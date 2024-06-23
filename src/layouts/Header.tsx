@@ -19,12 +19,12 @@ export const Header = () => {
     >
       <div className='mt-1 flex h-[64px] w-full max-w-[1200px] items-center justify-between px-4'>
         <div className='flex items-center text-lg font-medium'>
-          <Link href='/blog'>D5BL5G</Link>
+          <Link href='/blog'>CM</Link>
         </div>
         <div className='flex gap-3'>
           <ThemeSwitch />
           <Button asChild variant='ghost' size='icon'>
-            <Link href='https://github.com/d5br5' target='_blank'>
+            <Link href='https://github.com/ho1112' target='_blank'>
               <Github className='size-[1.2rem]' />
             </Link>
           </Button>
