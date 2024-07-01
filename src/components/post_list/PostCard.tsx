@@ -26,7 +26,7 @@ const PostCard = ({ post }: Props) => {
         </div>
         <div className='flex flex-1 flex-col justify-between p-4 pt-1'>
           <div>
-            <div className='text-sm font-medium text-pink-600 lg:text-base'>
+            <div className='text-sm font-medium text-chomin lg:text-base'>
               {post.categoryPublicName}
             </div>
             <h2 className='mb-3 mt-1 text-lg font-bold sm:text-xl md:text-lg'>{post.title}</h2>

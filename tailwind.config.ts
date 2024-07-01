@@ -58,6 +58,11 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        chomin : {
+          DEFAULT: '#31ced2',
+          light: '#72cfd2',
+          dark: '#329a9d',
+        }
       },
       typography: {
         DEFAULT: {

@@ -9,14 +9,14 @@ export const Footer = () => {
       <div className='flex justify-center gap-4'>
         <Link href='https://github.com/ho1112' target='_blank'>
           <IconGithub
-            className='fill-foreground transition hover:fill-pink-600'
+            className='fill-foreground transition hover:fill-chomin'
             height={30}
             width={30}
           />
         </Link>
-        <Link href='https://www.linkedin.com/in/dohkim777' target='_blank'>
+        <Link href='https://www.linkedin.com/' target='_blank'>
           <IconLinkedin
-            className='fill-foreground transition hover:fill-pink-600'
+            className='fill-foreground transition hover:fill-chomin'
             height={30}
             width={30}
           />

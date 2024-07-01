@@ -12,6 +12,9 @@ interface Props {
   toc: HeadingItem[];
 }
 
+/**
+ * side scroll spy
+ */
 const TableOfContent = ({ toc }: Props) => {
   const activeIdList = useHeadingsObserver('h2, h3');
 
@@ -29,7 +32,7 @@ const TableOfContent = ({ toc }: Props) => {
                   key={item.link}
                   className={cn(
                     isH3 && 'ml-4',
-                    isIntersecting && 'font-medium text-pink-600',
+                    isIntersecting && 'font-medium text-chomin',
                     'py-1 transition'
                   )}
                 >
