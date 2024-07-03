@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * side scroll spy
+ * side TOC(with scroll spy)
  */
 const TableOfContent = ({ toc }: Props) => {
   const activeIdList = useHeadingsObserver('h2, h3');

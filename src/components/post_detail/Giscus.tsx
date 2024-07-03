@@ -29,6 +29,7 @@ export default function Giscus() {
     scriptElem.setAttribute('data-emit-metadata', '0');
     scriptElem.setAttribute('data-input-position', 'bottom');
     scriptElem.setAttribute('data-theme', theme);
+    // TODO: language change
     // scriptElem.setAttribute('data-lang', 'ko');
     scriptElem.setAttribute('data-lang', 'ja');
 

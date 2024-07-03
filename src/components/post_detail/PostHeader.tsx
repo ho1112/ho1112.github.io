@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import { Post } from '@/config/types';
-import { CalendarDays, Clock3, Eye } from 'lucide-react';
+import { CalendarDays, Clock3 } from 'lucide-react';
+import { HitsOfPost } from '../common/HitsOfPost';
 
 interface Props {
   post: Post;
@@ -26,8 +27,9 @@ export const PostHeader = ({ post }: Props) => {
         </div>
         <div className='flex items-center gap-1'>
           <Clock3 className='w-3.5' />
-          <span>{post.readingMinutes}분</span>
+          <span>{post.readingMinutes}min</span>
         </div>
+        <HitsOfPost url={post.url}/>
       </div>
       <hr className='mt-5' />
     </header>
