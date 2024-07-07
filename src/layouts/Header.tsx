@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useSpyElem } from '@/hook/useSpy';
 import ThemeSwitch from '@/layouts/theme/Switch';
 import { Github } from 'lucide-react';
+import { Language } from './theme/Language';
 
 export const Header = () => {
   const { ref, marginTop } = useSpyElem(65);
@@ -23,6 +24,7 @@ export const Header = () => {
         </div>
         <div className='flex gap-3'>
           <ThemeSwitch />
+          <Language />
           <Button asChild variant='ghost' size='icon'>
             <Link href='https://github.com/ho1112' target='_blank'>
               <Github className='size-[1.2rem]' />
