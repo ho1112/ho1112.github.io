@@ -27,7 +27,7 @@ export const Header = () => {
           <Language />
           <Button asChild variant='ghost' size='icon'>
             <Link href='https://github.com/ho1112' target='_blank'>
-              <Github className='size-[1.2rem]' />
+              <Github className='size-[2rem]' />
             </Link>
           </Button>
         </div>

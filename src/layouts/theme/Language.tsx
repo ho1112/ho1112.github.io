@@ -31,15 +31,15 @@ export const Language = () => {
       <Image
         className='absolute left-2 bottom-3 z-[2]'
         src={currentLanguage.src}
-        width={24}
-        height={24}
+        width={28}
+        height={28}
         alt={currentLanguage.alt}
       />
       <Image
-        className='absolute top-3 right-2 z-[1]'
+        className='absolute top-2 right-2 z-[1]'
         src={subLanguage.src}
-        width={20}
-        height={20}
+        width={26}
+        height={26}
         alt={subLanguage.alt}
       />
     </div>
