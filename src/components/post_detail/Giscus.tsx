@@ -1,18 +1,27 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-
 import { useTheme } from 'next-themes';
+import { useTranslation } from 'react-i18next';
 
 export default function Giscus() {
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
+  const { i18n } = useTranslation();
 
   // https://github.com/giscus/giscus/tree/main/styles/themes
   const theme = resolvedTheme === 'dark' ? 'dark' : 'light';
 
+  const language = i18n.language;
+
   useEffect(() => {
-    if (!ref.current || ref.current.hasChildNodes()) return;
+    if (!ref.current) return;
+
+    // 기존 스크립트 제거
+    const existingScript = ref.current.querySelector('script');
+    if (existingScript) {
+      ref.current.removeChild(existingScript);
+    }
 
     const scriptElem = document.createElement('script');
     scriptElem.src = 'https://giscus.app/client.js';
@@ -29,12 +38,17 @@ export default function Giscus() {
     scriptElem.setAttribute('data-emit-metadata', '0');
     scriptElem.setAttribute('data-input-position', 'bottom');
     scriptElem.setAttribute('data-theme', theme);
-    // TODO: language change
-    // scriptElem.setAttribute('data-lang', 'ko');
-    scriptElem.setAttribute('data-lang', 'ja');
+    scriptElem.setAttribute('data-lang', language);
 
     ref.current.appendChild(scriptElem);
-  }, [theme]);
+
+    // 언어나 테마 변경 시에 설정 업데이트
+    return () => {
+      if (ref.current && scriptElem) {
+        ref.current.removeChild(scriptElem);
+      }
+    };
+  }, [theme, language]);
 
   // https://github.com/giscus/giscus/blob/main/ADVANCED-USAGE.md#isetconfigmessage
   useEffect(() => {

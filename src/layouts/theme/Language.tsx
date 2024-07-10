@@ -42,7 +42,6 @@ export const Language = () => {
     setMounted(true);
     const storedLang = localStorage.getItem('i18nextLng');
     if (storedLang && i18n.language !== storedLang) {
-      console.log('change storage lang ', storedLang)
       i18n.changeLanguage(storedLang).then(() => {
          // 상태 업데이트로 컴포넌트 강제 리렌더링
          // state updateでコンポーネンんと強制リーレンダリング
