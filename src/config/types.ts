@@ -1,7 +1,9 @@
 export interface PostMatter {
   title: string;
   date: Date;
-  dateString: string;
+  year: string;
+  month: string;
+  day: string;
   thumbnail: string;
   desc: string;
 }
