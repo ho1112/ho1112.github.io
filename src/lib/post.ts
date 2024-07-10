@@ -46,8 +46,14 @@ const parsePostDetail = async (postPath: string) => {
   const { data, content } = matter(file);
   const grayMatter = data as PostMatter;
   const readingMinutes = Math.ceil(readingTime(content).minutes);
-  const dateString = dayjs(grayMatter.date).locale('ko').format('YYYY년 MM월 DD일');
-  return { ...grayMatter, dateString, content, readingMinutes };
+
+  // dayjs를 사용하여 날짜 데이터 분리
+  const dateObj = dayjs(grayMatter.date);
+  const year = dateObj.format('YYYY');
+  const month = dateObj.format('MM');
+  const day = dateObj.format('DD');
+
+  return { ...grayMatter, year, month, day, content, readingMinutes };
 };
 
 // category folder name을 public name으로 변경 : dir_name -> Dir Name
