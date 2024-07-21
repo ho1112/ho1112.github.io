@@ -1,46 +1,48 @@
-import { MdxComponents } from '../mdx';
-import { Post } from '@/config/types';
+"use client";
+
+import { useState, useEffect } from "react";
+// @ts-expect-error no types
+import { jsx, jsxs, Fragment } from "react/jsx-runtime";
+import { evaluate } from "@mdx-js/mdx";
+import type { FC, ReactNode } from "react";
+import type { MDXProps } from "mdx/types";
+import type { EvaluateOptions } from "@mdx-js/mdx";
+import rehypePrettyCode from 'rehype-pretty-code';
 // @ts-expect-error no types
 import remarkA11yEmoji from '@fec/remark-a11y-emoji';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
+import { MdxComponents } from "../mdx";
 
-interface Props {
-  post: Post;
-}
+type ReactMDXContent = (props: MDXProps) => ReactNode;
+type Runtime = Pick<EvaluateOptions, "jsx" | "jsxs" | "Fragment">;
 
-export const PostBody = ({ post }: Props) => {
-  return (
-    <MDXRemote
-      source={post.content}
-      options={{
-        mdxOptions: {
-          remarkPlugins: [
-            // 깃허브 Flavored 마크다운 지원 추가 (version downgrade)
-            remarkGfm,
-            // 이모티콘 접근성 향상
-            remarkA11yEmoji,
-            // mdx 1줄 개행 지원
-            remarkBreaks,
-          ],
-          rehypePlugins: [
-            // pretty code block
-            [
-              // @ts-ignore
-              rehypePrettyCode,
-              {
-                theme: { dark: 'github-dark-dimmed', light: 'github-light' },
-              },
-            ],
-            // toc id를 추가하고 제목을 연결
-            rehypeSlug,
-          ],
-        },
-      }}
-      components={MdxComponents}
-    />
-  );
+const runtime = { jsx, jsxs, Fragment } as Runtime;
+
+export const PostBody: FC<{ source?: string }> = ({ source = "" }) => {
+  const [MdxContent, setMdxContent] = useState<ReactMDXContent>(() => () => null);
+
+  useEffect(() => {
+    const rehypePlugins = [
+      rehypeSlug,
+      [rehypePrettyCode, {
+        theme: {
+          dark: 'github-dark-dimmed',
+          light: 'github-light'
+        }
+      }]
+    ];
+    const remarkPlugins = [remarkGfm, remarkBreaks, remarkA11yEmoji]; // remarkBreaks ok
+    const options = {
+      ...runtime,
+      rehypePlugins: rehypePlugins as any,
+      remarkPlugins: remarkPlugins as any,
+    };
+    evaluate(source, options).then(r => setMdxContent(() => r.default));
+
+  }, [source]);
+
+  return <MdxContent
+  components={MdxComponents}/>;
 };
