@@ -19,10 +19,15 @@ i18n
   .use(initReactI18next)
   .use(Backend)
   // 初期レンダリングのタイミングで言語情報がなくて、エラーになることがあるため、コメントアウト
-  // .use(LanguageDetector)
+  .use(LanguageDetector)
   .init({
     resources,
     fallbackLng: 'ja',
+    preload: ['ja'],
+    detection: {
+      order: ['cookie', 'localStorage', 'sessionStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+      caches: ['cookie']
+    },
     interpolation: {
       escapeValue: false,
     },

@@ -3,16 +3,24 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from "react-i18next";
+import Cookies from 'js-cookie';
 
 import { Post } from '@/config/types';
 import { CalendarDays, Clock3 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   post: Post;
 }
 
 const PostCard = ({ post }: Props) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState<string>('');
+
+  useEffect(() => {
+    const cookieLanguage = Cookies.get('i18next');
+    setLanguage(cookieLanguage || i18n.language);
+  }, [i18n.language]);
 
   return (
     <Link href={post.url}>
@@ -39,11 +47,15 @@ const PostCard = ({ post }: Props) => {
           <div className='flex justify-between gap-3 text-sm text-gray-500 dark:text-gray-400'>
             <div className='flex items-center gap-1'>
               <CalendarDays className='w-3.5' />
-              <span>{post.year}{t('postHeader.year')} {post.month}{t('postHeader.month')} {post.day}{t('postHeader.day')}</span>
+              {language &&
+                <span>{post.year}{t('postHeader.year')} {post.month}{t('postHeader.month')} {post.day}{t('postHeader.day')}</span>
+              }
             </div>
             <div className='flex items-center gap-1'>
               <Clock3 className='w-3.5' />
-              <span>{post.readingMinutes}{t('postHeader.min')}</span>
+              {language &&
+                <span>{post.readingMinutes}{t('postHeader.min')}</span>
+              }
             </div>
           </div>
         </div>

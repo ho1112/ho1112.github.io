@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import i18n from "@/i18n";
+import Cookies from 'js-cookie';
 
 export const Language = () => {
   const [mounted, setMounted] = useState(false);
@@ -19,8 +20,8 @@ export const Language = () => {
 
   const switchLang = () => {
     const newLang = i18n.language === 'ja' ? 'ko' : 'ja';
-    localStorage.setItem('i18nextLng', newLang)
     changeLanguage(newLang)
+    Cookies.set('i18next', newLang, { expires: 365 });
   }
 
   const changeLanguage = (newLang: string) => {
@@ -40,7 +41,7 @@ export const Language = () => {
 
   useEffect(() => {
     setMounted(true);
-    const storedLang = localStorage.getItem('i18nextLng');
+    const storedLang = Cookies.get('i18next')
     if (storedLang && i18n.language !== storedLang) {
       i18n.changeLanguage(storedLang).then(() => {
          // 상태 업데이트로 컴포넌트 강제 리렌더링
