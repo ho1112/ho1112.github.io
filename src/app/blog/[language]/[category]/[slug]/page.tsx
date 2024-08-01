@@ -6,9 +6,8 @@ import { PostBody } from '@/components/post_detail/PostBody';
 import { PostHeader } from '@/components/post_detail/PostHeader';
 import TocSidebar from '@/components/post_detail/TableOfContentSidebar';
 import TocTop from '@/components/post_detail/TableOfContentTop';
-import { baseDomain } from '@/config/const';
+import { baseDomain, languages } from '@/config/const';
 import { getPostDetail, getPostPaths, parsePostAbstract, parseToc } from '@/lib/post';
-import { languages } from '@/i18n';
 
 type Props = {
   params: { language: string; category: string; slug: string };
@@ -43,17 +42,17 @@ export async function generateMetadata({ params: { language, category, slug } }:
   };
 }
 
-// export function generateStaticParams() {
-//   const paramList = languages.flatMap((language) => {
-//     const postPaths: string[] = getPostPaths(language);
-//     return postPaths.map((path) => {
-//       const { categoryPath, slug } = parsePostAbstract(language, path);
-//       return { language, category: categoryPath, slug };
-//     });
-//   });
+export function generateStaticParams() {
+  const paramList = languages.flatMap((language) => {
+    const postPaths: string[] = getPostPaths(language);
+    return postPaths.map((path) => {
+      const { categoryPath, slug } = parsePostAbstract(language, path);
+      return { language, category: categoryPath, slug };
+    });
+  });
 
-//   return paramList;
-// }
+  return paramList;
+}
 
 const PostDetail = async ({ params: { language, category, slug } }: Props) => {
   const post = await getPostDetail(language, category, slug);
