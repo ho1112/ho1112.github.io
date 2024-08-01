@@ -6,6 +6,8 @@ import { initReactI18next } from 'react-i18next';
 import ko from './ko.json';
 import ja from './ja.json';
 
+export const languages = ['ko', 'ja']
+
 const resources = {
   ko: {
     translation: ko,

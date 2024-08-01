@@ -17,8 +17,8 @@ export const getPostPaths = (language: string, category?: string) => {
 };
 
 // MDX 파일 파싱 : abstract / detail 구분
-const parsePost = async (postPath: string): Promise<Post> => {
-  const postAbstract = parsePostAbstract(postPath);
+const parsePost = async (language: string, postPath: string): Promise<Post> => {
+  const postAbstract = parsePostAbstract(language, postPath);
   const postDetail = await parsePostDetail(postPath);
   return {
     ...postAbstract,
@@ -28,14 +28,14 @@ const parsePost = async (postPath: string): Promise<Post> => {
 
 // MDX의 개요 파싱
 // url, cg path, cg name, slug
-export const parsePostAbstract = (postPath: string) => {
+export const parsePostAbstract = (language: string, postPath: string) => {
   const filePath = postPath
     .slice(postPath.indexOf(BASE_PATH))
     .replace(`${BASE_PATH}/`, '')
     .replace('.mdx', '');
 
   const [categoryPath, slug] = filePath.split('/');
-  const url = `/blog/${categoryPath}/${slug}`;
+  const url = `/blog/${language}/${categoryPath}/${slug}`;
   const categoryPublicName = getCategoryPublicName(categoryPath);
   return { url, categoryPath, categoryPublicName, slug };
 };
@@ -71,7 +71,7 @@ const sortPostList = (PostList: Post[]) => {
 // 모든 포스트 목록 조회. 블로그 메인 페이지에서 사용
 export const getPostList = async (language: string, category?: string): Promise<Post[]> => {
   const postPaths = getPostPaths(language, category);
-  const postList = await Promise.all(postPaths.map((postPath) => parsePost(postPath)));
+  const postList = await Promise.all(postPaths.map(postPath => parsePost(language, postPath)));
   return postList;
 };
 
@@ -120,9 +120,9 @@ export const getCategoryDetailList = async (language: string) => {
 };
 
 // post 상세 페이지 내용 조회
-export const getPostDetail = async (category: string, slug: string) => {
-  const filePath = `${POSTS_PATH}/${category}/${slug}/content.mdx`;
-  const detail = await parsePost(filePath);
+export const getPostDetail = async (language: string, category: string, slug: string) => {
+  const filePath = `${POSTS_PATH}/${category}/${slug}/content_${language}.mdx`;
+  const detail = await parsePost(language, filePath);
   return detail;
 };
 

@@ -15,6 +15,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   return (
     <section className='mx-auto mt-12 w-full max-w-[950px] px-4'>
       <CategoryList
+        language={language}
         allPostCount={allPostCount}
         categoryList={categoryList}
         currentCategory={category}
