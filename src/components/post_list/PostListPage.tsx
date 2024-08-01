@@ -3,17 +3,14 @@ import PostCard from './PostCard';
 import { getAllPostCount, getCategoryDetailList, getSortedPostList } from '@/lib/post';
 
 interface PostListProps {
-  language?: string
+  language: string
   category?: string;
 }
 
 const PostListPage = async ({ language, category }: PostListProps) => {
   const postList = await getSortedPostList(language, category);
-  const categoryList = await getCategoryDetailList();
-  const allPostCount = await getAllPostCount();
-  console.log('postList ', postList)
-  // console.log('categoryList ', categoryList)
-  // console.log('allPostCount ', allPostCount)
+  const categoryList = await getCategoryDetailList(language);
+  const allPostCount = await getAllPostCount(language);
 
   return (
     <section className='mx-auto mt-12 w-full max-w-[950px] px-4'>

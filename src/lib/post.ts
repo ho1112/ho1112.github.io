@@ -10,7 +10,7 @@ const BASE_PATH = '/src/posts';
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
 // 모든 MDX 파일 조회
-export const getPostPaths = (language?: string, category?: string) => {
+export const getPostPaths = (language: string, category?: string) => {
   const folder = category || '**';
   const postPaths: string[] = sync(`${POSTS_PATH}/${folder}/**/*_${language}.mdx`);
   return postPaths;
@@ -69,20 +69,20 @@ const sortPostList = (PostList: Post[]) => {
 };
 
 // 모든 포스트 목록 조회. 블로그 메인 페이지에서 사용
-export const getPostList = async (language?: string, category?: string): Promise<Post[]> => {
+export const getPostList = async (language: string, category?: string): Promise<Post[]> => {
   const postPaths = getPostPaths(language, category);
   const postList = await Promise.all(postPaths.map((postPath) => parsePost(postPath)));
   return postList;
 };
 
 // 정렬된 포스트 목록 요청
-export const getSortedPostList = async (language?: string, category?: string) => {
+export const getSortedPostList = async (language: string, category?: string) => {
   const postList = await getPostList(language, category);
   return sortPostList(postList);
 };
 
-export const getSitemapPostList = async () => {
-  const postList = await getPostList();
+export const getSitemapPostList = async (language: string) => {
+  const postList = await getPostList(language);
   const baseUrl = 'https://ho1112.github.io/';
   const sitemapPostList = postList.map(({ url }) => ({
     lastModified: new Date(),
@@ -91,7 +91,7 @@ export const getSitemapPostList = async () => {
   return sitemapPostList;
 };
 
-export const getAllPostCount = async () => (await getPostList()).length;
+export const getAllPostCount = async (language:string) => (await getPostList(language)).length;
 
 export const getCategoryList = () => {
   const cgPaths: string[] = sync(`${POSTS_PATH}/*`);
@@ -99,8 +99,8 @@ export const getCategoryList = () => {
   return cgList;
 };
 
-export const getCategoryDetailList = async () => {
-  const postList = await getPostList();
+export const getCategoryDetailList = async (language: string) => {
+  const postList = await getPostList(language);
   const result: { [key: string]: number } = {};
   for (const post of postList) {
     const category = post.categoryPath;
