@@ -10,9 +10,9 @@ const BASE_PATH = '/src/posts';
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
 // 모든 MDX 파일 조회
-export const getPostPaths = (category?: string) => {
+export const getPostPaths = (language?: string, category?: string) => {
   const folder = category || '**';
-  const postPaths: string[] = sync(`${POSTS_PATH}/${folder}/**/*.mdx`);
+  const postPaths: string[] = sync(`${POSTS_PATH}/${folder}/**/*_${language}.mdx`);
   return postPaths;
 };
 
@@ -69,14 +69,15 @@ const sortPostList = (PostList: Post[]) => {
 };
 
 // 모든 포스트 목록 조회. 블로그 메인 페이지에서 사용
-export const getPostList = async (category?: string): Promise<Post[]> => {
-  const postPaths = getPostPaths(category);
+export const getPostList = async (language?: string, category?: string): Promise<Post[]> => {
+  const postPaths = getPostPaths(language, category);
   const postList = await Promise.all(postPaths.map((postPath) => parsePost(postPath)));
   return postList;
 };
 
-export const getSortedPostList = async (category?: string) => {
-  const postList = await getPostList(category);
+// 정렬된 포스트 목록 요청
+export const getSortedPostList = async (language?: string, category?: string) => {
+  const postList = await getPostList(language, category);
   return sortPostList(postList);
 };
 

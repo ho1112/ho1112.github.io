@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/layouts/theme/Provider';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseDomain),
@@ -34,8 +35,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies()
+  const lang = cookieStore.get('i18next')?.value ?? 'ja'
+
   return (
-    <html lang='en' className='h-full scroll-my-20 scroll-smooth' suppressHydrationWarning>
+    <html lang={lang} className='h-full scroll-my-20 scroll-smooth' suppressHydrationWarning>
       <body className='font-pretendard flex min-h-screen flex-col'>
         <ThemeProvider>
           <Header />
