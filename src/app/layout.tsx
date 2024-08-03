@@ -9,7 +9,7 @@ import { ThemeProvider } from '@/layouts/theme/Provider';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { getLanguageFromCookie } from '@/utils/\bcookies';
+import { getLanguageFromCookie } from '@/utils/cookies';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseDomain),

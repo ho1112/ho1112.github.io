@@ -1,4 +1,4 @@
-import { getLanguageFromCookie } from '@/utils/\bcookies';
+import { getLanguageFromCookie } from '@/utils/cookies';
 import { redirect } from 'next/navigation';
 
 export default function Blog() {
