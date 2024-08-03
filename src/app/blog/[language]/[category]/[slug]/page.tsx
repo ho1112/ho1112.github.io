@@ -60,7 +60,7 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
 
   return (
     <div className='prose mx-auto w-full max-w-[750px] px-5 dark:prose-invert sm:px-6'>
-      <PostHeader post={post} />
+      <PostHeader language={language} post={post} />
       <TocTop toc={toc} />
       <article className='relative'>
         <TocSidebar toc={toc} />
