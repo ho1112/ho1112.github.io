@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import { Toaster } from '@/components/ui/toaster';
-import { baseDomain, blogDesc, blogName, blogThumbnailURL } from '@/config/const';
+import { baseDomain, blogDesc, blogName, blogThumbnailURL } from '@/config/constant';
 import '@/config/globals.css';
 import { Footer } from '@/layouts/Footer';
 import { Header } from '@/layouts/Header';
@@ -9,7 +9,7 @@ import { ThemeProvider } from '@/layouts/theme/Provider';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { cookies } from 'next/headers';
+import { getLanguageFromCookie } from '@/utils/\bcookies';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseDomain),
@@ -35,8 +35,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = cookies()
-  const lang = cookieStore.get('i18next')?.value ?? 'ja'
+  const lang = getLanguageFromCookie()
 
   return (
     <html lang={lang} className='h-full scroll-my-20 scroll-smooth' suppressHydrationWarning>

@@ -6,7 +6,7 @@ import { PostBody } from '@/components/post_detail/PostBody';
 import { PostHeader } from '@/components/post_detail/PostHeader';
 import TocSidebar from '@/components/post_detail/TableOfContentSidebar';
 import TocTop from '@/components/post_detail/TableOfContentTop';
-import { baseDomain, languages } from '@/config/const';
+import { baseDomain, languages } from '@/config/constant';
 import { getPostDetail, getPostPaths, parsePostAbstract, parseToc } from '@/lib/post';
 
 type Props = {

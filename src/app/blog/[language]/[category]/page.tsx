@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 import PostListPage from '@/components/post_list/PostListPage';
-import { baseDomain, blogName, blogThumbnailURL } from '@/config/const';
+import { baseDomain, blogName, blogThumbnailURL } from '@/config/constant';
 import { getCategoryList, getCategoryPublicName } from '@/lib/post';
 
 type Props = {
