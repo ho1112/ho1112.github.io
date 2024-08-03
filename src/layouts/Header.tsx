@@ -8,9 +8,12 @@ import { useSpyElem } from '@/hook/useSpy';
 import ThemeSwitch from '@/layouts/theme/Switch';
 import { Github } from 'lucide-react';
 import { Language } from './theme/Language';
+import { usePathname } from 'next/navigation';
 
 export const Header = () => {
   const { ref, marginTop } = useSpyElem(65);
+  const pathname = usePathname()
+  const currentLanguage = pathname.startsWith('/blog/ko') ? 'ko' : 'ja';
 
   return (
     <nav
@@ -20,7 +23,7 @@ export const Header = () => {
     >
       <div className='mt-1 flex h-[64px] w-full max-w-[1200px] items-center justify-between px-4'>
         <div className='flex items-center text-lg font-medium'>
-          <Link href='/blog'>CM</Link>
+          <Link href={`/blog/${currentLanguage}/`}>CM</Link>
         </div>
         <div className='flex gap-3'>
           <ThemeSwitch />
