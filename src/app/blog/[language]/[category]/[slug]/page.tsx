@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
 import FloatingButton from '@/components/common/FloatingButton';
-import Giscus from '@/components/post_detail/Giscus';
 import { PostBody } from '@/components/post_detail/PostBody';
 import { PostHeader } from '@/components/post_detail/PostHeader';
 import TocSidebar from '@/components/post_detail/TableOfContentSidebar';
 import TocTop from '@/components/post_detail/TableOfContentTop';
 import { baseDomain, languages } from '@/config/constant';
 import { getPostDetail, getPostPaths, parsePostAbstract, parseToc } from '@/lib/post';
+import { Giscus } from '@/components/post_detail/Giscus';
 
 type Props = {
   params: { language: string; category: string; slug: string };
@@ -67,7 +67,7 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
         <PostBody post={post} />
       </article>
       <hr />
-      <Giscus />
+      <Giscus language={language} />
       <FloatingButton />
     </div>
   );
