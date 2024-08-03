@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 import PostListPage from '@/components/post_list/PostListPage';
-import { baseDomain, blogName, blogThumbnailURL } from '@/config/constant';
+import { baseDomain, blogName, blogThumbnailURL, languages } from '@/config/constant';
 import { getCategoryList, getCategoryPublicName } from '@/lib/post';
 
 type Props = {
@@ -12,8 +12,13 @@ type Props = {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  const categoryList = getCategoryList();
-  const paramList = categoryList.map((category) => ({ category }));
+  const categoryList = getCategoryList()
+  const paramList: { language: string, category: string }[] = languages.flatMap((language) => {
+    return categoryList.map((category) => {
+      return { language, category };
+    });
+  });
+
   return paramList;
 }
 
