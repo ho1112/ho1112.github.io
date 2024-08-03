@@ -1,18 +1,17 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslation } from "react-i18next";
 
 import { Post } from '@/config/types';
 import { CalendarDays, Clock3 } from 'lucide-react';
+import { getLanguageText } from '@/utils/language';
 
 interface Props {
+  language: string
   post: Post;
 }
 
-const PostCard = ({ post }: Props) => {
-  const { t } = useTranslation();
+const PostCard = ({ language, post }: Props) => {
+  const t = getLanguageText(language, 'postHeader');
 
   return (
     <Link href={post.url}>
@@ -39,11 +38,11 @@ const PostCard = ({ post }: Props) => {
           <div className='flex justify-between gap-3 text-sm text-gray-500 dark:text-gray-400'>
             <div className='flex items-center gap-1'>
               <CalendarDays className='w-3.5' />
-              <span>{post.year}{t('postHeader.year')} {post.month}{t('postHeader.month')} {post.day}{t('postHeader.day')}</span>
+              <span>{post.year}{t.year} {post.month}{t.month} {post.day}{t.day}</span>
             </div>
             <div className='flex items-center gap-1'>
               <Clock3 className='w-3.5' />
-              <span>{post.readingMinutes}{t('postHeader.min')}</span>
+              <span>{post.readingMinutes}{t.min}</span>
             </div>
           </div>
         </div>

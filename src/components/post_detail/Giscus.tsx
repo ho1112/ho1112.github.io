@@ -2,17 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
-import { useTranslation } from 'react-i18next';
 
-export default function Giscus() {
+export const Giscus = ({language}: {
+  language: string
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
-  const { i18n } = useTranslation();
 
   // https://github.com/giscus/giscus/tree/main/styles/themes
   const theme = resolvedTheme === 'dark' ? 'dark' : 'light';
-
-  const language = i18n.language;
 
   useEffect(() => {
     if (!ref.current) return;

@@ -13,12 +13,14 @@ import {
 import { CategoryDetail } from '@/config/types';
 
 interface CategoryListProps {
+  language: string
   categoryList: CategoryDetail[];
   allPostCount: number;
   currentCategory?: string;
 }
 
 const CategoryList = ({
+  language,
   categoryList,
   allPostCount,
   currentCategory = 'all',
@@ -27,9 +29,9 @@ const CategoryList = ({
 
   const onCategoryChange = (value: string) => {
     if (value === 'all') {
-      router.push('/blog');
+      router.push(`/blog/${language}/`);
     } else {
-      router.push(`/blog/${value}`);
+      router.push(`/blog/${language}/${value}`);
     }
   };
 
@@ -38,7 +40,7 @@ const CategoryList = ({
       <section className='mb-10 hidden sm:block'>
         <ul className='flex gap-3'>
           <CategoryButton
-            href='/blog'
+            href={`/blog/${language}/`}
             isCurrent={currentCategory === 'all'}
             displayName='All'
             count={allPostCount}
@@ -46,7 +48,7 @@ const CategoryList = ({
           {categoryList.map((cg) => (
             <CategoryButton
               key={cg.dirName}
-              href={`/blog/${cg.dirName}`}
+              href={`/blog/${language}/${cg.dirName}/`}
               displayName={cg.publicName}
               isCurrent={cg.dirName === currentCategory}
               count={cg.count}
