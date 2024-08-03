@@ -4,6 +4,16 @@ type Props = {
   params: { language: string };
 };
 
+// // 허용된 param 외 접근시 404
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return [
+    { language: 'ko' },
+    { language: 'ja' },
+  ];
+}
+
 const Lng = ({ params }: Props) => {
   const { language } = params;
 
