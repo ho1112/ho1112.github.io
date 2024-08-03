@@ -6,6 +6,7 @@ type Props = {
 
 // // 허용된 param 외 접근시 404
 export const dynamicParams = false;
+export const dynamic = 'force-static'
 
 export function generateStaticParams() {
   return [
