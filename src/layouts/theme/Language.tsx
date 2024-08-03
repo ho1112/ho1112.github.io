@@ -10,7 +10,7 @@ export const Language = () => {
 
   const switchLang = () => {
     const newPath = pathname.replace(`/${currentLanguage}`, `/${newLanguage}`);
-    Cookies.set('i18next', newLanguage);
+    Cookies.set('language', newLanguage, { expires: 30 });
     router.push(newPath);
   }
 
