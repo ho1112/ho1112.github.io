@@ -1,27 +1,33 @@
-import { Metadata } from 'next';
-
-import FloatingButton from '@/components/common/FloatingButton';
-import { PostBody } from '@/components/post_detail/PostBody';
-import { PostHeader } from '@/components/post_detail/PostHeader';
-import TocSidebar from '@/components/post_detail/TableOfContentSidebar';
-import TocTop from '@/components/post_detail/TableOfContentTop';
-import { baseDomain, languages } from '@/config/constant';
-import { getPostDetail, getPostPaths, parsePostAbstract, parseToc } from '@/lib/post';
-import { Giscus } from '@/components/post_detail/Giscus';
+import { Metadata } from 'next'
+import { baseDomain, languages } from '@/config/constant'
+import {
+  getPostDetail,
+  getPostPaths,
+  parsePostAbstract,
+  parseToc,
+} from '@/lib/post'
+import FloatingButton from '@/components/common/FloatingButton'
+import { Giscus } from '@/components/post_detail/Giscus'
+import { PostBody } from '@/components/post_detail/PostBody'
+import { PostHeader } from '@/components/post_detail/PostHeader'
+import TocSidebar from '@/components/post_detail/TableOfContentSidebar'
+import TocTop from '@/components/post_detail/TableOfContentTop'
 
 type Props = {
-  params: { language: string; category: string; slug: string };
-};
+  params: { language: string; category: string; slug: string }
+}
 
 // 허용된 param 외 접근시 404
-export const dynamicParams = false;
+export const dynamicParams = false
 export const dynamic = 'force-static'
 
-export async function generateMetadata({ params: { language, category, slug } }: Props): Promise<Metadata> {
-  const post = await getPostDetail(language, category, slug);
+export async function generateMetadata({
+  params: { language, category, slug },
+}: Props): Promise<Metadata> {
+  const post = await getPostDetail(language, category, slug)
 
-  const title = `${post.title} | choco-mint`;
-  const imageURL = `${baseDomain}${post.thumbnail}`;
+  const title = `${post.title} | choco-mint`
+  const imageURL = `${baseDomain}${post.thumbnail}`
 
   return {
     title,
@@ -40,30 +46,30 @@ export async function generateMetadata({ params: { language, category, slug } }:
       description: post.desc,
       images: [imageURL],
     },
-  };
+  }
 }
 
 export function generateStaticParams() {
   const paramList = languages.flatMap((language) => {
-    const postPaths: string[] = getPostPaths(language);
+    const postPaths: string[] = getPostPaths(language)
     return postPaths.map((path) => {
-      const { categoryPath, slug } = parsePostAbstract(language, path);
-      return { language, category: categoryPath, slug };
-    });
-  });
+      const { categoryPath, slug } = parsePostAbstract(language, path)
+      return { language, category: categoryPath, slug }
+    })
+  })
 
-  return paramList;
+  return paramList
 }
 
 const PostDetail = async ({ params: { language, category, slug } }: Props) => {
-  const post = await getPostDetail(language, category, slug);
-  const toc = parseToc(post.content);
+  const post = await getPostDetail(language, category, slug)
+  const toc = parseToc(post.content)
 
   return (
-    <div className='prose mx-auto w-full max-w-[750px] px-5 dark:prose-invert sm:px-6'>
+    <div className="prose mx-auto w-full max-w-[750px] px-5 dark:prose-invert sm:px-6">
       <PostHeader language={language} post={post} />
       <TocTop toc={toc} />
-      <article className='relative'>
+      <article className="relative">
         <TocSidebar toc={toc} />
         <PostBody post={post} />
       </article>
@@ -71,7 +77,7 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
       <Giscus language={language} />
       <FloatingButton />
     </div>
-  );
-};
+  )
+}
 
-export default PostDetail;
+export default PostDetail

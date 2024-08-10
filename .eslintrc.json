@@ -1,3 +1,97 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"]
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true // JSX 구문을 인식할 수 있도록 설정
+    },
+    "ecmaVersion": 2023,
+    "sourceType": "module" // 모듈 시스템을 지정. "module"은 (import/export)을 사용함을 명시
+  },
+  "extends": [
+    "eslint:recommended", // ESLint의 기본 추천 규칙 세트를 사용
+    "plugin:@typescript-eslint/recommended", // TypeScript 코드에 대한 추천 규칙 세트를 사용
+    "plugin:prettier/recommended" // Prettier와 충돌하는 ESLint 규칙을 비활성화하고, Prettier 규칙을 ESLint 규칙으로 통합
+  ],
+  "plugins": [
+    "@typescript-eslint", // TypeScript 관련 규칙을 제공
+    "prettier", // Prettier를 ESLint에 통합하여 코드 포맷팅 규칙을 적용
+    "import",
+    "react"
+  ],
+  "rules": {
+    "prettier/prettier": "error", // Prettier의 규칙을 따르지 않는 경우 ESLint에서 오류로 처리
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_" }
+    ], // 사용되지 않는 변수가 있을 경우 오류를 발생시킵니다. 단, _로 시작하는 변수는 예외로 처리
+    "@typescript-eslint/explicit-function-return-type": "off", // 함수의 반환 타입을 명시적으로 지정하지 않아도 되도록 규칙을 비활성화
+    "import/no-duplicates": "error", // 같은 파일의 import 중복이 있으면 에러
+    "import/first": "error", // import가 파일 선두에 있지 않으면 에러
+    "import/newline-after-import": "error", // import후에 개행이 없으면 에러
+    "@typescript-eslint/no-explicit-any": "warn", // any타입을 경고
+    "@next/next/no-img-element": "off", // img태그를 next/image로 변환하지 않은 것에 대한 경고
+    "no-irregular-whitespace": "off", // 전각스페이스 경고
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "order": "asc", // 昇順にソート
+          "caseInsensitive": true // 小文字大文字を区別する
+        },
+        "groups": [
+          "builtin", // 組み込みモジュール
+          "external", // npmでインストールした外部ライブラリ
+          "internal", // 自作モジュール
+          [
+            "parent", // 親ディレクトリ
+            "sibling"
+          ], // 本ファイルと同じディレクトリ
+          "index", // indexで始まるモジュール, ex) import foo from './foo/index';
+          "object", // オブジェクト(import * as...)··· from...)
+          "type" // タイプファイル
+        ],
+        "newlines-between": "never", // グループ毎にで改行を入れる 'always' or 'never'
+        "pathGroups": [
+          // 指定した順番にソートされる
+          {
+            "pattern": "@/components/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@/**",
+            "group": "internal",
+            "position": "before"
+          }
+        ]
+      }
+    ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": false, // 小文字大文字を区別する true:区分、false:しない
+        "ignoreDeclarationSort": true // importの宣言順番を無視する
+      }
+    ],
+    "sort-vars": ["error", { "ignoreCase": true }]
+  },
+  "env": {
+    "browser": true, // 브라우저 환경에서 사용할 수 있는 전역 변수(예: window, document)를 인식
+    "es2021": true, // ECMAScript 2021 구문을 지원합니다. 최신 JavaScript 문법을 사용할 수 있다
+    "node": true // Node.js 환경에서 사용할 수 있는 전역 변수(예: global, module)를 인식
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+      },
+      "typescript": {
+        "alwaysTryTypes": true,
+        "config": "tsconfig.json"
+      }
+    },
+    "react": {
+      "version": "detect" // 설치된 React 버전을 자동으로 감지하여 적절한 린트 규칙을 적용
+    }
+  }
 }
