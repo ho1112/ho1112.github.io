@@ -1,1 +1,4 @@
 **/*.mdx
+.next
+public
+node_modules
