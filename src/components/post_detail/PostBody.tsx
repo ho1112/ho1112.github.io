@@ -1,15 +1,15 @@
-import { MdxComponents } from '../mdx';
-import { Post } from '@/config/types';
 // @ts-expect-error no types
-import remarkA11yEmoji from '@fec/remark-a11y-emoji';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import rehypePrettyCode from 'rehype-pretty-code';
-import rehypeSlug from 'rehype-slug';
-import remarkBreaks from 'remark-breaks';
-import remarkGfm from 'remark-gfm';
+import remarkA11yEmoji from '@fec/remark-a11y-emoji'
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import rehypePrettyCode from 'rehype-pretty-code'
+import rehypeSlug from 'rehype-slug'
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
+import { Post } from '@/config/types'
+import { MdxComponents } from '../mdx'
 
 interface Props {
-  post: Post;
+  post: Post
 }
 
 export const PostBody = ({ post }: Props) => {
@@ -29,7 +29,7 @@ export const PostBody = ({ post }: Props) => {
           rehypePlugins: [
             // pretty code block
             [
-              // @ts-ignore
+              // @ts-expect-error lib
               rehypePrettyCode,
               {
                 theme: { dark: 'github-dark-dimmed', light: 'github-light' },
@@ -42,5 +42,5 @@ export const PostBody = ({ post }: Props) => {
       }}
       components={MdxComponents}
     />
-  );
-};
+  )
+}

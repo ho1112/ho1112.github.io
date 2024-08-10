@@ -1,9 +1,9 @@
-import { getLanguageFromCookie } from '@/utils/cookies';
-import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation'
+import { getLanguageFromCookie } from '@/utils/cookies'
 
 export const dynamic = 'force-static'
 
 export default function Blog() {
   const lang = getLanguageFromCookie()
-  redirect(`/blog/${lang}`);
+  redirect(`/blog/${lang}`)
 }

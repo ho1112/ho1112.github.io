@@ -1,25 +1,30 @@
-import Link from 'next/link';
-
-import { HeadingItem } from '@/config/types';
-import { cn } from '@/lib/utils';
+import Link from 'next/link'
+import { HeadingItem } from '@/config/types'
+import { cn } from '@/lib/utils'
 
 interface Props {
-  toc: HeadingItem[];
+  toc: HeadingItem[]
 }
 
 /**
  * 目次
  */
 const TableOfContentTop = ({ toc }: Props) => {
-  if (toc.length === 0) return null;
+  if (toc.length === 0) return null
 
   return (
-    <nav className='xl:hidden'>
-      <h2 id='table-of-contents-top'>On this page</h2>
+    <nav className="xl:hidden">
+      <h2 id="table-of-contents-top">On this page</h2>
       <ul>
         {toc.map((item) => (
-          <li key={item.link} className={cn(item.indent === 1 && 'ml-4', 'my-0 py-1 ')}>
-            <Link href={item.link} className='underline-offset-4 hover:text-chomin'>
+          <li
+            key={item.link}
+            className={cn(item.indent === 1 && 'ml-4', 'my-0 py-1 ')}
+          >
+            <Link
+              href={item.link}
+              className="underline-offset-4 hover:text-chomin"
+            >
               {item.text}
             </Link>
           </li>
@@ -27,7 +32,7 @@ const TableOfContentTop = ({ toc }: Props) => {
       </ul>
       <hr />
     </nav>
-  );
-};
+  )
+}
 
-export default TableOfContentTop;
+export default TableOfContentTop

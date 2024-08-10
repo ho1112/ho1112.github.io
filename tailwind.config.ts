@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
 
 const config = {
   darkMode: ['class'],
@@ -58,11 +58,11 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        chomin : {
+        chomin: {
           DEFAULT: '#31ced2',
           light: '#72cfd2',
           dark: '#329a9d',
-        }
+        },
       },
       typography: {
         DEFAULT: {
@@ -185,6 +185,6 @@ const config = {
     },
   },
   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
-} satisfies Config;
+} satisfies Config
 
-export default config;
+export default config

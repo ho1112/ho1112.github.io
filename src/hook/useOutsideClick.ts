@@ -1,25 +1,27 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react'
 
-type ClickEvent = MouseEvent;
+type ClickEvent = MouseEvent
 
-type ClickHandler = (e: ClickEvent) => void;
+type ClickHandler = (e: ClickEvent) => void
 
-export const useOutsideClick = <T extends HTMLElement>(handler: ClickHandler) => {
-  const ref = useRef<T>(null);
+export const useOutsideClick = <T extends HTMLElement>(
+  handler: ClickHandler,
+) => {
+  const ref = useRef<T>(null)
 
   useEffect(() => {
     const listener = (e: ClickEvent) => {
-      const target = e.target as Node;
-      if (!ref.current || ref.current.contains(target)) return;
+      const target = e.target as Node
+      if (!ref.current || ref.current.contains(target)) return
       setTimeout(() => {
-        handler(e);
-      }, 100);
-    };
+        handler(e)
+      }, 100)
+    }
 
-    document.addEventListener('mousedown', listener);
+    document.addEventListener('mousedown', listener)
     return () => {
-      document.removeEventListener('mousedown', listener);
-    };
-  }, [handler]);
-  return ref;
-};
+      document.removeEventListener('mousedown', listener)
+    }
+  }, [handler])
+  return ref
+}
