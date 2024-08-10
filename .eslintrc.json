@@ -62,7 +62,7 @@
             "pattern": "@/**",
             "group": "internal",
             "position": "before"
-          }
+          },
         ]
       }
     ],

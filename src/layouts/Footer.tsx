@@ -1,26 +1,25 @@
-import Link from 'next/link';
-
-import IconGithub from '@/components/icon/Github';
-import IconLinkedin from '@/components/icon/LinkedIn';
-import { isDev } from '@/utils/development';
-import { devHitsUrl } from '@/config/constant';
+import Link from 'next/link'
+import { devHitsUrl } from '@/config/constant'
+import { isDev } from '@/utils/development'
+import IconGithub from '@/components/icon/Github'
+import IconLinkedin from '@/components/icon/LinkedIn'
 
 export const Footer = () => {
   const hitUrl = isDev() ? devHitsUrl : '/blog'
 
   return (
-    <footer className='flex flex-col items-center justify-center gap-4 pb-16 pt-20 text-center'>
-      <div className='flex justify-center gap-4'>
-        <Link href='https://github.com/ho1112' target='_blank'>
+    <footer className="flex flex-col items-center justify-center gap-4 pb-16 pt-20 text-center">
+      <div className="flex justify-center gap-4">
+        <Link href="https://github.com/ho1112" target="_blank">
           <IconGithub
-            className='fill-foreground transition hover:fill-chomin'
+            className="fill-foreground transition hover:fill-chomin"
             height={30}
             width={30}
           />
         </Link>
-        <Link href='https://www.linkedin.com/' target='_blank'>
+        <Link href="https://www.linkedin.com/" target="_blank">
           <IconLinkedin
-            className='fill-foreground transition hover:fill-chomin'
+            className="fill-foreground transition hover:fill-chomin"
             height={30}
             width={30}
           />
@@ -32,11 +31,15 @@ export const Footer = () => {
       </a> */}
       {/* hits.sh */}
       <a href={`https://hits.sh/ho1112.github.io${hitUrl}/`}>
-        <img alt="Hits" src={`https://hits.sh/ho1112.github.io${hitUrl}.svg?view=today-total&style=for-the-badge&label=TOTAL%20VIEW&color=31ced2&labelColor=31ced2"/`} />
+        <img
+          alt="Hits"
+          src={`https://hits.sh/ho1112.github.io${hitUrl}.svg?view=today-total&style=for-the-badge&label=TOTAL%20VIEW&color=31ced2&labelColor=31ced2"/`}
+        />
       </a>
       <div>
-        © 2024. <span className='font-semibold'>Hoyeon LEE</span> all rights reserved.
+        © 2024. <span className="font-semibold">Hoyeon LEE</span> all rights
+        reserved.
       </div>
     </footer>
-  );
-};
+  )
+}
