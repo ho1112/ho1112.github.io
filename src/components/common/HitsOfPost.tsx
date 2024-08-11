@@ -16,7 +16,10 @@ export const HitsOfPost = ({ url }: HitsOfPostProps) => {
   useEffect(() => {
     const fetchHits = async () => {
       try {
-        const response = await fetch(`/api/hits?url=${hitUrl}`)
+        const response = isDev()
+          ? await fetch(`/api/hits?url=${hitUrl}`)
+          : await fetch(`https://hits.sh/api/urns/ho1112.github.io${url}`)
+
         const data = await response.json()
         setHits(data.total)
       } catch (error) {
