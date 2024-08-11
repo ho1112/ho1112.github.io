@@ -16,10 +16,9 @@ export const HitsOfPost = ({ url }: HitsOfPostProps) => {
   useEffect(() => {
     const fetchHits = async () => {
       try {
-        const response = isDev()
-          ? await fetch(`/api/hits?url=${hitUrl}`)
-          : await fetch(`https://hits.sh/api/urns/ho1112.github.io${url}`)
-
+        const response = await fetch(
+          `https://hits.sh/api/urns/ho1112.github.io${url}`,
+        )
         const data = await response.json()
         setHits(data.total)
       } catch (error) {
@@ -33,8 +32,19 @@ export const HitsOfPost = ({ url }: HitsOfPostProps) => {
 
   return (
     <>
-      <Eye className="w-3.5" />
-      <span>{hits}</span>
+      {isDev() ? (
+        <a href={`https://hits.sh/ho1112.github.io${hitUrl}`}>
+          <img
+            alt="Hits"
+            src={`https://hits.sh/ho1112.github.io${hitUrl}.svg?style=flat-square&label=%20&color=ffffff&labelColor=ffffff`}
+          />
+        </a>
+      ) : (
+        <>
+          <Eye className="w-3.5" />
+          <span>{hits}</span>
+        </>
+      )}
     </>
   )
 }
