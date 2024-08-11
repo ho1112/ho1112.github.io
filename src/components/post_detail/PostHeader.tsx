@@ -40,7 +40,9 @@ export const PostHeader = ({ language, post }: Props) => {
             {t.min}
           </span>
         </div>
-        <HitsOfPost url={post.url} />
+        <div className="flex items-center gap-1">
+          <HitsOfPost url={post.url} />
+        </div>
       </div>
       <hr className="mt-5" />
     </header>

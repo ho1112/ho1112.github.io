@@ -1,6 +1,7 @@
 'use client'
 
-import { useTheme } from 'next-themes'
+import { Eye } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { devHitsUrl } from '@/config/constant'
 import { isDev } from '@/utils/development'
 
@@ -9,18 +10,28 @@ interface HitsOfPostProps {
 }
 
 export const HitsOfPost = ({ url }: HitsOfPostProps) => {
-  const { resolvedTheme } = useTheme()
-  const theme = resolvedTheme === 'dark' ? '000000' : 'ffffff'
+  const [hits, setHits] = useState<number | string>('-')
   const hitUrl = isDev() ? devHitsUrl : url
 
+  useEffect(() => {
+    const fetchHits = async () => {
+      try {
+        const response = await fetch(`/api/hits?url=${hitUrl}`)
+        const data = await response.json()
+        setHits(data.total)
+      } catch (error) {
+        setHits('-')
+        console.error('get Hits Error', error)
+      }
+    }
+
+    fetchHits()
+  }, [hitUrl])
+
   return (
-    <div>
-      <a href={`https://hits.sh/ho1112.github.io${hitUrl}`}>
-        <img
-          alt="Hits"
-          src={`https://hits.sh/ho1112.github.io${hitUrl}.svg?style=flat-square&label=HITS&color=${theme}&labelColor=${theme}`}
-        />
-      </a>
-    </div>
+    <>
+      <Eye className="w-3.5" />
+      <span>{hits}</span>
+    </>
   )
 }
