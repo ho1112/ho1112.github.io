@@ -2,11 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 type ScrollDirection = 'UP' | 'DOWN'
 
-export const useSpyElem = (elemHeight: number) => {
+export const useScrollTracker = (elemHeight: number) => {
   // spy를 부착할 요소 ref
   const ref = useRef<HTMLDivElement>(null)
   // elem의 marginTop. 스크롤에 따라 동적으로 변함
-  const [marginTop, setMarginTop] = useState(0)
+  const [transform, setTransform] = useState('translateY(0)')
 
   // 스크롤이 일어나기 직전의 scroll top. scroll 방향
   const prevScrollTop = useRef(0)
@@ -16,8 +16,14 @@ export const useSpyElem = (elemHeight: number) => {
   const transitionPoint = useRef(elemHeight)
 
   const onScroll = useCallback(() => {
-    const currScrollTop =
+    let currScrollTop =
       document?.documentElement?.scrollTop || document?.body?.scrollTop || 0
+
+    // 스크롤 위치가 음수일 경우 0으로 설정(safari의 바운스 효과 방지)
+    if (currScrollTop < 0) {
+      currScrollTop = 0
+    }
+
     const nextDirection = prevScrollTop.current > currScrollTop ? 'UP' : 'DOWN'
 
     const isUpTransition =
@@ -35,11 +41,11 @@ export const useSpyElem = (elemHeight: number) => {
       transitionPoint.current = prevScrollTop.current + elemHeight
     }
 
-    const newMargin = Math.min(
+    const newTransform = `translateY(${Math.min(
       0,
       Math.max(-elemHeight, transitionPoint.current - NextBottomPoint),
-    )
-    setMarginTop(newMargin)
+    )}px)`
+    setTransform(newTransform)
 
     // 이벤트가 마무리된 시점. 현재 값을 prev에 저장
     prevDirection.current = nextDirection
@@ -62,5 +68,5 @@ export const useSpyElem = (elemHeight: number) => {
     }
   }, [onScroll])
 
-  return { ref, marginTop }
+  return { ref, transform }
 }

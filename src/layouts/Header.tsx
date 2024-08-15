@@ -3,20 +3,20 @@
 import { Github } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSpyElem } from '@/hook/useSpy'
+import { useScrollTracker } from '@/hook/useScrollTracker'
 import ThemeSwitch from '@/layouts/theme/Switch'
 import ScrollProgressBar from '@/components/common/ScrollProgressBar'
 import { Button } from '@/components/ui/button'
 import { Language } from './theme/Language'
 
 export const Header = () => {
-  const { ref, marginTop } = useSpyElem(65)
+  const { ref, transform } = useScrollTracker(65)
   const pathname = usePathname()
   const currentLanguage = pathname.startsWith('/blog/ko') ? 'ko' : 'ja'
 
   return (
     <nav
-      style={{ marginTop }}
+      style={{ transform }}
       ref={ref}
       className="fixed z-40 flex w-full flex-col items-center justify-center border-b bg-background shadow-sm"
     >
