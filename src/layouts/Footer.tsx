@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import { devHitsUrl } from '@/config/constant'
 import { isDev } from '@/utils/development'
@@ -37,8 +38,8 @@ export const Footer = () => {
         />
       </a>
       <div>
-        © 2024. <span className="font-semibold">Hoyeon LEE</span> all rights
-        reserved.
+        © {dayjs().year()} <span className="font-semibold">Hoyeon LEE</span>{' '}
+        all rights reserved.
       </div>
     </footer>
   )
