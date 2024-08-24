@@ -45,19 +45,17 @@ const PostCard = ({ language, post, index }: Props) => {
             />
           </div>
           {/* post info */}
-          <div className="absolute bottom-0 flex flex-col p-4 ">
+          <div className="absolute bottom-0 flex flex-col p-4">
             <div className="flex flex-1 flex-col">
-              <div>
-                <div className="text-sm font-medium text-chomin lg:text-base">
-                  <span className="bg-black px-2 py-1">
-                    {post.categoryPublicName}
-                  </span>
-                </div>
-                <h2 className="my-1 text-lg text-white font-bold sm:text-xl md:text-lg">
-                  {post.title}
-                </h2>
+              <div className="font-medium text-xs lg:text-sm text-chomin">
+                <span className="bg-black px-2 py-1">
+                  {post.categoryPublicName}
+                </span>
               </div>
-              <div className="flex gap-3 text-sm text-white font-bold">
+              <h2 className="my-1 font-bold text-lg lg:text-xl text-white">
+                {post.title}
+              </h2>
+              <div className="flex gap-3 font-medium text-[10px] lg:text-xs text-white">
                 <div className="flex items-center gap-1">
                   <CalendarDays className="w-3.5" />
                   <span>
