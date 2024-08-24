@@ -16,7 +16,7 @@ const PostCard = ({ language, post, index }: Props) => {
 
   return (
     <div
-      className={cn({
+      className={cn('group', {
         'md:col-span-2 md:row-span-2': index === 0, // 첫 번째 카드, 왼쪽 전면
         'md:col-start-3 md:row-start-1 md:col-span-2 md:row-span-1':
           index === 1, // 두 번째 카드, 우상단
@@ -36,6 +36,7 @@ const PostCard = ({ language, post, index }: Props) => {
           {/* image */}
           <div className="w-full aspect-video rounded-t-md">
             <Image
+              className="transition-transform duration-300 group-hover:scale-110"
               src={post.thumbnail}
               alt={`thumbnail for ${post.title}`}
               sizes="(max-width: 1000px) 50vw, 450px"
@@ -43,6 +44,9 @@ const PostCard = ({ language, post, index }: Props) => {
               priority
               style={{
                 objectFit: 'cover',
+                width: '100%', // 이미지가 부모 요소를 꽉 채우도록 설정
+                height: '100%', // 이미지가 부모 요소를 꽉 채우도록 설정
+                position: 'absolute',
               }}
             />
           </div>
