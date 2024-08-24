@@ -2,61 +2,88 @@ import { CalendarDays, Clock3 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Post } from '@/config/types'
+import { cn } from '@/lib/utils'
 import { getLanguageText } from '@/utils/language'
 
 interface Props {
   language: string
   post: Post
+  index: number
 }
 
-const PostCard = ({ language, post }: Props) => {
+const PostCard = ({ language, post, index }: Props) => {
   const t = getLanguageText(language, 'postHeader')
 
   return (
-    <Link href={post.url}>
-      <li className="flex h-full flex-col gap-3 overflow-hidden rounded-md border shadow-md transition hover:shadow-xl dark:border-slate-700 dark:hover:border-white">
-        <div className="relative aspect-video w-full rounded-t-md border-b">
-          <Image
-            src={post.thumbnail}
-            alt={`thumbnail for ${post.title}`}
-            sizes="(max-width: 1000px) 50vw, 450px"
-            fill
-            priority
-            style={{
-              objectFit: 'cover',
-            }}
-          />
-        </div>
-        <div className="flex flex-1 flex-col justify-between p-4 pt-1">
-          <div>
-            <div className="text-sm font-medium text-chomin lg:text-base">
-              {post.categoryPublicName}
-            </div>
-            <h2 className="mb-3 mt-1 text-lg font-bold sm:text-xl md:text-lg">
-              {post.title}
-            </h2>
+    <div
+      className={cn('group', {
+        'md:col-span-2 md:row-span-2': index === 0, // 첫 번째 카드, 왼쪽 전면
+        'md:col-start-3 md:row-start-1 md:col-span-2 md:row-span-1':
+          index === 1, // 두 번째 카드, 우상단
+        'md:col-start-3 md:row-start-2 md:col-span-1 md:row-span-1':
+          index === 2, // 세 번째 카드, 우하단 1열
+        'md:col-start-4 md:row-start-2 md:col-span-1 md:row-span-1':
+          index === 3, // 네 번째 카드, 우하단 2열
+      })}
+    >
+      <Link href={post.url}>
+        <li
+          className="relative flex h-full flex-col overflow-hidden rounded-md border shadow-lg transition
+            hover:shadow-xl dark:border-slate-700 dark:hover:border-white"
+        >
+          {/* 텍스트 가독성을 위한 그라디언트 */}
+          <div className="z-[1] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black before:via-transparent before:to-transparent before:opacity-70" />
+          {/* image */}
+          <div className="w-full aspect-video rounded-t-md">
+            <Image
+              className="transition-transform duration-300 group-hover:scale-110"
+              src={post.thumbnail}
+              alt={`thumbnail for ${post.title}`}
+              sizes="(max-width: 1000px) 50vw, 450px"
+              fill
+              priority
+              style={{
+                objectFit: 'cover',
+                width: '100%', // 이미지가 부모 요소를 꽉 채우도록 설정
+                height: '100%', // 이미지가 부모 요소를 꽉 채우도록 설정
+                position: 'absolute',
+              }}
+            />
           </div>
-          <div className="flex justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <CalendarDays className="w-3.5" />
-              <span>
-                {post.year}
-                {t.year} {post.month}
-                {t.month} {post.day}
-                {t.day}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Clock3 className="w-3.5" />
-              <span>
-                {post.readingMinutes}
-                {t.min}
-              </span>
+          {/* post info */}
+          <div className="absolute z-[2] bottom-0 flex flex-col p-4">
+            <div className="flex flex-1 flex-col">
+              <div className="font-medium text-xs lg:text-sm text-chomin">
+                <span className="bg-black px-2 py-1">
+                  {post.categoryPublicName}
+                </span>
+              </div>
+              <h2 className="my-1 font-bold text-lg lg:text-xl text-white">
+                {post.title}
+              </h2>
+              <div className="flex gap-3 font-medium text-[10px] lg:text-xs text-white">
+                <div className="flex items-center gap-1">
+                  <CalendarDays className="w-3.5" />
+                  <span>
+                    {post.year}
+                    {t.year} {post.month}
+                    {t.month} {post.day}
+                    {t.day}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock3 className="w-3.5" />
+                  <span>
+                    {post.readingMinutes}
+                    {t.min}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </li>
-    </Link>
+        </li>
+      </Link>
+    </div>
   )
 }
 

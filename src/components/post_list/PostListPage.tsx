@@ -16,6 +16,9 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   const categoryList = await getCategoryDetailList(language)
   const allPostCount = await getAllPostCount(language)
 
+  // 최신 포스터4개를 표시
+  const latestPostList = postList.slice(0, 4)
+
   return (
     <section className="mx-auto mt-12 w-full max-w-[950px] px-4">
       <CategoryList
@@ -25,12 +28,13 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         currentCategory={category}
       />
       <section>
-        <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-          {postList.map((post) => (
+        <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 h-[30vw]">
+          {latestPostList.map((post, index) => (
             <PostCard
               key={post.url + post.date}
               language={language}
               post={post}
+              index={index}
             />
           ))}
         </ul>
