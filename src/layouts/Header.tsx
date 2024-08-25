@@ -22,7 +22,7 @@ export const Header = () => {
     >
       <div className="mt-1 flex h-[64px] w-full max-w-[1200px] items-center justify-between px-4">
         <div className="flex items-center text-lg font-medium">
-          <Link href={`/blog/${currentLanguage}/`}>CM</Link>
+          <Link href={`/blog/${currentLanguage}/`}>mintora</Link>
         </div>
         <div className="flex gap-3">
           <ThemeSwitch />
