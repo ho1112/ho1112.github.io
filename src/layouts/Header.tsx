@@ -5,12 +5,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useScrollTracker } from '@/hook/useScrollTracker'
 import ThemeSwitch from '@/layouts/theme/Switch'
+import { cn } from '@/lib/utils'
 import ScrollProgressBar from '@/components/common/ScrollProgressBar'
 import { Button } from '@/components/ui/button'
 import { Language } from './theme/Language'
 
 export const Header = () => {
-  const { ref, transform } = useScrollTracker(60)
+  const { ref, transform, currentScrollTop } = useScrollTracker(60)
   const pathname = usePathname()
   const currentLanguage = pathname.startsWith('/blog/ko') ? 'ko' : 'ja'
 
@@ -19,7 +20,10 @@ export const Header = () => {
       <nav
         style={{ transform }}
         ref={ref}
-        className="fixed z-40 flex w-full flex-col items-center justify-center border-b bg-background shadow-sm"
+        className={cn(
+          'fixed z-40 flex w-full flex-col items-center justify-center bg-background',
+          { 'border-b shadow-md': currentScrollTop > 48 },
+        )}
       >
         <div className="mt-1 flex h-[60px] w-full max-w-[1200px] items-center justify-between px-4">
           <div className="flex items-center text-lg font-medium">

@@ -36,7 +36,8 @@ const CategoryList = ({
 
   return (
     <>
-      <section className="mb-10 hidden sm:block">
+      {/* pc */}
+      <section className="mx-auto mb-10 hidden sm:block max-w-[1068px]">
         <ul className="flex gap-3">
           <CategoryButton
             href={`/blog/${language}/`}
@@ -55,6 +56,7 @@ const CategoryList = ({
           ))}
         </ul>
       </section>
+      {/* sp */}
       <section className="mb-10 sm:hidden">
         <Select onValueChange={onCategoryChange} defaultValue={currentCategory}>
           <SelectTrigger className="w-[180px]">
