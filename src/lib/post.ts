@@ -110,6 +110,7 @@ export const getCategoryList = () => {
   return cgList
 }
 
+// *폐지예정_작성된 post들의 카테고리 취득
 export const getCategoryDetailList = async (language: string) => {
   const postList = await getPostList(language)
   const result: { [key: string]: number } = {}

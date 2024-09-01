@@ -5,7 +5,7 @@ interface Props {
   isCurrent: boolean
   displayName: string
   href: string
-  count: number
+  count?: number
 }
 
 export const CategoryButton = ({
@@ -18,7 +18,7 @@ export const CategoryButton = ({
     <li>
       <Button asChild size="sm" variant={isCurrent ? 'default' : 'ghost'}>
         <Link href={href}>
-          {displayName} ({count})
+          {displayName} {count && `(${count})`}
         </Link>
       </Button>
     </li>

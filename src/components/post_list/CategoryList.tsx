@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { CategoryButton } from './CategoryButton'
+import { CategoryExpandableMenu } from './CategoryExpandableMenu'
 
 interface CategoryListProps {
   language: string
@@ -38,22 +39,39 @@ const CategoryList = ({
     <>
       {/* pc */}
       <section className="mx-auto mb-10 px-4 hidden sm:block max-w-[1068px]">
-        <ul className="flex gap-3">
+        <ul className="flex gap-8">
           <CategoryButton
             href={`/blog/${language}/`}
             isCurrent={currentCategory === 'all'}
-            displayName="All"
-            count={allPostCount}
+            displayName="HOME"
+            // count={allPostCount}
           />
-          {categoryList.map((cg) => (
-            <CategoryButton
-              key={cg.dirName}
-              href={`/blog/${language}/${cg.dirName}/`}
-              displayName={cg.publicName}
-              isCurrent={cg.dirName === currentCategory}
-              count={cg.count}
-            />
-          ))}
+          <CategoryButton
+            href={`/blog/${language}/weekly/`}
+            isCurrent={currentCategory === 'weekly'}
+            displayName="weekly"
+          />
+          <CategoryExpandableMenu
+            displayName="webDev"
+            isCurrent={currentCategory === 'webDev'}
+            subCategories={[
+              { subName: 'workLog', displayName: 'workLog', language },
+              { subName: 'releaseNote', displayName: 'releaseNote', language },
+              { subName: 'FE', displayName: 'FE', language },
+              { subName: 'DevOps', displayName: 'DevOps', language },
+              { subName: 'techStory', displayName: 'techStory', language },
+            ]}
+          />
+          <CategoryButton
+            href={`/blog/${language}/blog/`}
+            isCurrent={currentCategory === 'blog'}
+            displayName="blog"
+          />
+          <CategoryButton
+            href={`/blog/${language}/codeLab/`}
+            isCurrent={currentCategory === 'codeLab'}
+            displayName="codeLab"
+          />
         </ul>
       </section>
       {/* sp */}
