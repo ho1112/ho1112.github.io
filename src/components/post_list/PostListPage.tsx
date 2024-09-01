@@ -21,7 +21,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
   return (
     <>
-      <section className="h-[48px] py-1 border-b shadow-md">
+      <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
         <CategoryList
           language={language}
           allPostCount={allPostCount}
@@ -29,7 +29,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           currentCategory={category}
         />
       </section>
-      <section className="mt-4 mx-auto w-full max-w-[1068px]">
+      <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
         <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 h-[30vw]">
           {latestPostList.map((post, index) => (
             <PostCard
