@@ -39,7 +39,7 @@ const CategoryList = ({
     <>
       {/* pc */}
       <section className="mx-auto mb-10 px-4 hidden sm:block max-w-[1068px]">
-        <ul className="flex gap-8">
+        <ul className="flex gap-8 text-base font-bold">
           <CategoryButton
             href={`/blog/${language}/`}
             isCurrent={currentCategory === 'all'}
