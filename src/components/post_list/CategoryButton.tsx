@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '../ui/button'
+import { cn } from '@/lib/utils'
 
 interface Props {
   isCurrent: boolean
@@ -15,12 +15,19 @@ export const CategoryButton = ({
   count,
 }: Props) => {
   return (
-    <li>
-      <Button asChild size="sm" variant={isCurrent ? 'default' : 'ghost'}>
+    <div>
+      <button
+        className={cn(
+          'pt-2 pb-2 px-4 hover:border-b-[3px] hover:border-chomin-light',
+          {
+            'border-b-[3px] border-chomin-light': isCurrent,
+          },
+        )}
+      >
         <Link href={href}>
           {displayName} {count && `(${count})`}
         </Link>
-      </Button>
-    </li>
+      </button>
+    </div>
   )
 }
