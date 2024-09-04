@@ -14,7 +14,6 @@ import { Header } from '@/layouts/Header'
 import { ThemeProvider } from '@/layouts/theme/Provider'
 import { getLanguageFromCookie } from '@/utils/cookies'
 import { Toaster } from '@/components/ui/toaster'
-import 'material-icons/iconfont/material-icons.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseDomain),

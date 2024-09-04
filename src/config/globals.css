@@ -1,4 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css');
+@import 'material-icons/iconfont/material-icons.css';
 
 @tailwind base;
 @tailwind components;
@@ -12,6 +13,11 @@
     @apply bg-background text-foreground;
     font-family: 'Pretendard';
   }
+}
+
+.mcon {
+  font-family: 'Material Icons';
+  font-style: normal;
 }
 
 :root {

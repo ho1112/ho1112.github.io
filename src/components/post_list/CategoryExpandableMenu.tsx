@@ -26,7 +26,7 @@ export const CategoryExpandableMenu = ({
         )}
       >
         {displayName}
-        <i className="material-icons absolute align-top">arrow_drop_down</i>
+        <i className="mcon absolute align-top">arrow_drop_down</i>
       </button>
       <ul
         className="absolute z-10 bg-white shadow-lg

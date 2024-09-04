@@ -8,13 +8,13 @@ interface Props {
 
 /**
  * 目次
+ * ~1279px
  */
 const TableOfContentTop = ({ toc }: Props) => {
   if (toc.length === 0) return null
 
   return (
     <nav className="xl:hidden">
-      <h2 id="table-of-contents-top">On this page</h2>
       <ul>
         {toc.map((item) => (
           <li
