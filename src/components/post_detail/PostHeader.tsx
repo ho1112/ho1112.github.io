@@ -44,7 +44,6 @@ export const PostHeader = ({ language, post }: Props) => {
           <HitsOfPost url={post.url} />
         </div>
       </div>
-      <hr className="mt-5" />
     </header>
   )
 }

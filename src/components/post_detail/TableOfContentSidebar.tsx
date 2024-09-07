@@ -41,11 +41,11 @@ const TableOfContent = ({ toc }: Props) => {
             })}
           </ul>
         </div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <ScrollTop />
           <ScrollToComment />
           <CopyLinkButton />
-        </div>
+        </div> */}
       </div>
     </aside>
   )
