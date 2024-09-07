@@ -4,7 +4,7 @@ interface Props {
   displayName: string
   isCurrent: boolean
   subCategories: {
-    subName: string
+    value: string
     displayName: string
     language: string
   }[]
@@ -33,9 +33,9 @@ export const CategoryExpandableMenu = ({
         opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300"
       >
         {subCategories.map((sub) => (
-          <li key={sub.subName} className="whitespace-nowrap">
+          <li key={sub.value} className="whitespace-nowrap">
             <a
-              href={`/blog/${sub.language}/${sub.subName}/`}
+              href={`/blog/${sub.language}/${sub.value}/`}
               className="block py-2 px-4 hover:bg-chomin-light"
             >
               {sub.displayName}
