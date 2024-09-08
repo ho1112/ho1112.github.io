@@ -3,7 +3,7 @@ export const baseDomain = 'https://ho1112.github.io/'
 export const blogName = 'mintora blog'
 export const blogDesc = '東京の韓国フロントエンド'
 
-export const blogThumbnailURL = `${baseDomain}/blog_thumbnail.webp`
+export const blogThumbnailURL = `${baseDomain}/meritt-thomas.jpg`
 
 export const languages = ['ko', 'ja']
 
