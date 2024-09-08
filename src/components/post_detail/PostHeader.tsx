@@ -13,8 +13,7 @@ export const PostHeader = ({ language, post }: Props) => {
   const t = getLanguageText(language, 'postHeader')
 
   return (
-    <header className="mt-14 text-center">
-      <h1 className="mb-5 text-3xl">{post.title}</h1>
+    <header className="mt-14">
       <div className="mb-3 text-base">
         <Link
           href={`/blog/${language}/${post.categoryPath}`}
@@ -23,7 +22,8 @@ export const PostHeader = ({ language, post }: Props) => {
           {post.categoryPublicName}
         </Link>
       </div>
-      <div className="flex justify-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+      <h1 className="mb-5 text-4xl md:text-5xl">{post.title}</h1>
+      <div className="flex gap-3 text-sm text-gray-500 dark:text-gray-400">
         <div className="flex items-center gap-1">
           <CalendarDays className="w-3.5" />
           <span>

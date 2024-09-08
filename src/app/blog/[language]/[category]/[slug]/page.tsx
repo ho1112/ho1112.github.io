@@ -74,14 +74,14 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
         className="bg-cover bg-no-repeat bg-center relative w-full h-[550px]"
         style={{ backgroundImage: `url(${imageURL})` }}
       >
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[750px] mx-auto px-5 sm:px-6 prose dark:prose-invert bg-background">
+        <div className="prose dark:prose-invert absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[750px] mx-auto px-5 sm:px-6 bg-background">
           <div className=" px-5 py-3">
             <PostHeader language={language} post={post} />
           </div>
         </div>
       </div>
       {/* content */}
-      <div className="relative mx-auto w-full max-w-[750px] px-5 sm:px-6 prose dark:prose-invert ">
+      <div className="prose dark:prose-invert relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
         <TocTop toc={toc} />
         <article className="relative">
           <TocSidebar toc={toc} />
