@@ -42,13 +42,13 @@ const CategoryList = ({
       displayName: 'HOME',
       value: 'all',
       isCurrent: currentCategory === 'all',
-      href: `/blog/`,
+      href: `/blog/${language}/`,
     },
     {
       displayName: 'weekly',
       value: 'weekly',
       isCurrent: currentCategory === 'weekly',
-      href: `/blog/weekly/`,
+      href: `/blog/${language}/weekly/`,
     },
     {
       displayName: 'webDev',
@@ -66,13 +66,13 @@ const CategoryList = ({
       displayName: 'blog',
       value: 'blog',
       isCurrent: currentCategory === 'blog',
-      href: `/blog/blog/`,
+      href: `/blog/${language}/blog/`,
     },
     {
       displayName: 'codeLab',
       value: 'codeLab',
       isCurrent: currentCategory === 'codeLab',
-      href: `/blog/codeLab/`,
+      href: `/blog/${language}/codeLab/`,
     },
   ]
 
