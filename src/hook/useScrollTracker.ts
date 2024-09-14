@@ -7,6 +7,7 @@ export const useScrollTracker = (elemHeight: number) => {
   const ref = useRef<HTMLDivElement>(null)
   // elem의 marginTop. 스크롤에 따라 동적으로 변함
   const [transform, setTransform] = useState('translateY(0)')
+  const [currentScrollTop, setCurrentScrollTop] = useState(0)
 
   // 스크롤이 일어나기 직전의 scroll top. scroll 방향
   const prevScrollTop = useRef(0)
@@ -16,24 +17,25 @@ export const useScrollTracker = (elemHeight: number) => {
   const transitionPoint = useRef(elemHeight)
 
   const onScroll = useCallback(() => {
-    let currScrollTop =
+    let currentScrollTop =
       document?.documentElement?.scrollTop || document?.body?.scrollTop || 0
 
     // 스크롤 위치가 음수일 경우 0으로 설정(safari의 바운스 효과 방지)
-    if (currScrollTop < 0) {
-      currScrollTop = 0
+    if (currentScrollTop < 0) {
+      currentScrollTop = 0
     }
 
-    const nextDirection = prevScrollTop.current > currScrollTop ? 'UP' : 'DOWN'
+    const nextDirection =
+      prevScrollTop.current > currentScrollTop ? 'UP' : 'DOWN'
 
     const isUpTransition =
       prevDirection.current === 'DOWN' && nextDirection === 'UP'
     const isDownTransition =
       prevDirection.current === 'UP' && nextDirection === 'DOWN'
 
-    const NextBottomPoint = currScrollTop + elemHeight
+    const NextBottomPoint = currentScrollTop + elemHeight
 
-    if (isUpTransition && transitionPoint.current < currScrollTop) {
+    if (isUpTransition && transitionPoint.current < currentScrollTop) {
       transitionPoint.current = prevScrollTop.current
     }
 
@@ -46,10 +48,11 @@ export const useScrollTracker = (elemHeight: number) => {
       Math.max(-elemHeight, transitionPoint.current - NextBottomPoint),
     )}px)`
     setTransform(newTransform)
+    setCurrentScrollTop(currentScrollTop)
 
     // 이벤트가 마무리된 시점. 현재 값을 prev에 저장
     prevDirection.current = nextDirection
-    prevScrollTop.current = currScrollTop
+    prevScrollTop.current = currentScrollTop
   }, [elemHeight])
 
   // 중간 지점에서 새로고침시 transition point를 해당 지점으로 초기화
@@ -68,5 +71,5 @@ export const useScrollTracker = (elemHeight: number) => {
     }
   }, [onScroll])
 
-  return { ref, transform }
+  return { ref, transform, currentScrollTop }
 }

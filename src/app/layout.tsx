@@ -47,6 +47,7 @@ export default function RootLayout({
       className="h-full scroll-my-20 scroll-smooth"
       suppressHydrationWarning
     >
+      <link rel="icon" type="image/x-icon" href="/icon/m_favicon.png" />
       <body className="font-pretendard flex min-h-screen flex-col">
         <ThemeProvider>
           <Header />

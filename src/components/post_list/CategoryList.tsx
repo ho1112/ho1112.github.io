@@ -1,15 +1,10 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { CategoryDetail } from '@/config/types'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { CategoryButton } from './CategoryButton'
+import { CategoryExpandableMenu } from './CategoryExpandableMenu'
 
 interface CategoryListProps {
   language: string
@@ -25,6 +20,8 @@ const CategoryList = ({
   currentCategory = 'all',
 }: CategoryListProps) => {
   const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedValue, setSelectedValue] = useState(currentCategory)
 
   const onCategoryChange = (value: string) => {
     if (value === 'all') {
@@ -34,41 +31,135 @@ const CategoryList = ({
     }
   }
 
+  const handleSelect = (value: string) => {
+    setSelectedValue(value)
+    onCategoryChange(value)
+    setIsOpen(false)
+  }
+
+  const categories = [
+    {
+      displayName: 'HOME',
+      value: 'all',
+      isCurrent: currentCategory === 'all',
+      href: `/blog/${language}/`,
+    },
+    {
+      displayName: 'weekly',
+      value: 'weekly',
+      isCurrent: currentCategory === 'weekly',
+      href: `/blog/${language}/weekly/`,
+    },
+    {
+      displayName: 'webDev',
+      value: 'webDev',
+      isCurrent: currentCategory === 'webDev',
+      subCategories: [
+        { value: 'workLog', displayName: 'workLog', language },
+        { value: 'releaseNote', displayName: 'releaseNote', language },
+        { value: 'FE', displayName: 'FE', language },
+        { value: 'DevOps', displayName: 'DevOps', language },
+        { value: 'techStory', displayName: 'techStory', language },
+      ],
+    },
+    {
+      displayName: 'blog',
+      value: 'blog',
+      isCurrent: currentCategory === 'blog',
+      href: `/blog/${language}/blog/`,
+    },
+    {
+      displayName: 'codeLab',
+      value: 'codeLab',
+      isCurrent: currentCategory === 'codeLab',
+      href: `/blog/${language}/codeLab/`,
+    },
+  ]
+
   return (
     <>
-      <section className="mb-10 hidden sm:block">
-        <ul className="flex gap-3">
-          <CategoryButton
-            href={`/blog/${language}/`}
-            isCurrent={currentCategory === 'all'}
-            displayName="All"
-            count={allPostCount}
-          />
-          {categoryList.map((cg) => (
-            <CategoryButton
-              key={cg.dirName}
-              href={`/blog/${language}/${cg.dirName}/`}
-              displayName={cg.publicName}
-              isCurrent={cg.dirName === currentCategory}
-              count={cg.count}
-            />
-          ))}
+      {/* pc */}
+      <section className="mx-auto mb-10 px-4 hidden sm:block max-w-[1068px]">
+        <ul className="flex gap-8 text-base font-bold">
+          {categories.map((category) =>
+            category.subCategories ? (
+              <CategoryExpandableMenu
+                key={category.displayName}
+                displayName={category.displayName}
+                isCurrent={category.isCurrent}
+                subCategories={category.subCategories}
+              />
+            ) : (
+              <CategoryButton
+                key={category.displayName}
+                href={category.href}
+                isCurrent={category.isCurrent}
+                displayName={category.displayName}
+              />
+            ),
+          )}
         </ul>
       </section>
-      <section className="mb-10 sm:hidden">
-        <Select onValueChange={onCategoryChange} defaultValue={currentCategory}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Theme" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All ({allPostCount})</SelectItem>
-            {categoryList.map((cg) => (
-              <SelectItem key={cg.dirName} value={cg.dirName}>
-                {cg.publicName} ({cg.count})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      {/* sp */}
+      <section className="mb-10 px-4 sm:hidden">
+        <div className="relative inline-block w-64">
+          {/* 드롭다운 트리거 */}
+          <div
+            className="flex justify-between items-center bg-white border border-gray-300 p-3 rounded-md cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <span>{selectedValue === 'all' ? 'HOME' : selectedValue}</span>
+            <svg
+              className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+          {/* 드롭다운 목록 */}
+          {isOpen && (
+            <ul className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              {categories.map((category) =>
+                category.subCategories ? (
+                  <>
+                    <li
+                      key={category.value}
+                      className="flex items-center leading-initial px-2 hover:bg-gray-200"
+                    >
+                      {category.value}
+                      <i className="mcon align-top text-3xl">arrow_drop_down</i>
+                    </li>
+                    <ul className="ml-4">
+                      {category.subCategories.map((subCategory) => (
+                        <li
+                          className="p-2 hover:bg-gray-200 cursor-pointer"
+                          onClick={() => handleSelect(subCategory.value)}
+                        >
+                          {subCategory.displayName}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <li
+                    key={category.value}
+                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => handleSelect(category.value)}
+                  >
+                    {category.displayName}
+                  </li>
+                ),
+              )}
+            </ul>
+          )}
+        </div>
       </section>
     </>
   )

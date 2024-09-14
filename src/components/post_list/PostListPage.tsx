@@ -20,14 +20,16 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   const latestPostList = postList.slice(0, 4)
 
   return (
-    <section className="mx-auto mt-12 w-full max-w-[950px] px-4">
-      <CategoryList
-        language={language}
-        allPostCount={allPostCount}
-        categoryList={categoryList}
-        currentCategory={category}
-      />
-      <section>
+    <>
+      <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
+        <CategoryList
+          language={language}
+          allPostCount={allPostCount}
+          categoryList={categoryList}
+          currentCategory={category}
+        />
+      </section>
+      <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
         <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 h-[30vw]">
           {latestPostList.map((post, index) => (
             <PostCard
@@ -39,7 +41,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           ))}
         </ul>
       </section>
-    </section>
+    </>
   )
 }
 

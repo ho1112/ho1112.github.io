@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import { baseDomain, languages } from '@/config/constant'
 import {
   getPostDetail,
@@ -26,7 +27,7 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const post = await getPostDetail(language, category, slug)
 
-  const title = `${post.title} | choco-mint`
+  const title = `${post.title} | mintora`
   const imageURL = `${baseDomain}${post.thumbnail}`
 
   return {
@@ -64,19 +65,33 @@ export function generateStaticParams() {
 const PostDetail = async ({ params: { language, category, slug } }: Props) => {
   const post = await getPostDetail(language, category, slug)
   const toc = parseToc(post.content)
+  const imageURL = `${post.thumbnail}`
 
   return (
-    <div className="prose mx-auto w-full max-w-[750px] px-5 dark:prose-invert sm:px-6">
-      <PostHeader language={language} post={post} />
-      <TocTop toc={toc} />
-      <article className="relative">
-        <TocSidebar toc={toc} />
-        <PostBody post={post} />
-      </article>
-      <hr />
-      <Giscus language={language} />
-      <FloatingButton />
-    </div>
+    <>
+      {/* image + header */}
+      <div
+        className="bg-cover bg-no-repeat bg-center relative w-full h-[550px]"
+        style={{ backgroundImage: `url(${imageURL})` }}
+      >
+        <div className="prose dark:prose-invert absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[750px] mx-auto px-5 sm:px-6 bg-background">
+          <div className=" px-5 py-3">
+            <PostHeader language={language} post={post} />
+          </div>
+        </div>
+      </div>
+      {/* content */}
+      <div className="prose dark:prose-invert relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
+        <TocTop toc={toc} />
+        <article className="relative">
+          <TocSidebar toc={toc} />
+          <PostBody post={post} />
+        </article>
+        <hr />
+        <Giscus language={language} />
+        <FloatingButton />
+      </div>
+    </>
   )
 }
 

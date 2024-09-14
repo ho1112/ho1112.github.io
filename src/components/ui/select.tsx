@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
+// 삭제후보
 const Select = SelectPrimitive.Root
 
 const SelectGroup = SelectPrimitive.Group

@@ -38,8 +38,8 @@ export const Footer = () => {
         />
       </a>
       <div>
-        © {dayjs().year()} <span className="font-semibold">Hoyeon LEE</span>{' '}
-        all rights reserved.
+        © {dayjs().year()} <span className="font-semibold">Hoyeon LEE</span> |
+        Powered by Next.js, GitHub Pages
       </div>
     </footer>
   )
