@@ -5,11 +5,7 @@ date: 2024-09-28
 thumbnail: /meritt-thomas.jpg
 ---
 
-<Callout type="info">
-test info
-</Callout>
-
-## Next.js 13
+<h1>Next.js 13</h1>
 
 Next.js Conf 에서 발표했듯이Next.js 13(안정 버전)은 제한 없이 동적으로 작업할 수 있는 기반을 마련합니다.
 
@@ -26,7 +22,7 @@ Next.js 13과 pages디렉토리는 안정적이며 프로덕션에 사용할 준
 ```bash
 npm i next@latest react@latest react-dom@latest eslint-config-next@latest
 ```
-
+---
 ## New app 디렉토리 (베타)
 오늘 우리는 Next.js에서 라우팅과 레이아웃 경험을 개선하고 `app`디렉토리 도입을 통해 React의 미래와 방향을 맞추고 있습니다. 이는 이전에 커뮤니티 피드백을 위해 공개된 [Layouts RFC](https://nextjs.org/blog/layouts-rfc)의 후속 작업입니다.
 
@@ -70,6 +66,85 @@ export default function BlogLayout({ children }) {
 경로가 로드될 때 Next.js와 React 런타임이 로드되며 이는 캐시 가능하고 크기를 예측할 수 있습니다. 이 런타임은 애플리케이션 성장함에 따라 크기가 증가하지 않습니다. 또한 비동기적으로 로드되어 서버에서 전달된 HTML이 클라이언트에서 점진적으로 개선될 수 있도록 합니다.
 
 [서버 컴포넌트](https://nextjs.org/docs/app/building-your-application/rendering/server-components)에 대해 자세히 알아보거나, [예제를 배포하여 사용](https://vercel.com/templates/next.js/app-directory)해 보세요."
+
+## 스트리밍
+`app/`디렉토리는 UI유닛을 점진적으로 렌더링하고 스트리밍할 수 있는 기능을 클라이언트에 도입합니다
+
+서버 컴포넌트와 Next.js의 [중첩 레이아웃](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts)을 사용하면 특별히 데이터가 필요하지 않은 페이지의 일부를 즉시 렌더링하고 데이터를 가져오는 페이지 일부에 [로딩 상태](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)를 표시할 수 있습니다. 이 접근 방식을 사용하면 사용자가 전체 페이지가 로딩될 때까지 기다릴 필요가 없습니다.
+
+![컴포넌트, 테스트 및 스타일과 같은 애플리케이션 코드를 경로에 함께 배치할 수 있습니다.](/posts/releaseNote/next13/streaming.avif)
+
+Vercel에 배포하면 `app/`디렉토리를 사용하는 Next.js 13 애플리케이션이 Node.js 및 Edge 런타임 모두에서 기본적으로 응답을 스트리밍하여 성능을 개선합니다.
+
+[스트리밍](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming#what-is-streaming)에 대해 자세히 알아보거나 [예제를 배포하여 사용](https://vercel.com/templates/next.js/app-directory)해 보세요.
+
+## 데이터 페칭
+React의 최근 [Promises RFC 서포트](https://github.com/acdlite/rfcs/blob/first-class-promises/text/0000-first-class-support-for-promises.md)는 컴포넌트 내에서 **데이터를 가져오고 Promise를 처리하는 강력한 새로운 방법**을 도입했습니다.
+```javascript
+// app/page.js
+async function getData() {
+  const res = await fetch('https://api.example.com/...');
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+  return res.json();
+}
+
+// This is an async Server Component
+export default async function Page() {
+  const data = await getData();
+
+  return <main>{/* ... */}</main>;
+}
+```
+네이티브 fetch 웹 API는 React 및 Next.js에서도 확장되었습니다. [자동으로 페치 요청을 중복 제거](https://nextjs.org/docs/app/api-reference/functions/fetch)하고 컴포넌트 수준에서 데이터를 페치, 캐시 및 재검증할 수 있는 유연한 방법을 제공합니다. 이제 하나의 API를 통해 정적 사이트 생성(SSG), 서버사이드 렌더링(SSR) 및 증분 정적 재생성(ISR)의 모든 이점을 이용할 수 있습니다:
+```javascript
+// This request should be cached until manually invalidated.
+// Similar to `getStaticProps`.
+// `force-cache` is the default and can be omitted.
+fetch(URL, { cache: 'force-cache' });
+
+// This request should be refetched on every request.
+// Similar to `getServerSideProps`.
+fetch(URL, { cache: 'no-store' });
+
+// This request should be cached with a lifetime of 10 seconds.
+// Similar to `getStaticProps` with the `revalidate` option.
+fetch(URL, { next: { revalidate: 10 } });
+```
+`app`디렉토리에서는 [레이아웃, 페이지](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) 그리고 컴포넌트 내에서 데이터를 가져올 수 있으며 서버에서의 [스트리밍 응답](https://nextjs.org/blog/next-13#streaming)도 지원됩니다.
+
+로딩 및 오류 상태를 처리하고 UI가 렌더링될 때 스트리밍하는 인체공학적 방법을 지원하고 있습니다. 향후 릴리스에서는 데이터 변경도 개선하고 간소화할 예정입니다.
+![app/디렉토리를 사용하면 새로운 특수 파일 loading.js를 사용하여 서스펜스 경계가 있는 인스턴트 로딩 UI를 자동으로 생성할 수 있습니다.](/posts/releaseNote/next13/streaming-loading.avif)
+
+우리는 오픈소스 커뮤니티, 패키지 유지 관리자, 그리고 React 생태계에 기여하는 다른 기업들과 협력하여 React와 Next.js의 새로운 시대를 함께 구축하게 되어 매우 기쁩니다. 컴포넌트 내부에서 데이터 페칭을 함께 배치하고 클라이언트로 전송되는 자바스크립트 양을 줄이는 기능은 우리가 `app/`디렉토리에 포함하게 되어 기쁜 두 가지 중요한 커뮤니티 피드백이었습니다.
+[데이터 페칭](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating)에 대해 자세히 알아보거나 [예제를 배포](https://vercel.com/templates/next.js/app-directory)하여 시도해 보세요.
+
+---
+## Turbopack(알파) 도입
+Next.js 13에는 Webpack의 새로운 Rust 기반 후속버전인 Turbopack이 포함되어 있습니다.
+
+Webpack은 **30억 번** 이상 다운로드되었습니다. 웹 개발의 중요한 부분을 차지해왔지만 자바스크립트 기반 도구로 달성할 수 있는 성능의 한계에 도달했습니다.
+
+Next.js 12에서는 네이티브 Rust 기반 도구로 전환을 시작했습니다. 우리는 Babel에서 이전하여 17배 더 빠른 트랜스파일링 속도를 얻었습니다. 그런 다음 Terser를 대체했고 6배 더 빠른 압축 속도를 달성했습니다. 이제 번들링 작업도 완전히 네이티브 방식으로 진행할 때입니다.
+
+Next.js 13과 함께 Turbopack 알파를 사용하면 다음과 같은 결과를 얻을 수 있습니다.
+
+-- Webpack보다 **700배 빠른** 업데이트
+-- Vite보다 **10배** 빠른** 업데이트
+-- Webpack보다 **4배 빠른** 콜드 스타트
+![Turbopack은 Webpack의 Rust 기반 후속 버전으로, 대규모 애플리케이션을 위한 700배 더 빠른 HMR을 제공합니다.
+](/posts/releaseNote/next13/turbopack.avif)
+
+[Turbopack](https://turbo.build/pack)은 개발 환경에서 필요한 최소한의 에셋만 번들링하므로 시작 시간이 매우 빠릅니다. 3,000개의 모듈을 가진 애플리케이션에서 Turbopack은 1.8초 만에 부팅됩니다. Vite는 11.4초, Webpack은 16.5초가 걸립니다.
+Turbopack은 서버 컴포넌트, TypeScript, JSX, CSS 등 다양한 기능을 기본적으로 지원합니다. 알파 버전에서는 아직 [많은 기능](https://turbo.build/pack/docs/features)이 지원되지 않지만 로컬 반복 작업 속도를 높이기 위해 Turbopack을 사용한 피드백을 듣고 싶습니다.
+
+>참조: Next.js에서 Turbopack은 현재 `next dev`만 지원합니다. [지원되는 기능](https://turbo.build/pack/docs/features)을 확인하세요. `next build`에 대한 Turbopack 지원도 추가할 예정입니다.
+
+Next.js 13에서 `next dev --turbo`로 Turbopack 알파 버전을 오늘 시도해보세요.
+
+---
+
+## next/image
 
 
 
