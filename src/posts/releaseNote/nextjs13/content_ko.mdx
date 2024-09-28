@@ -1,0 +1,75 @@
+---
+title: 'Next.js 13(번역)'
+desc: 설명
+date: 2024-09-28
+thumbnail: /meritt-thomas.jpg
+---
+
+<Callout type="info">
+test info
+</Callout>
+
+## Next.js 13
+
+Next.js Conf 에서 발표했듯이Next.js 13(안정 버전)은 제한 없이 동적으로 작업할 수 있는 기반을 마련합니다.
+
+- [app디렉토리(베타)](https://nextjs.org/blog/next-13#new-app-directory-beta): 더 쉽고 빠르며 클라이언트 JS가 적습니다.
+  * [레이아웃](https://nextjs.org/blog/next-13#layouts)
+  * [React 서버 컴포넌트](https://nextjs.org/blog/next-13#server-components)
+  * [스트리밍](https://nextjs.org/blog/next-13#streaming)
+- [Turbopack(알파)](https://nextjs.org/blog/next-13#introducing-turbopack-alpha): Rust 기반 Webpack보다 최대 700배 더 빠름.
+- [새로운 기능 next/image](https://nextjs.org/blog/next-13#nextimage): 네이티브 브라우저의 지연 로딩으로 속도가 더 빨라졌습니다.
+- [새로운 기능 @next/font(베타)](https://nextjs.org/blog/next-13#nextfont): 레이아웃을 전혀 변경하지 않고 자동으로 자체 호스팅되는 글꼴입니다.
+- [개선 사항 next/link](https://nextjs.org/blog/next-13#breaking-changes): 자동화된 .API를 단순화했습니다. \<a\>.
+
+Next.js 13과 pages디렉토리는 안정적이며 프로덕션에 사용할 준비가 되었습니다. 오늘 실행하여 업데이트하세요.
+```bash
+npm i next@latest react@latest react-dom@latest eslint-config-next@latest
+```
+
+## New app 디렉토리 (베타)
+오늘 우리는 Next.js에서 라우팅과 레이아웃 경험을 개선하고 `app`디렉토리 도입을 통해 React의 미래와 방향을 맞추고 있습니다. 이는 이전에 커뮤니티 피드백을 위해 공개된 [Layouts RFC](https://nextjs.org/blog/layouts-rfc)의 후속 작업입니다.
+
+`app` 디렉토리는 현재 베타 단계에 있으며 아직 프로덕션 환경에서 사용하는 것을 권장하지 않습니다. Next.js 13은 `pages` 디렉터리와 함께 사용할 수 있으며 개선된 next/image 및 next/link 컴포넌트와 같은 안정적인 기능을 사용할 수 있습니다. `app` 디렉토리로는 필요에 따라 점진적으로 전환할 수 있습니다. `pages` 디렉토리는 당분간 계속 지원될 예정입니다.
+
+`app`디렉토리는 다음과 같은 기능을 지원합니다:
+- 레이아웃: 상태를 유지하면서 경로 간 UI를 쉽게 공유하고 불필요한 재렌더링을 방지합니다.
+- 서버 컴포넌트: 가장 동적인 애플리케이션에서도 서버 우선 방식을 기본으로 사용합니다.
+- 스트리밍: 즉시 로딩 상태를 표시하고 렌더링된 UI 단위로 스트리밍합니다.
+- 데이터 패칭 지원: 비동기 서버 컴포넌트와 확장된 fetch API를 통해 컴포넌트 단위의 데이터 패칭을 지원합니다.
+---
+![`app`디렉토리는 기존의 pages/ 디렉터리에서 점진적으로 도입할 수 있습니다.](/posts/releaseNote/next13/app-folder.avif)
+
+## 레이아웃
+`app/`디렉토리를 사용하면 네비게이션 전반에 걸쳐 상태를 유지하고 비용이 많이 드는 재렌더링을 피하고 고급 라우팅 패턴을 사용할 수 있습니다. 또한 레이아웃을 중첩할 수 있고 컴포넌트, 테스트 및 스타일과 같은 애플리케이션 코드를 경로와 함께 배치할 수 있습니다.
+![`app/`디렉토리는 기존의 pages/ 디렉터리에서 점진적으로 도입할 수 있습니다.](/posts/releaseNote/next13/colocating-assets-in-the-app-directory.avif)
+
+`app/` 내부에서 경로를 만들려면 `page.js`라는 단일 파일이 필요합니다:
+
+```javascript
+// app/page.js
+// This file maps to the index route (/)
+export default function Page() {
+  return <h1>Hello, Next.js!</h1>;
+}
+```
+그런 다음 파일 시스템을 통해 **레이아웃을 정의**할 수 있습니다. 레이아웃은 여러 페이지 간 UI를 공유합니다. 탐색 시 레이아웃은 상태를 유지하고 상호작용을 계속하며 재렌더링되지 않습니다
+```javascript
+// app/blog/layout.js
+export default function BlogLayout({ children }) {
+  return <section>{children}</section>;
+}
+```
+[레이아웃과 페이지](https://nextjs.org/docs/app/building-your-application/routing)에 대해 자세히 알아보거나 [예제를 배포하여 사용](https://vercel.com/templates/next.js/app-directory)해 보세요.
+
+## 서버 컴포넌트
+`app/`디렉토리는 React의 새로운 서버 컴포넌트 아키텍처를 지원합니다. 서버와 클라이언트 컴포넌트는 각각 서버와 클라이언트가 가장 잘하는 작업을 수행하도록 하여, 훌륭한 개발자 경험을 제공하는 단일 프로그래밍 모델로 빠르고 상호작용이 뛰어난 애플리케이션을 구축할 수 있게 해줍니다.
+
+서버 컴포넌트를 통해 복잡한 인터페이스를 구축하면서 클라이언트로 전송되는 자바스크립트 양을 줄여 초기 페이지 로드를 더욱 빠르게 할 수 있습니다.
+
+경로가 로드될 때 Next.js와 React 런타임이 로드되며 이는 캐시 가능하고 크기를 예측할 수 있습니다. 이 런타임은 애플리케이션 성장함에 따라 크기가 증가하지 않습니다. 또한 비동기적으로 로드되어 서버에서 전달된 HTML이 클라이언트에서 점진적으로 개선될 수 있도록 합니다.
+
+[서버 컴포넌트](https://nextjs.org/docs/app/building-your-application/rendering/server-components)에 대해 자세히 알아보거나, [예제를 배포하여 사용](https://vercel.com/templates/next.js/app-directory)해 보세요."
+
+
+
