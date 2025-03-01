@@ -22,7 +22,6 @@ const CategoryList = ({
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState(currentCategory)
-
   const onCategoryChange = (value: string) => {
     if (value === 'all') {
       router.push(`/blog/${language}/`)

@@ -1,0 +1,365 @@
+---
+title: 'Next.js 13(翻訳)'
+desc: 설명
+date: 2024-09-28
+thumbnail: /meritt-thomas.jpg
+---
+
+<h1>Next.js 13</h1>
+
+Next.js Confで発表された通り、Next.js 13（安定版）は制限なく動的に作業できる基盤を提供します。
+
+- [appディレクトリ（ベータ）](https://nextjs.org/blog/next-13#new-app-directory-beta): より簡単で高速、そしてクライアントJSが少なくなります。
+  * [レイアウト](https://nextjs.org/blog/next-13#layouts)
+  * [Reactサーバーコンポーネント](https://nextjs.org/blog/next-13#server-components)
+  * [ストリーミング](https://nextjs.org/blog/next-13#streaming)
+- [Turbopack（アルファ）](https://nextjs.org/blog/next-13#introducing-turbopack-alpha): RustベースのWebpackよりも最大700倍高速です。
+- [新機能 next/image](https://nextjs.org/blog/next-13#nextimage): ネイティブブラウザの遅延ローディングにより、さらに高速です。
+- [新機能 @next/font（ベータ）](https://nextjs.org/blog/next-13#nextfont): レイアウトを全く変更せず、フォントが自動的にセルフホストされます。
+- [改善 next/link](https://nextjs.org/blog/next-13#breaking-changes): 自動化されたAPIが簡素化されました。\<a\>タグが省略されます。
+
+Next.js 13とpagesディレクトリは安定しており、プロダクションで使用する準備ができています。今すぐアップデートを実行してください。
+```bash
+npm i next@latest react@latest react-dom@latest eslint-config-next@latest
+```
+---
+## New app ディレクトリ(ベータ)
+本日、Next.jsにおけるルーティングとレイアウトの体験を改善し`app`ディレクトリの導入によりReactの未来と方向を合わせています。これは以前にコミュニティフィードバックのために公開された[Layouts RFC](https://nextjs.org/blog/layouts-rfc)の後続作業です。
+
+`app`ディレクトリは現在ベータ段階にあり、まだプロダクション環境での使用は推奨されていません。 Next.js 13は`pages`ディレクトリと共存可能でnext/imageやnext/linkコンポーネントのような安定した機能を利用できます。 `app`ディレクトリは必要に応じて段階的に移行できます。 `pages`ディレクトリは当面の間サポートが続く予定です。
+
+`app`ディレクトリでは以下の機能がサポートされています:
+- レイアウト: 状態を保持しつつ、ルート間でUIを簡単に共有し、不要な再レンダリングを防ぎます。
+- サーバーコンポーネント: 最も動的なアプリケーションでも、 最も動的なアプリケーションでも、サーバー優先の方式をデフォルトで採用します。
+- ストリーミング: 即時ローディング状態を表示し、レンダリングされたUI単位でストリーミングします。
+- データフェッチサポート: 非同期サーバー コンポーネントと拡張されたfetch APIにより、コンポーネント単位のデータのフェッチをサポートします。
+---
+![`app`ディレクトリは、既存のpages/ディレクトリから漸進的に導入することができます。](/posts/releaseNote/next13/app-folder.avif)
+
+### レイアウト
+`app/`ディレクトリを使用すると、ナビゲーション全体でステータスを維持し、コストのかかる再レンダリングを回避し、高度なルーティング パターンを使用できます。 また、レイアウトを重ね合わせることができ、コンポーネント、テスト、スタイルなどのアプリケーション コードをパスと一緒に配置できます。
+![`app/`ディレクトリは、既存のpages/ディレクトリから漸進的に導入することができます。](/posts/releaseNote/next13/colocating-assets-in-the-app-directory.avif)
+
+`app/` 内部でパスを作成するには、'page.js'という単一ファイルが必要です:
+
+```javascript
+// app/page.js
+// This file maps to the index route (/)
+export default function Page() {
+  return <h1>Hello, Next.js!</h1>;
+}
+```
+次に、ファイルシステムを使用して、**レイアウトを定義することができます。** レイアウトは複数のページ間のUIを共有します。 探索時、レイアウトは状態を維持し、相互作用を継続し、再レンダリングされません
+```javascript
+// app/blog/layout.js
+export default function BlogLayout({ children }) {
+  return <section>{children}</section>;
+}
+```
+[レイアウトとページ](https://nextjs.org/docs/app/building-your-application/routing)の詳細を学習するか、 [サンプルを展開して試してみる](https://vercel.com/templates/next.js/app-directory)
+
+### サーバーコンポーネント
+`app/`ディレクトリは、Reactの新しいサーバー コンポーネントアーキテクチャをサポートします。 サーバとクライアントのコンポーネントは、それぞれサーバとクライアントが最も得意とするタスクを実行できるようにし、優れた開発者の経験を提供する単一のプログラミングモデルで、高速で高度にインタラクティブなアプリケーションを構築できるようにします。
+
+サーバーコンポーネントを通じて複雑なインターフェースを構築しながら、クライアントに送信されるJavaScriptの量を減らし、初期ページへのロードをより速くすることができます。
+
+パスがロードされるとき、Next.jsとReactランタイムがロードされ、これはキャッシュ可能で大きさを予測することができます。 このランタイムは、アプリケーションが成長するにつれてサイズが増加しません。 また、非同期的にロードされ、サーバーから配信されたHTMLがクライアントで徐々に改善されるようにします。
+
+[サーバーコンポーネント](https://nextjs.org/docs/app/building-your-application/rendering/server-components)の詳細を学習するか、[サンプルを展開して試してみる](https://vercel.com/templates/next.js/app-directory)
+
+### ストリーミング
+`app/`ディレクトリはUIユニットを漸進的にレンダリングしストリーミングできる機能をクライアントに導入します
+
+サーバーコンポーネントとNext.jsの [ネストレイアウト](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts)を使用すると、特にデータを必要としないページの一部をすぐにレンダリングし、データを取得するページの一部に[ローディング状態](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)を表示することができます。 このアプローチを使用すると、ユーザーはページ全体がロードされるまで待つ必要がありません。
+
+![コンポーネント、テスト、スタイルなどのアプリケーションコードを一緒にパスに配置できます。](/posts/releaseNote/next13/streaming.avif)
+
+Vercelにデプロイすると、`app/`ディレクトリを使用するNext.js13アプリケーションがNode.jsとEdgeランタイムの両方で基本的に応答をストリーミングして性能を改善します。
+
+[ストリーミング](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming#what-is-streaming)の詳細を学習するか、 [サンプルを展開して試してみる](https://vercel.com/templates/next.js/app-directory)
+
+### データフェッチ
+Reactの最近[Promises RFCサポート](https://github.com/acdlite/rfcs/blob/first-class-promises/text/0000-first-class-support-for-promises.md)はコンポーネントの中で**データをインポートし、Promiseを処理する強力な新しい方法**を導入しました。
+```javascript
+// app/page.js
+async function getData() {
+  const res = await fetch('https://api.example.com/...');
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+  return res.json();
+}
+
+// This is an async Server Component
+export default async function Page() {
+  const data = await getData();
+
+  return <main>{/* ... */}</main>;
+}
+```
+ネイティブfetchウェブAPIはReact及びNext.jsでも拡張されました。 [自動にフェッチ重複を排除](https://nextjs.org/docs/app/api-reference/functions/fetch)してコンポーネントレベルでデータをフェッチ、キャッシュ、および再検証する柔軟な方法を提供します。 これで、1つのAPIを通じて静的サイト生成(SSG)、サーバーサイドレンダリング(SSR)、および増分静的再生性(ISR)のすべての利点を利用することができます:
+```javascript
+// This request should be cached until manually invalidated.
+// Similar to `getStaticProps`.
+// `force-cache` is the default and can be omitted.
+fetch(URL, { cache: 'force-cache' });
+
+// This request should be refetched on every request.
+// Similar to `getServerSideProps`.
+fetch(URL, { cache: 'no-store' });
+
+// This request should be cached with a lifetime of 10 seconds.
+// Similar to `getStaticProps` with the `revalidate` option.
+fetch(URL, { next: { revalidate: 10 } });
+```
+`app`ディレクトリでは[レイアウト、ページ](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts)そして、コンポーネント内からデータをインポートでき、サーバーからの[ストリーミング応答](https://nextjs.org/blog/next-13#streaming)もサポートされます。
+
+ローディング及びエラー状態を処理し、UIがレンダリングされる時にストリーミングする人体工学的方法を支援しています。 今後のリリースでは、データの変更も改善し、簡素化する予定です。
+![app/ディレクトリを使用すると、新しい特殊ファイルloading.jsを使用してサスペンス境界のあるインスタントローディングUIを自動的に生成することができます。](/posts/releaseNote/next13/streaming-loading.avif)
+
+私たちはオープンソースコミュニティ、パッケージ維持管理者、そしてReact生態系に寄与する他の企業と協力して、ReactとNext.jsの新しい時代を共に構築することができ、大変嬉しく思います。コンポーネント内部でデータフェッチを一緒に配置し、クライアントに送信されるJavaScriptの量を減らす機能は、私たちが`app/`ディレクトリに含めることができて嬉しい2つの重要なコミュニティフィードバックでした。
+[データフェッチ](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating)の詳細を学習するか、 [サンプルを展開して試してみる](https://vercel.com/templates/next.js/app-directory)
+
+---
+## Turbopack(アルファ)導入
+Next.js13にはWebpackの新しいRustベースの後続バージョンであるTurbopackが含まれています。
+
+Webpackは**30億回**以上ダウンロードされました。 ウェブ開発の重要な部分を占めてきましたが、JavaScriptベースのツールで達成できる性能の限界に達しました。
+
+Next.js12では、ネイティブRustベースのツールへの切り替えを開始しました。 私たちはBabelから移転して17倍速いトランスファイリング速度を得ました。 次にTerserを置き換え、その結果、最小化が6倍高速化されました。 バンドリング作業も完全にネイティブ方式で進める時です。
+
+Next.js13と一緒にTurbopackアルファを使用すると、次のような結果が得られます。
+
+-- Webpackより**700倍速い**アップデート
+-- Viteより**10倍**速いアップデート
+-- Webpackより**4倍速い**コールドスタート
+![Turbopackは WebpackのRustペースの後続バージョンで、大規模アプリケーションのための700倍速いHMRを提供します。
+](/posts/releaseNote/next13/turbopack.avif)
+
+[Turbopack](https://turbo.build/pack)は開発環境で必要な最小限のアセットのみをバンドルするため、開始時間は非常に高速です。3,000個のモジュールを持つアプリケーションでは、Turbopackは1.8秒で起動します。 Viteは11.4秒、Webpackは16.5秒かかります。
+Turbopackはサーバーコンポーネント、 TypeScript、 JSX、 CSSなどをすぐにサポートします。 アルファ版では、 まだ[多くの機能](https://turbo.build/pack/docs/features)がサポートされていませんが、ローカル反復作業速度を高めるためにTurbopackを使ったフィードバックを聞きたいです。
+
+<Callout type='border'>
+参照: Next.jsでTurbopackは現在`next dev`のみサポートしています。 [サポートされる機能](https://turbo.build/pack/docs/features)を確認してください。 `next build`に対するTurbopackサポートも追加する予定です。
+</Callout>
+
+Next.js 13の`next dev --turbo`でTurbopackアルファバージョンを試してみましょう。
+
+---
+
+## next/image
+Next.js 13は **強力な新しいイメージ コンポーネント**を導入してレイアウトシフトなしで画像を簡単に表示し、パフォーマンスを向上させるために必要に応じてファイルを最適化できます。
+
+Next.js コミュニティのアンケート調査によると **回答者の70%**がプロダクションでNext.jsイメージコンポーネントを使用し、その結果**Core Web Vitalsが改善**されました。 Next.js13ではnext/imageをもっと改善させました。
+
+新しいイメージコンポーネント:
+- クライアント側でより少ないjavascriptを使用します。
+- スタイルの指定と設定がより簡単になりました。
+- 基本的に`alt`タグを要求し、アクセシビリティが向上しました。
+- ウェブプラットフォームとよりよく合わせられました。
+- ネイティブ遅延ローディングを使用するため、別途のハイドレーション(hydration)が必要なく、より速いです。
+```javascript
+// app/page.js
+import Image from 'next/image';
+import avatar from './lee.png';
+
+export default function Home() {
+  // "alt" is now required for improved accessibility
+  // optional: image files can be colocated inside the app/ directory
+  return <Image alt="leeerob" src={avatar} placeholder="blur" />;
+}
+```
+[イメージコンポーネント](https://nextjs.org/docs/app/building-your-application/optimizing/images)の詳細を学習するか、[サンプルを展開して試してみる](https://vercel.com/templates/next.js/nextjs-boilerplate)
+
+### Next.js 13でnext/imageにアップグレード
+既存のイメージコンポーネントは`next/legacy/image`に変更されました。
+`next/image`で`next/legacy/image`に既存の使用方法を自動的にアップデートできるcodemodを提供しました。
+例えば、このコマンドをルートで実行すると、./pagesディレクトリでcodemodが実行されます。
+
+```bash
+npx @next/codemod next-image-to-legacy-image ./pages
+```
+[codemodについて詳しく調べてみましょう](https://nextjs.org/docs/app/building-your-application/upgrading/codemods)
+
+---
+
+## @next/font
+Next.js 13は**新しフォントシステム**を導入しました:
+
+- カスタムフォントを含むフォントを自動的に最適化します。
+- 外部ネットワーク リクエストを削除して、プライバシーとパフォーマンスを向上させます。
+- すべてのフォントファイルに対して自動的に自己ホストをサポートします。
+- CSSの[size-adjust](https://web.dev/css-size-adjust/)属性を使用してレイアウトシフトを自動的に防ぎます。
+
+この新しいフォントシステムにより、性能と個人情報保護を考慮し、すべてのGoogle Fontsを便利に使用することができます。 CSSとフォントファイルはビルド時にダウンロードされ、残りの静的資産とともに独自にホスティングされます。 **ブラウザからGoogleへのリクエストは送信されません。**
+```javascript
+// app/layout.js / pages/_app.js
+import { Inter } from '@next/font/google';
+
+const inter = Inter();
+
+<html className={inter.className}></html>;
+```
+カスタムフォントもサポートされ、自動セルフホスティング、キャッシング、フォントファイルのフリーローディングを含む機能がサポートされます。
+```javascript
+// app/layout.js / pages/_app.js
+import localFont from '@next/font/local';
+
+const myFont = localFont({ src: './my-font.woff2' });
+
+<html className={myFont.className}></html>;
+```
+フォントローディング経験のすべての部分をカスタマイズすることができ、依然として優れた性能とレイアウトシフトが発生しないように保障することができます。 ここにはfont-display、フリーローディング、フォールバックフォントなどを含めた様々な設定が可能です。
+
+[新しフォントコンポーネント](https://nextjs.org/docs/app/building-your-application/optimizing/fonts)の詳細を学習するか、[サンプルを展開して試してみる](https://vercel.com/templates/next.js/loading-web-fonts)
+
+---
+## next/link
+`next/link`は子として `<a>`タグを手動で追加する必要がありません。
+
+この機能は12.2バージョンで実験的に導入され、これで基本設定として適用されました。 Next.js 13では `<Link>`が常に`<a>`タグをレンダリングして、基本タグにpropsを渡すことができます。 例えば:
+```javascript
+import Link from 'next/link'
+// Next.js 12: `<a>` has to be nested otherwise it's excluded
+<Link href="/about">
+  <a>About</a>
+</Link>
+
+// Next.js 13: `<Link>` always renders `<a>`
+<Link href="/about">
+  About
+</Link>
+```
+[改善されたリングコンポーネント](https://nextjs.org/docs/app/api-reference/components/link)の詳細を学習するか、[サンプルを展開して試してみる](https://vercel.com/templates/next.js/nextjs-boilerplate)
+
+### Next.js 13でnext/linkをアップグレード
+Next.js 13でリンクをアップグレードするために、コードベースを自動的に更新できるcodemodを提供しました。
+例えば、このコマンドをルートで実行すると、「./pages」ディレクトリでcodemodが実行されます。
+```bash
+npx @next/codemod new-link ./pages
+```
+[codemod](https://nextjs.org/docs/app/building-your-application/upgrading/codemods)の詳細を学習するか、 説明を確認してください。
+
+---
+## OGイメージ生成
+ソーシャルカード、つまりオープングラフイメージはコンテンツに対するクリック参加率を大幅に高めることができ、一部の実験では最大40%高い転換率を示しました。
+
+静的なソーシャルカードは時間がかかり、エラーが発生しやすく、維持管理が難しいです。 これにより、ソーシャルカードがしばしば不足したり、完全に省略されたりしました。 今まではリアルタイムで個人化され計算される動的ソーシャルカードを生成することが難しく、費用が多くかかりました。
+
+私たちはNext.jsと完璧に統合され、動的ソーシャルカードを生成できる新しいライブラリである`@vercel/og`を作りました。
+```javascript
+// pages/api/og.jsx
+import { ImageResponse } from '@vercel/og';
+
+export const config = {
+  runtime: 'experimental-edge',
+};
+
+export default function () {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          display: 'flex',
+          fontSize: 128,
+          background: 'white',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        Hello, World!
+      </div>
+    ),
+  );
+}
+```
+このアプローチは、Vercel Edge Functions、WebAssembly、そしてHTMLとCSSをイメージに変換し、Reactコンポーネントの抽象化を活用する新しいコアライブラリを使用して、従来のソリューションよりも**5倍速いものです。**
+
+---
+## ミドルウェアAPIアップデート
+Next.js 12ではNext.jsルーターとともに完全な柔軟性を提供するためにミドルウェアを導入しました。 初期API設計に対する皆様のフィードバックを反映して開発者の経験を改善し、強力な新しい機能を追加しました。
+
+これで、リクエストにヘッダーをより簡単に設定できます。
+```javascript
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  // Clone the request headers and set a new header `x-version`
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-version', '13');
+
+  // You can also set request headers in NextResponse.rewrite
+  const response = NextResponse.next({
+    request: {
+      // New request headers
+      headers: requestHeaders,
+    },
+  });
+
+  // Set a new response header `x-version`
+  response.headers.set('x-version', '13');
+  return response;
+}
+```
+これからは`rewrite`または`redirect`を使用しなくてもミドルウェアから直接応答を提供することができます。
+
+```javascript
+// middleware.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { isAuthenticated } from '@lib/auth';
+
+// Limit the middleware to paths starting with `/api/`
+export const config = {
+  matcher: '/api/:function*',
+};
+
+export function middleware(request: NextRequest) {
+  // Call our authentication function to check the request
+  if (!isAuthenticated(request)) {
+    // Respond with JSON indicating an error message
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Auth failed',
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+}
+```
+
+ミドルウェアから応答を送信するには`next.config.js`ファイルに`experimental.allowMiddlewareResponseBody`設定オプションを追加する必要があります。
+
+---
+## 重要な変更
+- 最小Reactバージョンが17.0.2から18.2.0に引き上げられました。
+- 12.xがサポート終了されたため最小Node.jsバージョンが12.22.0から14.6.0に引き上げられました([PR](https://github.com/vercel/next.js/pull/41482)).
+- `swcMinify`の設定属性が`false`から`true`に変更されました。 詳しくは[Next.jsコンパイラ](https://nextjs.org/docs/architecture/nextjs-compiler)を参照してください。
+- `next/image`インポートが`next/legacy/image`に変更されました。 `next/future/image`インポートは`next/image`に変更されました。 安全かつ自動的にインポートを変更できる[codemodが提供](https://nextjs.org/docs/app/building-your-application/upgrading/codemods#next-image-to-legacy-image)されます。
+- `next/link`の子に`<a>`タグを使用できません。 レガシー動作を使用するには`legacyBehavior`を追加するか`<a>`タグを削除してアップグレードしてください。 これを自動アップグレード自動的にアップグレードできる[codemodが提供](https://nextjs.org/docs/app/building-your-application/upgrading/codemods#new-link)されます。
+- `User-Agent`がBotの場合は、パスがプリロード(prefetch)されなくなりました。
+- 非推奨になった`target`が`next.config.js`から排除されました。
+- サポートされているブラウザが変更。 Internet Explorerを外し、最新ブラウザを対象にします。 Browserslistを使用して対象ブラウザを変更できます。
+  - Chrome 64+
+  - Edge 79+
+  - Firefox 67+
+  - Opera 51+
+  - Safari 12+
+
+詳しくは[アップグレードガイド](https://nextjs.org/docs/app/building-your-application/upgrading)を確認してください。
+
+---
+## コミュニティ
+6年前、私たちはNext.jsを世界に公開しました。 私たちの目標は開発者の経験を単純化するゼロ設定Reactフレームワークを作ることでした。 振り返ってみると、コミュニティがこのように成長し、私たちが一緒に提供したことを見ると、驚くべきことです。 これからも続けてみましょう。
+
+Next.jsは2,400人以上の開発者、Google及びMetaのような業界パートナー、そしてコアチームの結合された作業の結果です。 週300万件以上のnpmダウンロードと94,000個のGitHubスターを保有したNext.jsは、ウェブを構築する最も人気のある方法の1つです。
+
+このリリースにつながる基礎研究と実験を手伝ってくれたGoogle ChromeのAuroraチームに特別に感謝します。
+
+このリリースは、以下の方々の貢献によって行われました: @ijjk, @huozhi, @HaNdTriX, @iKethavel, @timneutkens, @shuding, @rishabhpoddar, @hanneslund, @balazsorban44, @devknoll, @anthonyshew, @TomerAberbach, @philippbosch, @styfle, @mauriciomutte, @hayitsdavid, @abdennor, @Kikobeats, @cjdunteman, @Mr-Afonso, @kdy1, @jaril, @abdallah-nour, @North15, @feedthejim, @brunocrosier, @Schniz, @sedlukha, @hashlash, @Ethan-Arrowood, @fireairforce, @migueloller, @leerob, @janicklas-ralph, @Trystanr, @atilafassina, @nramkissoon, @kasperadk, @valcosmos, @henriqueholtz, @nip10, @jesstelford, @lorensr, @AviAvinav, @SukkaW, @jaycedotbin, @saurabhburade, @notrab, @kwonoj, @sanruiz, @angeloashmore, @falsepopsky, @fmontes, @Gebov, @UltiRequiem, @p13lgst, @Simek, @mrkldshv, @thomasballinger, @kyliau, @AdarshKonchady, @endymion1818, @pedro757, @perkinsjr, @gnoff, @jridgewell, @silvioprog, @mabels, @nialexsan, @feugy, @jackromo888, @crazyurus, @EarlGeorge, @MariaSolOs, @lforst, @maximbaz, @maxam2017, @teobler, @Nutlope, @sunwoo0706, @WestonThayer, @Brooooooklyn, @Nsttt, @charlypoly, @aprendendofelipe, @sviridoff, @jackton1, @nuta, @Rpaudel379, @marcialca, @MarDi66, @ismaelrumzan, @javivelasco, @eltociear, and @hiro0218.
+
+---
+#### 原文: https://nextjs.org/blog/next-13

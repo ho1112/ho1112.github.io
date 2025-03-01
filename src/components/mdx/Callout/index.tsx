@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { cn } from '@/lib/utils'
 import * as Icon from './Icons'
 
-type CalloutType = 'info' | 'warn' | 'danger' | 'normal'
+type CalloutType = 'info' | 'warn' | 'danger' | 'normal' | 'border'
 
 interface CalloutProps extends PropsWithChildren {
   type?: CalloutType
@@ -34,6 +34,11 @@ const metadata: IconType = {
     icon: Icon.Normal,
     boxClass: 'text-secondary-foreground bg-secondary',
   },
+
+  border: {
+    icon: Icon.Normal,
+    boxClass: 'text-secondary-foreground border border-gray-200',
+  },
 }
 
 export const Callout = (props: CalloutProps) => {
@@ -49,7 +54,7 @@ export const Callout = (props: CalloutProps) => {
         boxClassName,
       )}
     >
-      {type !== 'normal' && (
+      {type !== 'normal' && type !== 'border' && (
         <div>
           <Icon />
         </div>
