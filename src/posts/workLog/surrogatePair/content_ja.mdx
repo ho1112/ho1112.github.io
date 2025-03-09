@@ -1,0 +1,95 @@
+---
+title: 'Surrogate Pair文字数を正確に数え方'
+desc: Surrogate Pair文字数の数え方
+date: 2025-03-01
+thumbnail: /meritt-thomas.jpg
+---
+
+<h1>텍스트 에리어의 글자 수 세기</h1>
+
+어느 날 텍스트 입력 에리어의 글자 수가 실제와 다르게 표시되고 있다는 문의가 들어왔다.
+현재 유저가 입력할 수 있는 텍스트 에리어에는 글자 수에 제한이 있었는데 허용된 글자 수보다 적게 입력했음에도 불구하고 제한에 걸려 원하는 메시지를 입력할 수 없다는 것이었다.
+
+문제의 원인을 조사해보니 현재 문자 수를 측정할 때 String.length를 사용하고 있었는데 일부 이모지나 특수 문자의 경우 length가 2로 취급되어 발생한 문제였다.
+즉, 써로게이트 페어 문자들의 처리방식을 변경해야했다.
+
+---
+## Surrogate Pair
+UTF-16은 유니코드 문자를 표현하는 방법 중 하나로 대부분의 일반적인 문자는 하나의 16비트 유닛으로 표현되지만 표현 가능한 문자가 늘어나면서 한계에 다다르게 되었다.
+UTF-32를 사용하면 해결이 가능하지만 대부분의 문자는 16비트로 표현이 가능했고 메모리도 효율적으로 관리할 수 있었기 때문에 16비트에도 더 많은 문자를 표현할 수 있는 방법이 필요해졌다.
+그래서 나온 방식이 바로 써로게이트 페어이다.
+0x10000(65536)이상의 코드 포인트를 가진 문자는 두 개의 유닛으로 표현되는 써로게이트 페어가 필요하다.
+
+---
+### Surrogate Pair의 구조
+Surrogate Pair는 각각 High Surrogate와 Low Surrogate로 구분되며 함께 사용되어 문자를 만든다.
+High Surrogate (상위 써로게이트): D800 ~ DBFF 사이의 값을 가지며 첫 번째 16비트 유닛으로 사용된다.
+Low Surrogate (하위 써로게이트): DC00 ~ DFFF 사이의 값을 가지며 두 번째 16비트 유닛으로 사용된다.
+
+예를 들어 이모지 '😊'는 U+1F60A로 UTF-16에서는 두 개의 코드 유닛 D83D + DE0A로 표현된다.
+
+### Surrogate Pair를 사용하는 문자들
+주로 이모지와 학술적인 문자, 기호에 많이 사용된다.
+
+**이모지**
+😃😂❤️🐶🐱🐻🌹🌻🍏🍔⚽🏈
+**고대 문자 세트**
+고대 이집트 상형 문자 (Egyptian Hieroglyphs): U+13000 – U+1342F 𓀀, 𓀁, 𓀂
+선형 문자 B (Linear B Syllabary): U+10000 – U+1007F 𐀀, 𐀁, 𐀂
+고트 문자 (Gothic): U+10330 – U+1034F 𐌰, 𐌱, 𐌲
+**음악과 예술 관련 기호**
+음악 기호 (Musical Symbols): U+1D100 – U+1D1FF 𝄞, 𝄡
+바이킹 룬 문자 (Runic Symbols): 일부는 U+16A0 – U+16FF 범위를 벗어나는 코드 포인트 사용 ᛮ, ᛯ, ᛰ
+**수학 기호와 기술용 문자**
+수학 알파벳 (Mathematical Alphanumeric Symbols): U+1D400 – U+1D7FF 𝐀, 𝐁, 𝐂
+마야 숫자 (Mayan Numerals): U+1D2E0 – U+1D2FF 𐋀, 𐋁, 𐋂
+**기타 언어와 기호**
+시라다 (Cuneiform): U+12000 – U+123FF (수메르어 및 아카드어에 사용된 고대 점토판 문자) 𒀀, 𒀁, 𒀂
+미로와 함께 사용되는 문자 (Deseret Alphabet): U+10400 – U+1044F (모르몬교 초기 구성원들에 의해 만들어진 알파벳) 𐐀, 𐐁,𐐂
+
+---
+
+## Surrogate Pair의 문자열 길이
+두 개의 코드 유닛을 사용하기 때문에 기존의 문자열 길이 측정방식을 써로게이트 페어 문자에 적용하면 다음과 같이 출력된다.
+```javascript
+let egao = "😊";
+console.log(egao.length); // result: 2
+```
+유저가 인식하는 글자 수는 한 개지만 실제 길이로는 2가 된다.
+
+### Surrogate Pair가 포함된 문자열의 길이 측정
+다음과 같은 방법들로 Surrogate Pair의 길이를 알아낼 수 있다.
+1. Array.from() 함수 사용
+```javascript
+const text = "𐋀𐋁𐋂";
+const length = Array.from(text).length;
+console.log(length);  // result: 3
+```
+
+2. 스프레드 연산자(spread operator) (...) 사용
+```javascript
+const text = "𐋀𐋁𐋂";
+const length = [...text].length;
+console.log(length);  // result: 3
+```
+
+3. 정규표현식 사용
+유니코드 처리용 정규표현식인 `u`를 사용
+```javascript
+const text = "𐋀𐋁𐋂";
+const regex = /./gu;
+const length = text.match(regex).length;
+console.log(length);  // result: 3
+```
+
+4. 라이브러리 사용
+graphemesplit와 같은 라이브러리를 사용해 문자열을 측정하는 방법
+
+---
+
+## おわりに
+보이는 것과 실제는 다를 수 있다.
+문자 수를 처리하는 것은 간단해 보이기 때문에 간과하기 쉽다.
+하지만 모니터에 표시되는 문자의 수와 실제 프로그래밍 상에서 처리되어야 할 데이터의 양이 다를 수 있으며 이는 개발・최적화하는 과정에서 매우 중요한 고려사항이다.
+BMP(Basic Multilingual Plane)의 범위인 U+0000부터 U+FFFF까지는 대부분의 글로벌 커뮤니케이션에 필요한 문자를 포함하지만 U+10000 이상의 코드를 정확히 처리하기 위해서는 Unicode-aware 시스템이 필수적이다.
+다양한 유저, 국제화된 시스템을 개발할 때는 BMP를 넘어서는 문자들까지 고려하여 포괄적인 문자 지원이 가능하도록 Unicode-aware 개발 접근 방식을 적용하는 것이 중요할 것이다.
