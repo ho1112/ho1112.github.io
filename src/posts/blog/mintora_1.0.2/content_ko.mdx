@@ -1,0 +1,58 @@
+---
+title: '메인 디자인'
+desc: 블로그 메인 디자인
+date: 2025-04-06
+thumbnail: /posts/blog/mintora_1.0.1/i18n.avif
+---
+
+<h1>메인 디자인 만들기</h1>
+
+디자인은 너무 간단하지도 복잡하지도 않은 그 중간쯤으로 만들고 싶었습니다.
+그래서 예전에 잠깐 다루어보았던 wordpress의 newspaper 템플릿이 적당해보였기에 참고해서 만들어보았습니다.
+
+---
+
+## 테마
+### 리스트 화면
+우선 top과 각 카테고리 메인 화면에서 참조한 템플릿입니다.
+![](/posts/blog/mintora_1.0.2/newspaper.avif)
+포스터를 같은 크기의 리스트 형식으로 나열하는 것보다는 썸네일 크기를 다르게 주는 것이 더 확실한 포인트를 주는 것 같아서 참조하였습니다.
+
+### 상세 화면
+다음은 포스트 상세화면입니다.
+![](/posts/blog/mintora_1.0.2/arts.avif)
+잡지 같은 느낌으로 상단에 썸네일 이미지를 크게 보여줍니다.
+포스터 본문이 이미지 부분으로 살짝 올라와 있는 모습이 포인트라고 생각해서 참조하였습니다.
+
+---
+## 적용
+### 리스트 화면
+대부분의 썸네일을 하얀 배경으로 만들고 있습니다.
+이 디자인은 타이틀이 따로 분리되어 있지 않고 썸네일 위에 올라와 있기에 하얀 배경 + 하얀 글씨 조합이면 보이지가 않습니다.
+그래서 타이틀이 표시되는 부분에는 검은 그라데이션을 추가하여 가독성을 향상시켰습니다.
+```html
+<div className="z-[1] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black before:via-transparent before:to-transparent before:opacity-70" />
+```
+![](/posts/blog/mintora_1.0.2/main_ko.png)
+
+### 상세 화면
+상세 화면은 다음과 같이 배치하였습니다.
+- 카테고리
+- 타이틀
+- 날짜, 읽는 시간, 조회수
+- 본문과 TOC
+- 댓글
+![](/posts/blog/mintora_1.0.2/detail_ko.png)
+
+---
+
+## 마치며
+현재는 TOP페이지와 각 카테고리의 TOP화면 디자인이 똑같습니다.
+그래서 디자인은 통일하되 각 카테고리의 개요와 썸네일 표시방법의 차이는 두는 편이 좋지 않을까 생각했습니다.
+LINE야후의 기술 블로그가 카테고리 설명을 나타내기에 좋은 디자인 같아 나중에 이 부분을 추가할 예정입니다.
+![](/posts/blog/mintora_1.0.2/lycorp.avif)
+
+#### 🔗 참고
+https://demo.tagdiv.com/newspaper_pro/
+https://demo.tagdiv.com/newspaper_classic_pro/2019/09/10/td-post-the-art-of-true-confidence/
+https://techblog.lycorp.co.jp/
