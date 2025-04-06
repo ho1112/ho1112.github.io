@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -10,7 +10,7 @@ export const Language = () => {
 
   const switchLang = () => {
     const newPath = pathname.replace(`/${currentLanguage}`, `/${newLanguage}`)
-    Cookies.set('language', newLanguage, { expires: 30 })
+    // Cookies.set('language', newLanguage, { expires: 30 })
     router.push(newPath)
   }
 
