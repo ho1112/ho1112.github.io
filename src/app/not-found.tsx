@@ -1,22 +1,14 @@
-'use client'
-
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+
+const RandomEmoji = dynamic(() => import('../components/ui/random-emiji'), {
+  ssr: false,
+})
 
 export default function NotFound() {
-  const messages = ['｡°(°.◜ᯅ◝°)°｡', '(˃̣̣̣̣︿˂̣̣̣̣ )', '(๑•́ ᎔ ก̀๑)', '╥﹏╥', '•᷄⌓•᷅']
-  const [randomMessage, setRandomMessage] = useState('')
-
-  useEffect(() => {
-    const message = messages[Math.floor(Math.random() * messages.length)]
-    setRandomMessage(message)
-  }, [])
-
   return (
     <div className="flex flex-col items-center justify-center mt-28 text-center px-4">
-      <p className="text-[15vw] lg:text-[150px] whitespace-nowrap mb-6">
-        {randomMessage}
-      </p>
+      <RandomEmoji />
       <h2 className="text-2xl font-semibold mb-4">Not Found</h2>
       <Link
         href="/"
