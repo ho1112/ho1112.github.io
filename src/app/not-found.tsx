@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export default function NotFound() {
   const messages = ['｡°(°.◜ᯅ◝°)°｡', '(˃̣̣̣̣︿˂̣̣̣̣ )', '(๑•́ ᎔ ก̀๑)', '╥﹏╥', '•᷄⌓•᷅']
