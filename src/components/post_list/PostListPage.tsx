@@ -18,6 +18,8 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
   // 최신 포스터4개를 표시
   const latestPostList = postList.slice(0, 4)
+  // 최신을 제외한 모든 포스터
+  const allPostList = postList.slice(4)
 
   return (
     <>
@@ -29,6 +31,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           currentCategory={category}
         />
       </section>
+      {/* 최신 포스트 */}
       <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
         <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 h-[30vw]">
           {latestPostList.map((post, index) => (
@@ -37,6 +40,20 @@ const PostListPage = async ({ language, category }: PostListProps) => {
               language={language}
               post={post}
               index={index}
+            />
+          ))}
+        </ul>
+      </section>
+      {/* 나머지 포스트를 3열 그리드로 표시하는 새로운 섹션 */}
+      <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {allPostList.map((post, index) => (
+            <PostCard
+              key={post.url + post.date}
+              language={language}
+              post={post}
+              index={index}
+              variant="grid"
             />
           ))}
         </ul>
