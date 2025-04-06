@@ -9,23 +9,27 @@ interface Props {
   language: string
   post: Post
   index: number
+  variant?: 'featured' | 'grid'
 }
 
-const PostCard = ({ language, post, index }: Props) => {
+const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
   const t = getLanguageText(language, 'postHeader')
 
+  const cardWrapperClass =
+    variant === 'featured'
+      ? cn('group', {
+          'md:col-span-2 md:row-span-2': index === 0, // 첫 번째 카드, 왼쪽 전면
+          'md:col-start-3 md:row-start-1 md:col-span-2 md:row-span-1':
+            index === 1, // 두 번째 카드, 우상단
+          'md:col-start-3 md:row-start-2 md:col-span-1 md:row-span-1':
+            index === 2, // 세 번째 카드, 우하단 1열
+          'md:col-start-4 md:row-start-2 md:col-span-1 md:row-span-1':
+            index === 3, // 네 번째 카드, 우하단 2열
+        })
+      : 'group'
+
   return (
-    <div
-      className={cn('group', {
-        'md:col-span-2 md:row-span-2': index === 0, // 첫 번째 카드, 왼쪽 전면
-        'md:col-start-3 md:row-start-1 md:col-span-2 md:row-span-1':
-          index === 1, // 두 번째 카드, 우상단
-        'md:col-start-3 md:row-start-2 md:col-span-1 md:row-span-1':
-          index === 2, // 세 번째 카드, 우하단 1열
-        'md:col-start-4 md:row-start-2 md:col-span-1 md:row-span-1':
-          index === 3, // 네 번째 카드, 우하단 2열
-      })}
-    >
+    <div className={cardWrapperClass}>
       <Link href={post.url}>
         <li
           className="relative flex h-full flex-col overflow-hidden rounded-md border shadow-lg transition
