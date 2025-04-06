@@ -19,9 +19,19 @@ thumbnail: /posts/blog/mintora_1.0.3/not-found.avif
 ---
 ## 코드 예시
 ```javaScript
+'use client'
+
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+
 export default function NotFound() {
   const messages = ['｡°(°.◜ᯅ◝°)°｡', '(˃̣̣̣̣︿˂̣̣̣̣ )', '(๑•́ ᎔ ก̀๑)', '╥﹏╥', '•᷄⌓•᷅']
-  const randomMessage = messages[Math.floor(Math.random() * messages.length)]
+  const [randomMessage, setRandomMessage] = useState('')
+
+  useEffect(() => {
+    const message = messages[Math.floor(Math.random() * messages.length)]
+    setRandomMessage(message)
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center mt-28 text-center px-4">
@@ -38,6 +48,7 @@ export default function NotFound() {
     </div>
   )
 }
+
 ```
 
 먼저 준비한 몇 가지 이모티콘을 배열(messages)에 넣습니다. 네이버 스마트보드의 이모티콘 중에서 슬픈 느낌을 가진 것을 골랐습니다.
