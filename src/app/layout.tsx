@@ -12,7 +12,6 @@ import '@/config/globals.css'
 import { Footer } from '@/layouts/Footer'
 import { Header } from '@/layouts/Header'
 import { ThemeProvider } from '@/layouts/theme/Provider'
-import { getLanguageFromCookie } from '@/utils/cookies'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
@@ -39,11 +38,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const lang = getLanguageFromCookie()
+  // const lang = getLanguageFromCookie()
 
   return (
     <html
-      lang={lang}
+      lang={'ja'}
       className="h-full scroll-my-20 scroll-smooth"
       suppressHydrationWarning
     >
