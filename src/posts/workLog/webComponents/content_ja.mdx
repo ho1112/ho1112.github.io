@@ -7,23 +7,24 @@ thumbnail: /posts/workLog/webComponents/logo.avif
 
 <h1>Web Components의 도입 필요성</h1>
 
-다양한 기술 스택을 사용하는 서비스에서는 여러 언어와 프레임워크가 혼합되어 사용되곤 한다.
-내가 담당했던 호텔 시스템은 React였지만 다른 카테고리의 예약 시스템은 PHP, Vue 등으로 개발되었다.
-각 서비스의 상단 네비게이션바는 같은 디자인과 기능을 갖고 있었지만 실제로는 각각 별도로 구현되어 있어서 수정사항이 발생할 경우 모든 서비스의 담당자가 개별적으로 개발 및 배포를 진행해야 했다.
-이러한 비효율성을 줄이고 유지보수 및 사용자 경험을 일관되게 유지하기 위해 상단 네비게이션바의 통합 관리가 필요하게 되었고 이 문제를 해결하기 위해 크로스 플랫폼이 가능한 Web Components의 도입이 결정되었다.
+다양한 기술 스택을 사용하는 서비스에서는 여러 언어와 프레임워크가 혼합되어 사용됩니다.
+제가 담당했던 호텔 시스템은 React였지만 다른 카테고리의 예약 시스템은 PHP, Vue 등으로 개발되었습니다.
+각 서비스의 상단 네비게이션바는 같은 디자인과 기능을 갖고 있었으나 실제로는 각각 별도로 구현되어 있어서 수정사항이 발생할 경우 모든 서비스의 담당자가 개별적으로 개발 및 배포를 진행해야했습니다.
+이러한 비효율성을 줄이고 유지보수 및 사용자 경험을 일관되게 유지하기 위해 상단 네비게이션 바를 통합적으로 관리할 필요가 있었고 이러한 문제를 해결하기 위해 크로스 플랫폼 기술인 Web Components를 도입하게 되었습니다.
 
 ---
 ## Web Components 개요
-Web Components는 웹 개발의 재사용 가능하고 캡슐화된 컴포넌트를 만들기 위한 표준이다.
-이 기술은 독립적으로 동작하며 페이지의 나머지 부분과 격리된 사용자 정의 엘리먼트를 생성할 수 있게 해준다.
+Web Components는 재사용 가능하고 캡슐화된 웹 컴포넌트를 만들기 위한 웹 표준 기술입니다.
+이 기술을 활용하면 독립적으로 동작하며 다른 페이지의 부분들과 격리된 사용자 정의 HTML 요소를 생성할 수 있습니다.
 
 주요 개념 및 구성 요소
-Web Components 기술은 주로 세 가지 주요 기술로 구성된다.
+Web Components는 크게 세 가지 기술로 구성됩니다.
 
 **Custom Elements**
-Custom Elements를 사용하면 개발자가 자신만의 HTML 태그를 생성할 수 있다.
-이를 통해 재사용 가능한 컴포넌트를 사용할 수 있다.
-예를 들어 커스텀 버튼 태그 `<my-button>`을 만들고 이를 불러와 다른 HTML과 함께 사용할 수 있다.
+Custom Elements를 사용하면 개발자가 직접 HTML 태그를 생성할 수 있습니다.
+이를 통해 재사용 가능한 컴포넌트를 제작할 수 있습니다.
+
+예를 들어 커스텀 버튼 태그 `<my-button>`을 만들고 이를 불러와 다른 HTML과 함께 사용할 수 있습니다.
 
 ```javascript
 <template id="my-button-template">
@@ -45,13 +46,12 @@ Custom Elements를 사용하면 개발자가 자신만의 HTML 태그를 생성�
 ```
 
 **Shadow DOM**
-Shadow DOM은 DOM으로부터 독립적인 DOM 트리를 생성하고 스타일과 마크업을 캡슐화한다.
-컴포넌트가 페이지의 나머지 부분과 독립적으로 동작할 수 있도록 해준다.
+Shadow DOM은 DOM으로부터 독립적인 DOM 트리를 만들어 스타일과 마크업을 캡슐화하며 컴포넌트가 페이지의 나머지 부분과 독립적으로 작동할 수 있도록 해줍니다.
 
 **HTML Templates**
-HTML Templates는 화면에 바로 렌더링하지 않고 JavaScript를 통해 필요할 때 불려진다.
-이를 통해 컴포넌트의 재사용성을 높이고 메모리 사용을 최적화한다.
-```javascript
+HTML Templates는 즉시 렌더링되지 않고 JavaScript를 통해 필요할 때 동적으로 사용됩니다.
+이를 통해 컴포넌트의 재사용성을 높이고 메모리 사용을 효율적으로 관리할 수 있습니다.
+```html
 <template id="concert-ticket">
   <div class="concert">
     <img src="artist.jpg">
@@ -61,24 +61,24 @@ HTML Templates는 화면에 바로 렌더링하지 않고 JavaScript를 통해 �
 </template>
 <script>
   const ticketTemplate = document.getElementById("concert-ticket').content;
-  const clone = document.importNode(ticketTemplate, true); // 템플릿을 deep copy해서 자식 요소까지 복제
+  // 템플릿을 deep copy해서 자식 요소까지 복제
+  const clone = document.importNode(ticketTemplate, true);
   clone.querySelector('.title').textContent = 'New Live';
   clone.querySelector('.price').textContent = '￥12,000';
   document.body.appendChild(clone); // 복제된 템플릿의 값을 수정하여 삽입
 </script>
 ```
 
-이 세 가지 핵심 기술을 활용하여 웹 컴포넌트를 구성하면 프레임워크나 라이브러리에 구애받지 않고 일관된 UI 컴포넌트를 적용할 수 있다.
+이 세 가지 핵심 기술을 활용하면 프레임워크나 라이브러리에 구애받지 않고 일관된 UI 컴포넌트를 구축할 수 있습니다.
 
 ## Lit 라이브러리 소개
 Lit 라이브러리란?
-Lit는 Web Components를 구현하기 위한 간결하고 효율적인 라이브러리이다.
-Web Components 표준을 기반으로 하며 반응형, 선언적 템플릿 같은 기능을 제공하여 Web Components 개발을 효율적으로 만들어 준다.
+Lit는 Web Components를 더욱 간결하고 효율적으로 구현할 수 있도록 도와주는 라이브러리입니다.
+Web Components 표준을 기반으로 하며 반응형 속성과 선언적 템플릿 기능을 제공하여 컴포넌트 개발의 효율성을 높여줍니다.
 
 ### Lit를 사용하는 이유
-Lit는 동적 UI부분만 업데이트 하는 방식으로 빠른 렌더링을 제공한다. 또 라이브러리 자체도 가볍기 때문에 로딩 시간을 단축시키고 번들 크기를 작게 유지한다.
-그리고 기존의 자바스크립트, React와 문법이 비슷하기 때문에 러닝커브가 낮은 편에 속한다.
-반응형 업데이트 시스템은 데이터가 변경될 때 자동으로 UI를 업데이트 하기 때문에 효율적인 렌더링이 가능하다.
+Lit는 데이터가 변경될 때 동적으로 변경된 부분만 효율적으로 렌더링하여 빠른 성능을 제공합니다. 또한 라이브러리 자체가 가볍기 때문에 로딩 시간을 단축하고 번들 크기를 최소화합니다.
+JavaScript 및 React와 유사한 문법 덕분에 학습 난이도도 낮습니다.
 
 ```javascript
 import {html, css, LitElement} from 'lit';
@@ -100,6 +100,7 @@ export class SimpleGreeting extends LitElement {
 <simple-greeting name="World"></simple-greeting>
 ```
 
+Lit의 특징은 다음과 같습니다.
 1. Custom Elements: Lit 컴포넌트는 표준 사용자 정의 요소로 브라우저가 기본 HTML 요소처럼 처리한다.
 2. Scoped styles: Lit는 Shadow DOM을 사용해 스타일을 자동으로 범위 지정한다. 이로 인해 CSS 선택자를 간단하게 유지하며 페이지의 다른 스타일로부터 독립적으로 작동하여 스타일 충돌을 방지한다.
 3. Reactive properties: 반응형 속성을 선언하여 컴포넌트의 API와 내부 상태를 모델링, 속성이 변경될 때마다 Lit 컴포넌트가 효율적으로 다시 렌더링된다.
@@ -107,13 +108,13 @@ export class SimpleGreeting extends LitElement {
 
 ---
 ### 실제 프로젝트에서의 구현
-본 서비스가 pc, 타블렛, 스마트폰 사이즈로 제공되기 때문에 디렉토리 구조를 index에서 pc, tb, sp로 분기하여 각각에 맞는 렌더링이 이루어지도록 설계하였다.
-헤더는 로고, 로그인 기능을 포함한 바(bar) 컴포넌트와 모든 서비스 메뉴가 표시되는 네비게이션(nav) 컴포넌트로 구성하였다.
+본 서비스가 pc, 타블렛, 스마트폰 사이즈로 제공되기 때문에 디렉토리 구조를 index에서 pc, tb, sp로 분기하여 각각에 맞는 렌더링이 이루어지도록 설계하였습니다.
+헤더는 로고, 로그인 기능을 포함한 바(bar) 컴포넌트와 모든 서비스 메뉴가 표시되는 네비게이션(nav) 컴포넌트로 구성하였습니다.
 
-각각의 헤더에서는 로그인 상태, 언어, 서비스명, 공지사항 등의 property를 갖도록 되어있다.
+각각의 헤더에서는 로그인 상태, 언어, 서비스명, 공지사항 등의 property를 갖도록 되어있습니다.
 
-header 부모 컴포넌트
 ```javascript
+// header 부모 컴포넌트
 @customElement('header-pc')
 export class HeaderPc extends LitElement {
   @property({ type: Boolean })
@@ -150,8 +151,8 @@ declare global {
 }
 ```
 
-header bar 컴포넌트
 ```javascript
+// header bar 컴포넌트
 @customElement('header-bar-pc')
 export class HeaderBarPC extends LitElement {
   @property({ type: Boolean })
@@ -264,37 +265,37 @@ declare global {
 }
 ```
 
-bar컴포넌트에서는 상태변화, 동적 렌더링을 위해 아래와 같은 기능들이 사용되었다.
+bar컴포넌트에서는 상태변화, 동적 렌더링을 위해 아래와 같은 기능들이 사용되었습니다.
 
 + Property와 State
-@property 데코레이터는 컴포넌트의 속성을 정의할 때 사용된다.
-이 속성들은 컴포넌트 외부에서 변경할 수 있으며 변경될 때 컴포넌트가 자동으로 업데이트된다.
-예를 들어 login과 language처럼 외부에서 컴포넌트의 상태나 설정을 조정할 필요가 있을 때 사용된다.
-@state 데코레이터는 내부 상태 관리를 위해 사용된다.
-이 상태들은 컴포넌트 내부에서만 관리되며 변경될 때만 컴포넌트가 업데이트된다.
-예시의 컴포넌트에서는 내부에서의 도움말 표시 여부를 결정하는데에 사용되었다.
-React와 비교하자면 property는 props, state는 useState와 같다고 할 수 있다.
+@property 데코레이터는 컴포넌트의 속성을 정의할 때 사용됩니다.
+이 속성들은 컴포넌트 외부에서 변경할 수 있으며 변경될 때 컴포넌트가 자동으로 업데이트됩니다.
+예를 들어 login과 language처럼 외부에서 컴포넌트의 상태나 설정을 조정할 필요가 있을 때 사용됩니다.
+@state 데코레이터는 내부 상태 관리를 위해 사용됩니다.
+이 상태들은 컴포넌트 내부에서만 관리되며 변경될 때만 컴포넌트가 업데이트됩니다.
+예시의 컴포넌트에서는 내부에서의 도움말 표시 여부를 결정하는데에 사용되었습니다.
+React와 비교하자면 property는 props, state는 useState와 같은 역할을 한다고 볼 수 있습니다.
 + Lifecycle Methods
-willUpdate는 속성이나 상태가 변경되어 업데이트가 발생하기 직전에 호출된다.
-이 함수로 변경될 속성에 따라 필요한 스타일이나 로직을 적용할 수 있다.
+willUpdate는 속성이나 상태가 변경되어 업데이트가 발생하기 직전에 호출됩니다.
+이 함수로 변경될 속성에 따라 필요한 스타일이나 로직을 적용할 수 있습니다.
 + Event Handlers
 @click과 @mouseover로 DOM 이벤트를 처리
 + styleMap
-styleMap은 Lit 라이브러리의 지시자 중 하나로 인라인 스타일을 동적으로 관리할 수 있게 해준다.
-스타일을 조건부로 적용해야 할 때 사용된다.
-인라인 스타일을 관리하는 styleMap외에 class를 동적으로 변경해 스타일을 변경해주는 classMap도 존재한다.
+styleMap은 Lit 라이브러리의 지시자 중 하나로 인라인 스타일을 동적으로 관리할 수 있게 해줍니다.
+주로 스타일을 조건부로 적용해야 할 때 사용됩니다.
+인라인 스타일을 관리하는 styleMap외에 class를 동적으로 변경해 스타일을 변경해주는 classMap도 존재합니다.
 
-> 이 중에서 가장 핵심적이고 자주 사용되는 것이 바로 **Lifecycle Methods**이다. 이 메소드들은 다음과 같은 순서로 동작한다.
+> 이 중에서 가장 핵심적이고 자주 사용되는 것이 바로 **Lifecycle Methods**입니다. 이 메소드들은 다음과 같은 순서로 동작합니다.
 ### Lit의 Lifecycle Methods
 1. Pre-update
-컴포넌트의 하나 이상의 속성이 변경되거나 requestUpdate() 메소드가 호출되면 업데이트가 스케줄된다.
-컴포넌트의 상태에 변화가 생겼음을 Lit 프레임워크에 알리며 이에 따라 프레임워크는 새로운 렌더링을 준비한다.
+컴포넌트의 하나 이상의 속성이 변경되거나 requestUpdate() 메소드가 호출되면 업데이트가 스케줄됩니다.
+컴포넌트의 상태에 변화가 생겼음을 Lit 프레임워크에 알리며 이에 따라 프레임워크는 새로운 렌더링을 준비합니다.
 2. Update
-속성 반영 (Reflecting Attributes): HTML 속성으로 표시되어야 하는 프로퍼티 값들이 DOM에 반영
-내부 DOM 업데이트 (Updating Internal DOM): 컴포넌트의 render 메소드가 호출되어 내부 DOM을 최신 상태로 갱신.
+속성 반영 (Reflecting Attributes): HTML 속성으로 표시되어야 하는 프로퍼티 값들이 DOM에 반영됩니다
+내부 DOM 업데이트 (Updating Internal DOM): 컴포넌트의 render 메소드가 호출되어 내부 DOM을 최신 상태로 갱신합니다.
 3. Post-Update
-모든 업데이트 과정이 끝나면 updateComplete 프로미스가 해결(resolved).
-이 프로미스는 외부에서 업데이트가 완료되었음을 감지하기 때문에 업데이트 후 추가 작업을 지시할 수 있다.
+모든 업데이트 과정이 끝나면 updateComplete 프로미스가 해결(resolved)됩니다.
+이 프로미스는 외부에서 업데이트가 완료되었음을 감지하기 때문에 업데이트 후 추가 작업을 지시할 수 있습니다.
 
 **Pre-Update**
 ![](/posts/workLog/webComponents/update-1.avif)
@@ -305,38 +306,38 @@ styleMap은 Lit 라이브러리의 지시자 중 하나로 인라인 스타일�
 ![](/posts/workLog/webComponents/update-4.avif)
 
 ### 브라우저에서의 Shadow DOM
-Shadow DOM은 다음과 같이 구성된다
+Shadow DOM은 다음과 같이 구성됩니다.
 ![Shadow DOM](/posts/workLog/webComponents/shadowdom.svg)
 섀도우 호스트 : 섀도우 DOM이 연결된 일반 DOM 노드
 섀도우 트리 : 섀도우 DOM 내부의 DOM 트리
 섀도우 경계 : 섀도우 DOM이 끝나고 일반 DOM이 시작되는 곳
 섀도우 루트 : 섀도우 트리의 루트 노드
 
-브라우저에서 확인해보면 각각의 webComponents가 ShadowDom으로 캡슐화되어 있는 것을 확인할 수 있다.
+브라우저에서 확인해보면 각각의 webComponents가 ShadowDom으로 캡슐화되어 있는 것을 확인할 수 있습니다.
 ![브라우저에서의 ShadowDom 구조](/posts/workLog/webComponents/shadowdom_browser.avif)
 
 ## 프로젝트 후기 및 느낀점
-사내에서 처음으로 Web Components를 도입할 때 모든 작업을 혼자 맡았기 때문에 처음에는 엄청난 부담을 느끼기도 하고 한국과 일본에서는 Web Components에 대한 커뮤니티가 크지 않았기 때문에 대부분의 자료를 영어로 된 것을 참조해야하는 불편함도 있었다.
-그래도 React와 유사한 측면이 많아 러닝커브가 크지 않았고 새로운 기술을 다루는 과정 자체에서 오는 즐거움과 완성됐을 때의 보람도 있었다.
+사내에서 처음으로 Web Components를 도입할 때 모든 작업을 혼자 맡았기 때문에 처음에는 엄청난 부담을 느끼기도 했고 한국과 일본에서는 Web Components에 대한 커뮤니티가 크지 않았기 때문에 대부분의 자료를 영어로 된 것을 참조해야하는 불편함도 있었습니다.
+그래도 React와 유사한 측면이 많아 러닝커브가 크지 않았고 새로운 기술을 다루는 과정 자체에서 오는 즐거움과 완성됐을 때의 보람도 있었습니다.
 
-프로젝트의 시작부터 끝까지 그리고 이후 유지보수까지 대부분 혼자 담당하면서 이 컴포넌트에 애착을 가지게 되어서 당시의 회사를 떠난 지금도 가끔 웹사이트에 접속해 잘 운영되고 있는지 확인하곤 한다. 👀
+프로젝트의 시작부터 끝까지 그리고 이후 유지보수까지 대부분 혼자 담당하면서 이 컴포넌트에 애착을 가지게 되어서 당시의 회사를 떠난 지금도 가끔 웹사이트에 접속해 잘 운영되고 있는지 확인하곤 합니다. 👀
 
 ---
 
 ## 마치며
-2011년 공개된 webComponents는 컴포넌트의 재사용성과 캡슐화된 스타일링을 목표로하여 웹 개발의 표준적인 접근 방식을 제시하였다.
-그리고 이러한 컴포넌트 기반 개발은 React와 Vue로 이어져 현재까지 프론트엔드의 메인프레임으로 자리잡고 있다.
+2011년 공개된 webComponents는 컴포넌트의 재사용성과 캡슐화된 스타일링을 목표로하여 웹 개발의 표준적인 접근 방식을 제시하였습니다.
+그리고 이러한 컴포넌트 기반 개발은 React와 Vue로 이어져 현재까지 프론트엔드의 메인프레임으로 자리잡고 있습니다.
 
-각기 다른 환경에서도 일관된 기능과 스타일을 유지할 수 있는 재사용 가능한 컴포넌트는 개발 프로세스와 유지보수를 간소화하는 장점을 가지고 있다.
-특히 크로스 플랫폼 기술이라는 점은 개발자에게 있어 엄청난 매력이다.
-하지만 현재 webComponents 사용률은 그리 높지 않은 상황이다.
+각기 다른 환경에서도 일관된 기능과 스타일을 유지할 수 있는 재사용 가능한 컴포넌트는 개발 프로세스와 유지보수를 간소화하는 장점을 가지고 있습니다.
+특히 크로스 플랫폼 기술이라는 점은 개발자에게 있어 엄청난 매력이 아닐 수 없습니다.
+하지만 현재 webComponents 사용률은 그리 높지 않은 상황입니다.
 ![Web Components 사용통계](/posts/workLog/webComponents/statistics.avif)
 
-장점은 분명 존재하지만 기존의 프레임워크, 라이브러리가 제공하는 편리함과 생태계 또한 무시할 수 없다.
-실제로 경험해 본 바로도 크로스 플랫폼이라는 이점이 아니라면 React, Nextjs를 대체할 필요성을 느끼진 못했다.
+장점은 분명 존재하지만 기존의 프레임워크, 라이브러리가 제공하는 편리함과 생태계 또한 무시할 수 없고
+실제로 경험해 본 바로도 크로스 플랫폼이라는 이점이 아니라면 React, Nextjs를 대체할 필요성을 느끼진 못한 것 같습니다.
 
 그럼에도 webComponents의 방향성은 분명 웹 개발에 있어 고려해야할 중요한 기술이기에
-webComponents를 경험해보고 그 가능성을 생각해볼 수 있는 좋은 시간이었다고 생각한다.
+webComponents를 경험해보고 그 가능성을 생각해볼 수 있는 좋은 시간이었다고 생각합니다.
 
 #### 🔗 참고
 https://en.wikipedia.org/wiki/Web_Components
