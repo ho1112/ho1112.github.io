@@ -36,7 +36,7 @@ const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
             hover:shadow-xl dark:border-slate-700 dark:hover:border-white"
         >
           {/* 텍스트 가독성을 위한 그라디언트 */}
-          <div className="z-[1] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black before:via-transparent before:to-transparent before:opacity-70" />
+          <div className="z-[1] before:absolute before:inset-0 before:bg-[linear-gradient(to_top,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0)_60%)]" />
           {/* image */}
           <div className="w-full aspect-video rounded-t-md">
             <Image
