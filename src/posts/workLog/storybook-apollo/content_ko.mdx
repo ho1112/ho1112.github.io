@@ -1,0 +1,539 @@
+---
+title: 'Storybook 부활시키기 (+ with Apollo Client)'
+desc: storybook & apollo-client
+date: 2025-04-20
+thumbnail: /posts/workLog/storybook-apollo/sbicon.avif
+---
+
+<h1>storybook 부활시키기</h1>
+
+얼마 전 회사에서 사용하고 있던 Storybook이 어느 순간부터 제대로 작동하지 않는 상태가 되어 있었습니다.
+이 기회에 최신 버전으로 완전히 새롭게 설치하고 Docker 환경과 함께 Apollo Client(GraphQL)를 활용하여 다시 부활시킨 과정을 정리해보았습니다.
+
+---
+## Storybook이란?
+Storybook은 UI 컴포넌트를 독립적으로 개발하고 테스트할 수 있는 오픈 소스 도구입니다.
+컴포넌트를 시각적으로 표현하여 프론트엔드 개발자와 디자이너의 협업과 효율성을 높여줍니다.
+
+컴포넌트 확인을 위해 브라우저를 기동하고 그 페이지까지 들어가지 않아도 바로 확인할 수 있다는 게 가장 큰 장점입니다.
+그리고 현재 이 서비스에 사용되고 있는 컴포넌트들을 한 눈에 살펴볼 수 있고 독립적인 상태에서의 동작을 확인할 수 있습니다.
+개인적으로는 일반적인 상태에서 확인하기 어려운 모달, 아이콘, 상태 변화로 인한 디자인 체크 시에 유용하게 사용했습니다.
+자세한 내용은 공식사이트를 참조 👉 [storybook](https://storybook.js.org/)
+
+## Apollo Client란?
+Apollo Client는 GraphQL 쿼리를 통해 데이터를 관리하고 프론트엔드 애플리케이션과 연동하는 데 사용하는 JavaScript 상태 관리 라이브러리입니다.
+효율적이고 유연한 데이터 로딩과 캐싱을 제공합니다.
+자세한 내용은 공식사이트를 참조 👉 [apollographql](https://www.apollographql.com/docs/react)
+
+## 구버전 Storybook 삭제 및 신규 설치
+기존의 구버전 Storybook이 최신 환경과의 호환성 문제로 인해 제대로 동작하지 않았기 때문에 아예 완전히 삭제하고 최신 버전의 Storybook을 새롭게 설치했습니다.
+새롭게 설치한 Storybook과 애드온은 아래와 같습니다.
+```json
+"@storybook/addon-essentials": "7.6.20",
+"@storybook/addon-interactions": "7.6.20",
+"@storybook/addon-links": "7.6.20",
+"@storybook/addon-onboarding": "1.0.11",
+"@storybook/blocks": "7.6.20",
+"@storybook/nextjs": "7.6.20",
+"@storybook/react": "7.6.20",
+"@storybook/test": "7.6.20",
+"storybook": "7.6.20",
+"storybook-addon-apollo-client": "5.0.0",
+```
+
+## Storybook 서버 기동 및 동작 확인
+설치가 끝나고 Storybook을 기동하여 제대로 설치되었는지 확인했습니다.
+```sh
+npm run storybook
+```
+초기 포트번호는 6006이기에 `http://localhost:6006`로 접속하여 정상적으로 동작하는지 확인했습니다.
+
+## Docker 환경에서의 Storybook 포트 개방
+터미널 상에서 스토리북 기동은 문제가 없었지만 이것만으로는 페이지가 열리지 않았습니다.
+원인은 Docker환경에서 기동했기 때문입니다.
+새로운 포트를 사용하기 위해선 Docker에서 해당 포트를 개방해주어야 합니다.
+다음과 같이 포트를 매핑해주었습니다.
+```yaml
+# docker-compose.yml
+mintora:
+    container_name: test-web
+    build:
+      context: .
+      dockerfile: docker/web/local.Dockerfile
+    ports:
+      - "6006:6006" // storybook 포트 개방
+    volumes:
+      - ./web:/usr/src/app:cached
+      - node_modules:/usr/src/app/node_modules
+    command: npm run dev
+```
+
+포트를 개방한 뒤 다시 기동시켜주니 스토리북을 확인할 수 있었습니다.
+![초기 환경](/posts/workLog/storybook-apollo/storybook_init.png)
+
+## Storybook 설정
+새롭게 설치한 스토리북을 현재 환경에 맞추기 위해 config와 preview 파일을 설정했습니다.
+
+main.ts에는 stories파일을 작성할 경로와 사용할 애드온들을 설정해주었습니다.
+```ts
+// storybook/main.ts
+import type { StorybookConfig } from '@storybook/nextjs'
+
+const path = require('path')
+
+const config: StorybookConfig = {
+  stories: [
+    '../**/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-onboarding',
+    '@storybook/addon-interactions',
+    'storybook-addon-apollo-client',
+  ],
+  framework: {
+    name: '@storybook/nextjs',
+    options: {},
+  },
+  staticDirs: ['../public'],
+  webpackFinal: async (config) => {
+    config.resolve = config.resolve || {}
+    config.module = config.module || {}
+    config.module.rules = config.module.rules || []
+
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, '../'),
+      '@styles': path.resolve(__dirname, '../styles'),
+      '@components': path.resolve(__dirname, '../components'),
+    }
+    config.devtool = false
+    return config
+  },
+}
+export default config
+```
+
+preview.ts에는 apollo client사용을 위해 MockedProvider를 설정해 두었습니다.
+```ts
+// storybook/preview.ts
+import type { Preview } from '@storybook/react'
+import '../styles/globals.scss'
+import { MockedProvider } from '@apollo/client/testing'
+
+const preview: Preview = {
+  parameters: {
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    apolloClient: {
+      // apollo client와 Storybook의 버전에 따라 Addon버전을 맞출 필요가 있기 때문에 주의
+      // https://storybook.js.org/addons/storybook-addon-apollo-client
+      MockedProvider,
+    },
+  },
+}
+
+export default preview
+```
+
+## stories 작성
+이제 초기 환경 설정이 모두 끝났기 때문에 stories 파일들을 작성했습니다.
+
+stories파일은 아래와 같이 구성됩니다.
+```ts
+// Button/index.stories.tsx
+import {
+  PrimaryButton,
+  ...
+} from './index'
+import type { Meta, StoryObj } from '@storybook/react'
+
+const meta: Meta = {
+  title: 'Components/Buttons',
+  parameters: {
+    // 컴포넌트 배치: centered, fullscreen, padded
+    layout: 'centered',
+  },
+  // Doc 자동 작성
+  tags: ['autodocs'],
+  // 컴포넌트의 매개변수 지정
+  argTypes: {
+    icon: {
+      control: 'text',
+      description: 'icon名',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled',
+    },
+  },
+}
+export default meta
+
+export const Primary: StoryObj<typeof PrimaryButton> = {
+  render: (args) => <PrimaryButton {...args} />,
+  args: {
+    type: 'button',
+    icon: 'offer',
+    disabled: false,
+    isLoading: false,
+    onClick: () => {
+      alert('click')
+    },
+  },
+}
+...
+```
+
+실제로 사용하는 컴포넌트 이외에 단순 확인을 위해서도 stories를 만들 수 있습니다.
+아래는 이 서비스에서 사용하는 아이콘 목록을 확인하기 위해 작성한 스토리입니다.
+```ts
+// Icon/index.stories.tsx
+import { Icon } from './index'
+import type { Meta, StoryObj } from '@storybook/react'
+
+const meta = {
+  title: 'Components/Icon',
+  component: Icon,
+  parameters: {
+    // centered, fullscreen, padded
+    layout: 'padded',
+  },
+  argTypes: {
+    icon: {
+      control: 'text',
+      description: 'icon名',
+    },
+    size: {
+      control: 'number',
+      description: 'サイズ(rem)',
+    },
+  },
+  tags: ['autodocs'],
+} satisfies Meta<typeof Icon>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+const glyphNames = [
+  'camera',
+  'operating',
+  'company',
+  'document',
+  'instagram',
+  'logout',
+  'question',
+  ... 생략
+  'operator',
+  'searchCheck',
+]
+
+export const Default: Story = {
+  args: {
+    icon: '',
+    size: 24,
+  },
+  render: (args) => (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {glyphNames.map((iconName) => (
+        <div key={iconName}>
+          <Icon {...args} icon={iconName} />
+          <p style={{ margin: '4px' }}>{iconName}</p>
+        </div>
+      ))}
+    </div>
+  ),
+}
+```
+이렇게 작성하면 아이콘들을 한 번에 확인할 수 있기 때문에 중복방지와 함께 신규 디자인 시에 유용했기 때문에 새로운 프로젝트를 시작할 떄 항상 만들어둡니다.
+
+## Apollo Client(GraphQL)와 Storybook 통합
+GraphQL데이터가 필요한 컴포넌트가 존재했기 때문에 Storybook에서도 Apollo Client를 사용할 수 있도록 설정을 해주었습니다.
+실제 네트워크 요청이 아닌 사전에 설정한 Mock데이터를 사용하는 개념입니다.
+Apollo Client의 useQuery나 useMutation 훅으로 발생하는 GraphQL 요청을 가로채서 미리 정의한 mock 데이터를 반환합니다.
+
+### 개별 스토리
+```ts
+import { Meta, StoryObj } from '@storybook/react'
+import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { TestDialog } from './scope-condition-dialog'
+import { MockedProvider } from '@apollo/client/testing'
+import { TestMockDocument } from '@/graphql-types'
+
+// 필요한 mock를 작성
+const MockData = {
+  request: {
+    query: TestMockDocument,
+    variables: {},
+  },
+  result: {
+    data: {
+      msMockData: [
+        {
+          __typename: 'MsMockType',
+          id: '1',
+          name: 'coffeee',
+        },
+        { __typename: 'MsMockType', id: '2', name: 'cake' },
+        {
+          __typename: 'MsMockType',
+          id: '3',
+          name: 'snack',
+        },
+        {
+          __typename: 'MsMockType',
+          id: '4',
+          name: 'macaron',
+        },
+        { __typename: 'MsMockType', id: '5', name: 'chocolate' },
+        { __typename: 'MsMockType', id: '6', name: 'ichigo' },
+      ],
+    },
+  },
+}
+
+const meta: Meta<typeof TestDialog> = {
+  title: 'Event/TestDialog',
+  component: TestDialog,
+  parameters: {
+    layout: 'centered',
+  },
+  decorators: [
+    (Story) => (
+      // decorators에 MockedProvider와 작성한 mock데이터를 설정
+      <MockedProvider mocks={[MockData]} addTypename={false}>
+        <Story />
+      </MockedProvider>
+    ),
+  ],
+  argTypes: {
+    dialogState: { control: 'boolean' },
+  },
+}
+
+export default meta
+type Story = StoryObj<typeof TestDialog>
+
+export const Default: Story = {
+  render: (args) => {
+    const form = useForm<any>({
+      mode: 'all',
+    })
+    const { control } = form
+
+    const [isActive, setIsActive] = useState(true)
+
+    return (
+      <FormProvider {...form}>
+        <TestDialog
+          control={control}
+          dialogState={[isActive, setIsActive]}
+        />
+      </FormProvider>
+    )
+  },
+}
+```
+
+순서는 다음과 같습니다.
+1. mock 데이터 정의
+`const MockData`와 같이 mock 데이터를 작성합니다.
+request.query에는 모킹할 GraphQL document를 넣어줍니다.
+request.variables는 해당 쿼리에 넘겨질 변수입니다.
+result.data에 원하는 mock 데이터를 작성합니다.
+
+2. MockedProvider로 감싸기
+```ts
+  <MockedProvider mocks={[MockData]} addTypename={false}>
+    <Story />
+  </MockedProvider>
+```
+mocks prop에 위에서 정의한 mock 배열을 전달합니다.
+addTypename={false}는 mock 데이터에 직접 typename을 넣었기 때문에 Apollo가 자동으로 추가하지 않도록 하는 옵션입니다.
+
+3. 컴포넌트 내부에서 쿼리 호출
+스토리가 시작되어 컴포넌트 내부에서 쿼리가 호출되면 네트워크를 호출하는 대신, MockedProvider가 request.query와 request.variables가 일치하는 mock을 찾아 result.data를 리턴합니다.
+
+### 글로벌 스토리
+하나의 스토리에서 사용하는 것이 아닌 글로벌에서 필요한 mock데이터라면 preview에 설정합니다.
+두 가지 방식 중에 편한 것을 사용하면 됩니다.
+
+1. decorators방식
+```ts
+// storybook/preview.ts
+import type { Preview } from '@storybook/react';
+import '../styles/globals.scss';
+import { MockedProvider } from '@apollo/client/testing';
+
+// 글로벌로 사용하고 싶은 mock데이터
+import { MockData } from '../src/mocks';
+
+const preview: Preview = {
+  decorators: [
+    (Story) => (
+      <MockedProvider mocks={[MockData]} addTypename={false}>
+        <Story />
+      </MockedProvider>
+    ),
+  ],
+  parameters: {
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: { … },
+  },
+}
+
+export default preview;
+```
+
+2. storybook-addon-apollo-client 사용
+main파일에 addon 설정
+```ts
+// storybook/main.ts
+addons: [
+    'storybook-addon-apollo-client',
+    ...
+  ],
+```
+```ts
+import type { Preview } from '@storybook/react';
+import '../styles/globals.scss';
+
+import { MockedProvider } from '@apollo/client/testing';
+import { withApolloClient } from 'storybook-addon-apollo-client';
+
+// 글로벌로 사용하고 싶은 mock데이터
+import { MockData } from '../src/mocks';
+
+export const decorators = [
+  // 모든 스토리를 이 데코레이터로 감쌉니다.
+  withApolloClient({
+    MockedProvider,
+    // storybook-addon-apollo-client은 여기 정의한 mocks 배열을
+    // 각 스토리에 apolloClient.parameters.mocks로 주입해줍니다
+    mocks: [
+      MockData,
+      // 필요하다면 추가 mock…
+    ],
+    addTypename: false, // mock 데이터에 __typename을 직접 넣었다면 false
+  }),
+]
+
+const preview: Preview = {
+  parameters: {
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    apolloClient: {
+      // https://storybook.js.org/addons/storybook-addon-apollo-client
+      MockedProvider,
+    },
+  },
+}
+```
+
+## 스테이징 서버 자동 Storybook 기동 설정 (Docker)
+로컬에서의 스토리 작성 작업이 끝나면 다른 작업자, 디자이너들도 확인할 수 있도록 스테이징 서버에 적용합니다.
+```dockerfile
+# syntax=docker/dockerfile:1
+
+# npm install
+...
+
+# build
+FROM node:20.17.0-alpine3.20 AS builder
+
+ARG stage=""
+
+RUN npm run build
+
+// storybook 빌드를 추가
+RUN npm run build-storybook
+
+# runner
+FROM node:20.17.0-alpine3.20 AS runner
+
+...
+
+CMD ["node", "server.js"]
+```
+
+### nginx 에러 해결하기
+Docker 설정을 끝내고 스테이징 서버의 스토리북에 접속해보니 스토리는 열리는데 컴포넌트가 무한 로딩 상태였습니다.
+개발자툴을 열어 콘솔로그를 확인해보니 아래와 같은 에러가 검출되었습니다.
+`Refused to display 'https://stg.******.jp/' in a frame because it set 'X-Frame-Options' to 'deny'.`
+nginx의 `add_header X-Frame-Options DENY;` 설정으로 인해 iframe이 거부 된 것이 원인이었습니다.
+스토리북의 컴포넌트를 iframe 안에서 렌더링하기 때문에 iframe을 허용해주어야 합니다.
+
+```conf
+location /storybook/ {
+    proxy_pass http://127.0.0.1:3000;
+
+    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
+    proxy_hide_header X-Powered-By;
+    // iframe 차단을 막기위해 X-Frame-Options에 빈 값을 설정
+    add_header X-Frame-Options "";
+}
+```
+`add_header X-Frame-Options ""`를 설정해줍니다.
+
+### 스테이징에만 공개하기
+iframe문제가 해결됐기 때문에 스테이징 환경에선 정상적으로 표시되었습니다.
+스토리북은 기본적으로 개발 환경에서 사용되기 때문에 운영서버에서는 기동하지 않도록 해야합니다.
+다시 dockerfile로 돌아와서 스테이징 환경에서만 스토리북이 빌드 되도록 분기 처리를 해줍니다.
+```dockerfile
+# npm install
+...
+
+# build
+FROM node:20.17.0-alpine3.20 AS builder
+
+ARG stage=""
+
+RUN npm run build
+
+↓ 변경
+# build for staging
+FROM builder AS staging-builder
+RUN npm run build-storybook
+
+# runner for staging
+FROM runner AS staging-runner
+COPY --from=staging-builder /usr/src/app/storybook-static ./public/storybook-static
+```
+이렇게 하면 운영서버는 스토리북을 빌드하지 않기 때문에 존재하지 않는 페이지가 됩니다.
+
+### rewrite 설정
+스토리북이 정적 파일로 빌드 되기 때문에 확인을 위해서 `/storybook-static/index.html`와 같이 url을 입력해야합니다.
+번거롭기 때문에 간단히 `/storybook`으로 접속하도록 next.config에 rewrite를 설정해주었습니다.
+
+```js
+async rewrites() {
+    return [
+      {
+        source: '/storybook',
+        destination: '/storybook-static/index.html',
+      },
+      {
+        source: '/storybook/:path*',
+        destination: '/storybook-static/:path*',
+      },
+    ];
+  },
+```
+---
+## 마치며
+이렇게 Storybook을 최신 버전으로 다시 설정하고 Docker 환경과 Apollo Client를 통합하여 개발 환경을 복구할 수 있었습니다.
+오랫동안 방치된 개발 환경을 최신화하는 과정에서 많은 시행착오와 학습이 있었고 이를 통해 도구의 중요성과 효과적인 협업 환경 구축의 필요성을 다시 한번 알게되었습니다.
+앞으로도 개발 생산성을 높일 수 있는 다양한 도구와 환경 설정을 꾸준히 탐색하고 유용한 내용을 지속적으로 기록하여 공유하도록 하겠습니다.
+

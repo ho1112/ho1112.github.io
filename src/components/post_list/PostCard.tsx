@@ -62,7 +62,14 @@ const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
                   {post.categoryPublicName}
                 </span>
               </div>
-              <h2 className="my-1 font-bold text-lg lg:text-xl text-white">
+              <h2
+                className={cn(
+                  'my-1 font-bold text-white',
+                  variant === 'grid'
+                    ? 'text-base lg:text-lg'
+                    : 'text-lg lg:text-xl',
+                )}
+              >
                 {post.title}
               </h2>
               <div className="flex gap-3 font-medium text-[10px] lg:text-xs text-white">
