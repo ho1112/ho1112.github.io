@@ -7,7 +7,7 @@ thumbnail: /posts/workLog/storybook-apollo/sbicon.avif
 
 <h1>storybook 부활시키기</h1>
 
-얼마 전 회사에서 사용하고 있던 Storybook이 어느 순간부터 제대로 작동하지 않는 상태가 되어 있었습니다.
+새롭게 들어간 현장에서 예전에 사용하고 있던 Storybook이 어느 순간부터 제대로 작동하지 않는 상태가 되었으니 부활시켜달라는 의뢰가 들어왔습니다
 이 기회에 최신 버전으로 완전히 새롭게 설치하고 Docker 환경과 함께 Apollo Client(GraphQL)를 활용하여 다시 부활시킨 과정을 정리해보았습니다.
 
 ---
@@ -26,7 +26,7 @@ Apollo Client는 GraphQL 쿼리를 통해 데이터를 관리하고 프론트엔
 자세한 내용은 공식사이트를 참조 👉 [apollographql](https://www.apollographql.com/docs/react)
 
 ## 구버전 Storybook 삭제 및 신규 설치
-기존의 구버전 Storybook이 최신 환경과의 호환성 문제로 인해 제대로 동작하지 않았기 때문에 아예 완전히 삭제하고 최신 버전의 Storybook을 새롭게 설치했습니다.
+기존의 구버전 Storybook이 최신 환경과의 호환성 문제로 있었기 때문에 아예 완전히 삭제하고 최신 버전의 Storybook을 새롭게 설치했습니다.
 새롭게 설치한 Storybook과 애드온은 아래와 같습니다.
 ```json
 "@storybook/addon-essentials": "7.6.20",
