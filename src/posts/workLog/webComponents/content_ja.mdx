@@ -1,30 +1,30 @@
 ---
 title: 'Web Components(+Lit)'
-desc: webComponents with Lit
+desc: Litを使用したWeb Components
 date: 2025-03-09
 thumbnail: /posts/workLog/webComponents/logo.avif
 ---
 
-<h1>Web Components의 도입 필요성</h1>
+<h1>Web Components導入の必要性</h1>
 
-다양한 기술 스택을 사용하는 서비스에서는 여러 언어와 프레임워크가 혼합되어 사용됩니다.
-제가 담당했던 호텔 시스템은 React였지만 다른 카테고리의 예약 시스템은 PHP, Vue 등으로 개발되었습니다.
-각 서비스의 상단 네비게이션바는 같은 디자인과 기능을 갖고 있었으나 실제로는 각각 별도로 구현되어 있어서 수정사항이 발생할 경우 모든 서비스의 담당자가 개별적으로 개발 및 배포를 진행해야했습니다.
-이러한 비효율성을 줄이고 유지보수 및 사용자 경험을 일관되게 유지하기 위해 상단 네비게이션 바를 통합적으로 관리할 필요가 있었고 이러한 문제를 해결하기 위해 크로스 플랫폼 기술인 Web Components를 도입하게 되었습니다.
+さまざまな技術スタックを使用するサービスでは、複数の言語やフレームワークが混在して利用されています。
+私が担当していたホテルシステムはReactで開発されていましたが、別カテゴリーの予約システムはPHPやVueで構築されていました。
+各サービスの上部ナビゲーションバーは同じデザインと機能を持っていたものの、実際にはそれぞれ別々に実装されていたため、修正が発生するたびに各サービス担当者が個別に開発・デプロイを行わなければなりませんでした。
+このような非効率を解消し、メンテナンス性およびユーザー体験を一貫して維持するために、上部ナビゲーションバーを統合的に管理する必要があり、その解決策としてクロスプラットフォーム技術であるWeb Componentsを導入しました。
 
 ---
-## Web Components 개요
-Web Components는 재사용 가능하고 캡슐화된 웹 컴포넌트를 만들기 위한 웹 표준 기술입니다.
-이 기술을 활용하면 독립적으로 동작하며 다른 페이지의 부분들과 격리된 사용자 정의 HTML 요소를 생성할 수 있습니다.
+## Web Componentsの概要
+Web Componentsは再利用可能でカプセル化されたウェブコンポーネントを作成するためのウェブ標準技術です。
+この技術を用いることで独立して動作しページの他部分と隔離されたカスタムHTML要素を生成できます。
 
 주요 개념 및 구성 요소
-Web Components는 크게 세 가지 기술로 구성됩니다.
+Web Componentsは大きく分けて以下の三つの技術で構成されます。
 
-**Custom Elements**
-Custom Elements를 사용하면 개발자가 직접 HTML 태그를 생성할 수 있습니다.
-이를 통해 재사용 가능한 컴포넌트를 제작할 수 있습니다.
+### Custom Elements
+Custom Elementsを使用すると、開発者自身が独自のHTMLタグを定義できます。
+これにより再利用可能なコンポーネントを作成できます。
 
-예를 들어 커스텀 버튼 태그 `<my-button>`을 만들고 이를 불러와 다른 HTML과 함께 사용할 수 있습니다.
+例えば、カスタムボタンタグ`<my-button>`を作って、これを読み込んで他のHTMLに組み込んで利用できます。
 
 ```javascript
 <template id="my-button-template">
@@ -45,12 +45,13 @@ Custom Elements를 사용하면 개발자가 직접 HTML 태그를 생성할 수
 <my-button></my-button>
 ```
 
-**Shadow DOM**
-Shadow DOM은 DOM으로부터 독립적인 DOM 트리를 만들어 스타일과 마크업을 캡슐화하며 컴포넌트가 페이지의 나머지 부분과 독립적으로 작동할 수 있도록 해줍니다.
+### Shadow DOM
+Shadow DOMは通常のDOMから独立したDOMツリーを作成し、スタイルやマークアップをカプセル化します。
+これによりコンポーネントはページの残り部分と独立して動作できます。
 
-**HTML Templates**
-HTML Templates는 즉시 렌더링되지 않고 JavaScript를 통해 필요할 때 동적으로 사용됩니다.
-이를 통해 컴포넌트의 재사용성을 높이고 메모리 사용을 효율적으로 관리할 수 있습니다.
+### HTML Templates
+HTML Templatesは即時レンダリングされず、JavaScriptを通して必要なタイミングに動的に利用されます。
+これによりコンポーネントの再利用性を高め、メモリ使用量を効率的に管理できます。
 ```html
 <template id="concert-ticket">
   <div class="concert">
@@ -61,7 +62,7 @@ HTML Templates는 즉시 렌더링되지 않고 JavaScript를 통해 필요할 �
 </template>
 <script>
   const ticketTemplate = document.getElementById("concert-ticket').content;
-  // 템플릿을 deep copy해서 자식 요소까지 복제
+  // テンプレートをdeep copyして子要素まで複製
   const clone = document.importNode(ticketTemplate, true);
   clone.querySelector('.title').textContent = 'New Live';
   clone.querySelector('.price').textContent = '￥12,000';
@@ -69,16 +70,17 @@ HTML Templates는 즉시 렌더링되지 않고 JavaScript를 통해 필요할 �
 </script>
 ```
 
-이 세 가지 핵심 기술을 활용하면 프레임워크나 라이브러리에 구애받지 않고 일관된 UI 컴포넌트를 구축할 수 있습니다.
+これら三つのコア技術を活用することで、フレームワークやライブラリに依存しない一貫したUIコンポーネントを構築できます。
 
-## Lit 라이브러리 소개
-Lit 라이브러리란?
-Lit는 Web Components를 더욱 간결하고 효율적으로 구현할 수 있도록 도와주는 라이브러리입니다.
-Web Components 표준을 기반으로 하며 반응형 속성과 선언적 템플릿 기능을 제공하여 컴포넌트 개발의 효율성을 높여줍니다.
+## Lit ライブラリの紹介
+Litライブラリとは？
+LitはWeb Componentsをより簡潔かつ効率的に実装するためのライブラリです。
+Web Components標準をベースに、リアクティブプロパティや宣言的テンプレート機能を提供し、コンポーネント開発の生産性を向上させます。
 
 ### Lit를 사용하는 이유
-Lit는 데이터가 변경될 때 동적으로 변경된 부분만 효율적으로 렌더링하여 빠른 성능을 제공합니다. 또한 라이브러리 자체가 가볍기 때문에 로딩 시간을 단축하고 번들 크기를 최소화합니다.
+Litはデータが変更された際に、動的に変更されたところのみ効率的に再レンダリングすることで高速なパフォーマンスを実現します。 なお、ライブラリ自体が軽量なため、ロード時間を短縮し、バンドルサイズを最小限に抑えます。
 JavaScript 및 React와 유사한 문법 덕분에 학습 난이도도 낮습니다.
+JavaScriptやReactに似た文法のおかげで学習コストも低く、導入がスムーズです。
 
 ```javascript
 import {html, css, LitElement} from 'lit';
@@ -100,21 +102,21 @@ export class SimpleGreeting extends LitElement {
 <simple-greeting name="World"></simple-greeting>
 ```
 
-Lit의 특징은 다음과 같습니다.
-1. Custom Elements: Lit 컴포넌트는 표준 사용자 정의 요소로 브라우저가 기본 HTML 요소처럼 처리한다.
-2. Scoped styles: Lit는 Shadow DOM을 사용해 스타일을 자동으로 범위 지정한다. 이로 인해 CSS 선택자를 간단하게 유지하며 페이지의 다른 스타일로부터 독립적으로 작동하여 스타일 충돌을 방지한다.
-3. Reactive properties: 반응형 속성을 선언하여 컴포넌트의 API와 내부 상태를 모델링, 속성이 변경될 때마다 Lit 컴포넌트가 효율적으로 다시 렌더링된다.
-4. Declarative templates: 태그가 지정된 템플릿 리터럴을 기반으로 하며 HTML 마크업을 자바스크립트와 결합하여 간단하고 빠르게 작성할 수 있다.
+Litの特徴は以下となります
+1. Custom Elements: Litコンポーネントは標準のカスタム要素として扱われ、ブラウザがネイティブのHTML要素と同様に処理します。
+2. Scoped styles: LitはShadow DOMを使用してスタイルを自動でスコープ指定します。これによりCSSセレクタをシンプルに維持しながら、ページ内の他のスタイルから独立し、スタイルの衝突を防ぎます。
+3. Reactive properties: リアクティブプロパティを宣言することで、コンポーネントのAPIや内部状態をモデル化し、プロパティが変更されるたびにLitコンポーネントが効率的に再レンダリングされます。
+4. Declarative templates: タグ付きテンプレートリテラルに基づき、HTMLマークアップとJavaScriptを組み合わせて簡単かつ速めに作成できます。
 
 ---
-### 실제 프로젝트에서의 구현
-본 서비스가 pc, 타블렛, 스마트폰 사이즈로 제공되기 때문에 디렉토리 구조를 index에서 pc, tb, sp로 분기하여 각각에 맞는 렌더링이 이루어지도록 설계하였습니다.
-헤더는 로고, 로그인 기능을 포함한 바(bar) 컴포넌트와 모든 서비스 메뉴가 표시되는 네비게이션(nav) 컴포넌트로 구성하였습니다.
+### 実際のプロジェクトでの実装
+本サービスはPC、タブレット、スマートフォンに対応しているため、ディレクトリ構造をindexからpc, tb, spに分岐しそれぞれに最適化したレンダリングを行う設計にしました。
+ヘッダーはロゴやログイン機能を含むバー（bar）コンポーネントと、全サービスメニューを表示するナビゲーション（nav）コンポーネントで構成されています。
 
-각각의 헤더에서는 로그인 상태, 언어, 서비스명, 공지사항 등의 property를 갖도록 되어있습니다.
+それぞれのヘッダーはログイン状態、言語、サービス名、お知らせなどのプロパティを持つようになっています。
 
 ```javascript
-// header 부모 컴포넌트
+// header 親コンポーネント
 @customElement('header-pc')
 export class HeaderPc extends LitElement {
   @property({ type: Boolean })
@@ -152,7 +154,7 @@ declare global {
 ```
 
 ```javascript
-// header bar 컴포넌트
+// header bar コンポーネント
 @customElement('header-bar-pc')
 export class HeaderBarPC extends LitElement {
   @property({ type: Boolean })
@@ -265,37 +267,37 @@ declare global {
 }
 ```
 
-bar컴포넌트에서는 상태변화, 동적 렌더링을 위해 아래와 같은 기능들이 사용되었습니다.
+barコンポーネントではステータス変化、動的レンダリングのため、以下とような機能が使用されました。
 
-+ Property와 State
-@property 데코레이터는 컴포넌트의 속성을 정의할 때 사용됩니다.
-이 속성들은 컴포넌트 외부에서 변경할 수 있으며 변경될 때 컴포넌트가 자동으로 업데이트됩니다.
-예를 들어 login과 language처럼 외부에서 컴포넌트의 상태나 설정을 조정할 필요가 있을 때 사용됩니다.
-@state 데코레이터는 내부 상태 관리를 위해 사용됩니다.
-이 상태들은 컴포넌트 내부에서만 관리되며 변경될 때만 컴포넌트가 업데이트됩니다.
-예시의 컴포넌트에서는 내부에서의 도움말 표시 여부를 결정하는데에 사용되었습니다.
-React와 비교하자면 property는 props, state는 useState와 같은 역할을 한다고 볼 수 있습니다.
++ PropertyとState
+@propertyデコレーターはコンポーネント外部から指定可能なプロパティを定義するため使用されます。
+このプロパティはコンポーネントの外部で変更可能で、変更されるとコンポーネントが自動的にアップデートされます。
+例えば、`login` や `language` のように、外部からコンポーネントの状態や設定を調整する必要がある場合に使います。
+@stateデコレーターは内部状態の管理のため使用されます。
+このステータスはコンポーネントの内部でのみ管理され変更された場合のみコンポーネントがアップデートされます。
+例として、サンプルコンポーネントではヘルプ表示のオン／オフを制御するために使われています。
+Reactと比較すると、`@property` が `props`、`@state` が `useState` に相当します。
 + Lifecycle Methods
-willUpdate는 속성이나 상태가 변경되어 업데이트가 발생하기 직전에 호출됩니다.
-이 함수로 변경될 속성에 따라 필요한 스타일이나 로직을 적용할 수 있습니다.
+willUpdateはプロパティや状態が変更されてアップデートが発生する直前に呼び出されます。
+このメソッド内で、変更されるプロパティに応じたスタイルやロジックを適用できます。
 + Event Handlers
-@click과 @mouseover로 DOM 이벤트를 처리
+@clickや@mouseoverでDOMイベントを処理します。
 + styleMap
-styleMap은 Lit 라이브러리의 지시자 중 하나로 인라인 스타일을 동적으로 관리할 수 있게 해줍니다.
-주로 스타일을 조건부로 적용해야 할 때 사용됩니다.
-인라인 스타일을 관리하는 styleMap외에 class를 동적으로 변경해 스타일을 변경해주는 classMap도 존재합니다.
+styleMapはLitライブラリのディレクティブの一つで、インラインスタイルを動的に管理できます。
+主に条件付きでスタイルを適用したいときに使います。
+インラインスタイル用の styleMapのほかに、クラスを動的に切り替えるclassMapもあります。
 
-> 이 중에서 가장 핵심적이고 자주 사용되는 것이 바로 **Lifecycle Methods**입니다. 이 메소드들은 다음과 같은 순서로 동작합니다.
-### Lit의 Lifecycle Methods
+> この中でも最も核心的で頻繁に使用されるのが**Lifecycle Methods**です。これらのメソッドは以下の順序で動作します。
+### LitのLifecycle Methods
 1. Pre-update
-컴포넌트의 하나 이상의 속성이 변경되거나 requestUpdate() 메소드가 호출되면 업데이트가 스케줄됩니다.
-컴포넌트의 상태에 변화가 생겼음을 Lit 프레임워크에 알리며 이에 따라 프레임워크는 새로운 렌더링을 준비합니다.
+コンポーネントの一つ以上のプロパティが変更されるか、requestUpdate()メソッドが呼び出されるとアップデートがスケジュールされます。
+コンポーネントの状態に変化があったことをLitフレームワークに通知し新しいレンダリングの準備を行います。
 2. Update
-속성 반영 (Reflecting Attributes): HTML 속성으로 표시되어야 하는 프로퍼티 값들이 DOM에 반영됩니다
-내부 DOM 업데이트 (Updating Internal DOM): 컴포넌트의 render 메소드가 호출되어 내부 DOM을 최신 상태로 갱신합니다.
+属性反映(Reflecting Attributes): HTML属性として反映すべきプロパティ値がDOM に反映されます。
+内部DOMアップデート(Updating Internal DOM): コンポーネントのrenderメソッドが呼び出され、内部DOMが最新状態に更新されます。
 3. Post-Update
-모든 업데이트 과정이 끝나면 updateComplete 프로미스가 해결(resolved)됩니다.
-이 프로미스는 외부에서 업데이트가 완료되었음을 감지하기 때문에 업데이트 후 추가 작업을 지시할 수 있습니다.
+すべての更新処理が完了すると、updateCompleteプロミスが解決(resolved)されます。
+このプロミスは外部からアップデートが完了されたことを完治するため、アップデート後追加作業を指示することができます。
 
 **Pre-Update**
 ![](/posts/workLog/webComponents/update-1.avif)
@@ -305,41 +307,40 @@ styleMap은 Lit 라이브러리의 지시자 중 하나로 인라인 스타일�
 **Post-Update**
 ![](/posts/workLog/webComponents/update-4.avif)
 
-### 브라우저에서의 Shadow DOM
-Shadow DOM은 다음과 같이 구성됩니다.
+### ブラウザでのShadow DOM
+Shadow DOMは以下のように構成されます。
 ![Shadow DOM](/posts/workLog/webComponents/shadowdom.svg)
-섀도우 호스트 : 섀도우 DOM이 연결된 일반 DOM 노드
-섀도우 트리 : 섀도우 DOM 내부의 DOM 트리
-섀도우 경계 : 섀도우 DOM이 끝나고 일반 DOM이 시작되는 곳
-섀도우 루트 : 섀도우 트리의 루트 노드
+Shadow Host : ShadowDOMが接続された通常のDOMノード
+Shadow Tree : ShadowDOM内部のDOMツリー
+Shadow Boundary : ShadowDOMの終了点と通常DOMの開始点
+Shadow Root : Shadowツリーのルートノード
 
-브라우저에서 확인해보면 각각의 webComponents가 ShadowDom으로 캡슐화되어 있는 것을 확인할 수 있습니다.
-![브라우저에서의 ShadowDom 구조](/posts/workLog/webComponents/shadowdom_browser.avif)
+ブラウザで確認すると、それぞれのWeb ComponentsがShadowDomでカプセル化されていることが分かります。
+![ブラウザでのShadowDom構造](/posts/workLog/webComponents/shadowdom_browser.avif)
 
-## 프로젝트 후기 및 느낀점
-사내에서 처음으로 Web Components를 도입할 때 모든 작업을 혼자 맡았기 때문에 처음에는 엄청난 부담을 느끼기도 했고 한국과 일본에서는 Web Components에 대한 커뮤니티가 크지 않았기 때문에 대부분의 자료를 영어로 된 것을 참조해야하는 불편함도 있었습니다.
-그래도 React와 유사한 측면이 많아 러닝커브가 크지 않았고 새로운 기술을 다루는 과정 자체에서 오는 즐거움과 완성됐을 때의 보람도 있었습니다.
+## プロジェクトの振り返りと感想
+社内で初めてWeb Componentsを導入した際、すべての作業を一人で担当したため当初は非常に大きなプレッシャーを感じました。また、韓国や日本ではWeb Componentsに関するコミュニティがまだ成熟しておらず、ほとんどの資料が英語で提供されている不便さもありました。
+それでもReactとの類似点が多かったためラーニングカーブは緩やかで、新技術に触れる喜びや完成したときのやりがいも大きかったです。
 
-프로젝트의 시작부터 끝까지 그리고 이후 유지보수까지 대부분 혼자 담당하면서 이 컴포넌트에 애착을 가지게 되어서 당시의 회사를 떠난 지금도 가끔 웹사이트에 접속해 잘 운영되고 있는지 확인하곤 합니다. 👀
-
+プロジェクトの開始から維持保守までを一人で担当したことでこのコンポーネントに強い愛着が生まれ、前職を離れた今もたまにアクセスして正常に稼働しているかを確認したりします。 👀
 ---
 
-## 마치며
-2011년 공개된 webComponents는 컴포넌트의 재사용성과 캡슐화된 스타일링을 목표로하여 웹 개발의 표준적인 접근 방식을 제시하였습니다.
-그리고 이러한 컴포넌트 기반 개발은 React와 Vue로 이어져 현재까지 프론트엔드의 메인프레임으로 자리잡고 있습니다.
+## おわりに
+2011年に公開されたWeb Componentsは、コンポーネントの再利用性とカプセル化されたスタイルを目的としてウェブ開発の標準的アプローチを提示しました。
+提示しました。そしてこのコンポーネントベース開発はReactやVueへと受け継がれ、現在ではフロントエンドの主流技術となっています。
 
-각기 다른 환경에서도 일관된 기능과 스타일을 유지할 수 있는 재사용 가능한 컴포넌트는 개발 프로세스와 유지보수를 간소화하는 장점을 가지고 있습니다.
-특히 크로스 플랫폼 기술이라는 점은 개발자에게 있어 엄청난 매력이 아닐 수 없습니다.
-하지만 현재 webComponents 사용률은 그리 높지 않은 상황입니다.
-![Web Components 사용통계](/posts/workLog/webComponents/statistics.avif)
+異なる環境間でも一貫した機能とスタイルを維持できる再利用可能なコンポーネントは、開発プロセスと保守を簡素化する大きな利点を持ちます。
+特にクロスプラットフォーム技術ということは開発者にとって大きな魅力と言わざるを得ません。
+しかし現状ではWeb Componentsの利用率はまだ高くありません。
+![Web Components使用統計](/posts/workLog/webComponents/statistics.avif)
 
-장점은 분명 존재하지만 기존의 프레임워크, 라이브러리가 제공하는 편리함과 생태계 또한 무시할 수 없고
-실제로 경험해 본 바로도 크로스 플랫폼이라는 이점이 아니라면 React, Nextjs를 대체할 필요성을 느끼진 못한 것 같습니다.
+メリットは確かに存在しますが、既存のフレームワークやライブラリが提供する利便性とコミュニティも無視できないし
+実際に使ってみた感覚ではクロスプラットフォームのメリットがなければReactやNext.jsを置き換える必要性は感じませんでした。
 
-그럼에도 webComponents의 방향성은 분명 웹 개발에 있어 고려해야할 중요한 기술이기에
-webComponents를 경험해보고 그 가능성을 생각해볼 수 있는 좋은 시간이었다고 생각합니다.
+それでもWeb Componentsの方向性はウェブ開発において検討すべき重要な技術であり、
+webComponentsを経験してみて、この可能性を考えられる良い機会だったと思います。
 
-#### 🔗 참고
+#### 🔗 参考
 https://en.wikipedia.org/wiki/Web_Components
 https://developer.mozilla.org/en-US/docs/Web/API/Web_components
 https://lit.dev/
