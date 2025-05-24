@@ -60,8 +60,8 @@ const CategoryList = ({
       value: 'Dev',
       isCurrent: currentCategory === 'Dev',
       subCategories: [
+        { value: 'web', displayName: 'web', language },
         { value: 'releaseNote', displayName: 'releaseNote', language },
-        { value: 'Web', displayName: 'Web', language },
       ],
     },
     {
