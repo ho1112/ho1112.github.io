@@ -1,0 +1,177 @@
+---
+title: '🚀 2025-05 W3 #7'
+desc: 2025년 5월 3주차 뉴스레터
+date: 2025-05-18
+thumbnail: /posts/weekly/may.avif
+---
+
+## 🔥 이번 주 핵심 테마
+- 최신 JavaScript 기능 심층 분석, UI 개발을 위한 혁신적인 도구 및 CSS 레이아웃의 발전 등 개발자 생산성과 웹 표준의 미래를 조망하는 다양한 소식들을 확인하세요.
+
+## 1. 🔍 심층 분석
+1.  **[JavaScript의 명시적 리소스 관리 (Explicit Resource Management)](https://v8.dev/features/explicit-resource-management)** (*JavaScript Weekly #735*)
+    * 배경: 파일 핸들, 네트워크 연결과 같은 리소스를 관리할 때 수동으로 정리하는 것은 오류가 발생하기 쉽고 코드를 복잡하게 만들 수 있습니다. 이를 개선하기 위해 새로운 표준 기능이 제안되었습니다.
+    * 핵심 기능: `using` 및 `await using` 선언을 도입합니다. 이 선언을 사용하여 생성된 객체가 `[Symbol.dispose]` 또는 `[Symbol.asyncDispose]` 메서드를 가지고 있다면, 해당 객체가 선언된 블록을 벗어날 때 이 메서드가 자동으로 호출됩니다.
+    * 코드 예제:
+        ```javascript
+        function example() {
+          const getResource = () => ({
+            [Symbol.dispose]: () => console.log('리소스 해제 완료!'),
+            process: () => console.log('리소스 사용 중...')
+          });
+
+          using myResource = getResource();
+          myResource.process();
+        } // 이 블록을 벗어나면 myResource[Symbol.dispose]()가 자동으로 호출됩니다.
+        example();
+        ```
+    * 실무 적용: 파일 I/O, 데이터베이스 연결, 사용자 정의 리소스 래퍼 등에서 리소스 관리를 단순화하고, 정리 코드를 줄이며, 리소스 유출을 방지하는 데 유용합니다.
+    * 주의사항: Node.js 22+, 최신 브라우저 등 런타임 지원이 필요합니다. 개발자는 리소스 객체에 `[Symbol.dispose]` 또는 `[Symbol.asyncDispose]` 메서드를 올바르게 구현해야 합니다.
+
+2.  **[CSS 높이의 수수께끼 (The Height Enigma)](https://www.joshwcomeau.com/css/height-enigma/)** (*Frontend Focus #692*)
+    * 배경: CSS에서 백분율 기반 높이(%)는 특히 초보자들에게 예상치 못한 방식으로 동작하는 경우가 많습니다. 이는 부모 요소의 높이 계산 방식에 대한 이해 부족에서 비롯됩니다.
+    * 핵심 기능: 요소의 백분율 높이는 해당 요소의 포함 블록(containing block) 높이를 기준으로 계산됩니다. 만약 부모 요소의 높이가 명시적으로 정의되어 있지 않거나 내용(content)에 따라 결정된다면, 자식 요소의 백분율 높이는 의도대로 작동하지 않을 수 있습니다.
+    * 코드 예제:
+        ```css
+        .parent-container {
+          height: 300px; /* 부모 요소에 명시적인 높이 설정 */
+        }
+
+        .child-element {
+          height: 50%; /* .parent-container 높이의 50%, 즉 150px */
+        }
+        ```
+    * 실무 적용: 전체 높이 요소, 부모의 특정 부분을 채우는 요소 등 레이아웃 디자인 시 필수적으로 이해해야 합니다. `vh` (viewport height) 단위는 뷰포트 기준 높이가 필요할 때 대안이 될 수 있습니다.
+    * 주의사항: 해당 요소의 모든 조상 요소들의 높이 속성을 신중하게 고려해야 합니다. 특정 경우에는 `min-height` 또는 `flexbox/grid` 레이아웃이 더 적합할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[저수지 샘플링 (Reservoir Sampling) 시각적 해설](https://rroses.github.io/reservoir-sampling-explained/)** (*JavaScript Weekly #735*)
+    + 요약: 크기가 매우 크거나 알 수 없는 데이터 스트림에서 k개의 아이템을 무작위로 효율적으로 샘플링하는 알고리즘에 대한 시각적이고 이해하기 쉬운 설명입니다. 빅데이터 분석 및 스트리밍 데이터 처리에 유용합니다.
+- **[디자인 시스템에 지역화(Localization) 통합 방법](https://www.smashingmagazine.com/2024/05/integrate-localization-design-systems/)** (*Smashing Newsletter #507*)
+    + 요약: 글로벌 제품을 위한 디자인 시스템 구축 시 다국어 지원, 텍스트 확장, RTL 레이아웃, 문화적 적합성을 고려한 아이콘 처리 등 지역화 전략과 모범 사례를 다룹니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+1.  **[tscircuit: React를 사용한 전자 회로 설계](https://tscircuit.com/)** (*React Status #429*)
+    * 개요: 전자 회로 설계를 위해 React의 선언적 컴포넌트 모델을 활용하는 혁신적인 접근 방식을 제공합니다. 개발자에게 친숙한 방식으로 회로를 구성하고 시각화할 수 있게 해줍니다.
+    * 사용법 (개념 코드):
+        ```jsx
+        import { Board, Resistor, LED, Trace } from 'tscircuit';
+
+        function MyCircuit() {
+          return (
+            <Board>
+              <Resistor name="R1" resistance="330ohm" />
+              <LED name="LED1" color="red" />
+              <Trace path={['R1.p2', 'LED1.anode']} />
+              {/* 추가적인 컴포넌트 및 연결 */}
+            </Board>
+          );
+        }
+        ```
+    * 실전 팁: React에 익숙한 개발자들이 전자 프로젝트 프로토타이핑이나 교육 자료 제작 시 유용하게 사용할 수 있습니다. 회로도 디자인과 문서화를 코드 기반으로 관리할 수 있는 장점이 있습니다.
+
+2.  **[k6 v1.0: Go 기반 JavaScript 부하 테스트 도구](https://k6.io/blog/k6-v1-0-is-here/)** (*JavaScript Weekly #735*)
+    * 개요: k6는 JavaScript (ES2015/ES6) 스크립트를 사용하여 API 및 웹사이트에 대한 성능 부하 테스트를 수행할 수 있는 강력하고 현대적인 도구입니다. Go로 작성되어 높은 성능을 자랑하며, v1.0에서는 안정성, TypeScript 지원 강화 및 확장성이 향상되었습니다.
+    * 사용법 (기본 스크립트 예시):
+        ```javascript
+        // loadtest.js
+        import http from 'k6/http';
+        import { check, sleep } from 'k6';
+
+        export const options = {
+          vus: 10, // 가상 사용자 10명
+          duration: '30s', // 30초 동안 실행
+        };
+
+        export default function () {
+          const res = http.get('[https://test-api.k6.io/public/crocodiles/](https://test-api.k6.io/public/crocodiles/)');
+          check(res, { 'status is 200': (r) => r.status === 200 });
+          sleep(1); // 1초 대기
+        }
+        // 실행: k6 run loadtest.js
+        ```
+    * 실전 팁: 테스트 시나리오를 JavaScript로 작성하여 개발 친화적이며, CI/CD 파이프라인에 통합하여 지속적인 성능 모니터링이 가능합니다. 다양한 프로토콜을 지원하며, 결과 분석을 위한 풍부한 메트릭을 제공합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Figma Sites: Figma 디자인을 웹에 직접 게시](https://www.figma.com/blog/introducing-figma-sites/)** (*Frontend Focus #692*)
+    + 요약: Figma에서 디자인한 내용을 별도의 코딩 없이 웹사이트로 바로 게시할 수 있는 기능입니다. 프로토타입, 간단한 랜딩 페이지 제작에 유용할 수 있으나, 출력되는 코드의 품질에 대해서는 다양한 의견이 있습니다.
+- **[디자이너와 UI 엔지니어를 위한 작은 도우미들 (모음)](https://www.smashingmagazine.com/2024/05/little-helpers-designers-ui-engineers/)** (*Smashing Newsletter #507*)
+    + 요약: 디자인 토큰 관리를 위한 Tokens Studio, SVG 경로 편집기, 생산성 런처 Raycast, 스크린샷 도구 CleanShot X, npm 패키지 비용 분석기 Bundlephobia, 애니메이션 디버깅 도구 MotionDevTools 등 작업 흐름을 개선하는 유용한 소형 유틸리티들을 소개합니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+1.  **[최신 npm 패키지 제작 모범 사례](https://modern-npm-packages.mjs.cool/)** (*JavaScript Weekly #735, React Status #429*)
+    * 핵심 인사이트: 효과적이고 유지보수 가능한 npm 패키지를 만들기 위한 최신 접근법을 다룹니다. ES 모듈 사용, TypeScript 타입 제공, 적절한 `package.json` 설정, 린팅, 포맷팅, 테스트 자동화 및 CI/CD를 통한 배포 파이프라인 구축 등 실질적인 가이드라인을 제공합니다.
+    * 왜 이 글이 유익한가: 고품질의 JavaScript 패키지를 개발하고 배포하는 데 필요한 지식을 체계적으로 정리해주어, 생태계에 기여하고자 하는 개발자들에게 훌륭한 지침서가 됩니다.
+
+2.  **[CSS Overflow Level 5 명세 분석: 순수 CSS 스크롤 및 캐러셀 구현의 현재와 미래](https://www.sarasoueidan.com/blog/css-overflow-5/)** (*JavaScript Weekly #735*)
+    * 핵심 인사이트: `scroll-snap-type-x`, `scroll-timeline` 등 CSS Overflow Level 5 명세에 추가된 새로운 속성들을 활용한 순수 CSS 기반 스크롤 효과 및 캐러셀 구현 가능성을 탐구합니다. Sara Soueidan은 이러한 기능들의 접근성 및 사용성을 심층 분석하며, 아직은 JavaScript 기반 솔루션을 완전히 대체하기에는 한계가 있을 수 있다고 지적합니다.
+    * 왜 이 글이 유익한가: 최신 CSS 기능의 가능성과 현실적인 제약을 동시에 파악할 수 있으며, 특히 웹 접근성을 고려한 기술 선택의 중요성을 강조합니다.
+
+3.  **[HTMX와 웹 개발의 미래](https://carlhewitt.dev/htmx-and-the-future-of-web-development)** (*Frontend Focus #692*)
+    * 핵심 인사이트: 복잡한 JavaScript 프레임워크의 대안으로 HTMX를 조명합니다. HTMX는 HTML 속성을 통해 AJAX 요청, CSS 트랜지션, 웹소켓, 서버-센트 이벤트 등을 직접 마크업에서 처리하여 하이퍼미디어 중심 애플리케이션의 상호작용을 단순화하는 것을 목표로 합니다. 곧 출시될 HTMX 2.0.0에 대한 기대감도 언급합니다.
+    * 왜 이 글이 유익한가: 클라이언트 측 JavaScript의 복잡성을 줄이고 서버 주도 아키텍처를 선호하는 개발자들에게 새로운 관점과 선택지를 제시합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Penpot의 네이티브 디자인 토큰을 활용한 디자인과 코드 통합](https://www.smashingmagazine.com/2024/05/integrating-design-code-native-design-tokens-penpot/)** (*Smashing Newsletter #507*)
+    + 요약: 오픈소스 디자인 도구인 Penpot에서 네이티브 디자인 토큰을 지원함에 따라, 디자인과 개발 워크플로우 간의 간극을 줄이고 일관성을 유지하는 방법에 대해 설명합니다.
+- **[왜 우리는 여전히 88x31 버튼을 사용하는가](https://ultrasciencelabs.com/notes/88x31/)** (*Frontend Focus #692*)
+    + 요약: 초기 웹 시절 유행했던 88x31 픽셀 버튼의 역사와 그 작은 형식 안에 담긴 창의적 제약, 그리고 웹 문화의 한 단면으로서의 지속적인 매력을 탐구하는 흥미로운 글입니다.
+
+---
+
+## 4. ✨ 아이디어
+1.  **[MoodHue: AI를 사용하여 감정에 기반한 색상 팔레트 생성](https://moodhue.com/)** (*Frontend Focus #692*)
+    * 특징: 사용자가 '차분함', '활기참'과 같은 감정이나 분위기를 텍스트로 입력하면, AI가 해당 설명에 맞는 5가지 색상으로 구성된 팔레트를 생성해줍니다. 생성된 색상을 블러/메시 그라데이션으로 미리 볼 수 있는 옵션도 제공합니다. 디자이너나 개발자가 프로젝트 초기 단계에서 빠르게 색상 영감을 얻는 데 유용합니다.
+
+2.  **[대시보드 디자인: 쇼케이스 및 예제 모음](https://www.dashboard.design/)** (*Smashing Newsletter #507*)
+    * 특징: 다양한 산업 및 목적에 맞는 대시보드 레이아웃과 디자인 사례들을 한눈에 볼 수 있도록 모아놓은 웹사이트입니다. 정보 아키텍처 구성, 데이터 시각화 방법에 대한 영감을 얻을 수 있으며, 실제 프로젝트에 적용할 만한 아이디어를 찾는 데 도움이 됩니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Next.js에서 Ruby on Rails로 마이그레이션 (React 프론트엔드 유지)](https://www.flightcontrol.dev/blog/we-migrated-from-nextjs-to-rails)** (*JavaScript Weekly #735*)
+    + 요약: 한 개발팀이 기존 Next.js 기반 백엔드를 Ruby on Rails로 전환하면서 프론트엔드는 React로 유지한 경험과 그 이유, 과정을 공유했습니다.
+- **[Google, Gemini 2.5 Pro 모델 업데이트: 프론트엔드 앱 빌드 능력 향상](https://developers.googleblog.com/2024/05/gemini-25-pro-builds-frontend-apps.html)** (*JavaScript Weekly #735*)
+    + 요약: Google이 Gemini 2.5 Pro AI 모델을 업데이트하여, 특히 '심미적인 웹 개발 감각'을 갖춘 프론트엔드 애플리케이션 구축 능력이 크게 향상되었다고 밝혔습니다.
+- **[PptxGenJS: 코드로 PowerPoint 프레젠테이션 생성 라이브러리](https://gitbrent.github.io/PptxGenJS/)** (*React Status #429*)
+    + 요약: JavaScript를 사용하여 슬라이드, 텍스트, 도형, 이미지, 차트 등을 정의하고 .pptx 파일로 내보낼 수 있는 라이브러리입니다. 동적 데이터 기반 보고서 생성 등에 유용합니다.
+- **[현재 페이지 쿠키 삭제 북마클릿](https://henry.codes/writing/a-bookmarklet-for-clearing-cookies/)** (*Frontend Focus #692*)
+    + 요약: 웹 개발 및 테스트 시 현재 보고 있는 페이지의 쿠키를 간편하게 삭제할 수 있는 북마클릿입니다.
+- **[Piny: Astro, React, Next.js, Tailwind를 위한 새로운 비주얼 에디터 (상용)](https://piny.com/)** (*React Status #429*)
+    + 요약: 최신 웹 기술 스택(Astro, React, Next.js, Tailwind CSS)을 대상으로 하는 새로운 상용 비주얼 편집기 Piny가 등장했습니다.
+
+## 6. 🎉 릴리스
+- **[Node.js v24 (Current)](https://nodejs.org/en/blog/release/v24.0.0)** (*JavaScript Weekly #735*)
+    + 업데이트: 최신 기능을 제공하는 'Current' 릴리스 라인이 v24로 업데이트되었습니다. npm 11을 포함하며, V8 JavaScript 엔진이 12.4로 업데이트되고 새로운 `WebSocket` 클라이언트 등이 추가되었습니다.
+- **[k6 v1.0](https://k6.io/blog/k6-v1-0-is-here/)** (*JavaScript Weekly #735*)
+    + 업데이트: Go 기반의 JavaScript 부하 테스트 도구 k6가 정식 1.0 버전을 출시했습니다. 안정성, TypeScript 지원, 확장성이 향상되었습니다.
+- **[Parcel v2.15.0](https://parceljs.org/blog/v2-15-0/)** (*React Status #429, Frontend Focus #692*)
+    + 업데이트: HTML 및 SVG를 위한 새로운 트랜스포머와 미니파이어가 추가되었으며, SVG를 React 컴포넌트에서 사용할 수 있도록 JSX로 변환하는 기능도 지원합니다.
+- **[Babylon.js v7.10](https://www.babylonjs.com/)** (*JavaScript Weekly #735*)
+    + 업데이트: 강력한 웹 기반 3D 그래픽 엔진 Babylon.js의 신규 버전입니다.
+- **[Redux Toolkit v2.3.0](https://github.com/reduxjs/redux-toolkit/releases/tag/v2.3.0)** (*JavaScript Weekly #735*)
+    + 업데이트: Redux 개발을 더 쉽게 만들어주는 공식 도구 세트 Redux Toolkit의 업데이트입니다.
+- **[Bun v1.1.12](https://bun.sh/blog/bun-v1.1.12)** (*JavaScript Weekly #735*)
+    + 업데이트: 빠른 JavaScript 런타임 및 툴킷 Bun의 최신 버전입니다. `bun pm trust` 명령어 추가 등 다양한 개선 사항이 포함되었습니다.
+- **[Deno v1.43.4](https://deno.com/blog/deno-1.43.4)** (*JavaScript Weekly #735*)
+    + 업데이트: Deno 런타임의 안정성 및 성능 개선이 포함된 패치 릴리스입니다.
+- **[PrimeReact v10.10.0](https://primereact.org/installation/)** (*React Status #429*)
+    + 업데이트: 인기 있는 React UI 컴포넌트 라이브러리 PrimeReact의 최신 버전입니다.
+- **[React Router v7.6](https://reactrouter.com/en/main/start/overview)** (*React Status #429*)
+    + 업데이트: React 애플리케이션을 위한 표준 라우팅 라이브러리 React Router의 새 버전입니다.
+- **[HTMX v2.0.0 (Pre-release)](https://htmx.org/posts/2024-01-26-htmx-2-0-0-alpha-is-released/)** (*Frontend Focus #692*)
+    + 업데이트: 서버와의 상호작용을 HTML 속성으로 단순화하는 라이브러리 HTMX의 차기 주요 버전인 2.0.0 알파 버전이 공개되었습니다. (프리릴리스이므로 프로덕션 사용에는 주의가 필요합니다.)
+
+## ✍️ 마치며
+- 이번 주에는 JavaScript의 핵심 기능인 리소스 관리부터 CSS 레이아웃의 근본적인 이해, 그리고 개발 생산성을 높여줄 다양한 도구와 라이브러리 출시 소식까지 풍성했습니다. 특히 k6 1.0 정식 출시와 HTMX 2.0 프리릴리스는 웹 개발의 성능과 방식에 대한 새로운 가능성을 제시합니다. 빠르게 변화하는 기술 트렌드 속에서 기본기를 다지고 새로운 도구들을 적극적으로 탐색하는 자세가 중요해 보입니다.
+
+#### 출처
+- [JavaScript Weekly #735](https://javascriptweekly.com/issues/735)
+- [Smashing Newsletter #507](https://mailchi.mp/smashingmagazine/507-little-helpers-for-designers-and-ui-engineers?e=02d8dcf17a)
+- [React Status #429](https://react.statuscode.com/issues/429)
+- [Frontend Focus #692](https://frontendfoc.us/issues/692)
