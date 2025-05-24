@@ -50,15 +50,18 @@ const CategoryList = ({
       href: `/blog/${language}/weekly/`,
     },
     {
-      displayName: 'webDev',
-      value: 'webDev',
-      isCurrent: currentCategory === 'webDev',
+      displayName: 'workLog',
+      value: 'workLog',
+      isCurrent: currentCategory === 'workLog',
+      href: `/blog/${language}/workLog/`,
+    },
+    {
+      displayName: 'Dev',
+      value: 'Dev',
+      isCurrent: currentCategory === 'Dev',
       subCategories: [
-        { value: 'workLog', displayName: 'workLog', language },
         { value: 'releaseNote', displayName: 'releaseNote', language },
-        { value: 'FE', displayName: 'FE', language },
-        { value: 'DevOps', displayName: 'DevOps', language },
-        { value: 'techStory', displayName: 'techStory', language },
+        { value: 'Web', displayName: 'Web', language },
       ],
     },
     {
