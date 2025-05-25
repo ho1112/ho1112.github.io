@@ -1,0 +1,341 @@
+---
+title: 'Next.js와 Canvas로 눈 내리는 효과 만들기 ❄️'
+desc: Next.js와 Canvas로 눈 내리는 효과 만들기 ❄️
+date: 2025-05-25
+thumbnail: /posts/workLog/hirakata/logo.avif
+---
+
+<Snowfall />
+
+# Next.js와 Canvas로 블로그에 인터랙티브한 눈 내리는 효과 만들기 ❄️
+
+매년 겨울, 특히 크리스마스 시즌이 되면 메신저 채팅방에 예쁘게 눈이 내리는 효과를 본 적이 있을거라고 생각합니다.
+그걸 볼 때마다 항상 저런 애니메이션 효과를 만들어보고 싶다는 생각을 했습니다. 단순히 배경 이미지를 까는 것보다 동적인 효과를 주는 것이 현실과의 상호작용을 더 크게 느끼게 해준다고 생각했기 때문입니다.
+
+그래서 이번에 Next.js, TailwindCSS, 그리고 HTML Canvas를 활용하여 페이지 전체에 눈 내리는 효과를 만들어보았습니다.
+
+## 🎯 목표 및 기술
+
+**목표:**
+
+* 페이지 전체에 눈이 내리는 시각적 효과를 구현한다.
+* 눈 효과는 페이지 콘텐츠 위에 오버레이 되지만 마우스 클릭이나 스크롤 등 기존 페이지 상호작용을 방해하지 않아야 한다.
+* 브라우저 창 크기가 변경되어도 자연스럽게 반응해야 한다.
+* mdx환경에서 재사용 가능한 React 컴포넌트로 만든다.
+
+**기술 스택:**
+
+* **HTML5 Canvas:** 수많은 눈송이를 효율적으로 그리고 애니메이션 처리하기 위해 선택했습니다. DOM 요소를 직접 조작하는 것보다 성능 면에서 유리합니다.
+
+## 🛠️ 구현 과정 상세
+
+눈 내리는 효과는 `Snowfall.tsx`라는 단일 React 컴포넌트로 구현했습니다. (전체 코드는 이 글의 말미나 이전 대화의 Canvas에서 확인하실 수 있습니다.)
+
+### 1단계: Canvas 컴포넌트 기본 구조 잡기
+
+먼저 `Snowfall.tsx`이라는 파일을 생성하고 기본적인 React 컴포넌트 구조를 만듭니다.
+
+```typescript
+// components/Snowfall.tsx
+"use client" // useEffect가 사용되기 때문에 클라이언트 컴포넌트임을 명시합니다.
+
+import { useEffect, useRef } from 'react'
+
+// 눈송이 속성 인터페이스
+interface Snowflake { /* ... */ }
+
+const Snowfall: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
+  useEffect(() => {
+    const canvasInstance = canvasRef.current
+    const contextInstance = canvasInstance?.getContext('2d')
+
+    if (canvasInstance && contextInstance) {
+      // code here!
+    }
+  }, [])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999]"
+    />
+  )
+}
+
+export default Snowfall
+```
+
+* `"use client"`: Next.js App Router 환경에서 `useEffect`, `useRef` 같은 클라이언트 사이드 훅을 사용하기 위해 필수입니다.
+* `useRef<HTMLCanvasElement | null>(null)`: Canvas DOM 요소에 직접 접근하기 위해 `useRef`를 사용합니다.
+* `useEffect`: 컴포넌트가 마운트된 후 Canvas 관련 로직을 실행합니다.
+* `<canvas>` 요소: 화면 전체에 고정시키고 z-index를 설정해 가장 위에 위치시킵니다. `pointer-events-none`으로 다른 컴포넌트의 마우스 이벤트를 방해하지 않도록 합니다.
+
+### 2단계: 눈송이 정의 및 생성
+
+눈송이의 모양과 상태를 정의하는 `Snowflake` 인터페이스를 만들고, 이 인터페이스에 따라 여러 개의 눈송이 객체를 생성하는 함수를 작성합니다.
+
+```typescript
+interface Snowflake {
+  x: number
+  y: number
+  radius: number
+  density: number // 눈송이의 움직임 다양성을 위한 값
+  color: string   // 눈송이 색상
+}
+
+let snowflakes: Snowflake[] = []
+const numSnowflakes: number = 150 // 눈송이 개수 (조절 가능)
+
+const createSnowflakes = (): void => {
+  snowflakes = []
+  for (let i = 0 i < numSnowflakes i++) {
+    snowflakes.push({
+      // 초기 위치를 랜덤으로 생성
+      x: Math.random() * canvasInstance.width,
+      y: Math.random() * canvasInstance.height,
+      radius: Math.random() * 3 + 1,          // 크기 (1px ~ 4px)
+      density: Math.random() * numSnowflakes,
+      color: 'rgba(255, 255, 255, 0.8)',     // 흰색, 약간 투명
+    })
+  }
+}
+```
+각 눈송이는 랜덤한 x, y 위치, 반지름(크기), 밀도(움직임 패턴에 영향), 색상을 가집니다.
+
+### 3단계: 눈송이 그리기 및 애니메이션
+
+이제 생성된 눈송이들을 Canvas에 그려줍니다.
+
+**눈송이 그리기 (`drawSnowflakes`)**:
+
+```typescript
+const drawSnowflakes = (): void => {
+  contextInstance.clearRect(0, 0, canvasInstance.width, canvasInstance.height) // 중요: 이전 프레임 지우기
+  for (let i = 0 i < snowflakes.length i++) {
+    const s = snowflakes[i]
+    contextInstance.fillStyle = s.color
+    contextInstance.beginPath() // 중요: 이 눈송이만을 위한 새 경로 시작
+    contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true) // 원형 눈송이
+    contextInstance.fill()
+  }
+  updateSnowflakes() // 그린 후 다음 위치로 업데이트
+}
+```
+매 프레임마다 `clearRect`로 모든 프레임을 지우고 다시 그려서 눈이 내리는 애니메이션을 연출합니다. `arc` 메소드를 사용해 원형 눈송이를 표현했습니다.
+
+**눈송이 위치 업데이트 (`updateSnowflakes`)**:
+
+```typescript
+const updateSnowflakes = (): void => {
+  for (let i = 0 i < snowflakes.length i++) {
+    const s = snowflakes[i]
+    s.y += Math.pow(s.radius, 0.5) * 0.5 + 1 // 아래로 떨어짐 (큰 눈이 약간 더 빨리)
+    s.x += Math.sin(s.density * 0.02) * s.radius * 0.1 // 좌우 떨어지는 방향
+
+    // 화면 아래로 벗어나면 다시 위에서 시작
+    if (s.y > canvasInstance.height + s.radius) {
+      snowflakes[i].x = Math.random() * canvasInstance.width
+      snowflakes[i].y = -s.radius
+    }
+    // 화면 좌우로 벗어나면 반대편에서 시작
+    if (s.x > canvasInstance.width + s.radius) {
+      // right -> left
+      snowflakes[i].x = -s.radius
+    } else if (s.x < -s.radius) {
+      // left -> right
+      snowflakes[i].x = canvasInstance.width + s.radius
+    }
+  }
+}
+```
+y 좌표를 증가시켜 아래로 떨어지게 하고 `Math.sin`을 이용해 좌우 방향을 추가하여 자연스러움을 더했습니다.
+화면을 벗어난 눈송이는 다시 화면 위쪽과 좌우에서 나타나도록 처리합니다.
+
+**애니메이션 루프 (`animate`)**:
+
+```typescript
+let animationFrameId: number
+const animate = (): void => {
+  drawSnowflakes()
+  animationFrameId = requestAnimationFrame(animate) // 재귀 호출로 루프 생성
+}
+```
+`requestAnimationFrame`은 브라우저의 다음 리페인트 시점에 `animate` 함수를 다시 호출하여 부드러운 애니메이션을 만듭니다.
+
+### 4단계: 반응형 처리 (리사이즈 대응)
+
+브라우저 창 크기가 변경되면 Canvas 크기도 함께 변경, 눈송이들을 새 크기에 맞게 다시 배치해줍니다.
+
+```typescript
+const setCanvasSize = () => {
+  canvasInstance.width = window.innerWidth
+  canvasInstance.height = window.innerHeight
+}
+
+const handleResize = (): void => {
+  setCanvasSize()
+  createSnowflakes() // 눈송이를 새 크기에 맞게 재생성
+}
+
+// useEffect 내 초기 설정 및 이벤트 리스너 등록
+setCanvasSize()
+createSnowflakes()
+animate()
+window.addEventListener('resize', handleResize)
+
+// useEffect의 cleanup 함수에서 이벤트 리스너 제거
+return () => {
+  window.removeEventListener('resize', handleResize)
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId)
+  }
+}
+```
+
+## 겪었던 문제들과 해결 과정 (Troubleshooting)
+
+### 🏔 문제 1: 눈사태가 되어버렸다!
+![](/posts/codeLab/Snowfall/avalanche.avif)
+
+처음 눈송이들을 반복문으로 여러 개 그리자 예상과 다르게 그려지는 문제를 겪었습니다. 모든 눈송이가 하나의 거대한 덩어리가 되어 마치 화면이 깨진 것처럼 보였습니다.
+
+* **원인:** Canvas에서 경로(path)를 그리는 명령어들(`arc`, `lineTo`, `moveTo` 등)은 기본적으로 누적됩니다.
+연속해서 도형을 그리면 이전에 그린 도형의 경로 정보가 남아 다음 도형에 영향을 주어서 Canvas가 이 모든 원들을 하나의 경로로 인식하고 채워버립니다.
+* **잘못된 시도 (예시):**
+    ```javascript
+    // 각 눈송이를 그릴 때 beginPath()가 없다면?
+    for (let i = 0; i < snowflakes.length; i++) {
+      const s = snowflakes[i];
+      contextInstance.fillStyle = s.color;
+      // contextInstance.beginPath(); // <- 이 줄이 없다고 가정!
+      contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true);
+      contextInstance.fill(); // fill()을 루프 안에서 호출해도 문제가 발생할 수 있음
+                              // 특히 fillStyle이 동일하고, clearRect가 없다면 겹쳐 그려짐
+                              // 더 큰 문제는 fill()을 루프 밖에서 한번만 호출하는 경우 발생
+    }
+    // 만약 fill()을 루프 밖에서 한 번만 호출했다면
+    // 모든 arc가 하나의 경로로 합쳐져서 예상치 못한 결과가 나옴
+    ```
+* **해결:** 각 눈송이를 **독립적인 도형**으로 그리려면 각 눈송이를 그리기 직전에 `contextInstance.beginPath()`를 호출합니다.
+이 함수는 "지금부터 완전히 새로운 그림 경로를 시작할 거야!"라고 Canvas에 알리는 역할을 합니다. 이렇게 하면 이전 눈송이의 경로가 다음 눈송이에 영향을 주지 않아 각 눈송이가 깨끗하고 정확하게 그려집니다.
+
+    ```typescript
+    // Snowfall.tsx의 drawSnowflakes 함수 내부
+    function drawSnowflakes(): void {
+      contextInstance.clearRect(0, 0, canvasInstance.width, canvasInstance.height);
+      for (let i = 0; i < snowflakes.length; i++) {
+        const s = snowflakes[i];
+        contextInstance.fillStyle = s.color;
+
+        contextInstance.beginPath(); // 각 눈송이마다 새로운 경로 시작!
+
+        contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true);
+        contextInstance.fill(); // 현재 정의된 경로(이 눈송이)만 채움
+      }
+      updateSnowflakes();
+    }
+    ```
+
+### 🥶 문제 2: 오버레이!
+
+Canvas가 화면 전체를 덮으면서 그 아래에 있는 헤더와 TOC등이 클릭되지 않는 현상이 있었습니다.
+
+* **원인:** Canvas 요소가 최상단에 위치해서 모든 마우스 이벤트를 가로채기 때문입니다.
+* **해결:** CSS의 `pointer-events` 속성을 사용했습니다. Canvas 요소에 `pointer-events-none` 스타일을 적용하면 해당 요소는 마우스 이벤트를 무시하고 이벤트가 그 아래에 있는 요소로 전달됩니다. Tailwind CSS로는 `className="... pointer-events-none ..."` 이렇게 간단히 적용할 수 있습니다.
+
+### 🚫 문제 3: Next.js에서 "useEffect는 클라이언트 컴포넌트에서만 작동합니다" 에러
+
+MDX 파일에 `Snowfall` 컴포넌트를 삽입했더니 다음과 같은 에러가 발생했습니다:
+`You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.`
+
+* **원인:** Next.js 13+ App Router (또는 특정 Pages Router 설정)에서는 컴포넌트가 기본적으로 서버 컴포넌트로 취급됩니다. 서버 컴포넌트는 서버에서 렌더링되므로 `useEffect`, `useState` 같이 브라우저 환경에 의존적인 훅을 직접 사용할 수 없습니다. `Snowfall` 컴포넌트는 `useEffect`와 `useRef`를 사용하므로 클라이언트 사이드에서 실행되어야 합니다.
+* **해결:** `Snowfall.tsx` 파일의 가장 첫 줄에 `"use client"` 지시어를 추가했습니다. 이 지시어는 Next.js에게 해당 파일 및 그 파일에서 export하는 모든 컴포넌트가 클라이언트 컴포넌트임을 알려줍니다.
+
+    ```typescript
+    // components/Snowfall.tsx
+    "use client" // 바로 이 부분!
+
+    import { useEffect, useRef } from 'react'
+    // ...
+    ```
+
+### 😵 문제 4: 하얀 배경에 흰 눈송이가 안 보여요! (다크 모드 강제 적용)
+눈송이를 흰색(rgba(255, 255, 255, 0.8))으로 만들었더니, 제 블로그의 기본 라이트 테마에서는 눈송이가 배경에 묻혀 전혀 보이지 않는 문제가 있었습니다. 눈 내리는 효과를 제대로 보여주려면 어두운 배경이 필요했습니다.
+
+* **초기 시도**: Snowfall 컴포넌트의 useEffect 내에서 localStorage.setItem('theme', 'dark') 코드를 추가하여 다크 모드를 유도해 보았습니다.
+
+* **문제점**: localStorage 값만 변경해서는 즉시 테마가 바뀌지 않았습니다. 새로고침을 해야만 다크 모드가 적용되었는데, 이는 사용자 경험상 좋지 않았습니다. DOM의 즉각적인 변화를 유발하지 않기 때문입니다.
+
+* **해결**: Snowfall 컴포넌트가 마운트될 때 즉시 다크 모드를 적용하고, 언마운트될 때 원래 테마 설정으로 복원하도록 로직을 수정했습니다.
+
+    ```typescript
+    useEffect(() => {
+      const htmlElement = document.documentElement
+      const originalThemeInStorage = localStorage.getItem('theme')
+      const hasHtmlDarkTheme = htmlElement.classList.contains('dark')
+
+      // 1. 다크 모드 테마 저장
+      localStorage.setItem('theme', 'dark')
+
+      // 2. 즉각적인 시각적 변경을 위해 'dark' 클래스 직접 추가
+      if (!hasHtmlDarkTheme) {
+        htmlElement.classList.add('dark')
+      }
+
+      // ... (기존 Canvas 애니메이션 로직) ...
+
+      // useEffect의 cleanup 함수 (컴포넌트 언마운트 시)
+      return () => {
+        // ... (Canvas 애니메이션 관련 cleanup) ...
+
+        // 테마 복원 로직
+        if (!hasHtmlDarkTheme) {
+          // Snowfall 컴포넌트가 'dark' 클래스를 추가했다면, 제거합니다.
+          htmlElement.classList.remove('dark')
+        }
+
+        // localStorage의 테마 값을 원래대로 복원합니다.
+        if (originalThemeInStorage) {
+          localStorage.setItem('theme', originalThemeInStorage)
+        } else {
+          localStorage.removeItem('theme') // 원래 테마 설정이 없었다면 제거
+        }
+        // 만약 애플리케이션 전체 테마 시스템이 localStorage 변경에 반응한다면
+        // 이 시점에서 다시 원래 테마로 돌아갈 것입니다.
+      }
+    }, [])
+    // ...
+    ```
+
+이 페이지에 접속해 Snowfall 컴포넌트가 동작하면 다크 모드가 적용되어 눈송이가 잘 보이게 했습니다. 다른 페이지로 이동하여 컴포넌트가 사라지면 원래 테마 설정으로 돌아가도록 처리하였습니다.
+
+## MDX에 적용하기
+
+`Snowfall` 컴포넌트를 MdxComponents 등록하여 MDX 파일에서 간단히 import하여 사용할 수 있게 하였습니다.
+
+```jsx
+// components/mdx/index.tsx
+
+export const MdxComponents: MDXComponents = {
+  a: ExternalLink as any,
+  img: Image as any,
+  blockquote: Callout,
+  Callout,
+  // codeLab
+  Snowfall,
+}
+```
+MDX 파일에서도 일반 React 컴포넌트처럼 `<Snowfall />`을 삽입하면 됩니다.
+
+## 마무리하며
+
+Next.js와 HTML Canvas를 사용하여 인터랙티브하면서도 사용자 경험을 해치지 않는 눈 내리는 효과를 만들어보았습니다. 간단해 보일 수 있지만 실제 구현 과정에서는 CSS 동작 방식과 애니메이션, 자연스러운 움직임, Next.js의 렌더링 등 다양한 이해가 필요했습니다.
+
+**💡 추가 개선 아이디어:**
+
+* **다양한 눈송이 모양:** 원형 대신 이미지나 다른 도형 사용하기
+* **바람 효과:** 눈송이가 한쪽으로 흩날리는 효과 추가하기
+* **사용자 인터랙션:** 마우스 커서나 버튼으로 눈송이가 흩어지는 효과
+
