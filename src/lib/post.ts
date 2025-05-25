@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import dayjs from 'dayjs'
+import Slugger from 'github-slugger'
 import { sync } from 'glob'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
@@ -144,22 +145,48 @@ export const getPostDetail = async (
   return detail
 }
 
+// export const parseToc = (content: string): HeadingItem[] => {
+//   const regex = /^(##|###) (.*$)/gim
+//   const headingList = content.match(regex)
+//   return (
+//     headingList?.map((heading: string) => ({
+//       text: heading.replace('##', '').replace('#', ''),
+//       link:
+//         '#' +
+//         heading
+//           .replace('# ', '')
+//           .replace('#', '')
+//           .replace(/[[\]:!@#$/%^&*()+=,.]/g, '') // 특수문자 제거
+//           .replace(/ /g, '-') // 공백을 하이픈으로
+//           .toLowerCase() // 소문자
+//           .replace('?', ''), // 물음표 제거
+//       indent: (heading.match(/#/g)?.length || 2) - 2,
+//     })) || []
+//   )
+// }
+
 export const parseToc = (content: string): HeadingItem[] => {
-  const regex = /^(##|###) (.*$)/gim
-  const headingList = content.match(regex)
-  return (
-    headingList?.map((heading: string) => ({
-      text: heading.replace('##', '').replace('#', ''),
-      link:
-        '#' +
-        heading
-          .replace('# ', '')
-          .replace('#', '')
-          .replace(/[[\]:!@#$/%^&*()+=,.]/g, '')
-          .replace(/ /g, '-')
-          .toLowerCase()
-          .replace('?', ''),
-      indent: (heading.match(/#/g)?.length || 2) - 2,
-    })) || []
-  )
+  const regex = /^(##|###) (.*$)/gim // ## 또는 ### 로 시작하는 제목 줄을 찾습니다.
+  const headingLines = content.match(regex)
+
+  if (!headingLines) {
+    return []
+  }
+
+  const slugger = new Slugger()
+
+  return headingLines.map((line: string) => {
+    // `## ` 또는 `### ` 같은 마크다운 접두사를 제거하고 순수 제목 텍스트만 추출합니다.
+    const text = line.replace(/^(##|###) /, '')
+
+    // github-slugger를 사용하여 slug를 생성합니다.
+    // 이 slug는 rehypeSlug가 생성하는 id와 동일한 규칙을 따릅니다.
+    const slug = slugger.slug(text)
+
+    return {
+      text: text, // TOC에 표시될 텍스트
+      link: `#${slug}`, // 생성된 slug를 링크로 사용
+      indent: (line.match(/#/g)?.length || 0) - 2, // #의 개수로 들여쓰기 수준 결정
+    }
+  })
 }
