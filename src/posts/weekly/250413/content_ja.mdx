@@ -1,206 +1,206 @@
 ---
 title: '🚀 2025-04 W2 #2'
-desc: 2025년 4월 2주차 뉴스레터
+desc: 2025年4月第2週目のニュースレター
 date: 2025-04-13
 thumbnail: /posts/weekly/april.avif
 ---
 
-## 🔥 이번 주 핵심 테마
-- React 19.1 상세 분석과 새로운 JavaScript 런타임 Bare 등장, 그리고 웹 표준 기술(커스텀 `<select>`, `text-wrap: pretty`)의 발전과 함께 개발 효율성을 높이는 다양한 도구 및 라이브러리 업데이트 소식이 풍성합니다.
+## 🔥 今週の主要テーマ
+- React 19.1の詳細分析、新しいJavaScriptランタイムBareの登場、そしてウェブ標準技術（カスタム`<select>`、`text-wrap: pretty`）の発展と共に、開発効率を高める様々なツールおよびライブラリアップデートのニュースが豊富です。
 
-## 1. 🔍 심층 분석
+## 1. 🔍 深掘り
 1. **[React for Two Computers](https://react.statuscode.com/link/156468/web)**
-    - 출처: *React Status #424*
-    - 배경: Dan Abramov가 React Conf 2024에서 발표했던 "React for Two Computers" 강연 내용에 대한 깊은 생각을 정리한 글입니다. React Server Components와 같은 아이디어의 기반이 되는 아키텍처와 이론에 대한 기술적으로 풍부한 고찰을 담고 있습니다.
-    - 핵심 기능: 이 글은 서버와 클라이언트라는 '두 개의 컴퓨터' 환경에서 React가 어떻게 동작하고, 컴포넌트가 어떻게 렌더링되며 상태를 관리하는지에 대한 근본적인 원리를 탐구합니다. RSC의 개념, 서버-클라이언트 간의 데이터 흐름, 그리고 이것이 애플리케이션 설계에 미치는 영향 등을 심도 있게 다룹니다.
-    - 코드 예제:
-      ```jsx
-      // app/page.js (Server Component)
-      async function MyPage() {
-        const data = await fetchData();
-        return <ClientComponent initialData={data} />;
-      }
+	- 出典: *React Status #424*
+	- 背景: Dan Abramov氏がReact Conf 2024で発表した「React for Two Computers」講演の内容について深く考察した記事です。React Server Componentsのようなアイデアの基盤となるアーキテクチャと理論に関する技術的に豊富な考察が盛り込まれています。
+	- 主要機能: この記事は、サーバーとクライアントという「2つのコンピュータ」環境でReactがどのように動作し、コンポーネントがどのようにレンダリングされ状態を管理するのかについての根本的な原理を探求します。RSCの概念、サーバークライアント間のデータフロー、そしてこれがアプリケーション設計に与える影響などを深く掘り下げています。
+	- コード例: (記事の性格上、特定の短いコード例よりは概念説明が主となります。RSCの簡単な例で代替します)
+		```jsx
+		// app/page.js (Server Component)
+		async function MyPage() {
+		  const data = await fetchData();
+		  return <ClientComponent initialData={data} />;
+		}
 
-      // app/ClientComponent.js (Client Component)
-      'use client';
-      import { useState, useEffect } from 'react';
+		// app/ClientComponent.js (Client Component)
+		'use client';
+		import { useState, useEffect } from 'react';
 
-      export default function ClientComponent({ initialData }) {
-        const [data, setData] = useState(initialData);
-        // ... 클라이언트 로직
-        return <div>{JSON.stringify(data)}</div>;
-      }
-      ```
-    - 실무 적용: React Server Components를 도입하거나 이해하려는 개발자, 혹은 React의 내부 동작 원리와 미래 방향성에 대해 깊이 알고 싶은 개발자에게 매우 유용합니다. 복잡한 애플리케이션 아키텍처를 설계할 때 도움이 될 수 있습니다.
-    - 주의사항: 내용이 매우 길고 기술적으로 깊이가 있으므로 충분한 시간을 가지고 집중해서 읽어야 합니다. React의 핵심 철학에 대한 이해가 선행되면 더욱 좋습니다.
+		export default function ClientComponent({ initialData }) {
+		  const [data, setData] = useState(initialData);
+		  // ... クライアントロジック
+		  return <div>{JSON.stringify(data)}</div>;
+		}
+		```
+	- 実務適用: React Server Componentsを導入したり理解しようとする開発者、あるいはReactの内部動作原理と将来の方向性について深く知りたい開発者にとって非常に有用です。複雑なアプリケーションアーキテクチャを設計する際に役立ちます。
+	- 注意事項: 内容が非常に長く技術的に深いため、十分な時間をかけて集中して読む必要があります。Reactの核心的な哲学についての理解が先行すると、より良いでしょう。
 
 2. **[Bare: A New Lightweight Runtime for Modular JS Apps](https://javascriptweekly.com/link/156412/web)**
-    - 출처: *JavaScript Weekly #730*
-    - 배경: Node.js와 유사하지만 극도로 가볍게 설계된 새로운 JavaScript 런타임 'Bare'가 등장했습니다. V8과 libuv를 기반으로 하며, 여러 JavaScript 엔진을 지원하도록 설계되었습니다.
-    - 핵심 기능: Bare는 모듈 시스템, 애드온 시스템, 스레드 지원 등 최소한의 기능만을 핵심 런타임에 내장합니다. 나머지 기능은 Bare 자체와 독립적으로 발전할 수 있는 사용자 영역 모듈에 의존하는 접근 방식을 취합니다. 이를 통해 매우 유연하고 모듈화된 애플리케이션 구축을 목표로 합니다.
-    - 코드 예제:
-      ```javascript
-      // http-server.mjs (Bare 런타임에서 실행)
-      import { createServer } from 'bare-http1'; // 사용자 영역 모듈 예시
+	- 出典: *JavaScript Weekly #730*
+	- 背景: Node.jsと似ていますが、極めて軽量に設計された新しいJavaScriptランタイム「Bare」が登場しました。V8とlibuvを基盤とし、複数のJavaScriptエンジンをサポートするように設計されています。
+	- 主要機能: Bareは、モジュールシステム、アドオンシステム、スレッドサポートなど、最小限の機能のみをコアランタイムに組み込んでいます。残りの機能は、Bare自体とは独立して発展できるユーザーランドモジュールに依存するアプローチを取っています。これにより、非常に柔軟でモジュール化されたアプリケーション構築を目指します。
+	- コード例:
+		```javascript
+		// http-server.mjs (Bareランタイムで実行)
+		import { createServer } from 'bare-http1'; // ユーザーランドモジュールの例
 
-      const server = createServer((req, res) => {
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('Hello From Bare!\\n');
-      });
+		const server = createServer((req, res) => {
+		  res.writeHead(200, { 'Content-Type': 'text/plain' });
+		  res.end('Hello From Bare!\\n');
+		});
 
-      server.listen(3000, '127.0.0.1', () => {
-        console.log('Listening on 127.0.0.1:3000');
-      });
-      // 실행: bare http-server.mjs
-      ```
-    - 실무 적용: 최소한의 코어만 필요한 임베디드 시스템, IoT 장치 또는 극도의 경량화와 모듈성이 중요한 애플리케이션 개발에 유용할 수 있습니다. 특정 기능만 선택적으로 탑재하여 런타임 크기를 줄이고자 할 때 고려해볼 수 있습니다.
-    - 주의사항: 아직 초기 단계의 프로젝트일 수 있으므로 프로덕션 환경에서의 안정성이나 생태계 지원은 충분하지 않을 수 있습니다. Node.js와 같은 성숙한 런타임의 대안으로 고려하기 전 충분한 검토가 필요합니다.
-
----
-#### 놓치기 아까운 콘텐츠
-- **[React Reconciliation: The Hidden Engine Behind Your Components](https://react.statuscode.com/link/156470/web)** (출처: *React Status #424* )
-  + 요약: React가 Virtual DOM의 변경 사항을 기반으로 실제 DOM을 어떻게 업데이트하는지 결정하는 프로세스인 재조정(Reconciliation) 알고리즘의 작동 방식을 심층적으로 살펴봅니다. 빠르고 효율적인 앱을 만드는 데 필수적인 이해를 돕습니다.
-- **[Could JavaScript Have Synchronous `await`?](https://javascriptweekly.com/link/156425/web)** (출처: *JavaScript Weekly #730* )
-  + 요약: Dr. Axel Rauschmayer가 비동기 코드가 동기 코드와 다른 문제점과 이를 해결하기 위한 방안, 그리고 동기적 `await`의 잠재적 결과에 대해 고찰합니다.
+		server.listen(3000, '127.0.0.1', () => {
+		  console.log('Listening on 127.0.0.1:3000');
+		});
+		// 実行: bare http-server.mjs
+		```
+	- 実務適用: 最小限のコアのみが必要な組み込みシステム、IoTデバイス、または極度の軽量化とモジュール性が重要なアプリケーション開発に役立つ可能性があります。特定の機能のみを選択的に搭載してランタイムサイズを削減したい場合に検討できます。
+	- 注意事項: まだ初期段階のプロジェクトである可能性があるため、プロダクション環境での安定性やエコシステムのサポートは十分ではないかもしれません。Node.jsのような成熟したランタイムの代替として検討する前に、十分な検討が必要です。
 
 ---
-
-## 2. 🛠️ 툴 & 라이브러리
-1. **[Anime.js 4.0: A JS Animation Library for the Web](https://javascriptweekly.com/link/156430/web)** (출처: *JavaScript Weekly #730* )
-    + 개요: CSS 속성, SVG, DOM 요소 및 JavaScript 객체에 애니메이션 효과를 적용할 수 있는 성숙한 라이브러리인 Anime.js의 주요 업그레이드 버전입니다. 부드럽고 잘 구축되어 있으며, 새로운 문서와 함께 제공됩니다.
-    + 사용 예시(코드/CLI):
-      ```javascript
-      import anime from 'animejs';
-
-      anime({
-        targets: '.square', // CSS 선택자
-        translateX: 250,    // X축으로 250px 이동
-        rotate: '1turn',    // 1바퀴 회전
-        backgroundColor: '#FFF', // 배경색 변경
-        duration: 800,      // 800ms 동안 실행
-        loop: true,         // 반복
-        direction: 'alternate', // 정방향/역방향 반복
-        easing: 'easeInOutQuad' // 이징 함수
-      });
-      ```
-    + 실전 팁: 복잡한 연쇄 애니메이션이나 타임라인 기반 애니메이션을 구현할 때 매우 유용합니다. 공식 문서의 다양한 예제와 데모를 참고하여 인터랙티브한 웹 경험을 만들어보세요.
-
-2. **[Konva: A JavaScript 2D Canvas Library](https://react.statuscode.com/link/156478/web)** (출처: *React Status #424* )
-    + 개요: 네이티브 Canvas API 위에 구축된 추상화 라이브러리로, 도형, 스타일링, 이벤트, 애니메이션 등을 보다 구조화된 방식으로 작업할 수 있게 해줍니다. Vue, Svelte, React와의 통합 라이브러리도 제공합니다.
-    + 사용 예시(코드/CLI): (Konva React 예시)
-      ```jsx
-      import React from 'react';
-      import { Stage, Layer, Rect, Text } from 'react-konva';
-
-      function App() {
-        return (
-          <Stage width={window.innerWidth} height={window.innerHeight}>
-            <Layer>
-              <Text text="Try click on rect" />
-              <Rect
-                x={20} y={50} width={100} height={100}
-                fill="red" shadowBlur={10} draggable
-                onClick={() => console.log('Rect clicked!')}
-              />
-            </Layer>
-          </Stage>
-        );
-      }
-      ```
-    + 실전 팁: 복잡한 2D 그래픽, 게임, 또는 인터랙티브한 데이터 시각화를 Canvas로 구현해야 할 때 유용합니다. 레이어 시스템과 이벤트 처리 기능을 활용하면 개발 생산성을 높일 수 있습니다.
-
----
-#### 놓치기 아까운 콘텐츠
-- **[Milkdown 7.7: WYSIWYG Markdown Editor Framework](https://javascriptweekly.com/link/156433/web)** (출처: *JavaScript Weekly #730* )
-  + 요약: 플러그인 시스템 기반으로 높은 수준의 사용자 정의가 가능한 WYSIWYG Markdown 편집기 프레임워크입니다. 문서는 Milkdown 자체로 렌더링됩니다. GitHub 리포지토리도 제공됩니다.
-- **[Fancy Components: A Growing Library of Ready-to-Use Animated React Components](https://react.statuscode.com/link/156477/web)** (출처: *React Status #424* )
-  + 요약: 다양한 텍스트 애니메이션, 배경, 물리 관련 애니메이션, SVG 필터 등을 위한 바로 사용 가능한 애니메이션 React 컴포넌트 라이브러리입니다. 데모 사이트에서 직접 사용해볼 수 있습니다.
+#### 見逃せないコンテンツ
+- **[React Reconciliation: The Hidden Engine Behind Your Components](https://react.statuscode.com/link/156470/web)** (出典: *React Status #424* )
+	+ 要約: ReactがVirtual DOMの変更に基づいて実際のDOMをどのように更新するかを決定するプロセスである再調整（Reconciliation）アルゴリズムの動作方法を深く掘り下げて見ていきます。高速で効率的なアプリを作成するために不可欠な理解を助けます。
+- **[Could JavaScript Have Synchronous `await`?](https://javascriptweekly.com/link/156425/web)** (出典: *JavaScript Weekly #730* )
+	+ 要約: Dr. Axel Rauschmayer氏が、非同期コードが同期コードと異なる問題点とそれを解決するための方法、そして同期的`await`の潜在的な結果について考察します。
 
 ---
 
-## 3. 📝 추천 아티클 & 팁
-1. **[Better Typography with `text-wrap: pretty`](https://frontendfoc.us/link/156569/web)** (출처: *Frontend Focus #687* )
-    + 배경 설명: 웹에서의 텍스트 줄 바꿈은 가독성에 큰 영향을 미치며, 특히 제목이나 짧은 문단에서 마지막 줄에 단어 하나만 남는 현상(orphan)은 보기 좋지 않습니다.
-    + 핵심 인사이트: Safari 최신 프리뷰 버전에 `text-wrap: pretty` CSS 속성이 추가되었습니다. 이 속성은 브라우저가 자동으로 텍스트 줄 바꿈을 최적화하여, 고아 단어(orphan) 발생을 줄이는 등 더 보기 좋은 타이포그래피를 구현하도록 돕습니다. "웹 타이포그래피에 전례 없는 수준의 세련됨을 가져다줄 것"으로 평가받고 있습니다.
-    + 코드 예시:
-      ```css
-      h1 {
-        text-wrap: pretty;
-      }
-      p {
-        text-wrap: pretty; /* 혹은 balance를 고려해볼 수도 있음 */
-      }
-      ```
-    + 왜 이 글이 유익한지: CSS만으로 타이포그래피의 가독성과 심미성을 크게 향상시킬 수 있는 새로운 표준 기능을 소개합니다. 별도의 JavaScript 라이브러리 없이도 더 나은 사용자 경험을 제공할 수 있는 방법을 제시합니다. (데모는 Safari Technology Preview 216에서 확인 필요)
+## 2. 🛠️ ツール & ライブラリ
+1. **[Anime.js 4.0: A JS Animation Library for the Web](https://javascriptweekly.com/link/156430/web)** (出典: *JavaScript Weekly #730* )
+	+ 概要: CSSプロパティ、SVG、DOM要素、およびJavaScriptオブジェクトにアニメーション効果を適用できる成熟したライブラリであるAnime.jsのメジャーアップグレードバージョンです。スムーズでよく構築されており、新しいドキュメントと共に提供されます。
+	+ 使用例(コード/CLI):
+		```javascript
+		import anime from 'animejs';
 
-2. **[Custom `<select>`](https://smashingmagazine.com/2025/04/custom-select-menus-css-html/)** (출처: *Smashing Newsletter #502* )
-    + 배경 설명: 전통적으로 `<select>` 요소의 스타일을 커스터마이징하는 것은 매우 어려웠습니다. 이로 인해 많은 개발자들이 JavaScript 라이브러리에 의존해야 했습니다.
-    + 핵심 인사이트: Chrome 135부터 `<select>` 요소의 스타일링에 대한 완전한 제어권을 개발자에게 제공합니다. 선택 버튼, 드롭다운 목록, 화살표 아이콘, 현재 선택된 항목의 체크 표시, 개별 `<option>` 요소까지 CSS로 스타일링할 수 있게 됩니다. 또한 `<option>` 내부에 이미지나 SVG와 같은 리치 HTML 콘텐츠를 포함할 수도 있습니다.
-    + 코드 예시: (개념적인 CSS 접근법)
-      ```css
-      select {
-        appearance: none; /* 기본 UI 제거 */
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        padding: 10px;
-        border-radius: 5px;
-      }
+		anime({
+		  targets: '.square', // CSSセレクタ
+		  translateX: 250,	// X軸方向に250px移動
+		  rotate: '1turn',	// 1回転
+		  backgroundColor: '#FFF', // 背景色変更
+		  duration: 800,	  // 800ms間実行
+		  loop: true,		 // ループ
+		  direction: 'alternate', // 正方向/逆方向ループ
+		  easing: 'easeInOutQuad' // イージング関数
+		});
+		```
+	+ 実践チップ: 複雑な連鎖アニメーションやタイムラインベースのアニメーションを実装する際に非常に役立ちます。公式ドキュメントの様々な例やデモを参考にして、インタラクティブなウェブ体験を作りましょう。
 
-      select::part(button) { /* 가상 요소 ::part() 사용 예시 */
-        background-image: url('custom-arrow.svg');
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-      }
+2. **[Konva: A JavaScript 2D Canvas Library](https://react.statuscode.com/link/156478/web)** (出典: *React Status #424* )
+	+ 概要: ネイティブCanvas APIの上に構築された抽象化ライブラリで、図形、スタイリング、イベント、アニメーションなどをより構造化された方法で扱うことができます。Vue、Svelte、Reactとの統合ライブラリも提供しています。
+	+ 使用例(コード/CLI): (Konva Reactの例)
+		```jsx
+		import React from 'react';
+		import { Stage, Layer, Rect, Text } from 'react-konva';
 
-      option {
-        padding: 8px;
-      }
-      option:checked {
-        background-color: navy;
-        color: white;
-      }
-      ```
-    + 왜 이 글이 유익한지: JavaScript 없이도 `<select>` 요소를 자유롭게 디자인할 수 있게 되어 웹 접근성을 유지하면서도 풍부한 사용자 인터페이스를 구축할 수 있는 새로운 가능성을 열어줍니다. (Smashing Newsletter의 링크는 Adam Argyle의 글을 참조하도록 안내함)
-
-3. **[Optimizing For High-Latency Environments](https://www.smashingmagazine.com/2025/04/optimizing-high-latency-environments-performance/)** (출처: *Smashing Newsletter #502* )
-    + 배경 설명: 지연 시간(Latency)은 웹 성능을 제한하는 주요 요인 중 하나입니다. Chrome 사용자 경험 보고서(CrUX)에 RTT(Round-Trip-Time)가 추가되어 사용자의 네트워크 지형에 대한 통찰력을 얻을 수 있게 되었습니다.
-    + 핵심 인사이트: Harry Roberts가 작성한 이 가이드는 높은 지연 시간 환경에 최적화하는 방법을 포괄적으로 다룹니다. 지연 시간을 염두에 둔 설계, 프로토콜 업그레이드가 불가능할 경우의 대처법, 비용이 많이 드는 모든 것을 적극적으로 캐싱하여 현재 문제를 최대한 억제하는 방법 등을 포함한 모범 사례를 조언합니다.
-    + 왜 이 글이 유익한지: 실제 사용자 환경의 다양성을 고려하여 웹 성능을 개선할 수 있는 구체적이고 실용적인 팁들을 제공합니다. 특히 글로벌 서비스를 제공하거나 네트워크 환경이 열악한 사용자를 고려해야 하는 경우 매우 유용합니다.
+		function App() {
+		  return (
+			<Stage width={window.innerWidth} height={window.innerHeight}>
+			  <Layer>
+				<Text text="Try click on rect" />
+				<Rect
+				  x={20} y={50} width={100} height={100}
+				  fill="red" shadowBlur={10} draggable
+				  onClick={() => console.log('Rect clicked!')}
+				/>
+			  </Layer>
+			</Stage>
+		  );
+		}
+		```
+	+ 実践チップ: 複雑な2Dグラフィック、ゲーム、またはインタラクティブなデータ可視化をCanvasで実装する必要がある場合に役立ちます。レイヤーシステムとイベント処理機能を活用すると、開発生産性を向上させることができます。
 
 ---
-#### 놓치기 아까운 콘텐츠
-- **[Minimal CSS-Only Blurry Image Placeholders](https://frontendfoc.us/link/156565/web)** (출처: *Frontend Focus #687* )
-  + 요약: 단일 커스텀 속성만을 사용하여 흐릿한 저품질 이미지 플레이스홀더를 생성하는 실험적인 순수 CSS 기법입니다. CSS 변수와 방사형 그라데이션의 한계를 탐구하며 작동 원리를 설명합니다. (Safari에서는 제대로 작동하지 않을 수 있음)
-- **[Accelerating Large-Scale Test Migration with LLMs](https://react.statuscode.com/link/156473/web)** (출처: *React Status #424* )
-  + 요약: Airbnb가 Enzyme에서 React Testing Library로 대규모 테스트 코드를 마이그레이션하면서 LLM을 활용한 첫 번째 대규모 코드 마이그레이션을 완료한 방법을 소개합니다.
-- **[Exploring Art with TypeScript, Jupyter, Polars, and Observable Plot](https://javascriptweekly.com/link/156422/web)** (출처: *JavaScript Weekly #730*)
-  + 요약: Deno의 Jupyter Notebook 지원과 같은 기능을 활용하여 데이터 탐색을 위한 노트북 환경의 실제 사용 사례를 보여줍니다. Python 세계에서 흔히 볼 수 있는 노트북 스타일 프로그래밍을 JavaScript/TypeScript로 가져옵니다.
+#### 見逃せないコンテンツ
+- **[Milkdown 7.7: WYSIWYG Markdown Editor Framework](https://javascriptweekly.com/link/156433/web)** (出典: *JavaScript Weekly #730* )
+	+ 要約: プラグインシステムベースで高度なカスタマイズが可能なWYSIWYG Markdownエディタフレームワークです。ドキュメントはMilkdown自体でレンダリングされます。GitHubリポジトリも提供されています。
+- **[Fancy Components: A Growing Library of Ready-to-Use Animated React Components](https://react.statuscode.com/link/156477/web)** (出典: *React Status #424* )
+	+ 要約: 様々なテキストアニメーション、背景、物理関連アニメーション、SVGフィルターなどのためのすぐに使えるアニメーションReactコンポーネントライブラリです。デモサイトで直接試すことができます。
 
 ---
 
-## 4. ✨ 아이디어
-- **[Chilled-Out Text Underlines](https://smashingmagazine.com/2025/04/chilled-out-text-underlines-css/)** (출처: *Smashing Newsletter #502* )
-    + 특징: 본문 텍스트 내의 링크가 눈에 잘 띄면서도 독서 경험을 방해하지 않도록, 링크에 마우스를 올리거나 포커스하지 않았을 때 밑줄에 투명도를 추가하여 기본 스타일의 느낌은 유지하되 덜 강렬하게 만드는 CSS 기법입니다. `currentColor`를 사용하여 링크 색상에 관계없이 적용 가능합니다.
-- **[Overengineered Anchor Links](https://frontendfoc.us/link/156570/web)** (출처: *Frontend Focus #687* )
-    + 특징: 페이지 하단 콘텐츠로 연결되는 앵커 링크가 제대로 표시되지 않는 문제를 해결하기 위해 단순한 패딩을 넘어 수학적 방정식과 커스텀 매핑 함수까지 동원하여 해결책을 탐구하는 심도 있는 글입니다. 공식, 시각화 자료 등이 포함되어 있습니다.
+## 3. 📝 おすすめ記事 & チップ
+1. **[Better Typography with `text-wrap: pretty`](https://frontendfoc.us/link/156569/web)** (出典: *Frontend Focus #687* )
+	+ 背景説明: ウェブにおけるテキストの改行は可読性に大きな影響を与え、特に見出しや短い段落で最後の行に単語が1つだけ残る現象（orphan）は見栄えがよくありません。
+	+ 主要なインサイト: Safariの最新プレビュー版に`text-wrap: pretty` CSSプロパティが追加されました。このプロパティは、ブラウザが自動的にテキストの改行を最適化し、オーファンワード（orphan）の発生を減らすなど、より見栄えの良いタイポグラフィを実現するのに役立ちます。「ウェブタイポグラフィに前例のないレベルの洗練さをもたらすだろう」と評価されています。
+	+ コード例:
+		```css
+		h1 {
+		  text-wrap: pretty;
+		}
+		p {
+		  text-wrap: pretty; /* あるいは balance を検討することも可能 */
+		}
+		```
+	+ なぜこの記事が有益なのか: CSSだけでタイポグラフィの可読性と審美性を大幅に向上させることができる新しい標準機能を紹介します。別途JavaScriptライブラリなしでも、より良いユーザー体験を提供できる方法を提示します。（デモはSafari Technology Preview 216で確認が必要です）
 
-## 5. ⚡️ 짧은 소식
-- **[Safari 18.4 has been released with Declarative Web Push support, iterator helpers, Error.isError, and faster JSON.parse and JSON.stringify functions.](https://javascriptweekly.com/link/156417/web)** (출처: *JavaScript Weekly #730* )
-    + 요약: Safari 18.4가 출시되어 선언적 웹 푸시 지원, 이터레이터 헬퍼, `Error.isError`, 그리고 더 빨라진 `JSON.parse` 및 `JSON.stringify` 함수를 제공합니다.
-- **[An Update on the Deno v Oracle JavaScript™™ Fight](https://javascriptweekly.com/link/156413/web)** (출처: *JavaScript Weekly #730* )
-    + 요약: Deno가 Oracle의 'JavaScript' 상표권 취소를 USPTO에 청원했고 Oracle이 반격에 나섰습니다. Ryan Dahl이 상황을 요약하고 공개서한 서명 등 도움을 요청하고 있습니다.
-- **[The ES2025 spec has reached candidate stage in anticipation of being finally approved in June.](https://javascriptweekly.com/link/156420/web)** (출처: *JavaScript Weekly #730* )
-    + 요약: ES2025 사양이 6월 최종 승인을 앞두고 후보 단계에 도달했습니다.
-- **[The Chrome 136 beta is out now, adding six new CSS and UI features.](https://frontendfoc.us/link/156571/web)** (출처: *Frontend Focus #687* )
-    + 요약: Chrome 136 베타가 출시되었으며, 6가지 새로운 CSS 및 UI 기능이 추가되었습니다.
-- **[The ticket lottery for React Conf 2025 is set to take place starting April 25..](https://react.statuscode.com/link/156469/web)** (출처: *React Status #424* )
-    + 요약: React Conf 2025 티켓 추첨이 4월 25일부터 시작될 예정이며, 티켓 구매를 원하면 지금 신청할 수 있습니다. 행사는 2024년과 마찬가지로 올해 10월 라스베이거스 외곽에서 열립니다.
+2. **[Custom `<select>`](https://smashingmagazine.com/2025/04/custom-select-menus-css-html/)** (出典: *Smashing Newsletter #502* )
+	+ 背景説明: 従来、`<select>`要素のスタイルをカスタマイズすることは非常に困難でした。このため、多くの開発者がJavaScriptライブラリに依存する必要がありました。
+	+ 主要なインサイト: Chrome 135から、`<select>`要素のスタイリングに対する完全な制御権が開発者に提供されます。選択ボタン、ドロップダウンリスト、矢印アイコン、現在選択されている項目のチェックマーク、個々の`<option>`要素までCSSでスタイリングできるようになります。また、`<option>`内部に画像やSVGなどのリッチなHTMLコンテンツを含めることもできます。
+	+ コード例: (概念的なCSSアプローチ)
+		```css
+		select {
+		  appearance: none; /* 基本UIを削除 */
+		  background-color: #f0f0f0;
+		  border: 1px solid #ccc;
+		  padding: 10px;
+		  border-radius: 5px;
+		}
 
-## 6. 🎉 릴리스
+		select::part(button) { /* 疑似要素 ::part() の使用例 */
+		  background-image: url('custom-arrow.svg');
+		  background-repeat: no-repeat;
+		  background-position: right 10px center;
+		}
+
+		option {
+		  padding: 8px;
+		}
+		option:checked {
+		  background-color: navy;
+		  color: white;
+		}
+		```
+	+ なぜこの記事が有益なのか: JavaScriptなしでも`<select>`要素を自由にデザインできるようになり、ウェブアクセシビリティを維持しながらもリッチなユーザーインターフェースを構築できる新しい可能性を開きます。（Smashing NewsletterのリンクはAdam Argyle氏の記事を参照するように案内しています）
+
+3. **[Optimizing For High-Latency Environments](https://www.smashingmagazine.com/2025/04/optimizing-high-latency-environments-performance/)** (出典: *Smashing Newsletter #502* )
+	+ 背景説明: 遅延時間（Latency）はウェブパフォーマンスを制限する主要な要因の1つです。Chromeユーザーエクスペリエンスレポート（CrUX）にRTT（Round-Trip-Time）が追加され、ユーザーのネットワーク地形に関する洞察を得ることができるようになりました。
+	+ 主要なインサイト: Harry Roberts氏が作成したこのガイドは、高遅延環境に最適化する方法を包括的に扱います。遅延時間を考慮した設計、プロトコルのアップグレードが不可能な場合の対処法、コストのかかるすべてを積極的にキャッシュして現在の問題を最大限に抑制する方法などを含むベストプラクティスを助言します。
+	+ なぜこの記事が有益なのか: 実際のユーザー環境の多様性を考慮してウェブパフォーマンスを改善できる具体的かつ実用적인ヒントを提供します。特にグローバルサービスを提供したり、ネットワーク環境が劣悪なユーザーを考慮する必要がある場合に非常に役立ちます。
+
+---
+#### 見逃せないコンテンツ
+- **[Minimal CSS-Only Blurry Image Placeholders](https://frontendfoc.us/link/156565/web)** (出典: *Frontend Focus #687* )
+	+ 要約: 単一のカスタムプロパティのみを使用して、ぼやけた低品質の画像プレースホルダーを作成する実験的な純粋CSSテクニックです。CSS変数と放射状グラデーションの限界を探求し、動作原理を説明します。（Safariでは正しく動作しない場合があります）
+- **[Accelerating Large-Scale Test Migration with LLMs](https://react.statuscode.com/link/156473/web)** (出典: *React Status #424* )
+	+ 要約: AirbnbがEnzymeからReact Testing Libraryへの大規模なテストコードの移行において、LLMを活用した最初の大規模コード移行を完了した方法を紹介します。
+- **[Exploring Art with TypeScript, Jupyter, Polars, and Observable Plot](https://javascriptweekly.com/link/156422/web)** (出典: *JavaScript Weekly #730*)
+	+ 要約: DenoのJupyter Notebookサポートなどの機能を活用して、データ探索のためのノートブック環境の実際の使用例を示します。Pythonの世界でよく見られるノートブック形式のプログラミングをJavaScript/TypeScriptに持ち込みます。
+
+---
+
+## 4. ✨ アイデア
+- **[Chilled-Out Text Underlines](https://smashingmagazine.com/2025/04/chilled-out-text-underlines-css/)** (出典: *Smashing Newsletter #502* )
+	+ 特徴: 本文テキスト内のリンクが目立ちつつも読書体験を妨げないように、リンクにマウスオーバーしたりフォーカスしたりしていないときに下線に透明度を追加して、基本スタイルの雰囲気は維持しつつ、あまり強烈でないようにするCSSテクニックです。`currentColor`を使用して、リンクの色に関係なく適用可能です。
+- **[Overengineered Anchor Links](https://frontendfoc.us/link/156570/web)** (出典: *Frontend Focus #687* )
+	+ 特徴: ページ下部のコンテンツにリンクするアンカーリンクが正しく表示されない問題を解決するために、単純なパディングを超えて数学的方程式やカスタムマッピング関数まで動員して解決策を探求する深い内容の記事です。数式、視覚化資料などが含まれています。
+
+## 5. ⚡️ ミニノート
+- **[Safari 18.4 has been released with Declarative Web Push support, iterator helpers, Error.isError, and faster JSON.parse and JSON.stringify functions.](https://javascriptweekly.com/link/156417/web)** (出典: *JavaScript Weekly #730* )
+	+ 要約: Safari 18.4がリリースされ、宣言的ウェブプッシュサポート、イテレータヘルパー、`Error.isError`、そしてより高速になった`JSON.parse`および`JSON.stringify`関数を提供します。
+- **[An Update on the Deno v Oracle JavaScript™™ Fight](https://javascriptweekly.com/link/156413/web)** (出典: *JavaScript Weekly #730* )
+	+ 要約: DenoがOracleの「JavaScript」商標権取り消しをUSPTOに請願し、Oracleが反撃に出ました。Ryan Dahl氏が状況を要約し、公開書簡への署名など助けを求めています。
+- **[The ES2025 spec has reached candidate stage in anticipation of being finally approved in June.](https://javascriptweekly.com/link/156420/web)** (出典: *JavaScript Weekly #730* )
+	+ 要約: ES2025仕様が6月の最終承認を控え、候補段階に達しました。
+- **[The Chrome 136 beta is out now, adding six new CSS and UI features.](https://frontendfoc.us/link/156571/web)** (出典: *Frontend Focus #687* )
+	+ 要約: Chrome 136ベータ版がリリースされ、6つの新しいCSSおよびUI機能が追加されました。
+- **[The ticket lottery for React Conf 2025 is set to take place starting April 25..](https://react.statuscode.com/link/156469/web)** (出典: *React Status #424* )
+	+ 要約: React Conf 2025のチケット抽選が4月25日から開始される予定で、チケット購入を希望する場合は今すぐ申し込むことができます。イベントは2024年と同様に、今年10月にラスベガス郊外で開催されます。
+
+## 6. 🎉 リリース
 - **[React 19.1 Released](https://github.com/facebook/react/releases/tag/v19.1.0)** (*JavaScript Weekly #730* )
-    + 업데이트: 주요 기능은 어떤 컴포넌트가 다른 컴포넌트를 렌더링하는지 추적하는 개발 전용 기능인 'Owner Stacks'입니다. 또한 수정 사항, 엣지 환경 스트리밍 지원과 같은 작은 추가 기능, 서버에서 RSC 사전 렌더링을 위한 새 API 및 향상된 Suspense 지원도 제공합니다.
+	+ アップデート: 主な機能は、どのコンポーネントが他のコンポーネントをレンダリングしているかを追跡する開発専用機能である「Owner Stacks」です。また、修正、エッジ環境ストリーミングサポートなどの小さな追加機能、サーバーでのRSC事前レンダリングのための新しいAPI、および改善されたSuspenseサポートも提供します。
 - **[React Native 0.79: Faster Tooling and Much More](https://react.statuscode.com/link/156476/web)** (*React Status #424* )
-    + 업데이트: React Native 번들러인 Metro의 시작 속도가 훨씬 빨라졌고, `package.json`의 `exports` 및 `imports` 필드 분석이 안정화되었습니다. 안드로이드 앱 시작 속도도 크게 향상되었습니다.
+	+ アップデート: React NativeバンドラーであるMetroの起動速度が大幅に向上し、`package.json`の`exports`および`imports`フィールドの解析が安定化しました。Androidアプリの起動速度も大幅に向上しました。
 - **[Anime.js 4.0](https://javascriptweekly.com/link/156430/web)** (*JavaScript Weekly #730* )
 - **[Express 5.1](https://expressjs.com/en/changelog/5.1.0.html)** (*JavaScript Weekly #730* )
 - **[React Email 4.0](https://react.email/)** (*JavaScript Weekly #730* )
@@ -223,12 +223,12 @@ thumbnail: /posts/weekly/april.avif
 - **[TanStack Form 1.3](https://github.com/TanStack/form/releases/tag/v1.3.0)** (*React Status #424* )
 - **[Embla Carousel 8.6](https://github.com/davidcetinkaya/embla-carousel/releases/tag/v8.6.0)** (*React Status #424* )
 - **[simpleParallax.js 6.1](https://github.com/georgeldallas/simpleParallax/releases/tag/v6.1.0)** (*React Status #424* )
-    + 업데이트: 모든 이미지에 패럴랙스 효과를 추가합니다.
+	+ アップデート: すべての画像にパララックス効果を追加します。
 
-## ✍️ 마치며
-- 이번 주에는 React의 심층적인 아키텍처 논의부터 새로운 경량 JavaScript 런타임의 등장, 그리고 웹 표준의 꾸준한 발전까지 다양한 소식들이 있었습니다. 특히 개발자들이 오랫동안 기다려온 CSS 기능들이 점차 현실화되면서 JavaScript 없이도 풍부한 UI를 구현할 수 있는 가능성이 열리고 있습니다. AI는 여전히 개발 프로세스 전반에 걸쳐 영향을 미치며, 테스트 자동화부터 코드 마이그레이션, 심지어 IDE 경험까지 변화시키고 있습니다.
+## ✍️ おわりに
+- 今週は、Reactの深層的なアーキテクチャ議論から新しい軽量JavaScriptランタイムの登場、そしてウェブ標準の着実な発展まで、様々なニュースがありました。特に開発者が長年待ち望んできたCSS機能が徐々に現実化し、JavaScriptなしでもリッチなUIを実装できる可能性が開かれています。AIは依然として開発プロセス全体に影響を与え、テスト自動化からコード移行、さらにはIDE体験まで変化させています。
 
-#### 출처
+#### 出典
 - [JavaScript Weekly #730](https://javascriptweekly.com/issues/730)
 - [Frontend Focus #687](https://frontendfoc.us/issues/687)
 - [Smashing Newsletter #502](https://mailchi.mp/smashingmagazine/new-front-end-techniques?e=02d8dcf17a)
