@@ -9,168 +9,168 @@ thumbnail: /posts/weekly/april.avif
 - AI 기반 개발 도구의 부상과 실제 적용 사례, 최신 JavaScript 기능 및 주요 프레임워크의 발전, 그리고 웹 접근성 향상을 위한 지속적인 논의와 기술들이 주목받고 있습니다.
 
 ## 1. 🔍 심층 분석
-1.  **[Node.js Testing Best Practices](https://github.com/goldbergyoni/nodejs-testing-best-practices)**
+1. **[Node.js Testing Best Practices](https://github.com/goldbergyoni/nodejs-testing-best-practices)**
     * 출처: *JavaScript Weekly #731*
     * 배경: Node.js에서의 모던 테스팅 전략과 50가지 이상의 실전 팁을 상세히 다루는 가이드입니다. 마이크로서비스 테스팅, flaky 네트워크 시뮬레이션 등 다양한 주제를 포함합니다.
     * 핵심 기능: '테스팅 다이아몬드(Testing Diamond)' 개념 소개, 마이크로서비스 아키텍처에서의 테스트 방법, 불안정한 네트워크 환경을 시뮬레이션하여 테스트하는 기법 등을 포함한 포괄적인 내용을 제공합니다. GitHub에서 무료로 제공되는 책 형식으로 작성되었습니다.
     * 코드 예제:
-        ```javascript
-        // 예시: 기본적인 테스트 구조
-        describe('MyModule', () => {
-          it('should perform a specific action correctly', () => {
-            // 테스트 대상 함수 호출 및 결과 검증
-            expect(myFunctionUnderTest(true)).toBe(true);
-          });
+      ```javascript
+      // 예시: 기본적인 테스트 구조
+      describe('MyModule', () => {
+        it('should perform a specific action correctly', () => {
+          // 테스트 대상 함수 호출 및 결과 검증
+          expect(myFunctionUnderTest(true)).toBe(true);
         });
-        ```
+      });
+      ```
     * 실무 적용: Node.js 애플리케이션의 안정성과 코드 품질을 향상시키고자 하는 모든 개발자에게 필독서입니다.
     * 주의사항: 방대한 양의 정보(50가지 이상의 팁)를 담고 있어, 단계적으로 학습하고 적용하는 것이 효과적일 수 있습니다.
 
-2.  **[JSX Over the Wire](https://overreacted.io/jsx-over-the-wire)**
+2. **[JSX Over the Wire](https://overreacted.io/jsx-over-the-wire)**
     * 출처: *React Status #425*
     * 배경: Dan Abramov가 "두 대의 컴퓨터를 위한 React (React for Two Computers)"라는 개념을 확장하여 서버에서 클라이언트로 데이터를 전달하는 방식의 진화에 대한 생각을 공유합니다.
     * 핵심 기능: 전통적인 REST 엔드포인트 방식과, React 컴포넌트 트리를 미러링하는 화면별 ViewModel을 구축하는 BFF(Backend-For-Frontend) 접근 방식을 비교 대조합니다. 이를 통해 클라이언트/서버 애플리케이션의 구성 방식이 어떻게 더 개선될 수 있는지에 대한 고찰을 제공합니다.
     * 코드 예제:
-        ```json
-        // 서버에서 전송하는 ViewModel (개념적 예시)
-        {
-          "component": "UserProfilePage",
-          "props": { "userId": "user123" },
-          "children": [
-            { "component": "UserInfoDisplay", "props": { "name": "Jane Doe", "status": "Online" } },
-            { "component": "UserActivityFeed", "props": { "filter": "recent" } }
-          ]
-        }
-        ```
+      ```json
+      // 서버에서 전송하는 ViewModel (개념적 예시)
+      {
+        "component": "UserProfilePage",
+        "props": { "userId": "user123" },
+        "children": [
+          { "component": "UserInfoDisplay", "props": { "name": "Jane Doe", "status": "Online" } },
+          { "component": "UserActivityFeed", "props": { "filter": "recent" } }
+        ]
+      }
+      ```
     * 실무 적용: 특히 React를 사용하는 모던 웹 애플리케이션의 아키텍트와 개발자들이 데이터 페칭 및 상태 동기화를 간소화할 수 있는 새로운 아이디어를 얻는 데 유용합니다.
     * 주의사항: 이 글은 아이디어와 생각의 흐름을 주로 다루므로, 실제 구현에 대한 구체적인 내용은 아직 발전 중이거나 추가적인 커뮤니티 논의가 필요할 수 있습니다.
 
 ---
 #### 놓치기 아까운 콘텐츠
--   **[Comparing Tauri and Electron for Building Desktop Apps](https://costaalexoglou.com/tauri-vs-electron)** (출처: *JavaScript Weekly #731 / Frontend Focus #688*)
-    +   요약: Electron은 JS/HTML 기반 데스크톱 앱의 일반적인 선택이지만, Rust 기반 Tauri와 같은 대안이 등장했습니다. 이 글은 Tauri의 차이점(프로세스 모델, 번들 크기 등)과 선택 이유를 잘 보여줍니다.
--   **[React Reconciliation: The Hidden Engine Behind Your Components](https://example.com/react-reconciliation-christian-ekrem)** (출처: *JavaScript Weekly #731*)
-    +   요약: React는 Virtual DOM의 변경 사항을 기반으로 DOM을 업데이트하기 위해 조정(reconciliation) 알고리즘을 사용합니다. 이것이 어떻게 작동하는지 이해하는 것은 더 빠른 앱을 만드는 데 필수적입니다.
+- **[Comparing Tauri and Electron for Building Desktop Apps](https://costaalexoglou.com/tauri-vs-electron)** (출처: *JavaScript Weekly #731 / Frontend Focus #688*)
+  + 요약: Electron은 JS/HTML 기반 데스크톱 앱의 일반적인 선택이지만, Rust 기반 Tauri와 같은 대안이 등장했습니다. 이 글은 Tauri의 차이점(프로세스 모델, 번들 크기 등)과 선택 이유를 잘 보여줍니다.
+- **[React Reconciliation: The Hidden Engine Behind Your Components](https://example.com/react-reconciliation-christian-ekrem)** (출처: *JavaScript Weekly #731*)
+  + 요약: React는 Virtual DOM의 변경 사항을 기반으로 DOM을 업데이트하기 위해 조정(reconciliation) 알고리즘을 사용합니다. 이것이 어떻게 작동하는지 이해하는 것은 더 빠른 앱을 만드는 데 필수적입니다.
 
 ---
 
 ## 2. 🛠️ 툴 & 라이브러리
--   **[Firebase Studio: Google's New Agentic AI-Powered Development Environment](https://firebase.google.com/studio)** (출처: *JavaScript Weekly #731*)
-    +   개요: Google의 Firebase 팀이 선보인 AI 기반 개발 환경으로, 브라우저에서 앱을 빌드할 수 있도록 지원합니다. Gemini 2.5 Pro의 개발 작업 성공에 힘입어 Cursor, v0, Lovable과 유사한 경험을 제공하는 것을 목표로 합니다.
-    +   사용법:
-        ```text
-        # Firebase Studio 내에서 앱 기능 명세:
-        "실시간 데이터 동기화 기능을 갖춘 할 일 관리 앱을 만들어줘. 사용자 인증 기능도 포함해줘."
-        # AI가 기본 코드 구조, 컴포넌트, Firebase 백엔드 설정을 제안 및 생성.
-        ```
-    +   실전 팁: Firebase 생태계 내에서 AI를 활용하여 신속하게 프로토타입을 제작하거나 애플리케이션 개발을 가속화하려는 개발자에게 유용할 수 있습니다.
+- **[Firebase Studio: Google's New Agentic AI-Powered Development Environment](https://firebase.google.com/studio)** (출처: *JavaScript Weekly #731*)
+    + 개요: Google의 Firebase 팀이 선보인 AI 기반 개발 환경으로, 브라우저에서 앱을 빌드할 수 있도록 지원합니다. Gemini 2.5 Pro의 개발 작업 성공에 힘입어 Cursor, v0, Lovable과 유사한 경험을 제공하는 것을 목표로 합니다.
+    + 사용법:
+      ```text
+      # Firebase Studio 내에서 앱 기능 명세:
+      "실시간 데이터 동기화 기능을 갖춘 할 일 관리 앱을 만들어줘. 사용자 인증 기능도 포함해줘."
+      # AI가 기본 코드 구조, 컴포넌트, Firebase 백엔드 설정을 제안 및 생성.
+      ```
+    + 실전 팁: Firebase 생태계 내에서 AI를 활용하여 신속하게 프로토타입을 제작하거나 애플리케이션 개발을 가속화하려는 개발자에게 유용할 수 있습니다.
 
--   **[Chrono 2.8: A Natural Language Date Parser](https://github.com/wanasit/chrono)** (출처: *JavaScript Weekly #731*)
-    +   개요: "오늘", "지난 금요일", "2주 후" 또는 전체 날짜와 시간 같은 문자열을 입력하면 해당 JavaScript Date 객체로 변환해주는 라이브러리입니다.
-    +   사용법:
-        ```javascript
-        import chrono from 'chrono-node';
-        const referenceDate = new Date(); // 기준 날짜 (선택 사항)
-        const parsedDate = chrono.parseDate('다음 주 수요일 오후 3시에 회의', referenceDate);
-        console.log(parsedDate); // JavaScript Date 객체 출력
-        ```
-    +   실전 팁: 사용자가 입력한 자연어 형태의 날짜 및 시간 정보를 유연하게 이해하고 처리해야 하는 애플리케이션(예: 챗봇, 스케줄링 도구)에 매우 유용합니다.
+- **[Chrono 2.8: A Natural Language Date Parser](https://github.com/wanasit/chrono)** (출처: *JavaScript Weekly #731*)
+    + 개요: "오늘", "지난 금요일", "2주 후" 또는 전체 날짜와 시간 같은 문자열을 입력하면 해당 JavaScript Date 객체로 변환해주는 라이브러리입니다.
+    + 사용법:
+      ```javascript
+      import chrono from 'chrono-node';
+      const referenceDate = new Date(); // 기준 날짜 (선택 사항)
+      const parsedDate = chrono.parseDate('다음 주 수요일 오후 3시에 회의', referenceDate);
+      console.log(parsedDate); // JavaScript Date 객체 출력
+      ```
+    + 실전 팁: 사용자가 입력한 자연어 형태의 날짜 및 시간 정보를 유연하게 이해하고 처리해야 하는 애플리케이션(예: 챗봇, 스케줄링 도구)에 매우 유용합니다.
 
 ---
 #### 놓치기 아까운 콘텐츠
--   **[Agent Hooks: Hooks That Bring Agents Into Your App](https://github.com/sunchuanqi/agent-hooks)** (출처: *React Status #425*)
-    +   요약: 애플리케이션에 AI 에이전트(LLM 등)를 통합하기 위한 React Hooks를 제공하여, 복잡한 로직을 추상화하고 개발을 용이하게 합니다.
--   **[Font Tester: A Browser Extension to Live Test and Preview Google Fonts](https://example.com/font-tester-extension-paul)** (출처: *Frontend Focus #688*)
-    +   요약: 현재 웹 페이지에 Google Fonts나 로컬에 설치된 사용자 정의 글꼴을 실시간으로 적용해보고 미리 볼 수 있는 브라우저 확장 프로그램입니다. 다양한 글꼴을 빠르게 비교하거나 테스트하는 데 유용합니다.
+- **[Agent Hooks: Hooks That Bring Agents Into Your App](https://github.com/sunchuanqi/agent-hooks)** (출처: *React Status #425*)
+  + 요약: 애플리케이션에 AI 에이전트(LLM 등)를 통합하기 위한 React Hooks를 제공하여, 복잡한 로직을 추상화하고 개발을 용이하게 합니다.
+- **[Font Tester: A Browser Extension to Live Test and Preview Google Fonts](https://example.com/font-tester-extension-paul)** (출처: *Frontend Focus #688*)
+  + 요약: 현재 웹 페이지에 Google Fonts나 로컬에 설치된 사용자 정의 글꼴을 실시간으로 적용해보고 미리 볼 수 있는 브라우저 확장 프로그램입니다. 다양한 글꼴을 빠르게 비교하거나 테스트하는 데 유용합니다.
 
 ---
 
 ## 3. 📝 추천 아티클 & 팁
--   **[Some Features Every JavaScript Developer Should Know in 2025](https://suren.dev/js-features-2025)** (출처: *JavaScript Weekly #731*)
-    +   핵심 인사이트: 최신 JavaScript의 iterator helpers, `structuredClone()` (깊은 복사), Set 연산 (합집합, 교집합 등)과 같은 모던 기능들을 간략하게 소개합니다.
-    +   코드 예시: (`structuredClone()` 활용)
-        ```javascript
-        const originalObject = { date: new Date(), data: { nested: true, arr: [1, 2] } };
-        const deepClonedObject = structuredClone(originalObject);
-        console.log(deepClonedObject.data !== originalObject.data); // true (객체가 깊은 복사됨)
-        ```
-    +   왜 이 글이 유익한지: 개발자들이 최신 JavaScript 기능을 활용하여 더 깔끔하고 효율적인 코드를 작성하는 데 도움을 줍니다.
+- **[Some Features Every JavaScript Developer Should Know in 2025](https://suren.dev/js-features-2025)** (출처: *JavaScript Weekly #731*)
+  + 핵심 인사이트: 최신 JavaScript의 iterator helpers, `structuredClone()` (깊은 복사), Set 연산 (합집합, 교집합 등)과 같은 모던 기능들을 간략하게 소개합니다.
+  + 코드 예시: (`structuredClone()` 활용)
+    ```javascript
+    const originalObject = { date: new Date(), data: { nested: true, arr: [1, 2] } };
+    const deepClonedObject = structuredClone(originalObject);
+    console.log(deepClonedObject.data !== originalObject.data); // true (객체가 깊은 복사됨)
+    ```
+  + 왜 이 글이 유익한지: 개발자들이 최신 JavaScript 기능을 활용하여 더 깔끔하고 효율적인 코드를 작성하는 데 도움을 줍니다.
 
--   **[Mastering Default Values with Nullish Coalescing (??)](https://mattsmith.dev/nullish-coalescing)** (출처: *JavaScript Weekly #731 / React Status #425*)
-    +   핵심 인사이트: `null` 또는 `undefined`에만 반응하는 nullish coalescing 연산자(`??`)를 `||` (OR 연산자) 대신 사용하여 기본값을 할당하는 것의 이점을 설명합니다. `||` 연산자는 `0`이나 빈 문자열(`''`)과 같은 'falsy' 값도 기본값으로 대체해버리는 문제를 `??`는 방지할 수 있습니다.
-    +   코드 예시:
-        ```javascript
-        let userProvidedCount = 0; // 사용자가 입력한 값
-        let quantity = userProvidedCount ?? 10; // quantity는 0 (0은 null이나 undefined가 아님)
-        let oldQuantity = userProvidedCount || 10; // oldQuantity는 10 (0은 falsy 값이므로)
-        ```
-    +   왜 이 글이 유익한지: `0`이나 빈 문자열과 같이 의도된 'falsy' 값이 예기치 않게 기본값으로 덮어씌워지는 흔한 버그를 예방할 수 있습니다.
+- **[Mastering Default Values with Nullish Coalescing (??)](https://mattsmith.dev/nullish-coalescing)** (출처: *JavaScript Weekly #731 / React Status #425*)
+  + 핵심 인사이트: `null` 또는 `undefined`에만 반응하는 nullish coalescing 연산자(`??`)를 `||` (OR 연산자) 대신 사용하여 기본값을 할당하는 것의 이점을 설명합니다. `||` 연산자는 `0`이나 빈 문자열(`''`)과 같은 'falsy' 값도 기본값으로 대체해버리는 문제를 `??`는 방지할 수 있습니다.
+  + 코드 예시:
+    ```javascript
+    let userProvidedCount = 0; // 사용자가 입력한 값
+    let quantity = userProvidedCount ?? 10; // quantity는 0 (0은 null이나 undefined가 아님)
+    let oldQuantity = userProvidedCount || 10; // oldQuantity는 10 (0은 falsy 값이므로)
+    ```
+  + 왜 이 글이 유익한지: `0`이나 빈 문자열과 같이 의도된 'falsy' 값이 예기치 않게 기본값으로 덮어씌워지는 흔한 버그를 예방할 수 있습니다.
 
--   **[Default Styles for H1 Elements are Changing](https://developer.mozilla.org/en-US/blog/default-styles-h1-changing/)** (출처: *Frontend Focus #688*)
-    +   핵심 인사이트: 브라우저들이 `<section>`, `<article>` 등 섹셔닝 콘텐츠 내에 중첩된 `<h1>` 요소의 기본 사용자 에이전트(UA) 스타일을 업데이트하고 있습니다. 이로 인해 기본 스타일에 의존하는 경우 `<h1>` 요소의 모양이 달라질 수 있습니다.
-    +   코드 예시: (HTML 구조)
-        ```html
-        <body>
-          <h1>Website Title (Likely Unchanged)</h1>
-          <article>
-            <h1>Article Main Title (Potentially new default styles)</h1>
-            <section>
-              <h1>Section Title (Potentially new default styles)</h1>
-            </section>
-          </article>
-        </body>
-        ```
-    +   왜 이 글이 유익한지: 웹사이트의 시각적 일관성에 영향을 줄 수 있는 브라우저 변경 사항에 대해 미리 알려주어, 개발자들이 사전에 확인하고 필요한 경우 명시적인 스타일을 적용하도록 유도합니다.
+- **[Default Styles for H1 Elements are Changing](https://developer.mozilla.org/en-US/blog/default-styles-h1-changing/)** (출처: *Frontend Focus #688*)
+  + 핵심 인사이트: 브라우저들이 `<section>`, `<article>` 등 섹셔닝 콘텐츠 내에 중첩된 `<h1>` 요소의 기본 사용자 에이전트(UA) 스타일을 업데이트하고 있습니다. 이로 인해 기본 스타일에 의존하는 경우 `<h1>` 요소의 모양이 달라질 수 있습니다.
+  + 코드 예시: (HTML 구조)
+    ```html
+    <body>
+      <h1>Website Title (Likely Unchanged)</h1>
+      <article>
+        <h1>Article Main Title (Potentially new default styles)</h1>
+        <section>
+          <h1>Section Title (Potentially new default styles)</h1>
+        </section>
+      </article>
+    </body>
+    ```
+  + 왜 이 글이 유익한지: 웹사이트의 시각적 일관성에 영향을 줄 수 있는 브라우저 변경 사항에 대해 미리 알려주어, 개발자들이 사전에 확인하고 필요한 경우 명시적인 스타일을 적용하도록 유도합니다.
 
 ---
 #### 놓치기 아까운 콘텐츠
--   **[Accelerating Large-Scale Test Migration with LLMs](https://medium.com/airbnb-engineering/accelerating-large-scale-test-migration-with-llms)** (출처: *JavaScript Weekly #731*)
-    +   요약: Airbnb가 어떻게 대규모 언어 모델(LLM)을 활용하여 Enzyme에서 React Testing Library로의 테스트 코드 마이그레이션 작업을 성공적으로 가속화했는지에 대한 사례를 공유합니다.
--   **[The Case for Web Components with Lit](https://philippkunz.com/blog/case-for-web-components-with-lit)** (출처: *JavaScript Weekly #731*)
-    +   요약: 개발자 Philipp Kunz가 Google의 Lit 라이브러리를 사용하여 웹 컴포넌트를 구축하는 것의 장점, 사용 사례, 그리고 왜 이것이 현대 웹 개발에서 강력한 선택이 될 수 있는지에 대해 설명합니다.
+- **[Accelerating Large-Scale Test Migration with LLMs](https://medium.com/airbnb-engineering/accelerating-large-scale-test-migration-with-llms)** (출처: *JavaScript Weekly #731*)
+  + 요약: Airbnb가 어떻게 대규모 언어 모델(LLM)을 활용하여 Enzyme에서 React Testing Library로의 테스트 코드 마이그레이션 작업을 성공적으로 가속화했는지에 대한 사례를 공유합니다.
+- **[The Case for Web Components with Lit](https://philippkunz.com/blog/case-for-web-components-with-lit)** (출처: *JavaScript Weekly #731*)
+  + 요약: 개발자 Philipp Kunz가 Google의 Lit 라이브러리를 사용하여 웹 컴포넌트를 구축하는 것의 장점, 사용 사례, 그리고 왜 이것이 현대 웹 개발에서 강력한 선택이 될 수 있는지에 대해 설명합니다.
 
 ---
 
 ## 4. ✨ 아이디어
--   **[Minimal CSS-only Blurry Image Placeholders](https://example.com/css-blurry-placeholders)** (출처: *JavaScript Weekly #731*)
-    +   특징: 이미지가 완전히 로드되기 전에 CSS만을 사용하여 동적으로 흐릿한 이미지 플레이스홀더를 생성하는 영리한 기술입니다. 이를 통해 사용자 경험을 개선하고 페이지 로딩 성능에 대한 인식을 향상시킬 수 있습니다.
+- **[Minimal CSS-only Blurry Image Placeholders](https://example.com/css-blurry-placeholders)** (출처: *JavaScript Weekly #731*)
+  + 특징: 이미지가 완전히 로드되기 전에 CSS만을 사용하여 동적으로 흐릿한 이미지 플레이스홀더를 생성하는 영리한 기술입니다. 이를 통해 사용자 경험을 개선하고 페이지 로딩 성능에 대한 인식을 향상시킬 수 있습니다.
 
--   **[PureAnim: An SVG Animation Toolkit](https://pureanim.com)** (출처: *Frontend Focus #688*)
-    +   특징: SVG 그래픽의 각 부분을 타임라인 뷰와 다양한 설정을 통해 애니메이션화할 수 있는 도구입니다. 복잡한 코드 작성 없이도 상호작용적이고 매력적인 벡터 그래픽을 만들 수 있으며, 사전 구축된 애니메이션 예제를 통해 작동 방식을 쉽게 파악할 수 있습니다.
+- **[PureAnim: An SVG Animation Toolkit](https://pureanim.com)** (출처: *Frontend Focus #688*)
+  + 특징: SVG 그래픽의 각 부분을 타임라인 뷰와 다양한 설정을 통해 애니메이션화할 수 있는 도구입니다. 복잡한 코드 작성 없이도 상호작용적이고 매력적인 벡터 그래픽을 만들 수 있으며, 사전 구축된 애니메이션 예제를 통해 작동 방식을 쉽게 파악할 수 있습니다.
 
 ## 5. ⚡️ 짧은 소식
--   **[npm Registry Access Token 문제 발생 가능성](https://status.npmjs.org/)** (출처: *JavaScript Weekly #731*)
-    +   요약: npm 레지스트리에서 모든 접근 토큰이 초기화되었을 수 있다는 추측이 있습니다. 문제가 발생하는 경우 새 토큰을 생성하는 것이 권장됩니다.
--   **[Cloudflare의 활발한 업데이트 소식](https://blog.cloudflare.com/)** (출처: *JavaScript Weekly #731*)
-    +   요약: Cloudflare가 Next.js 앱을 Workers에 쉽게 배포하는 기능, Git 리포지토리에 'deploy to Workers' 버튼 추가 기능, Cloudflare Vite 플러그인 v1 출시, 그리고 전체 프론트엔드, 백엔드, 데이터베이스를 하나의 Worker에 배포하는 기능을 선보였습니다.
--   **[JSHeroes 컨퍼런스 개최 안내](https://jsheroes.io/)** (출처: *JavaScript Weekly #731*)
-    +   요약: 연례 JSHeroes 컨퍼런스가 5월 29-30일 루마니아 클루지나포카에서 개최됩니다.
--   **[Git 20주년](https://github.blog/)** (출처: *JavaScript Weekly #731*)
-    +   요약: Git이 탄생 20주년을 맞이했습니다. GitHub의 Taylor Blau가 Linus Torvalds와 함께 이정표와 프로젝트 배경에 대해 이야기를 나누었습니다.
--   **[JavaScript Records & Tuples 제안 철회](https://github.com/tc39/proposals)** (출처: *React Status #425*)
-    +   요약: 오랫동안 논의되어 온 JavaScript의 Records 및 Tuples 제안이 최근 TC39 회의에서 철회되었습니다.
+- **[npm Registry Access Token 문제 발생 가능성](https://status.npmjs.org/)** (출처: *JavaScript Weekly #731*)
+  + 요약: npm 레지스트리에서 모든 접근 토큰이 초기화되었을 수 있다는 추측이 있습니다. 문제가 발생하는 경우 새 토큰을 생성하는 것이 권장됩니다.
+- **[Cloudflare의 활발한 업데이트 소식](https://blog.cloudflare.com/)** (출처: *JavaScript Weekly #731*)
+  + 요약: Cloudflare가 Next.js 앱을 Workers에 쉽게 배포하는 기능, Git 리포지토리에 'deploy to Workers' 버튼 추가 기능, Cloudflare Vite 플러그인 v1 출시, 그리고 전체 프론트엔드, 백엔드, 데이터베이스를 하나의 Worker에 배포하는 기능을 선보였습니다.
+- **[JSHeroes 컨퍼런스 개최 안내](https://jsheroes.io/)** (출처: *JavaScript Weekly #731*)
+  + 요약: 연례 JSHeroes 컨퍼런스가 5월 29-30일 루마니아 클루지나포카에서 개최됩니다.
+- **[Git 20주년](https://github.blog/)** (출처: *JavaScript Weekly #731*)
+  + 요약: Git이 탄생 20주년을 맞이했습니다. GitHub의 Taylor Blau가 Linus Torvalds와 함께 이정표와 프로젝트 배경에 대해 이야기를 나누었습니다.
+- **[JavaScript Records & Tuples 제안 철회](https://github.com/tc39/proposals)** (출처: *React Status #425*)
+  + 요약: 오랫동안 논의되어 온 JavaScript의 Records 및 Tuples 제안이 최근 TC39 회의에서 철회되었습니다.
 
 ## 6. 🎉 릴리스
--   **[Next.js 15.3](https://nextjs.org/blog)** (*JavaScript Weekly #731, React Status #425*)
-    +   업데이트: Turbopack을 사용한 프로덕션 빌드 속도 향상(알파 지원), Rspack 커뮤니티 지원, 새로운 네비게이션 훅 추가.
--   **[Bun 1.2.9](https://bun.sh/blog)** (*JavaScript Weekly #731*)
-    +   업데이트: (구체적인 업데이트 내용은 뉴스레터에 명시되지 않았으나, 지속적인 성능 개선 및 버그 수정이 포함될 것으로 예상됨).
--   **[Astro 5.7](https://astro.build/blog/)** (*React Status #425, Frontend Focus #688*)
-    +   업데이트: SVG 컴포넌트 도입, 실험적인 Fonts API 지원, 버그 수정 등.
--   **[TypeSpec 1.0-RC](https://typespec.io/)** (*JavaScript Weekly #731*)
-    +   업데이트: Microsoft의 클라우드 서비스 API 및 데이터 형태 정의 언어. Release Candidate 버전 공개.
--   **[pnpm 10.8](https://pnpm.io/)** (*JavaScript Weekly #731*)
-    +   업데이트: 효율적인 대체 패키지 매니저 업데이트.
--   **[Prisma 6.6](https://www.prisma.io/blog/)** (*JavaScript Weekly #731*)
-    +   업데이트: Node.js 및 TypeScript를 위한 인기 ORM 업데이트.
--   **[React Native 0.79](https://reactnative.dev/blog)** (*JavaScript Weekly #731*)
-    +   업데이트: "더 빠르게, 더 빠르게, 더 빠르게 (Faster, faster, faster)"를 강조한 성능 개선에 중점을 둔 릴리스.
--   **[Tailwind CSS 4.1](https://tailwindcss.com/blog)** (*JavaScript Weekly #731*)
-    +   업데이트: (구체적인 업데이트 내용은 뉴스레터에 명시되지 않았으나, 새로운 유틸리티 및 기능 개선 포함 예상).
--   **[Expo SDK 53 Beta](https://blog.expo.dev/)** (*React Status #425*)
-    +   업데이트: React Native 애플리케이션 개발을 위한 Expo SDK의 새로운 베타 버전.
--   **[Chrome 135](https://chromereleases.googleblog.com/)** (*Frontend Focus #688*)
-    +   업데이트: 사용자 정의 가능한 `<select>` 요소 API 지원 등 새로운 기능 및 개선 사항 포함.
+- **[Next.js 15.3](https://nextjs.org/blog)** (*JavaScript Weekly #731, React Status #425*)
+  + 업데이트: Turbopack을 사용한 프로덕션 빌드 속도 향상(알파 지원), Rspack 커뮤니티 지원, 새로운 네비게이션 훅 추가.
+- **[Bun 1.2.9](https://bun.sh/blog)** (*JavaScript Weekly #731*)
+  + 업데이트: (구체적인 업데이트 내용은 뉴스레터에 명시되지 않았으나, 지속적인 성능 개선 및 버그 수정이 포함될 것으로 예상됨).
+- **[Astro 5.7](https://astro.build/blog/)** (*React Status #425, Frontend Focus #688*)
+  + 업데이트: SVG 컴포넌트 도입, 실험적인 Fonts API 지원, 버그 수정 등.
+- **[TypeSpec 1.0-RC](https://typespec.io/)** (*JavaScript Weekly #731*)
+  + 업데이트: Microsoft의 클라우드 서비스 API 및 데이터 형태 정의 언어. Release Candidate 버전 공개.
+- **[pnpm 10.8](https://pnpm.io/)** (*JavaScript Weekly #731*)
+  + 업데이트: 효율적인 대체 패키지 매니저 업데이트.
+- **[Prisma 6.6](https://www.prisma.io/blog/)** (*JavaScript Weekly #731*)
+  + 업데이트: Node.js 및 TypeScript를 위한 인기 ORM 업데이트.
+- **[React Native 0.79](https://reactnative.dev/blog)** (*JavaScript Weekly #731*)
+  + 업데이트: "더 빠르게, 더 빠르게, 더 빠르게 (Faster, faster, faster)"를 강조한 성능 개선에 중점을 둔 릴리스.
+- **[Tailwind CSS 4.1](https://tailwindcss.com/blog)** (*JavaScript Weekly #731*)
+  + 업데이트: (구체적인 업데이트 내용은 뉴스레터에 명시되지 않았으나, 새로운 유틸리티 및 기능 개선 포함 예상).
+- **[Expo SDK 53 Beta](https://blog.expo.dev/)** (*React Status #425*)
+  + 업데이트: React Native 애플리케이션 개발을 위한 Expo SDK의 새로운 베타 버전.
+- **[Chrome 135](https://chromereleases.googleblog.com/)** (*Frontend Focus #688*)
+  + 업데이트: 사용자 정의 가능한 `<select>` 요소 API 지원 등 새로운 기능 및 개선 사항 포함.
 
 ## ✍️ 마치며
 이번 주 IT 업계는 AI를 활용한 개발 혁신, JavaScript와 주요 프레임워크들의 꾸준한 발전, 그리고 모든 사용자를 위한 웹 접근성 강화 노력이 두드러졌습니다. Firebase Studio와 같은 AI 기반 도구는 개발 생산성을 한층 높일 잠재력을 보여주었으며, Node.js 테스팅 가이드나 JSX Over the Wire 같은 심도 있는 논의는 개발 방식에 대한 새로운 시각을 제공했습니다. 또한, Next.js, Astro, Bun 등의 릴리스는 최신 기술 동향을 반영하며 계속해서 진화하고 있음을 알 수 있습니다. 접근성 관련 논의와 새로운 브라우저 기능들은 더 포용적인 웹 환경을 만드는 데 기여할 것으로 기대됩니다.
