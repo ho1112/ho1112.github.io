@@ -1,307 +1,307 @@
 ---
 title: '🚀 2025-04 W4 #4'
-desc: 2025년 4월 4주차 뉴스레터
+desc: 2025年4月第4週のニュースレター
 date: 2025-04-27
 thumbnail: /posts/weekly/april.avif
 ---
 
-## 🔥 이번 주 핵심 테마
-- React Compiler의 RC 단계 진입과 다양한 프론트엔드 도구 및 기술 심층 분석, 그리고 디자인 시스템 구축을 위한 실용적인 전략들을 살펴봅니다.
+## 🔥 今週の主要テーマ
+- React CompilerのRC段階への移行と様々なフロントエンドツール及び技術の深掘り、そしてデザインシステム構築のための実用的な戦略について見ていきます。
 
-## 1. 🔍 심층 분석
+## 1. 🔍 深掘り
 1. **[Impossible Components](https://react.statuscode.com/link/170495/web)**
-    - 출처: *React Status #426*
-    - 배경: 서버 전용 기능과 클라이언트 전용 기능을 혼합하는 '불가능해 보이는' 컴포넌트 개념에 대한 탐구입니다. React Server Components (RSC)가 이러한 간극을 어떻게 메울 수 있는지 보여줍니다. Dan Abramov는 서버에서만 실행되어야 하는 로직(예: 데이터베이스 접근, 파일 시스템 사용)과 클라이언트에서 상호작용을 담당하는 로직(예: `useState`, `useEffect`)을 어떻게 함께 사용할 수 있는지에 대한 비전을 제시합니다.
-    - 핵심 기능: RSC를 활용하면, 컴포넌트의 일부는 서버에서 렌더링되어 HTML로 전송되고, 필요한 클라이언트 측 인터랙션을 위한 JavaScript 코드만 클라이언트로 전송됩니다. 이를 통해 초기 로딩 성능을 개선하고 서버 리소스를 효율적으로 활용할 수 있습니다.
-    - 코드 예제: (Dan Abramov의 글과 RSC 개념에 기반한 예시)
-      *서버 컴포넌트 (데이터 fetching 및 서버 로직 담당)*
-      ```javascript
-      // app/greeting-backend.js
-      // 'use server'; // Next.js App Router 등 RSC 지원 환경에서 명시
-      import { readFile } from 'fs/promises'; // 서버 API 예시
-      import { GreetingFrontend } from './greeting-frontend';
+		- 出典: *React Status #426*
+		- 背景: サーバー専用機能とクライアント専用機能を混在させる「不可能に見える」コンポーネントの概念に関する探求です。React Server Components (RSC)がこのギャップをどのように埋めることができるかを示します。Dan Abramovは、サーバーでのみ実行されるべきロジック（例：データベースアクセス、ファイルシステム使用）とクライアントでインタラクションを担当するロジック（例：`useState`、`useEffect`）をどのように一緒に使用できるかについてのビジョンを提示します。
+		- 主な機能: RSCを活用すると、コンポーネントの一部はサーバーでレンダリングされてHTMLとして送信され、必要なクライアントサイドのインタラクションのためのJavaScriptコードのみがクライアントに送信されます。これにより、初期ローディングパフォーマンスを改善し、サーバーリソースを効率的に活用できます。
+		- コード例: (Dan Abramovの記事とRSCの概念に基づいた例)
+			*サーバーコンポーネント (データフェッチング及びサーバーロジック担当)*
+			```javascript
+			// app/greeting-backend.js
+			// 'use server'; // Next.js App RouterなどRSC対応環境で明示
+			import { readFile } from 'fs/promises'; // サーバーAPIの例
+			import { GreetingFrontend } from './greeting-frontend';
 
-      export async function GreetingBackend() {
-        const colorFromFile = await readFile('./my-settings/color.txt', 'utf8');
-        // 서버에서 데이터를 가져오거나 처리
-        return <GreetingFrontend initialColor={colorFromFile.trim()} />;
-      }
-      ```
-      *클라이언트 컴포넌트 (상태 관리 및 인터랙션 담당)*
-      ```javascript
-      // app/greeting-frontend.js
-      'use client';
+			export async function GreetingBackend() {
+				const colorFromFile = await readFile('./my-settings/color.txt', 'utf8');
+				// サーバーからデータを取得または処理
+				return <GreetingFrontend initialColor={colorFromFile.trim()} />;
+			}
+			```
+			*クライアントコンポーネント (状態管理及びインタラクション担当)*
+			```javascript
+			// app/greeting-frontend.js
+			'use client';
 
-      import { useState, useEffect } from 'react';
+			import { useState, useEffect } from 'react';
 
-      export function GreetingFrontend({ initialColor }) {
-        const [name, setName] = useState('Guest');
-        const [textColor, setTextColor] = useState(initialColor);
+			export function GreetingFrontend({ initialColor }) {
+				const [name, setName] = useState('Guest');
+				const [textColor, setTextColor] = useState(initialColor);
 
-        useEffect(() => {
-          // 클라이언트 사이드에서만 실행되는 로직
-          console.log(`Color set to: ${textColor}`);
-        }, [textColor]);
+				useEffect(() => {
+					// クライアントサイドでのみ実行されるロジック
+					console.log(`Color set to: ${textColor}`);
+				}, [textColor]);
 
-        return (
-          <div>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-            />
-            <p style={{ color: textColor }}>Hello, {name}!</p>
-            <button onClick={() => setTextColor(textColor === initialColor ? 'deeppink' : initialColor)}>
-              Toggle Color
-            </button>
-          </div>
-        );
-      }
-      ```
-    - 실무 적용: 복잡한 데이터 의존성을 가진 컴포넌트를 서버와 클라이언트 로직을 분리하여 보다 효율적으로 관리하고, 초기 로딩 성능을 개선하고자 할 때 유용합니다. 인증 정보와 같이 민감한 데이터를 서버 컴포넌트 내에서만 다루어 보안을 강화할 수도 있습니다.
-    - 주의사항: RSC는 비교적 새로운 패러다임이므로, 프레임워크(예: Next.js App Router)의 지원 방식과 생태계를 잘 이해하고 도입해야 합니다. 서버 컴포넌트와 클라이언트 컴포넌트 간의 데이터 전달 방식, 상태 관리 전략에 대한 고민이 필요합니다.
+				return (
+					<div>
+						<input
+							type="text"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							placeholder="Enter your name"
+						/>
+						<p style={{ color: textColor }}>Hello, {name}!</p>
+						<button onClick={() => setTextColor(textColor === initialColor ? 'deeppink' : initialColor)}>
+							Toggle Color
+						</button>
+					</div>
+				);
+			}
+			```
+		- 実務適用: 複雑なデータ依存性を持つコンポーネントをサーバーとクライアントのロジックに分離して、より効率的に管理し、初期ローディングパフォーマンスを改善したい場合に有用です。認証情報のような機密データをサーバーコンポーネント内でのみ扱うことで、セキュリティを強化することもできます。
+		- 注意事項: RSCは比較的新しいパラダイムであるため、フレームワーク（例：Next.js App Router）のサポート方式とエコシステムをよく理解して導入する必要があります。サーバーコンポーネントとクライアントコンポーネント間のデータ伝達方式、状態管理戦略についての検討が必要です。
 
 2. **[A Flowing WebGL Gradient, Deconstructed](https://frontendfoc.us/link/170539/web)**
-    - 출처: *Frontend Focus #689* (JavaScript Weekly #732에도 언급)
-    - 배경: 웹에서 매력적인 플라즈마 스타일의 동적 그래디언트 효과를 렌더링하는 방법에 대한 깊이 있는 탐구입니다. JavaScript 개발자도 쉽게 이해할 수 있도록 GLSL(OpenGL Shading Language) 코드와 그 원리를 설명합니다.
-    - 핵심 기능: WebGL을 사용하여 캔버스에 픽셀 단위로 색상을 제어하는 프래그먼트 셰이더를 작성합니다. 시간에 따라 변하는 값(uniform 변수 `u_time`)과 픽셀의 좌표(varying 변수 또는 `gl_FragCoord`)를 사용하여 수학 함수(sin, cos, mix, noise 등)를 조합, 다채롭고 유동적인 색상 패턴을 만들어냅니다.
-    - 코드 예제: (Alex Harri의 글에 제시된 아이디어 기반의 프래그먼트 셰이더 예시)
-      ```glsl
-      // Fragment Shader (GLSL)
-      precision mediump float;
+		- 출처: *Frontend Focus #689* (JavaScript Weekly #732にも言及)
+		- 背景: ウェブで魅力的なプラズマスタイルの動的グラデーション効果をレンダリングする方法についての詳細な探求です。JavaScript開発者でも容易に理解できるように、GLSL (OpenGL Shading Language) コードとその原理を説明します。
+		- 主な機能: WebGLを使用してキャンバスにピクセル単位で色を制御するフラグメントシェーダーを作成します。時間経過で変化する値（uniform変数 `u_time`）とピクセルの座標（varying変数または `gl_FragCoord`）を使用して、数学関数（sin、cos、mix、noiseなど）を組み合わせ、多彩で流動的な色パターンを作り出します。
+		- コード例: (Alex Harriの記事で提示されたアイデアに基づくフラグメントシェーダーの例)
+			```glsl
+			// Fragment Shader (GLSL)
+			precision mediump float;
 
-      uniform vec2 u_resolution; // 캔버스 해상도 (width, height)
-      uniform float u_time;     // 시간 (애니메이션 용)
+			uniform vec2 u_resolution; // キャンバス解像度 (width, height)
+			uniform float u_time;      // 時間 (アニメーション用)
 
-      // 2D Simplex Noise 함수 (간략화된 예시, 실제로는 라이브러리 또는 상세 구현 필요)
-      // 이 함수는 글에서 직접 제공되진 않지만, 아이디어 구현을 위해 필요함
-      float snoise(vec2 v) {
-          // ... Simplex Noise 구현 ...
-          // 여기서는 간단한 sin/cos 기반 패턴으로 대체
-          return (sin(v.x * 0.1 + u_time) + cos(v.y * 0.1 - u_time)) * 0.5 + 0.5;
-      }
+			// 2D Simplex Noise 関数 (簡略化された例、実際にはライブラリまたは詳細な実装が必要)
+			// この関数は記事で直接提供されていませんが、アイデア実装のために必要です
+			float snoise(vec2 v) {
+				// ... Simplex Noise 実装 ...
+				// ここでは簡単な sin/cos ベースのパターンで代替
+				return (sin(v.x * 0.1 + u_time) + cos(v.y * 0.1 - u_time)) * 0.5 + 0.5;
+			}
 
-      void main() {
-          vec2 st = gl_FragCoord.xy / u_resolution.xy;
-          st.x *= u_resolution.x / u_resolution.y; // 화면 비율 보정
+			void main() {
+				vec2 st = gl_FragCoord.xy / u_resolution.xy;
+				st.x *= u_resolution.x / u_resolution.y; // 画面比率補正
 
-          float t = u_time * 0.3; // 시간 기반 변수
+				float t = u_time * 0.3; // 時間ベースの変数
 
-          // 여러 층의 노이즈(또는 수학 함수)를 중첩하여 복잡한 패턴 생성
-          float f = 0.0;
-          f += 0.50 * snoise(st * 2.0 + vec2(cos(t * 0.5), sin(t * 0.3)));
-          f += 0.25 * snoise(st * 4.0 + vec2(sin(t * 0.4), cos(t * 0.6)));
-          f += 0.125 * snoise(st * 8.0 - vec2(cos(t * 0.7), sin(t * 0.2)));
-          f = pow(f, 1.5); // 대비 조절
+				// 複数層のノイズ（または数学関数）を重ねて複雑なパターンを生成
+				float f = 0.0;
+				f += 0.50 * snoise(st * 2.0 + vec2(cos(t * 0.5), sin(t * 0.3)));
+				f += 0.25 * snoise(st * 4.0 + vec2(sin(t * 0.4), cos(t * 0.6)));
+				f += 0.125 * snoise(st * 8.0 - vec2(cos(t * 0.7), sin(t * 0.2)));
+				f = pow(f, 1.5); // コントラスト調整
 
-          // 색상 팔레트 정의 및 혼합
-          vec3 colorA = vec3(0.8, 0.1, 0.4); // 핑크/퍼플 계열
-          vec3 colorB = vec3(0.1, 0.4, 0.8); // 블루 계열
-          vec3 colorC = vec3(1.0, 0.8, 0.2); // 옐로우/오렌지 계열
+				// カラーパレット定義と混合
+				vec3 colorA = vec3(0.8, 0.1, 0.4); // ピンク/パープル系
+				vec3 colorB = vec3(0.1, 0.4, 0.8); // ブルー系
+				vec3 colorC = vec3(1.0, 0.8, 0.2); // イエロー/オレンジ系
 
-          vec3 color = mix(colorA, colorB, smoothstep(0.2, 0.5, f));
-          color = mix(color, colorC, smoothstep(0.4, 0.8, f + sin(st.x * 3.0 + t) * 0.1));
+				vec3 color = mix(colorA, colorB, smoothstep(0.2, 0.5, f));
+				color = mix(color, colorC, smoothstep(0.4, 0.8, f + sin(st.x * 3.0 + t) * 0.1));
 
-          gl_FragColor = vec4(color, 1.0);
-      }
-      ```
-      *JavaScript 측에서는 이 셰이더를 로드하고, `u_resolution`과 `u_time` uniform 변수를 매 프레임 업데이트하며 렌더링합니다.*
-    - 실무 적용: 웹사이트의 배경, 인터랙티브 아트, 데이터 시각화, 게임 그래픽 등 시각적으로 풍부하고 몰입감 있는 사용자 경험을 제공하고자 할 때 활용될 수 있습니다.
-    - 주의사항: WebGL과 GLSL은 GPU 자원을 사용하므로 성능 최적화가 중요합니다. 복잡한 셰이더는 모바일 기기나 저사양 시스템에서 성능 문제를 일으킬 수 있습니다. 디버깅이 상대적으로 어렵고, 브라우저 호환성도 고려해야 합니다.
-
----
-#### 놓치기 아까운 콘텐츠
-- **[Advanced React in the Wild](https://javascriptweekly.com/link/170424/web)** (출처: *JavaScript Weekly #732*)
-  + 요약: 5개의 서로 다른 엔지니어링 팀이 프로덕션 환경에서 React를 극한까지 활용한 사례 연구 모음입니다. 성능, Core Web Vitals, 캐싱 등 실제 환경에서의 성공 사례를 다룹니다.
-- **[Next Steps for Privacy Sandbox and Tracking Protections in Chrome](https://frontendfoc.us/link/170537/web)** (출처: *Frontend Focus #689*)
-  + 요약: Chrome에서 서드파티 쿠키 제거 계획에 대한 Google의 현재 입장을 설명합니다. 현재 접근 방식을 유지하며, 사용자에게 Chrome의 개인 정보 보호 및 보안 설정에서 선택권을 계속 제공할 것이라고 합니다.
----
-
-## 2. 🛠️ 툴 & 라이브러리
-- **[Astro Font: An Astro Plugin to Automatically Optimize Your Fonts](https://frontendfoc.us/link/170550/web)** (출처: *Frontend Focus #689*)
-  + 개요: Astro 프로젝트에서 폰트 사용을 최적화해주는 플러그인입니다. 커스텀 폰트, 로컬 폰트, CDN을 통한 폰트, Google Fonts 등 다양한 폰트 소스를 지원하며, 자동으로 폰트를 다운로드하고 `font-face` 규칙을 생성하여 성능을 향상시킵니다.
-  + 사용법:
-    ```bash
-    npm install astro-font
-    ```
-    Astro 설정 파일 (`astro.config.mjs`)에 플러그인을 추가하고 폰트 설정을 구성합니다.
-    ```javascript
-    // astro.config.mjs
-    import { defineConfig } from 'astro/config';
-    import astroFont from 'astro-font';
-
-    export default defineConfig({
-      integrations: [
-        astroFont({
-          src: [
-            {
-              name: 'My Local Font',
-              path: '/fonts/MyLocalFont.woff2', // public 디렉토리 기준 경로
-              weight: '400 700', // 400과 700 두 가지 웨이트
-              style: 'normal',
-              display: 'swap', // 폰트 로딩 전략
-              preload: true,   // 중요한 폰트 미리 로드
-            },
-            {
-              name: 'Google Font Example', // Google Fonts 사용 시
-              google: 'Inter',
-              variants: [
-                { weight: '400', style: 'normal' },
-                { weight: '700', style: 'italic' },
-              ],
-              subsets: ['latin'], // 사용할 문자셋
-            },
-          ],
-        }),
-      ],
-    });
-    ```
-  + 실전 팁: `preload` 옵션을 사용하여 중요한 폰트를 미리 로드함으로써 LCP(Largest Contentful Paint)와 같은 웹 성능 지표를 개선할 수 있습니다. `display: 'swap'` 등의 폰트 디스플레이 전략을 적절히 사용하여 FOIT(Flash of Invisible Text)나 FOUT(Flash of Unstyled Text)를 관리하세요.
-
-- **[Tailwind Trainer: A Game for Practicing Tailwind Utility Classes](https://frontendfoc.us/link/170549/web)** (출처: *Frontend Focus #689*)
-  + 개요: Flexbox Froggy와 Grid Garden 개발팀이 만든 Tailwind CSS 유틸리티 클래스 연습용 게임입니다. 게임을 통해 Tailwind의 문법을 익힐 수 있으며, 플레이할 때마다 다른 문제가 제시되어 반복 학습에 유용합니다.
-  + 사용법: 웹사이트에 접속하여 게임을 플레이하면서 제시되는 디자인을 Tailwind CSS 유틸리티 클래스를 조합하여 완성합니다. (CLI나 코드 설치 불필요)
-    *예시 문제 해결 과정 (개념적)*
-    ```html
-    <button class="bg-blue-500 text-white p-4 rounded">Click Me</button>
-    ```
-  + 실전 팁: 단순히 게임을 클리어하는 것을 넘어, 각 유틸리티 클래스가 실제 어떤 CSS 속성으로 변환되는지 함께 생각해보면 학습 효과를 극대화할 수 있습니다. 자주 사용하지만 헷갈리는 클래스들(예: flexbox, grid 관련 클래스)을 집중적으로 연습하는 데 활용하면 좋습니다.
+				gl_FragColor = vec4(color, 1.0);
+			}
+			```
+			*JavaScript側ではこのシェーダーをロードし、`u_resolution`と`u_time` uniform変数を毎フレーム更新しながらレンダリングします。*
+		- 実務適用: ウェブサイトの背景、インタラクティブアート、データ可視化、ゲームグラフィックなど、視覚的に豊かで没入感のあるユーザー体験を提供したい場合に活用できます。
+		- 注意事項: WebGLとGLSLはGPUリソースを使用するため、パフォーマンス最適化が重要です。複雑なシェーダーはモバイルデバイスや低スペックシステムではパフォーマンス問題を引き起こす可能性があります。デバッグが比較的難しく、ブラウザの互換性も考慮する必要があります。
 
 ---
-#### 놓치기 아까운 콘텐츠
-- **[JSONMocker: A Web-Based Editor to Create Reusable JSON Mock Data Schema Files](https://frontendfoc.us/link/170552/web)** (출처: *Frontend Focus #689*)
-  + 요약: 재사용 가능한 JSON 목업 데이터 스키마 파일을 생성할 수 있는 웹 기반 편집기입니다. 개발 초기 단계에서 API 응답을 시뮬레이션하거나 테스트 데이터를 생성하는 데 유용합니다.
-- **[Symbl: Easily Search, Copy, and Use HTML Symbols, Emojis & More](https://frontendfoc.us/link/170551/web)** (출처: *Frontend Focus #689*)
-  + 요약: HTML 심볼, 이모지 등을 쉽게 검색하고 복사하여 사용할 수 있는 도구입니다. 웹 개발 시 특수 문자나 아이콘을 빠르게 찾아 활용할 수 있도록 도와줍니다.
+#### 見逃せないコンテンツ
+- **[Advanced React in the Wild](https://javascriptweekly.com/link/170424/web)** (出典: *JavaScript Weekly #732*)
+	+ まとめ: 5つの異なるエンジニアリングチームが本番環境でReactを極限まで活用した事例研究集です。パフォーマンス、Core Web Vitals、キャッシングなど、実際の環境での成功事例を取り上げています。
+- **[Next Steps for Privacy Sandbox and Tracking Protections in Chrome](https://frontendfoc.us/link/170537/web)** (出典: *Frontend Focus #689*)
+	+ まとめ: ChromeにおけるサードパーティCookie廃止計画に関するGoogleの現在の立場を説明しています。現在のアプローチを維持し、ユーザーにはChromeのプライバシーとセキュリティ設定で選択権を引き続き提供するとのことです。
 ---
 
-## 3. 📝 추천 아티클 & 팁
-- **[Minimal CSS-Only Blurry Image Placeholders](https://css-weekly.com/link/62391/web)** (출처: *CSS Weekly #610*)
-  + 핵심 인사이트: 마크업을 복잡하게 만들지 않으면서 CSS만으로 흐릿한 이미지 플레이스홀더(LQIP - Low Quality Image Placeholders)를 만드는 기법을 공유합니다. `background-image`, `filter: blur()`, `transform: scale()` 등의 CSS 속성을 활용하여 작은 크기의 원본 이미지를 확대하고 흐리게 처리하여 플레이스홀더로 사용합니다. 이는 사용자 경험을 개선하고, 이미지가 로드되기 전까지 레이아웃 깨짐을 방지하는 데 도움이 됩니다.
-  + 코드 예시:
-    ```html
-    <div class="image-container">
-      <img src="high-quality-image.jpg" alt="Description" loading="lazy" class="actual-image" />
-      </div>
-    ```
-    ```css
-    .image-container {
-      position: relative;
-      width: 300px; /* 또는 원하는 크기 */
-      aspect-ratio: 16/9; /* 이미지 비율 유지 */
-      background-color: #eee; /* 기본 배경색 */
-      /* 저화질 이미지 URL을 CSS 변수로 지정하거나 직접 사용 */
-      background-image: var(--low-quality-image-url); /* 예: url(low-quality-placeholder.jpg) */
-      background-size: cover;
-      overflow: hidden; /* blur 효과가 넘치지 않도록 */
-    }
+## 2. 🛠️ ツール & ライブラリ
+- **[Astro Font: An Astro Plugin to Automatically Optimize Your Fonts](https://frontendfoc.us/link/170550/web)** (出典: *Frontend Focus #689*)
+	+ 概要: Astroプロジェクトでフォントの使用を最適化するプラグインです。カスタムフォント、ローカルフォント、CDN経由のフォント、Google Fontsなど、様々なフォントソースをサポートし、自動的にフォントをダウンロードして`font-face`ルールを生成し、パフォーマンスを向上させます。
+	+ 使い方:
+		```bash
+		npm install astro-font
+		```
+		Astro設定ファイル (`astro.config.mjs`) にプラグインを追加し、フォント設定を行います。
+		```javascript
+		// astro.config.mjs
+		import { defineConfig } from 'astro/config';
+		import astroFont from 'astro-font';
 
-    .image-container::before {
-      content: '';
-      position: absolute;
-      inset: -5%; /* 흐림 효과 가장자리 잘림 방지용 약간의 확장 */
-      background-image: inherit; /* 컨테이너의 배경 이미지 상속 */
-      background-size: cover;
-      filter: blur(20px); /* 흐림 효과 강도 */
-      /* transform: scale(1.1); // inset으로 대체 가능 */
-    }
+		export default defineConfig({
+			integrations: [
+				astroFont({
+					src: [
+						{
+							name: 'My Local Font',
+							path: '/fonts/MyLocalFont.woff2', // publicディレクトリ基準のパス
+							weight: '400 700', // 400と700の2つのウェイト
+							style: 'normal',
+							display: 'swap', // フォント読み込み戦略
+							preload: true,	// 重要なフォントを事前に読み込む
+						},
+						{
+							name: 'Google Font Example', // Google Fonts使用時
+							google: 'Inter',
+							variants: [
+								{ weight: '400', style: 'normal' },
+								{ weight: '700', style: 'italic' },
+							],
+							subsets: ['latin'], // 使用する文字セット
+						},
+					],
+				}),
+			],
+		});
+		```
+	+ 実践のヒント: `preload`オプションを使用して重要なフォントを事前に読み込むことで、LCP (Largest Contentful Paint) のようなウェブパフォーマンス指標を改善できます。`display: 'swap'`などのフォント表示戦略を適切に使用して、FOIT (Flash of Invisible Text) やFOUT (Flash of Unstyled Text) を管理してください。
 
-    .actual-image {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: relative; /* ::before 위에 오도록 */
-      opacity: 0; /* 처음엔 투명하게 */
-      transition: opacity 0.3s ease-in-out; /* 부드러운 등장 효과 */
-    }
-
-    /* JavaScript로 이미지 로드 완료 시 .loaded 클래스 추가 */
-    .actual-image.loaded {
-      opacity: 1;
-    }
-    ```
-  + 왜 이 글이 유익한가: JavaScript 없이 CSS만으로 이미지 로딩 최적화 기법을 구현할 수 있어 성능에 미치는 영향이 적습니다 (단, 위 예시의 `loaded` 클래스 토글은 JS 필요). 또한, 복잡한 HTML 구조 변경 없이 스타일시트 수정만으로 적용 가능하여 유지보수가 용이합니다.
-
-- **[Organizing Layers And Artboards In Figma](https://www.smashingmagazine.com/2025/04/organizing-layers-artboards-figma/)** (출처: *Smashing Newsletter #504*)
-  + 핵심 인사이트: Figma에서 레이어와 아트보드를 효과적으로 구성하고 관리하기 위한 실용적인 팁과 전략을 제공합니다. 일관된 네이밍 컨벤션(예: `component/variant/state`), 그룹화 및 프레임 활용(Auto Layout 적극 사용), 페이지를 사용한 작업 영역 분리(예: Exploration, Components, Archive) 등 협업 효율성을 높이고 디자인 시스템의 확장성을 확보하기 위한 방법들을 다룹니다.
-  + 왜 이 글이 유익한가: 디자이너뿐만 아니라 Figma 파일을 다루는 개발자에게도 유용합니다. 잘 정리된 Figma 파일은 디자인 의도를 명확하게 전달하고, CSS 클래스명이나 컴포넌트 구조를 유추하는 데 도움을 주어 개발 과정에서의 혼선을 줄이고 생산성을 향상시킵니다.
-
-- **[Building Single Page Apps with SvelteKit](https://javascriptweekly.com/link/170425/web)** (출처: *JavaScript Weekly #732*)
-  + 핵심 인사이트: SvelteKit을 사용하여 단일 페이지 애플리케이션(SPA)을 구축하는 방법을 소개합니다. SvelteKit의 라우팅, 데이터 로딩(`load` 함수), 레이아웃 기능을 활용하여 전통적인 SPA처럼 동작하도록 설정하는 과정을 안내합니다. 더 나아가, `adapter-static`을 사용하여 웹 서버 없이 실행할 수 있는 단일 HTML 파일로 SvelteKit 앱을 빌드하는 방법까지 다루고 있어, 가볍고 빠른 프로토타이핑이나 간단한 웹 애플리케이션 배포에 유용합니다. (15분 분량의 튜토리얼)
-  + 코드 예시 (개념적, SvelteKit 라우팅 및 로드 함수):
-    ```javascript
-    // src/routes/posts/+page.js (SvelteKit의 load 함수 예시)
-    export async function load({ fetch }) {
-      const response = await fetch('/api/posts'); // 내부 API 또는 외부 API 호출
-      const posts = await response.json();
-      return {
-        posts
-      };
-    }
-    ```
-    ```svelte
-    <script>
-      export let data; // load 함수에서 반환된 데이터
-    </script>
-
-    <h1>Blog Posts</h1>
-    <ul>
-      {#each data.posts as post}
-        <li><a href="/posts/{post.id}">{post.title}</a></li>
-      {/each}
-    </ul>
-    ```
-  + 왜 이 글이 유익한가: SvelteKit의 유연성과 강력함을 보여주며, 전통적인 SPA 개발 방식 외에 새로운 접근법을 제시합니다. 특히 정적 사이트나 간단한 인터랙션을 포함한 페이지를 빠르고 효율적으로 만들고자 하는 개발자에게 좋은 가이드가 될 수 있습니다. `adapter-static`을 통한 빌드는 GitHub Pages 등 정적 호스팅 환경에 쉽게 배포할 수 있게 해줍니다.
+- **[Tailwind Trainer: A Game for Practicing Tailwind Utility Classes](https://frontendfoc.us/link/170549/web)** (出典: *Frontend Focus #689*)
+	+ 概要: Flexbox FroggyとGrid Gardenの開発チームが作成したTailwind CSSユーティリティクラス練習用ゲームです。ゲームを通じてTailwindの文法を学ぶことができ、プレイするたびに異なる問題が出題されるため、反復学習に役立ちます。
+	+ 使い方: ウェブサイトにアクセスしてゲームをプレイし、提示されるデザインをTailwind CSSユーティリティクラスを組み合わせて完成させます。(CLIやコードのインストールは不要)
+		*問題解決過程の例 (概念的)*
+		```html
+		<button class="bg-blue-500 text-white p-4 rounded">Click Me</button>
+		```
+	+ 実践のヒント: 単にゲームをクリアするだけでなく、各ユーティリティクラスが実際にどのようなCSSプロパティに変換されるかを一緒に考えると、学習効果を最大限に高めることができます。頻繁に使用するが混乱しやすいクラス (例: flexbox、grid関連のクラス) を集 ακόμα練習するのに活用すると良いでしょう。
 
 ---
-#### 놓치기 아까운 콘텐츠
-- **[Using Manim For Making UI Animations](https://www.smashingmagazine.com/2025/04/using-manim-making-ui-animations/)** (출처: *Smashing Newsletter #504*)
-  + 요약: 수학 애니메이션으로 유명한 Python 라이브러리 Manim을 사용하여 UI 애니메이션을 만드는 방법을 탐구합니다. 코드 기반으로 정교하고 프로그래밍적인 애니메이션을 제작하고자 하는 개발자나 디자이너에게 새로운 도구를 제시하며, 특히 복잡한 상태 변화나 데이터 기반 애니메이션에 유용할 수 있습니다.
-- **[A design systems playbook for product teams](https://www.figma.com/blog/a-design-systems-playbook-for-product-teams/)** (출처: *Smashing Newsletter #504*)
-  + 요약: 제품 팀을 위한 디자인 시스템 플레이북으로, 디자인 시스템을 성공적으로 구축하고 유지 관리하며 팀 전체에 효과적으로 전파하기 위한 가이드라인과 모범 사례를 제공합니다. 원칙 정의, 컴포넌트 설계, 문서화, 거버넌스 등 디자인 시스템 운영의 전반적인 과정을 다룹니다.
+#### 見逃せないコンテンツ
+- **[JSONMocker: A Web-Based Editor to Create Reusable JSON Mock Data Schema Files](https://frontendfoc.us/link/170552/web)** (出典: *Frontend Focus #689*)
+	+ まとめ: 再利用可能なJSONモックデータスキーマファイルを作成できるウェブベースのエディタです。開発初期段階でAPIレスポンスをシミュレートしたり、テストデータを生成したりするのに役立ちます。
+- **[Symbl: Easily Search, Copy, and Use HTML Symbols, Emojis & More](https://frontendfoc.us/link/170551/web)** (出典: *Frontend Focus #689*)
+	+ まとめ: HTMLシンボル、絵文字などを簡単に検索してコピーして使用できるツールです。ウェブ開発時に特殊文字やアイコンを素早く見つけて活用するのに役立ちます。
 ---
 
-## 4. ✨ 아이디어
-- **[CSS Hell](https://frontendfoc.us/link/170555/web)** (출처: *Frontend Focus #689*)
-  + 특징: CSS 속성을 변경하여 특정 기준(주어진 모양과 일치시키기)을 충족시켜야 하는 CSS 기반 퍼즐 게임입니다. 총 15개의 챌린지가 있으며, 각 챌린지는 HTML 구조가 고정된 상태에서 CSS만으로 목표를 달성해야 합니다. 꽤 난이도가 있는 편이며, CSS 선택자, 박스 모델, 레이아웃, 변형 등 다양한 CSS 지식을 요구합니다. 막힐 경우를 대비해 저장소에 의도된 해결책이 제공됩니다. (모바일 환경에서는 플레이가 원활하지 않을 수 있습니다.) CSS 지식을 테스트하고 새로운 해결 방법을 탐색하는 재미를 줍니다.
+## 3. 📝 おすすめ記事 & チップ
+- **[Minimal CSS-Only Blurry Image Placeholders](https://css-weekly.com/link/62391/web)** (出典: *CSS Weekly #610*)
+	+ 主要なインサイト: マークアップを複雑にすることなく、CSSのみでぼやけた画像プレースホルダー (LQIP - Low Quality Image Placeholders) を作成するテクニックを共有します。`background-image`、`filter: blur()`、`transform: scale()` などのCSSプロパティを活用して、小さいサイズの元画像を拡大し、ぼかしてプレースホルダーとして使用します。これはユーザーエクスペリエンスを向上させ、画像が読み込まれるまでのレイアウト崩れを防ぐのに役立ちます。
+	+ コード例:
+		```html
+		<div class="image-container">
+			<img src="high-quality-image.jpg" alt="Description" loading="lazy" class="actual-image" />
+			</div>
+		```
+		```css
+		.image-container {
+			position: relative;
+			width: 300px; /* または任意のサイズ */
+			aspect-ratio: 16/9; /* 画像のアスペクト比を維持 */
+			background-color: #eee; /* 基本の背景色 */
+			/* 低画質画像のURLをCSS変数として指定するか直接使用 */
+			background-image: var(--low-quality-image-url); /* 例: url(low-quality-placeholder.jpg) */
+			background-size: cover;
+			overflow: hidden; /* blur効果がはみ出さないように */
+		}
 
-- **[Text Circle Animation (CSS Only)](https://codepen.io/donotfold/pen/ZYYYJRV)** (출처: *CSS Weekly #610*)
-  + 특징: Stijn Van Minnebruggen이 만든 오직 CSS만을 사용한 놀라운 인터랙티브 데모입니다. 여러 개의 텍스트 요소가 원형으로 배열되어 각기 다른 속도와 방향으로 회전하는 애니메이션을 보여주며, CSS의 `clip-path`, `transform`, `@property` (Houdini) 등을 창의적으로 활용합니다. 마우스 인터랙션에 따라 애니메이션이 변화하는 등 CSS만으로도 풍부한 시각적 경험을 만들 수 있음을 보여줍니다. 특히 `@property`를 이용한 커스텀 속성 애니메이션이 인상적입니다.
+		.image-container::before {
+			content: '';
+			position: absolute;
+			inset: -5%; /* ぼかし効果の端が切れるのを防ぐための若干の拡張 */
+			background-image: inherit; /* コンテナの背景画像を継承 */
+			background-size: cover;
+			filter: blur(20px); /* ぼかし効果の強度 */
+			/* transform: scale(1.1); // insetで代替可能 */
+		}
 
-## 5. ⚡️ 짧은 소식
-- **[The ECMAScript Records and Tuples Proposal Has Been Withdrawn](https://javascriptweekly.com/link/170422/web)** (출처: *JavaScript Weekly #732*)
-  + 요약: 수년간 개발되어 온 JavaScript의 레코드(객체와 유사한 불변 데이터 구조) 및 튜플(배열과 유사한 불변 데이터 구조) 제안이 최근 TC39 회의에서 합의를 이루지 못하고 철회되었습니다. 반면, JavaScript에 열거형(enum)을 도입하는 제안은 1단계로, Deferred re-exports 제안은 2단계로 진행되었습니다.
-- **[How I Track My Blog's Analytics with Val Town](https://javascriptweekly.com/link/170426/web)** (출처: *JavaScript Weekly #732* / *React Status #426*에도 언급)
-  + 요약: Orestis Papadopoulos가 JavaScript/TypeScript 기반의 서버리스 스크립팅 플랫폼인 Val Town을 사용하여 자신의 블로그를 위한 기본적인 분석 기능(페이지 뷰 수집 등)을 빠르게 구축한 방법을 공유합니다. 별도의 서버나 데이터베이스 설정 없이 간단한 HTTP 엔드포인트를 만들어 데이터를 기록하는 사례입니다.
-- **[Deploying TypeScript: Recent Advances and Possible Future Directions](https://javascriptweekly.com/link/170427/web)** (출처: *JavaScript Weekly #732*)
-  + 요약: Dr. Axel Rauschmayer가 TypeScript 배포의 최근 발전 사항과 향후 가능한 방향에 대해 논의합니다. swc, esbuild와 같은 빠른 컴파일러의 등장, `tsc --build` 모드의 개선, 그리고 Deno나 Bun과 같이 TypeScript를 네이티브로 지원하는 런타임 환경에서의 배포 전략 등을 다룹니다.
-- **[Zero-Config Debugging with Deno and OpenTelemetry](https://javascriptweekly.com/link/170428/web)** (출처: *JavaScript Weekly #732*)
-  + 요약: Deno 런타임과 OpenTelemetry(분산 추적 표준)를 활용하여 별도 설정 없이 디버깅 및 애플리케이션 모니터링을 수행하는 방법을 소개합니다. Deno의 내장 OpenTelemetry 지원을 통해 HTTP 요청, 데이터베이스 쿼리 등을 자동으로 추적하고 시각화할 수 있습니다.
-- **[The Microsoft Edge team is proposing enhancing the `console.context()` method](https://react.statuscode.com/link/170501/web)** (출처: *React Status #426*)
-  + 요약: Microsoft Edge 팀이 개발자 도구의 `console.context()` 메서드를 개선하여 콘솔 로그에 시각적인 컨텍스트(예: 배경색, 아이콘)를 추가하고, 이를 기반으로 필터링할 수 있는 기능을 제안하고 있습니다. 이는 복잡한 애플리케이션에서 로그를 더 쉽게 구분하고 관리하는 데 도움을 줄 수 있습니다.
+		.actual-image {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			position: relative; /* ::beforeの上にくるように */
+			opacity: 0; /* 最初は透明に */
+			transition: opacity 0.3s ease-in-out; /* 滑らかな登場効果 */
+		}
 
-## 6. 🎉 릴리스
+		/* JavaScriptで画像読み込み完了時に .loaded クラスを追加 */
+		.actual-image.loaded {
+			opacity: 1;
+		}
+		```
+	+ この記事が有益な理由: JavaScriptなしでCSSのみで画像読み込み最適化テクニックを実装できるため、パフォーマンスへの影響が少ないです (ただし、上記例の`loaded`クラスの切り替えはJSが必要)。また、複雑なHTML構造の変更なしにスタイルシートの修正だけで適用可能であり、保守が容易です。
+
+- **[Organizing Layers And Artboards In Figma](https://www.smashingmagazine.com/2025/04/organizing-layers-artboards-figma/)** (出典: *Smashing Newsletter #504*)
+	+ 主要なインサイト: Figmaでレイヤーとアートボードを効果的に構成・管理するための実用的なヒントと戦略を提供します。一貫した命名規則（例：`component/variant/state`）、グループ化とフレームの活用（Auto Layoutの積極的な使用）、ページを使った作業領域の分離（例：Exploration, Components, Archive）など、コラボレーション効率を高め、デザインシステムの拡張性を確保するための方法論を取り上げています。
+	+ この記事が有益な理由: デザイナーだけでなく、Figmaファイルを扱う開発者にとっても有用です。整理されたFigmaファイルは、デザインの意図を明確に伝え、CSSクラス名やコンポーネント構造を推測するのに役立ち、開発プロセスでの混乱を減らし生産性を向上させます。
+
+- **[Building Single Page Apps with SvelteKit](https://javascriptweekly.com/link/170425/web)** (出典: *JavaScript Weekly #732*)
+	+ 主要なインサイト: SvelteKitを使用してシングルページアプリケーション (SPA) を構築する方法を紹介します。SvelteKitのルーティング、データローディング (`load` 関数)、レイアウト機能を活用して、従来のSPAのように動作するように設定するプロセスを案内します。さらに、`adapter-static`を使用してウェブサーバーなしで実行できる単一のHTMLファイルとしてSvelteKitアプリをビルドする方法まで取り上げており、軽量で高速なプロトタイピングや簡単なウェブアプリケーションのデプロイに役立ちます。(15分間のチュートリアル)
+	+ コード例 (概念的、SvelteKitルーティング及びロード関数):
+		```javascript
+		// src/routes/posts/+page.js (SvelteKitのload関数の例)
+		export async function load({ fetch }) {
+			const response = await fetch('/api/posts'); // 内部APIまたは外部API呼び出し
+			const posts = await response.json();
+			return {
+				posts
+			};
+		}
+		```
+		```svelte
+		<script>
+			export let data; // load関数から返されたデータ
+		</script>
+
+		<h1>Blog Posts</h1>
+		<ul>
+			{#each data.posts as post}
+				<li><a href="/posts/{post.id}">{post.title}</a></li>
+			{/each}
+		</ul>
+		```
+	+ この記事が有益な理由: SvelteKitの柔軟性と強力さを示し、従来のSPA開発方式以外に新しいアプローチを提示します。特に静的サイトや簡単なインタラクションを含むページを迅速かつ効率的に作成したい開発者にとって、良いガイドとなるでしょう。`adapter-static`によるビルドは、GitHub Pagesなどの静的ホスティング環境へ簡単にデプロイできるようにします。
+
+---
+#### 見逃せないコンテンツ
+- **[Using Manim For Making UI Animations](https://www.smashingmagazine.com/2025/04/using-manim-making-ui-animations/)** (出典: *Smashing Newsletter #504*)
+	+ まとめ: 数学アニメーションで有名なPythonライブラリManimを使用してUIアニメーションを作成する方法を探求します。コードベースで精巧かつプログラマティックなアニメーションを制作したい開発者やデザイナーに新しいツールを提示し、特に複雑な状態変化やデータ駆動型アニメーションに役立つ可能性があります。
+- **[A design systems playbook for product teams](https://www.figma.com/blog/a-design-systems-playbook-for-product-teams/)** (出典: *Smashing Newsletter #504*)
+	+ まとめ: 製品チーム向けのデザインシステムプレイブックで、デザインシステムを成功裏に構築・維持管理し、チーム全体に効果的に普及させるためのガイドラインとベストプラクティスを提供します。原則定義、コンポーネント設計、ドキュメンテーション、ガバナンスなど、デザインシステム運用の全般的なプロセスを取り上げています。
+---
+
+## 4. ✨ アイデア
+- **[CSS Hell](https://frontendfoc.us/link/170555/web)** (出典: *Frontend Focus #689*)
+	+ 特徴: CSSプロパティを変更して特定の基準（与えられた形状と一致させる）を満たす必要があるCSSベースのパズルゲームです。合計15個のチャレンジがあり、各チャレンジはHTML構造が固定された状態でCSSのみで目標を達成する必要があります。かなり難易度が高く、CSSセレクタ、ボックスモデル、レイアウト、変形など、さまざまなCSS知識が要求されます。行き詰まった場合に備えて、リポジトリに意図された解決策が提供されています。(モバイル環境ではプレイがスムーズでない場合があります。) CSSの知識をテストし、新しい解決方法を探求する楽しさを提供します。
+
+- **[Text Circle Animation (CSS Only)](https://codepen.io/donotfold/pen/ZYYYJRV)** (出典: *CSS Weekly #610*)
+	+ 特徴: Stijn Van Minnebruggenが作成した、CSSのみを使用した驚くべきインタラクティブデモです。複数のテキスト要素が円形に配置され、それぞれ異なる速度と方向で回転するアニメーションを表示し、CSSの`clip-path`、`transform`、`@property` (Houdini) などを創造的に活用しています。マウスインタラクションに応じてアニメーションが変化するなど、CSSだけでも豊かな視覚体験を生み出せることを示しています。特に`@property`を利用したカスタムプロパティアニメーションが印象的です。
+
+## 5. ⚡️ ミニノート
+- **[The ECMAScript Records and Tuples Proposal Has Been Withdrawn](https://javascriptweekly.com/link/170422/web)** (出典: *JavaScript Weekly #732*)
+	+ まとめ: 長年開発されてきたJavaScriptのレコード（オブジェクトに似た不変データ構造）およびタプル（配列に似た不変データ構造）提案が、最近のTC39会議で合意に至らず撤回されました。一方、JavaScriptに列挙型(enum)を導入する提案はステージ1に、Deferred re-exports提案はステージ2に進みました。
+- **[How I Track My Blog's Analytics with Val Town](https://javascriptweekly.com/link/170426/web)** (出典: *JavaScript Weekly #732* / *React Status #426*にも言及)
+	+ まとめ: Orestis Papadopoulosが、JavaScript/TypeScriptベースのサーバーレススクリプティングプラットフォームであるVal Townを使用して、自身のブログの基本的な分析機能（ページビュー収集など）を迅速に構築した方法を共有しています。別途サーバーやデータベースの設定なしに、簡単なHTTPエンドポイントを作成してデータを記録する事例です。
+- **[Deploying TypeScript: Recent Advances and Possible Future Directions](https://javascriptweekly.com/link/170427/web)** (出典: *JavaScript Weekly #732*)
+	+ まとめ: Dr. Axel Rauschmayerが、TypeScriptデプロイメントの最近の進展と今後の可能性について論じています。swc、esbuildといった高速コンパイラの登場、`tsc --build`モードの改善、そしてDenoやBunのようにTypeScriptをネイティブにサポートするランタイム環境でのデプロイ戦略などを取り上げています。
+- **[Zero-Config Debugging with Deno and OpenTelemetry](https://javascriptweekly.com/link/170428/web)** (出典: *JavaScript Weekly #732*)
+	+ まとめ: DenoランタイムとOpenTelemetry（分散トレーシング標準）を活用して、別途設定なしにデバッグ及びアプリケーション監視を行う方法を紹介しています。Denoの内蔵OpenTelemetryサポートにより、HTTPリクエスト、データベースクエリなどを自動的に追跡し、可視化できます。
+- **[The Microsoft Edge team is proposing enhancing the `console.context()` method]([https://react.statuscode.com/link/170501/web](https://react.statuscode.com/link/170501/web))** (出典: *React Status #426*)
+	+ まとめ: Microsoft Edgeチームが、開発者ツールの`console.context()`メソッドを改善し、コンソールログに視覚적인コンテキスト（例：背景色、アイコン）を追加し、それに基づいてフィルタリングできる機能を提案しています。これは、複雑なアプリケーションでログをより簡単に区別し管理するのに役立つ可能性があります。
+
+## 6. 🎉 リリース
 - **[React Compiler RC](https://react.statuscode.com/link/170493/web)** (*React Status #426*)
-    + 업데이트: React Compiler가 RC 단계에 진입했으며, 실험적인 swc 지원을 포함합니다.
+		+ アップデート: React CompilerがRC段階に入り、実験的なswcサポートを含みます。
 - **[pnpm 10.9](https://github.com/pnpm/pnpm/releases)** (*React Status #426*)
-    + 업데이트: JSR 패키지 설치를 지원합니다.
+		+ アップデート: JSRパッケージのインストールをサポートします。
 - **[React Suite 5.80](https://rsuitejs.com/)** (*React Status #426*)
-    + 업데이트: UI 컴포넌트 모음 업데이트.
+		+ アップデート: UIコンポーネント集のアップデート。
 - **[React Uploady 1.10](https://react-uploady.org/)** (*React Status #426*)
-    + 업데이트: 파일 업로드 컴포넌트 및 훅 업데이트.
+		+ アップデート: ファイルアップロードコンポーネント及びフックのアップデート。
 - **[Enums to JavaScript (Stage 1)](https://javascriptweekly.com/link/170422/web)** (*JavaScript Weekly #732*)
-    + 업데이트: JavaScript에 열거형(enum)을 도입하는 제안이 TC39에서 Stage 1으로 진행되었습니다.
+		+ アップデート: JavaScriptに列挙型(enum)を導入する提案がTC39でステージ1に進みました。
 - **[Deferred re-exports (Stage 2)](https://javascriptweekly.com/link/170422/web)** (*JavaScript Weekly #732*)
-    + 업데이트: Deferred re-exports 제안이 TC39에서 Stage 2로 진행되었습니다.
+		+ アップデート: Deferred re-exports提案がTC39でステージ2に進みました。
 
-(릴리스 기준을 엄격하게 소프트웨어 버전 업데이트로 적용 시 4개, TC39 제안 진행 상황 포함 시 6개 확보됨. 최소 10개 기준에는 미달하나, 제공된 뉴스레터 내에서 명확한 '릴리스'로 판단할 수 있는 항목이 제한적이었습니다. 누락 방지 탐색을 각 뉴스레터별로 수행했음에도 추가적인 소프트웨어 버전 릴리스는 발견되지 않았습니다.)
+(リリース基準を厳密にソフトウェアのバージョンアップデートに適用した場合4件、TC39提案の進捗状況を含めると6件確保。最小10件の基準には満たないものの、提供されたニュースレター内で明確な「リリース」と判断できる項目が限定的でした。欠落防止のため各ニュースレターを探索しましたが、追加のソフトウェアバージョンリリースは見つかりませんでした。)
 
-## ✍️ 마치며
-- 이번 주에는 React Compiler의 중요한 진전 소식과 함께, WebGL을 활용한 시각 효과 구현, SvelteKit SPA 구축, Figma 디자인 정리법 등 개발 및 디자인 생산성을 높일 수 있는 다양한 기술과 팁들이 소개되었습니다. 또한, JavaScript의 새로운 제안들의 진행 상황과 개인 정보 보호에 대한 Chrome의 입장 변화도 주목할 만한 소식이었습니다. 프론트엔드 개발자와 디자이너 모두에게 유용한 정보가 가득한 한 주였습니다.
+## ✍️ おわりに
+- 今週は、React Compilerの重要な進展のニュースと共に、WebGLを活用した視覚効果の実装、SvelteKit SPAの構築、Figmaデザインの整理法など、開発及びデザインの生産性を高めることができる様々な技術とヒントが紹介されました。また、JavaScriptの新しい提案の進捗状況や、プライバシー保護に関するChromeの立場の変化も注目すべきニュースでした。フロントエンド開発者とデザイナー双方にとって有益な情報が満載の一週間でした。
 
-#### 출처
+#### 出처
 - [JavaScript Weekly #732](https://javascriptweekly.com/issues/732)
 - [Frontend Focus #689](https://frontendfoc.us/issues/689)
 - [Smashing Newsletter #504](https://mailchi.mp/smashingmagazine/504-design-systems?e=02d8dcf17a)
