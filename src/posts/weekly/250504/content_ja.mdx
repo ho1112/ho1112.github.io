@@ -1,242 +1,242 @@
 ---
 title: '🚀 2025-05 W1 #5'
-desc: 2025년 5월 1주차 뉴스레터
+desc: 2025年5月第1週のニュースレター
 date: 2025-05-04
 thumbnail: /posts/weekly/may.avif
 ---
 
-## 🔥 이번 주 핵심 테마
-- React의 새로운 실험적 기능(View Transitions, Activity 컴포넌트) 공개와 p5.js 2.0 출시, 그리고 다양한 CSS 기법 및 프론트엔드 도구들의 업데이트 소식을 중심으로 최신 웹 개발 트렌드를 조망합니다.
+## 🔥 今週の主要テーマ
+- Reactの新しい実験的機能（View Transitions、Activityコンポーネント）の公開とp5.js 2.0のリリース、そして様々なCSSテクニック及びフロントエンドツールアップデートのニュースを中心に、最新のウェブ開発トレンドを展望します。
 
-## 1. 🔍 심층 분석
+## 1. 🔍 深掘り
 1.  **[The Mega April React Labs Update](https://react.statuscode.com/link/170937/web)**
     * *React Status #427*
-    * 배경: React 팀이 주요 새 기능과 현재 작업 중인 내용을 공유하는 'Labs' 게시물을 공개했습니다. 이번 업데이트는 특히 네이티브 앱에서 영감을 받은 웹에서의 전환 효과와 백그라운드 작업 관리에 중점을 둡니다.
-    * 핵심 기능:
-        * **View Transitions**: 웹에서 페이지 변경 또는 UI 요소 상태 변화 시 부드러운 애니메이션 전환을 쉽게 구현할 수 있도록 지원합니다. 이는 Chrome에서 이미 지원하는 View Transitions API를 React에 통합한 것입니다.
-        * **`<Activity>` 컴포넌트**: 사용자가 현재 보고 있지 않은 화면(예: 백그라운드 탭)의 콘텐츠를 React가 어떻게 처리할지 제어할 수 있게 합니다. 이를 통해 백그라운드 탭의 리소스 사용을 줄여 성능을 최적화하고, 사용자가 다시 해당 탭으로 돌아왔을 때 콘텐츠를 빠르게 복원할 수 있습니다.
-    * 코드 예제: (View Transitions 사용 예시 - 개념적)
+    * 背景: Reactチームが主要な新機能と現在作業中の内容を共有する「Labs」記事を公開しました。今回のアップデートは特に、ネイティブアプリからインスピレーションを得たウェブでのトランジション効果とバックグラウンドタスク管理に重点を置いています。
+    * 主な機能:
+        * **View Transitions**: ウェブでページ変更やUI要素の状態変化時にスムーズなアニメーショントランジションを容易に実装できるようサポートします。これはChromeで既にサポートされているView Transitions APIをReactに統合したものです。
+        * **`<Activity>` コンポーネント**: ユーザーが現在見ていない画面（例：バックグラウンドタブ）のコンテンツをReactがどのように処理するかを制御できるようにします。これにより、バックグラウンドタブのリソース使用を減らしてパフォーマンスを最適化し、ユーザーが再び該当タブに戻ってきた際にコンテンツを迅速に復元できます。
+    * コード例: (View Transitions 使用例 - 概念的)
         ```javascript
-        // 예시: Next.js 앱에서 라우터와 함께 사용
-        import { useViewTransition } from 'react-router-dom'; // 또는 Next.js의 유사 기능
+        // 例：Next.jsアプリでルーターと共に使用
+        import { useViewTransition } from 'react-router-dom'; // またはNext.jsの類似機能
 
         function MyComponent() {
-          const { startViewTransition } = useViewTransition();
+        	const { startViewTransition } = useViewTransition();
 
-          const handleClick = () => {
-            startViewTransition(() => {
-              // 상태 업데이트 또는 페이지 이동 로직
-              navigateTo('/new-page');
-            });
-          };
+        	const handleClick = () => {
+        		startViewTransition(() => {
+        			// 状態更新またはページ移動ロジック
+        			navigateTo('/new-page');
+        		});
+        	};
 
-          return <button onClick={handleClick}>Go to New Page with Transition</button>;
+        	return <button onClick={handleClick}>Go to New Page with Transition</button>;
         }
         ```
-    * 실무 적용: 사용자 경험을 크게 향상시키는 네이티브 앱과 유사한 부드러운 화면 전환 효과를 웹 애플리케이션에 쉽게 적용할 수 있습니다. `<Activity>` 컴포넌트를 통해 보이지 않는 UI의 업데이트를 지연시키거나 중단하여 애플리케이션 전체의 반응성과 효율성을 높일 수 있습니다.
-    * 주의사항: `react@experimental` 버전에서 사용 가능하며, API는 변경될 수 있습니다. View Transitions는 브라우저 지원이 필요하며(현재 Firefox Nightly 빌드에서도 지원 시작), `<Activity>` 컴포넌트의 동작 방식과 기존 애플리케이션 로직과의 통합을 신중히 고려해야 합니다.
+    * 実務適用: ユーザーエクスペリエンスを大幅に向上させるネイティブアプリに似たスムーズな画面トランジション効果をウェブアプリケーションに容易に適用できます。`<Activity>`コンポーネントを通じて、見えないUIの更新を遅延させたり中断したりすることで、アプリケーション全体の反応性と効率を高めることができます。
+    * 注意事項: `react@experimental`バージョンで利用可能であり、APIは変更される可能性があります。View Transitionsはブラウザのサポートが必要であり（現在Firefox Nightlyビルドでもサポート開始）、`<Activity>`コンポーネントの動作方式と既存のアプリケーションロジックとの統合を慎重に考慮する必要があります。
 
 2.  **[Polishing Your Typography with Line Height Units (`lh` and `rlh`)](https://frontendfoc.us/link/171009/web)**
-    * *Frontend Focus #690* (CSS Weekly #611에도 언급)
-    * 배경: 웹 타이포그래피에서 수직 리듬은 가독성과 시각적 조화에 매우 중요합니다. Jen Simmons (WebKit)는 새로운 CSS 단위인 `lh` (현재 요소의 line-height)와 `rlh` (루트 요소의 line-height)를 사용하여 이러한 수직 리듬을 더욱 정교하게 제어하는 방법을 소개합니다.
-    * 핵심 기능:
-        * `lh`: 현재 요소에 계산된 `line-height` 값을 기준으로 하는 단위입니다. 예를 들어 `margin-top: 0.5lh;`는 현재 요소의 줄 높이의 절반만큼 위쪽 여백을 설정합니다.
-        * `rlh`: HTML 루트 요소(`<html>`)에 계산된 `line-height` 값을 기준으로 하는 단위입니다. 문서 전체의 기본 줄 높이에 맞춰 일관된 간격을 설정할 때 유용합니다.
-    * 코드 예제:
+    * *Frontend Focus #690* (CSS Weekly #611にも言及)
+    * 背景: ウェブタイポグラフィにおいて垂直リズムは可読性と視覚的調和に非常に重要です。Jen Simmons (WebKit) は新しいCSS単位である`lh`（現在の要素のline-height）と`rlh`（ルート要素のline-height）を使用して、 이러한垂直リズムをより精교하게制御する方法を紹介します。
+    * 主な機能:
+        * `lh`: 現在の要素に計算された`line-height`値を基準とする単位です。例えば、`margin-top: 0.5lh;`は現在の要素の行の高さの半分だけ上マージンを設定します。
+        * `rlh`: HTMLルート要素（`<html>`）に計算された`line-height`値を基準とする単位です。文書全体の基本の行の高さに合わせて一貫した間隔を設定する際に有用です。
+    * コード例:
         ```css
         article p {
-          line-height: 1.6;
-          margin-bottom: 1lh; /* 현재 단락의 line-height 만큼 아래 여백 */
+        	line-height: 1.6;
+        	margin-bottom: 1lh; /* 現在の段落のline-height分の下マージン */
         }
 
         .callout {
-          padding: 1rlh; /* 루트 요소의 line-height 만큼 안쪽 여백 */
-          background-color: lightyellow;
-          border-left: 0.25rlh solid orange;
+        	padding: 1rlh; /* ルート要素のline-height分の内側マージン */
+        	background-color: lightyellow;
+        	border-left: 0.25rlh solid orange;
         }
 
         h2 {
-          font-size: 2rem;
-          line-height: 1.2;
-          margin-top: 2lh; /* h2 요소 자체의 line-height의 2배만큼 위 여백 */
-          margin-bottom: 1lh; /* h2 요소 자체의 line-height 만큼 아래 여백 */
+        	font-size: 2rem;
+        	line-height: 1.2;
+        	margin-top: 2lh; /* h2要素自体のline-heightの2倍の上マージン */
+        	margin-bottom: 1lh; /* h2要素自体のline-height分の下マージン */
         }
         ```
-    * 실무 적용: 텍스트 요소들(단락, 제목 등) 사이의 간격뿐만 아니라, 텍스트와 관련된 다른 UI 요소(이미지, 구분선, 컨테이너 등)의 크기나 여백을 텍스트의 수직 리듬에 정확하게 맞출 수 있습니다. 이를 통해 더욱 조화롭고 전문적인 레이아웃 디자인이 가능해집니다.
-    * 주의사항: `lh`와 `rlh` 단위는 비교적 최신 CSS 기능이므로, 모든 브라우저에서 지원되는지 확인해야 합니다. (WebKit에서 주도적으로 소개) 디자인 시스템에 적용 시 일관된 기준을 설정하고 사용하는 것이 중요합니다.
+    * 実務適用: テキスト要素（段落、見出しなど）間の間隔だけでなく、テキストに関連する他のUI要素（画像、区切り線、コンテナなど）のサイズやマージンをテキストの垂直リズムに正確に合わせることができます。これにより、より調和のとれた専門的なレイアウトデザインが可能になります。
+    * 注意事項: `lh`と`rlh`単位は比較的新しいCSS機能であるため、すべてのブラウザでサポートされているか確認する必要があります。(WebKitが主導的に紹介) デザインシステムに適用する際には一貫した基準を設定して使用することが重要です。
 
 ---
-#### 놓치기 아까운 콘텐츠
+#### 見逃せないコンテンツ
 -   **[What Does 'use client' Do?](https://react.statuscode.com/link/170939/web)** (*React Status #427*)
-    +   요약: Dan Abramov가 React Server Components에서 사용되는 `use client` 및 `use server` 지시어에 대해 설명합니다. 이 지시어들이 어떻게 클라이언트/서버 앱을 "두 환경에 걸친 단일 프로그램"으로 우아하게 구조화하는지, 그리고 이 개념이 React를 넘어 유용할 수 있는 이유를 탐구합니다.
+    +   まとめ: Dan AbramovがReact Server Componentsで使用される`use client`及び`use server`ディレクティブについて説明します。これらのディレクティブがどのようにクライアント/サーバーアプリを「両環境にまたがる単一プログラム」としてエレガントに構造化するのか、そしてこの概念がReactを超えて有用である可能性のある理由を探求します。
 -   **[Optimizing Node Performance with V8 GC Optimization](https://javascriptweekly.com/link/170835/web)** (*JavaScript Weekly #733*)
-    +   요약: Matteo Collina가 Node.js의 메모리 사용량과 V8 엔진의 가비지 컬렉션(GC) 작동 방식을 설명하고, 특정 사용 사례에 맞게 GC를 조정하는 방법을 알려줍니다. 높은 메모리 사용량이 반드시 메모리 누수를 의미하지는 않는다는 점을 강조합니다.
+    +   まとめ: Matteo CollinaがNode.jsのメモリ使用量とV8エンジンのガベージコレクション(GC)の動作方法を説明し、特定のユースケースに合わせてGCを調整する方法を教えます。高いメモリ使用量が必ずしもメモリリークを意味するわけではない点を強調します。
 ---
 
-## 2. 🛠️ 툴 & 라이브러리
+## 2. 🛠️ ツール & ライブラリ
 -   **[p5.js 2.0: The JavaScript Library for Creative Coding](https://javascriptweekly.com/link/170824/web)** (*JavaScript Weekly #733*)
-    * 개요: Processing에서 영감을 받은 인기 있는 크리에이티브 코딩 라이브러리 p5.js가 2.0 버전을 출시했습니다. 인터랙티브한 시각적 경험을 쉽게 만들 수 있도록 도와줍니다. 온라인 에디터를 통해 쉽게 실험해볼 수 있습니다.
-    * 주요 업데이트:
-        * 향상된 폰트 지원 및 텍스트 조작 기능 추가
-        * JavaScript로 셰이더를 작성하는 방법 추가
-        * 자세한 내용은 [p5.js 2.0: You Are Here](https://javascriptweekly.com/link/170825/web) 게시물에서 확인할 수 있습니다.
-    * 사용 예시 (JavaScript로 셰이더 작성 - 개념적):
+    * 概要: Processingからインスピレーションを受けた人気のクリエイティブコーディングライブラリp5.jsが2.0バージョンをリリースしました。インタラクティブな視覚体験を容易に作成できるよう支援します。オンラインエディタを通じて簡単に実験できます。
+    * 主なアップデート:
+        * 強化されたフォントサポート及びテキスト操作機能の追加
+        * JavaScriptでシェーダーを作成する方法の追加
+        * 詳細については、[p5.js 2.0: You Are Here](https://javascriptweekly.com/link/170825/web)の記事で確認できます。
+    * 使用例 (JavaScriptでシェーダー作成 - 概念的):
         ```javascript
         let myShader;
 
         function preload() {
-          // p5.js 2.0에서는 JS 내에서 셰이더 로직 정의 가능
-          myShader = createShaderFromFunction(
-            // Vertex Shader 로직 (문자열 또는 함수)
-            () => `
-              attribute vec3 aPosition;
-              void main() {
-                gl_Position = vec4(aPosition, 1.0);
-              }
-            `,
-            // Fragment Shader 로직 (문자열 또는 함수)
-            (uniforms) => `
-              precision mediump float;
-              uniform vec2 u_resolution;
-              uniform float u_time;
-              void main() {
-                vec2 st = gl_FragCoord.xy / u_resolution.xy;
-                gl_FragColor = vec4(st.x, st.y, abs(sin(u_time)), 1.0);
-              }
-            `
-          );
+        	// p5.js 2.0ではJS内でシェーダーロジック定義可能
+        	myShader = createShaderFromFunction(
+        		// Vertex Shaderロジック (文字列または関数)
+        		() => `
+        			attribute vec3 aPosition;
+        			void main() {
+        				gl_Position = vec4(aPosition, 1.0);
+        			}
+        		`,
+        		// Fragment Shaderロジック (文字列または関数)
+        		(uniforms) => `
+        			precision mediump float;
+        			uniform vec2 u_resolution;
+        			uniform float u_time;
+        			void main() {
+        				vec2 st = gl_FragCoord.xy / u_resolution.xy;
+        				gl_FragColor = vec4(st.x, st.y, abs(sin(u_time)), 1.0);
+        			}
+        		`
+        	);
         }
 
         function setup() {
-          createCanvas(windowWidth, windowHeight, WEBGL);
-          shader(myShader);
-          myShader.setUniform('u_resolution', [width, height]);
+        	createCanvas(windowWidth, windowHeight, WEBGL);
+        	shader(myShader);
+        	myShader.setUniform('u_resolution', [width, height]);
         }
 
         function draw() {
-          myShader.setUniform('u_time', millis() / 1000.0);
-          rect(0, 0, width, height);
+        	myShader.setUniform('u_time', millis() / 1000.0);
+        	rect(0, 0, width, height);
         }
         ```
-    * 실전 팁: p5.js는 데이터 시각화, 인터랙티브 아트, 교육용 자료 제작 등 다양한 분야에 활용될 수 있습니다. 새로운 셰이더 기능을 통해 더욱 복잡하고 아름다운 그래픽 효과를 JavaScript만으로 구현할 수 있게 되었습니다.
+    * 実践のヒント: p5.jsはデータ視覚化、インタラクティブアート、教育用資料制作など様々な分野で活用できます。新しいシェーダー機能を通じて、より複雑で美しいグラフィック効果をJavaScriptだけで実装できるようになりました。
 
 -   **[JavaScript Font Picker](https://javascriptweekly.com/link/170847/web)** (*JavaScript Weekly #733*)
-    * 개요: 사용자가 시스템 폰트, Google 폰트, 그리고 사용자가 직접 지정한 커스텀 폰트 중에서 폰트를 선택할 수 있게 해주는 풍부한 기능을 가진 컨트롤입니다.
-    * 사용법: GitHub 저장소에서 라이브러리를 다운로드하거나 npm을 통해 설치 후, HTML 요소에 바인딩하고 옵션을 설정하여 사용합니다.
+    * 概要: ユーザーがシステムフォント、Googleフォント、そしてユーザーが直接指定したカスタムフォントの中からフォントを選択できるようにする豊富な機能を持つコントロールです。
+    * 使用法: GitHubリポジトリからライブラリをダウンロードするか、npmを通じてインストール後、HTML要素にバインディングし、オプションを設定して使用します。
         ```html
         <input type="text" id="font-picker" />
         <div id="preview" style="font-size: 24px;">The quick brown fox jumps over the lazy dog.</div>
 
         <script src="js-font-picker.js"></script>
         <script>
-          const fontPicker = new JSFontPicker('#font-picker', {
-            fonts: [ // 기본 폰트 외 추가 폰트 (Google Fonts 등)
-              { name: 'Roboto', google: true },
-              { name: 'Open Sans', google: true },
-              { name: 'My Custom Font', css: 'MyCustomFont, sans-serif' }
-            ],
-            default: 'Arial', // 기본 선택 폰트
-            variants: true, // 폰트 두께/스타일 선택 활성화
-            onUpdate: function(font) {
-              document.getElementById('preview').style.fontFamily = font.family;
-            }
-          });
+        	const fontPicker = new JSFontPicker('#font-picker', {
+        		fonts: [ // 基本フォント以外の追加フォント (Google Fontsなど)
+        			{ name: 'Roboto', google: true },
+        			{ name: 'Open Sans', google: true },
+        			{ name: 'My Custom Font', css: 'MyCustomFont, sans-serif' }
+        		],
+        		default: 'Arial', // デフォルト選択フォント
+        		variants: true, // フォントの太さ/スタイル選択を有効化
+        		onUpdate: function(font) {
+        			document.getElementById('preview').style.fontFamily = font.family;
+        		}
+        	});
         </script>
         ```
-    * 실전 팁: 웹 애플리케이션에서 사용자에게 텍스트 편집 기능을 제공할 때 매우 유용합니다. 다양한 폰트 소스를 지원하므로 선택의 폭을 넓힐 수 있고, 콜백 함수를 통해 폰트 변경 시 실시간 미리보기 등의 인터랙션을 구현할 수 있습니다. 이 프로젝트 개발팀은 [JS Color Picker](https://javascriptweekly.com/link/170849/web)도 만들었습니다.
+    * 実践のヒント: ウェブアプリケーションでユーザーにテキスト編集機能を提供する際に非常に有用です。様々なフォントソースをサポートするため選択の幅を広げることができ、コールバック関数を通じてフォント変更時にリアルタイムプレビューなどのインタラクションを実装できます。このプロジェクト開発チームは[JS Color Picker](https://javascriptweekly.com/link/170849/web)も作成しました。
 
 ---
-#### 놓치기 아까운 콘텐츠
+#### 見逃せないコンテンツ
 -   **[Storybook 9 Beta](https://react.statuscode.com/link/170947/web)** (*React Status #427*, *Frontend Focus #690*)
-    +   요약: 인기 있는 UI '프론트엔드 워크숍' 도구인 Storybook이 v9 베타를 출시했습니다. Storybook 8의 여러 실험적 기능들이 안정화되었으며, 특히 컴포넌트 테스팅 기능이 강화되어 인터랙션, 시각적, 접근성 테스트를 기본으로 제공합니다. React Native 지원도 주요 개선 사항입니다.
+    +   まとめ: 人気のUI「フロントエンドワークショップ」ツールであるStorybookがv9ベータをリリースしました。Storybook 8の多くの実験的機能が安定化され、特にコンポーネントテスト機能が強化され、インタラクション、視覚、アクセシビリティテストを基本として提供します。React Nativeサポートも主要な改善点です。
 -   **[Reactylon: A React Framework for XR](https://react.statuscode.com/link/170952/web)** (*React Status #427*)
-    +   요약: Microsoft의 Babylon.js 3D 엔진과 React를 기반으로 웹에서 몰입형 확장 현실(XR) 경험을 만들 수 있는 프레임워크입니다. JSX로 3D 씬을 작성하면 Reactylon이 이를 (가상) 현실로 만듭니다. 문서에는 코드와 함께 다양한 라이브 데모가 포함되어 있습니다.
+    +   まとめ: MicrosoftのBabylon.js 3DエンジンとReactをベースに、ウェブで没入型拡張現実(XR)体験を作成できるフレームワークです。JSXで3Dシーンを作成するとReactylonがそれを(仮想)現実にします。ドキュメントにはコードと共に様々なライブデモが含まれています。
 ---
 
-## 3. 📝 추천 아티클 & 팁
+## 3. 📝 おすすめ記事 & チップ
 -   **[Polishing Your Typography with Line Height Units](https://webkit.org/blog/16831/line-height-units/?utm_source=CSS-Weekly&utm_campaign=Issue-611&utm_medium=web)** (*CSS Weekly #611*, *Frontend Focus #690*)
-    * 핵심 인사이트: Jen Simmons가 `lh`와 `rlh`라는 새로운 CSS 단위를 사용하여 단락 여백을 설정하고 텍스트의 수직 리듬을 만드는 방법을 설명합니다. 이를 통해 디자인의 일관성과 가독성을 크게 향상시킬 수 있습니다.
-    * 코드 예시:
+    * 主要なインサイト: Jen Simmonsが`lh`と`rlh`という新しいCSS単位を使用して段落マージンを設定し、テキストの垂直リズムを作成する方法を説明します。これにより、デザインの一貫性と可読性を大幅に向上させることができます。
+    * コード例:
         ```css
         p {
-          font-size: 1rem;
-          line-height: 1.5; /* 1.5배의 줄 간격, 즉 1.5rem */
+        	font-size: 1rem;
+        	line-height: 1.5; /* 1.5倍の行間、つまり1.5rem */
         }
         p + p {
-          margin-top: 1lh; /* 현재 요소의 line-height (1.5rem) 만큼의 마진 */
+        	margin-top: 1lh; /* 現在の要素のline-height (1.5rem) 分のマージン */
         }
         .container {
-          padding: 1rlh; /* 루트 요소의 line-height 만큼의 패딩 */
+        	padding: 1rlh; /* ルート要素のline-height 分のパディング */
         }
         ```
-    * 왜 이 글이 유익한가: `lh` 및 `rlh` 단위를 사용하면 다양한 폰트 크기나 줄 간격 설정에서도 일관된 수직 간격을 유지하기가 훨씬 쉬워집니다. 반응형 디자인에서 타이포그래피의 조화를 유지하는 데 매우 효과적인 방법입니다.
+    * この記事が有益な理由: `lh`及び`rlh`単位を使用すると、様々なフォントサイズや行間設定でも一貫した垂直間隔を維持するのがはるかに容易になります。レスポンシブデザインでタイポグラフィの調和を維持するのに非常に効果的な方法です。
 
 -   **[Creating a 3D Split-Flap Display with JavaScript](https://javascriptweekly.com/link/170830/web)** (*JavaScript Weekly #733*, *Frontend Focus #690*)
-    * 핵심 인사이트: Jhey Tompkins가 공항이나 기차역 시간표에서 볼 수 있는 클래식한 전광판(Split-Flap Display) 효과를 웹에서 JavaScript와 CSS를 사용하여 3D로 구현하는 과정을 상세히 설명합니다. DOM 요소 조작, CSS 3D 변형, 애니메이션 타이밍을 창의적으로 결합하여 매력적인 시각 효과를 만들어냅니다.
-    * 코드 예시 (개념적):
+    * 主要なインサイト: Jhey Tompkinsが空港や駅の時刻表で見られるクラシックな電光掲示板（Split-Flap Display）効果をウェブでJavaScriptとCSSを使用して3Dで実装する過程を詳細に説明します。DOM要素操作、CSS 3D変形、アニメーションタイミングを創造的に組み合わせて魅力的な視覚効果を生み出します。
+    * コード例 (概念的):
         ```javascript
-        // 각 글자를 감싸는 플랩 요소들을 만들고,
-        // CSS transform: rotateX() 와 perspective 를 이용해 3D 회전 효과를 줍니다.
-        // JavaScript로 다음 글자로 넘어갈 때 위쪽 플랩과 아래쪽 플랩의 애니메이션을 제어합니다.
+        // 各文字を囲むフラップ要素を作成し、
+        // CSS transform: rotateX() と perspective を利用して3D回転効果を与えます。
+        // JavaScriptで次の文字に移る際に上部フラップと下部フラップのアニメーションを制御します。
         function animateFlap(flapElement, newChar) {
-          const topHalf = flapElement.querySelector('.top');
-          const bottomHalf = flapElement.querySelector('.bottom');
-          // ... 애니메이션 로직 ...
-          topHalf.style.transform = 'rotateX(-90deg)';
-          // 다음 글자로 업데이트 후 bottomHalf 애니메이션 등
+        	const topHalf = flapElement.querySelector('.top');
+        	const bottomHalf = flapElement.querySelector('.bottom');
+        	// ... アニメーションロジック ...
+        	topHalf.style.transform = 'rotateX(-90deg)';
+        	// 次の文字に更新後、bottomHalfのアニメーションなど
         }
         ```
-    * 왜 이 글이 유익한가: 복고풍의 매력적인 UI를 구현하는 구체적인 방법을 배울 수 있으며, CSS 3D 변형과 JavaScript 애니메이션 제어에 대한 깊은 이해를 얻을 수 있습니다. 라이브 데모를 통해 직접 확인하고 코드를 분석해 볼 수 있습니다.
+    * この記事が有益な理由: レトロで魅力的なUIを実装する具体的な方法を学ぶことができ、CSS 3D変形とJavaScriptアニメーション制御に関する深い理解を得ることができます。ライブデモを通じて直接確認し、コードを分析することができます。
 
 -   **[Seeking an Answer: Why Can't HTML Alone Do Includes?](https://frontendfoc.us/link/171012/web)** (*Frontend Focus #690*)
-    * 핵심 인사이트: Chris Coyier가 수십 년 동안 논의되어 온 HTML 자체의 'include' 기능 부재에 대한 문제를 제기합니다. 현재는 JavaScript, 빌드 단계, iframe 등 다양한 우회 방법을 사용하고 있지만, 순수 HTML만으로 공통 요소를 재사용할 수 있는 간단하고 성능 좋은 방법이 없다는 점을 지적합니다.
-    * 왜 이 글이 유익한가: 웹 개발의 근본적인 문제 중 하나를 다시 생각해보게 하며, HTML 표준의 발전 방향에 대한 논의를 촉발합니다. 현재 해결책들의 장단점을 되짚어보고 미래의 가능성을 탐색하는 계기를 제공합니다.
+    * 主要なインサイト: Chris Coyierが数十年にわたり議論されてきたHTML自体の「include」機能不在に関する問題を提起します。現在はJavaScript、ビル드段階、iframeなど様々な回避方法を使用していますが、純粋なHTMLだけで共通要素を再利用できる簡単でパフォーマンスの良い方法がない点を指摘します。
+    * この記事が有益な理由: ウェブ開発の根本的な問題の一つを再考させ、HTML標準の発展方向に関する議論を 촉발します。現在の解決策の長所と短所を振り返り、未来の可能性を探求するきっかけを提供します。
 
 ---
-#### 놓치기 아까운 콘텐츠
+#### 見逃せないコンテンツ
 -   **[What is the 'Owl Selector' (*+*)?](https://frontendfoc.us/link/171019/web)** (*Frontend Focus #690*)
-    +   요약: CSS의 '부엉이 선택자' (`* + *`)에 대해 빠르게 살펴봅니다. 이 선택자가 어떻게 작동하는지, 왜 사용해야 하는지, 그리고 실행 가능한 대안은 무엇인지 설명합니다. 주로 요소들 사이에 일관된 간격을 적용할 때 유용합니다.
+    +   まとめ: CSSの「アウルセレクタ」（`* + *`）について素早く見ていきます。このセレクタがどのように機能するのか、なぜ使用すべきなのか、そして実行可能な代替案は何かを説明します。主に要素間に一貫した間隔を適用する際に有用です。
 -   **[Good vs Great Animations](https://css-weekly.com/link/62433/web)** (*CSS Weekly #611*)
-    +   요약: Emil Kowalski가 더 나은 애니메이션을 만드는 데 도움이 되는 실용적인 팁 모음을 공유합니다. 단순히 움직이는 것을 넘어 사용자의 인터랙션을 즐겁게 만들고 UI의 명확성을 높이는 애니메이션 기법들을 소개합니다.
+    +   まとめ: Emil Kowalskiがより良いアニメーションを作成するのに役立つ実用的なヒント集を共有します。単に動かすことを超えて、ユーザーのインタラクションを楽しくし、UIの明確性を高めるアニメーションテクニックを紹介します。
 ---
 
-## 4. ✨ 아이디어
+## 4. ✨ アイデア
 -   **[The People's Graphic Design Archive](https://mailchi.mp/smashingmagazine/505-the-beauty-of-graphic-design?e=02d8dcf17a)** (*Smashing Newsletter #505*)
-    * 특징: 그래픽 디자인 역사를 보존하기 위한 크라우드소싱 기반의 가상 아카이브입니다. 유머, 페미니즘, 특정 지역 디자인, 학생 운동, 우주 시대 포스터, 라면 포장지 등 다양한 시대와 주제의 10,000개 이상의 아이템을 포함하고 있습니다. 컬렉션이나 주제별로 탐색하거나 무작위로 작품을 발견할 수 있어 영감을 얻기에 좋은 곳입니다.
+    * 特徴: グラフィックデザインの歴史を保存するためのクラウドソーシングベースの仮想アーカイブです。ユーモア、フェミニズム、特定地域のデザイン、学生運動、宇宙時代のポスター、ラーメンのパッケージなど、様々な時代とテーマの10,000点以上のアイテムを含んでいます。コレクションやテーマ別に探索したり、ランダムに作品を発見したりすることができ、インスピレーションを得るのに良い場所です。
 
 -   **[Blob Shape with Hover Effect (Chrome only)](https://frontendfoc.us/link/171025/web)** (*Frontend Focus #690*)
-    * 특징: Temani Afif가 `clip-path`와 CSS `shape()` 함수(아마도 `paint() API`를 의미하는 듯)를 사용하여 CSS만으로 한 줄로 블롭(blob) 형태를 만들고 여기에 호버 효과를 추가하는 기술을 빠르게 공유합니다. 자신만의 모양을 만들 수 있는 생성기도 제공됩니다. 현재는 Chrome에서만 작동합니다.
+    * 特徴: Temani Afifが`clip-path`とCSS `shape()`関数（おそらく`paint() API`を意味すると思われる）を使用してCSSだけで一行でブロブ（blob）形状を作成し、これにホバー効果を追加する技術を素早く共有します。独自の形状を作成できるジェネレータも提供されています。現在はChromeでのみ動作します。
 
 -   **[Good Movies As Old Books](https://mailchi.mp/smashingmagazine/505-the-beauty-of-graphic-design?e=02d8dcf17a)** (*Smashing Newsletter #505*)
-    * 특징: Matt Stevens가 자신이 좋아하는 영화들을 빈티지 책 표지 디자인으로 재해석한 프로젝트입니다. Mission Impossible, Parasite, Back to the Future 등 다양한 영화들이 낡은 책처럼 표현되어 있으며, 찢어진 부분, 커피 자국, 오래된 가격표 스티커 등으로 현실감을 더했습니다.
+    * 特徴: Matt Stevensが自身の好きな映画をヴィンテージブックカバーデザインとして再解釈したプロジェクトです。Mission Impossible、Parasite、Back to the Futureなど様々な映画が古い本のように表現されており、破れた部分、コーヒーの染み、古い値札シールなどでリアリティを加えています。
 
-## 5. ⚡️ 짧은 소식
--   **SolidJS 10주년**: SolidJS 창시자 Ryan Carniato가 v1.0 출시 4년 후, 프로젝트 운영 10년을 돌아보는 글을 남겼습니다.
--   **Node.js 보안 사고 보고서**: 3월에 발생했던 Node.js 프로젝트의 CI/테스팅 설정 관련 보안 사고에 대한 자세한 내용이 공개되었습니다.
--   **Deno 2.3 출시 임박**: Deno 팀이 곧 출시될 Deno 2.3에 포함될 몇 가지 업데이트와 최근 개선 사항을 공유했습니다.
--   **Firefox, Tab groups 및 View Transition API 지원**: 많은 요청 끝에 Firefox가 Tab groups 기능을 추가했으며, Firefox 139 Nightly 빌드부터 View Transition API도 지원하기 시작했습니다.
--   **`console.context()` 제안 피드백 요청**: Microsoft Edge 팀이 개발자 도구 내 "유용한 컨텍스트 로깅"을 활성화하기 위한 새로운 `console.context()` 메서드에 대한 피드백을 찾고 있습니다.
+## 5. ⚡️ ミニノート
+-   **SolidJS 10周年**: SolidJS創設者Ryan Carniatoがv1.0リリース4年後、プロジェクト運営10年を振り返る記事を残しました。
+-   **Node.jsセキュリティインシデント報告書**: 3月に発生したNode.jsプロジェクトのCI/テスティング設定関連のセキュリティインシデントに関する詳細が公開されました。
+-   **Deno 2.3リリース間近**: Denoチームが間もなくリリースされるDeno 2.3に含まれるいくつかのアップデートと最近の改善点を共有しました。
+-   **Firefox、Tab groups及びView Transition APIサポート**: 多くの要望の末、FirefoxがTab groups機能を追加し、Firefox 139 NightlyビルドからView Transition APIもサポートし始めました。
+-   **`console.context()`提案フィードバック要求**: Microsoft Edgeチームが開発者ツール内の「有用なコンテキストロギング」を有効にするための新しい`console.context()`メソッドに関するフィードバックを求めています。
 
-## 6. 🎉 릴리스
+## 6. 🎉 リリース
 -   **[p5.js 2.0](https://javascriptweekly.com/link/170824/web)** (*JavaScript Weekly #733*)
-    +   업데이트: 크리에이티브 코딩 라이브러리. 향상된 폰트 지원, 텍스트 조작 기능 추가, JavaScript로 셰이더 작성 기능 등이 포함되었습니다.
+    +   アップデート: クリエイティブコーディングライブラリ。強化されたフォントサポート、テキスト操作機能の追加、JavaScriptでのシェーダー作成機能などが含まれています。
 -   **[Storybook 9 Beta](https://react.statuscode.com/link/170947/web)** (*React Status #427* / *Frontend Focus #690*)
-    +   업데이트: UI 컴포넌트 개발 도구. 컴포넌트 테스팅(인터랙션, 시각, 접근성) 기본 제공, React Native 지원 강화 등이 주요 내용입니다.
+    +   アップデート: UIコンポーネント開発ツール。コンポーネントテスト（インタラクション、視覚、アクセシビリティ）の標準提供、React Nativeサポート強化などが主な内容です。
 -   **[pnpm 10.10](https://react.statuscode.com/link/170965/web)** (*React Status #427*)
 -   **[Node.js v22.15.0 (LTS)](https://javascriptweekly.com/link/170828/web)** (*JavaScript Weekly #733*)
-    +   업데이트: Node.js의 새로운 LTS 버전입니다.
+    +   アップデート: Node.jsの新しいLTSバージョンです。
 -   **[Next.js 15.4 Canary](https://javascriptweekly.com/link/170828/web)** (*JavaScript Weekly #733*)
 -   **[ESLint v9.25.1](https://javascriptweekly.com/link/170859/web)** (*JavaScript Weekly #733*)
 -   **[Gridstack.js 12.1](https://react.statuscode.com/link/170955/web)** (*React Status #427*)
 -   **[MUI X 8.1](https://react.statuscode.com/link/170957/web)** (*React Status #427*)
 -   **[GSAP 3.13 (Free Tier Update)](https://css-weekly.com/link/62446/web)** (*CSS Weekly #611*)
-    +   업데이트: JavaScript 애니메이션 라이브러리 GSAP의 모든 기능이 이제 "No Charge" 라이선스로 무료 제공됩니다. 핵심 기능은 이전부터 무료였으나, 이번 업데이트로 ScrollTrigger, Draggable 등 모든 플러그인이 포함되었습니다.
+    +   アップデート: JavaScriptアニメーションライブラリGSAPのすべての機能が「No Charge」ライセンスで無料提供されるようになりました。コア機能は以前から無料でしたが、今回のアップデートですべてのプラグイン（ScrollTrigger、Draggableなど）が含まれました。
 -   **[Scala.js 1.19.0](https://javascriptweekly.com/link/170850/web)** (*JavaScript Weekly #733*)
 
-## ✍️ 마치며
--   이번 주는 React 생태계의 활발한 움직임과 함께 p5.js의 의미 있는 메이저 업데이트가 눈에 띄었습니다. 또한 새로운 CSS 타이포그래피 단위와 다양한 프론트엔드 도구들의 발전은 웹 개발의 표현력과 생산성을 한층 더 끌어올릴 것으로 기대됩니다. 개발자 경험을 향상시키기 위한 노력들이 다방면에서 이루어지고 있음을 확인할 수 있는 한 주였습니다.
+## ✍️ おわりに
+-   今週はReactエコシステムの活発な動きと共に、p5.jsの意義深いメジャーアップデートが目立ちました。また、新しいCSSタイポグラフィ単位と様々なフロントエンドツールの発展は、ウェブ開発の表現力と生産性を一層引き上げることが期待されます。開発者体験を向上させるための努力が多方面で行われていることを確認できる一週間でした。
 
-#### 출처
+#### 出처
 - [JavaScript Weekly #733](https://javascriptweekly.com/issues/733)
 - [Frontend Focus #690](https://frontendfoc.us/issues/690)
 - [Smashing Newsletter #505](https://mailchi.mp/smashingmagazine/505-the-beauty-of-graphic-design?e=02d8dcf17a)
