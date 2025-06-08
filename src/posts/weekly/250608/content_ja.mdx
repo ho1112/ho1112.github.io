@@ -1,0 +1,147 @@
+---
+title: '🚀 2025-06 W1 #10'
+desc: 2025年6月第1週のニュースレター
+date: 2025-06-08
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 今週の主要テーマ
+
+- **フレームワークの進化と再定義:** Angular v20が安定機能を多数公開し、RemixはPreactベースの新しいアーキテクチャで再起動して未来の方向性を提示します。同時に、ViteはRustベースのRolldownを導入し、ネイティブスピード競争に本格的に参入します。
+- **JavaScriptエンジンの進化:** V8エンジンは、明示的なリソース管理やコンパイルヒントのような新機能を通じて、パフォーマンスと安定性を一段階引き上げています。
+- **AIと開発体験の融合:** **AIベースのコードエディタアシスタント`stagewise`が主要なニュースとして扱われるなど、** 開発ワークフロー全般にAIを組み合わせようとする試みがより具体化しています。
+
+## 1. 🔍 深掘り
+
+1.	**[Explicit Resource Management in V8](https://v8.dev/features/explicit-resource-management)** (出典: *Naver FE News (2025-06)*)
+	-	**背景**: JavaScriptでファイルハンドルやネットワークソケットのようなリソースを管理する際に、`try-finally`ブロックの複雑さと潜在的なエラーを減らすために登場しました。より宣言的で安全なリソース解放パターンが必要でした。
+	-	**主要機能**: `using`宣言と`Disposable`インターフェースを導入し、特定のスコープを抜ける際にリソースが自動的にクリーンアップされるようにします。`Symbol.dispose`または`Symbol.asyncDispose`メソッドを持つオブジェクトを`using`または`await using`で宣言すると、ブロックが終了する時に該当メソッドが自動的に呼び出されます。
+	-	**コード例**:
+		```js
+		function doWork() {
+			const myResource = getResource();
+			// `myResource`は Symbol.dispose メソッドを持っている必要があります。
+			using T = myResource;
+
+			// ... T を使用した作業 ...
+
+		} // `doWork` 関数が終了する時、T.dispose() が自動的に呼び出されます。
+		```
+	-	**実務での適用**: データベース接続、ファイルストリーム、ロックのように明示的な解放が必須のリソースを扱う際に、コードの安定性と可読性を大幅に向上させることができます。
+	-	**注意事項**: この機能はECMAScript提案の最新段階にあるため、実際のプロダクション環境に適用する前には、ランタイム（Node.js、ブラウザ）のサポートバージョンを必ず確認する必要があります。
+
+2.	**[Exploring the OKLCH Ecosystem and Its Tools](https://frontendfoc.us/link/170049/web)** (出典: *Frontend Focus #695*)
+	![OKLCH色空間を視覚的に表現した画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bdhhoecb4yqn6wkjrkyv.jpg)
+	-	**背景**: 既存のHSL、RGBカラーモデルは人間の色覚モデルとの差があり、一貫性のあるカラーシステムを構築することが困難でした。OKLCHは人間の視覚により近く設計されており、予測可能でアクセシブルなカラーパレットを作成できます。
+	-	**主要機能**: OKLCHは`L`ightness（知覚的な明るさ）、`C`hroma（色の量）、`H`ue（色相）の3つの軸で色を定義します。`L`の値を固定したまま`C`と`H`を調整すると、ユーザーが知覚する明るさは同じに保ちながら色相を変更できるため、一貫したデザインシステムの実装に非常に有利です。
+	-	**実務での適用**: デザインシステム構築時、基本色を1つ決め、OKLCH値をプログラマティックに調整して様々な状態（hover, active, disabledなど）のカラーパレットを自動生成できます。これにより、色管理が容易になり、UI全体の視覚的な調和が改善されます。
+	-	**注意事項**: 現在、ほとんどのモダンブラウザでサポートされていますが、古いブラウザとの互換性が必要な場合は、ポリフィル（polyfill）や`@supports`ルールを使用したプログレッシブエンハンスメント（progressive enhancement）戦略を検討する必要があります。
+
+---
+
+#### 見逃せないコンテンツ
+
+-	**[The 3 Ways JavaScript Frameworks Render the DOM](https://javascriptweekly.com/link/169946/web)** (出典: *JavaScript Weekly #738*, *Frontend Focus #695*)
+	+	要約: SolidJSの創始者が、複数のJavaScriptフレームワーク（React, Svelte, Solid）がDOMをレンダリングする3つの主要なアプローチ（仮想DOMの比較、きめ細やかなリアクティビティ、テンプレートのクローニング）を比較分析します。各方式の長所と短所を理解することで、フレームワークの内部動作原理に対する理解を深めることができる映像です。
+-	**[Unpacking Node.js Memory - From Raw Bytes to Usable Data](https://www.banjocode.com/post/node/memory-management)** (出典: *Naver FE News (2025-06)*)
+	+	要約: Node.jsのV8エンジンがヒープメモリを管理する方法、ガベージコレクション、メモリリーク防止技術を深く掘り下げます。特に`Buffer`と`ArrayBuffer`の内部動作を説明し、大容量データ処理時のパフォーマンスを最適化する実質的な方法を提示します。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+1.	**[stagewise](https://github.com/stagewise-io/stagewise)** (出典: *Naver FE News (2025-06)*)
+	![stagewiseデモGIF](https://raw.githubusercontent.com/stagewise-io/assets/refs/heads/main/media/demo.gif)
+	-	**概要**: 「AIコードエディタのための視覚」というコンセプトのアシスタントツールです。開発者がAIによるコード生成や自動補完機能を使用する際、AIの提案が既存のコードとどのように統合され、どのような影響を与えるかを直感的な視覚的フィードバックで提供します。
+	-	**使用方法**: VS Codeのような主要なエディタに拡張機能として統合して使用します。AIがコードを提案すると、`stagewise`がそのコード変更が既存のコードベースに与える影響を自動的に視覚化して表示します。
+	-	**実践的なヒント**: GitHub Copilotと併用すると特に強力です。大規模なコードリファクタリングや複雑なバグ修正の際、`stagewise`の視覚的フィードバックを通じてAIの提案の妥当性を検討し、潜在的な副作用を事前に予測してコードの安定性を高めることができます。
+
+2.	**[Svelte Flow 1.0: Create Node-Based UIs and Diagrams in Svelte](https://javascriptweekly.com/link/169953/web)** (出典: *JavaScript Weekly #738*)
+	![Svelte Flowの使用例画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/rmdinxlutuicysrrjj7l.jpg)
+	-	**概要**: React FlowのSvelte版で、ノードベースのエディタや対話型ダイアグラムを簡単に作成できるSvelteコンポーネントライブラリです。ユーザーが直接ノードをドラッグ、接続、カスタマイズできる複雑なUIを宣言的に構築できます。
+	-	**使用方法**: コンポーネントをインポートし、ノードとエッジ（接続線）データをpropsとして渡すだけで、基本的なフローチャートがレンダリングされます。多様な例とカスタマイズオプションを提供し、複雑な要件にも対応できます。
+	-	**実践的なヒント**: データ可視化、ワークフローエディタ、組織図など、動的なダイアグラムが必要なアプリケーションに非常に有用です。特に背景、ミニマップ、コントロールなどの追加機能を簡単に追加でき、完成度の高いUIを迅速に開発できます。
+
+---
+
+#### 見逃せないコンテンツ
+
+-	**[Announcing Rolldown-Vite](https://voidzero.dev/posts/announcing-rolldown-vite)** (出典: *Naver FE News (2025-06)*)
+	+	要約: Viteの創始者Evan Youが公開した新しいRustベースのバンドラです。既存のRollupのパフォーマンス限界を克服し、ネイティブレベルの速度を目指しており、将来的にはViteのデフォルトバンドラとして採用される予定です。
+-	**[Beachpatrol: A CLI Tool to Automate Your Everyday Web Browser](https://frontendfoc.us/link/170074/web)** (出典: *Frontend Focus #695*)
+	+	要約: Playwrightをベースに、ヘッドレスではなく実際のブラウザウィンドウを制御して、日常的なウェブブラウザの操作を自動化するCLIツールです。目に見えるブラウザをスクリプトで制御したい場合に便利です。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+1.	**[The Work Is Never Just “The Work”](https://davestewart.co.uk/blog/the-work-is-never-just-the-work/)** (出典: *Smashing Newsletter #510*)
+	![作業を構成する複数の要素を視覚化した画像](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/15f40971-5672-8a3d-abc0-913c06dcd7c2.png)
+	-	**主要なインサイト**: プロジェクトを計画する際、実際のコード作成（The Work）以外に隠された「見えない作業」（ミーティング、レビュー、リサーチ、デバッグ、サポートなど）が全体の工数の80%を占める可能性があることを認識する必要があります。このような「作業を取り巻く作業」を考慮しないと、プロジェクトのスケジュールとコスト予測に大きな支障が生じます。この記事は、これらの隠れた作業を特定し、見積もるためのフレームワークを提供し、より現実的な計画を立てるのに役立ちます。
+
+2.	**[Why Are 2025/05/28 and 2025-05-28 Different Days in JavaScript?](https://javascriptweekly.com/link/169941/web)** (出典: *JavaScript Weekly #738*)
+	-	**主要なインサイト**: JavaScriptの`new Date()`コンストラクタは、文字列の形式によって日付を異なる方法で解釈します。`YYYY/MM/DD`形式はローカルタイムとして解釈するのに対し、`YYYY-MM-DD`形式はUTC（協定世界時）の深夜0時として解釈するのが標準です。この違いにより、タイムゾーンによっては2つの日付が別の日として計算される可能性があります。このような混乱を避けるため、間もなく標準となる`Temporal` APIの使用が推奨されます。
+
+3.	**[Getting Creative with HTML Dialog](https://frontendfoc.us/link/170064/web)** (出典: *Frontend Focus #695*)
+	![様々なスタイルのダイアログデザインの例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1749034842/xafrnpr8t0erbo1ddwri.png)
+	-	**主要なインサイト**: ネイティブの`<dialog>`要素を使用すると、JavaScriptで複雑なモーダルロジックを作成することなく、アクセシブルなダイアログボックスを作成できます。この記事では、CSSアニメーション、`::backdrop`疑似要素、`backdrop-filter`プロパティなどを活用して、基本的な`<dialog>`のスタイルを創造的に装飾する様々な方法を具体的なコード例と共に紹介します。
+
+---
+
+#### 見逃せないコンテンツ
+
+-	**[Better Time Estimates](https://www.linkedin.com/pulse/how-improve-your-time-estimates-vitaly-friedman?trackingId=dzchsI1tQW2i85QwcbVcGQ%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_content%3BciebR%2BFzRJuQDguoGKenYA%3D%3D&trk=article-ssr-frontend-pulse_little-text-block)** (出典: *Smashing Newsletter #510*)
+	+	要約: プロジェクトの時間見積もりの精度を高めるための実用的なヒントを提供します。作業範囲を明確に理解し、1日の生産時間を6〜6.5時間と想定し、予期せぬ問題に備えて最低15%のバッファ時間を追加する具体的な方法を提案します。
+-	**[Functional HTML](https://overreacted.io/functional-html/)** (出典: *Naver FE News (2025-06)*)
+	+	要約: Reduxの創始者Dan Abramovが、HTMLを関数型プログラミングの観点から再解釈した記事です。HTML要素を純粋関数のように扱うパラダイムを通じて、Reactのような現代のフロントエンドライブラリの哲学的基盤を明快に説明します。
+
+---
+
+## 4. ✨ アイデア
+
+-	**[Coding Without a Laptop - Two Weeks with AR Glasses and Linux on Android](https://holdtherobot.com/blog/2025/05/11/linux-on-android-with-ar-glasses/)** (出典: *Naver FE News (2025-06)*)
+	![ARグラスを着用してコーディングする様子](https://holdtherobot.com/assets/images/image1-fda7b7bad1f1031c2a9b93f312ec17f8.avif)
+	-	**特徴**: 開発者がラップトップなしでARグラスとAndroidフォンだけで2週間コーディング作業を行った興味深い実験記です。Termuxを利用してAndroid上でLinux環境を構築し、ARグラスで仮想画面を拡張して開発する過程を示し、未来のモバイル中心の開発環境の可能性を提示します。
+-	**[Glow Icons: 440+ Open Source SVG Icons Made for Interfaces](https://frontendfoc.us/link/170075/web)** (出典: *Frontend Focus #695*)
+	![Glow Iconsアイコンセットのプレビュー](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1749029631/k7udlxczhk6iacy7ht7l.png)
+	-	**特徴**: インターフェース用に作られた440以上のオープンソースSVGアイコンセットです。OutlineとSolidの2つのスタイルで提供され、Figmaファイルとしてもダウンロードできるため、デザイナーと開発者の両方に役立ちます。
+
+## 5. ⚡️ ミニノート
+
+-	**[The Browser Company explains why it stopped developing Arc.](https://frontendfoc.us/link/170070/web)** (出典: *Frontend Focus #695*)
+	+	要約: 「The Browser Company」が、モバイルオペレーティングシステムと同期する新しい方向に集中するため、デスクトップブラウザ「Arc」の開発を中止すると発表しました。
+-	**[TC39's 108th meeting](https://javascriptweekly.com/link/169930/web)** (出典: *JavaScript Weekly #738*)
+	+	要約: TC39の第108回会議で、「Seeded Pseudo-Random Numbers」提案がステージ2に、`Error.isError`提案がステージ4に昇格するなど、いくつかのJavaScript提案が進展を見せました。
+-	**[Matteo Collina has unveiled php-node](https://javascriptweekly.com/link/169929/web)** (出典: *JavaScript Weekly #738*)
+	+	要約: Node.jsと同じプロセス内でPHPアプリケーションを実行できる`php-node`が公開されました。これにより、Next.jsのフロントエンドとWordPressのバックエンドを一緒に運用するなどの構成が可能になります。
+-	**[The OpenJS Foundation is now a CVE Numbering Authority (CNA)](https://javascriptweekly.com/link/169933/web)** (出典: *JavaScript Weekly #738*)
+	+	要約: OpenJS Foundationが、ESLint, Express, Electronなど40以上の主要なJavaScriptプロジェクトに対するCVE（共通脆弱性識別子）を直接付与する機関となりました。
+
+## 6. 🎉 リリース
+
+-	**[Angular v20](https://javascriptweekly.com/link/169927/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: Signals, インクリメンタルハイドレーションなど、最新の実験的機能が安定化されました。また、リソースストリーミングやシグナルベースの新しい`httpResource` APIのような実験的な機能も追加されました。
+-	**[Remix Rebooted](https://javascriptweekly.com/link/169919/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: RemixがReactフレームワークから脱却し、Preactをベースにしたモデルファーストの軽量フルスタックフレームワークとして再出発します。既存のRemixの機能はReact Routerに統合されます。
+-	**[Bun v1.2.15](https://javascriptweekly.com/link/169935/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: プロジェクトの依存関係のセキュリティ監査を行う`bun audit`コマンドが追加されました。
+-	**[Ink 6.0](https://javascriptweekly.com/link/169936/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: Reactを使用してCLIアプリをビルドするツールで、React 19をサポートするように更新されました。
+-	**[Google Gen AI SDK for TypeScript and JavaScript v1](https://javascriptweekly.com/link/169960/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: Node.js環境でGoogleのGemini APIとVertexプラットフォームの全機能を活用できる公式SDKがv1としてリリースされました。
+-	**[Docusaurus v3.8](https://javascriptweekly.com/link/169937/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: ドキュメント中心の人気静的サイトジェネレータDocusaurusが新しいバージョンに更新されました。
+-	**[NeutralinoJS 6.1](https://javascriptweekly.com/link/169962/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: 軽量なクロスプラットフォームデスクトップアプリフレームワークであるNeutralinoJSの新バージョンがリリースされました。
+-	**[Faker 9.8](https://javascriptweekly.com/link/169965/web)** (出典: *JavaScript Weekly #738*)
+	+	アップデート: テストや開発用のダミーデータを生成するライブラリFakerの新バージョンがリリースされました。
+
+## ✍️ おわりに
+
+今週は、フレームワークとビルドツールの根本的な変化が際立ちました。Remixの大胆な方向転換とViteのRustベースのRolldown導入は、ウェブエコシステムがパフォーマンスと開発者体験のために絶えず進化していることを示しています。**特に`stagewise`のようなツールの登場は、AIがコーディングワークフローに深く統合されている現在のトレンドを明確に示しています。** また、V8エンジンの低レベルの改善と`Temporal` APIの登場は、JavaScript言語自体がより堅牢で予測可能に進化していることを示唆しています。このような変化の中で、「見えない作業」の重要性を認識し、現実的な計画を立てる知恵がこれまで以上に重要になっているように思えます。
+
+#### 出典
+- [JavaScript Weekly #738](https://javascriptweekly.com/issues/738)
+- [Smashing Newsletter #510](https://mailchi.mp/smashingmagazine/510-how-to-make-better-decisions?e=02d8dcf17a)
+- [NAVER FE News 2025-05](https://github.com/naver/fe-news/blob/master/issues/2025-06.md?utm_source=substack&utm_medium=email)
+- [Frontend Focus #695](https://frontendfoc.us/issues/695)

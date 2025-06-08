@@ -1,0 +1,147 @@
+---
+title: '🚀 2025-06 W1 #10'
+desc: 2025년 6월 1주차 뉴스레터
+date: 2025-06-08
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 이번 주 핵심 테마
+
+- **프레임워크의 진화와 재정의:** Angular v20이 안정적인 기능을 대거 선보이고, Remix는 Preact 기반의 새로운 아키텍처로 재부팅하며 미래 방향성을 제시합니다. 동시에 Vite는 Rust 기반의 Rolldown을 도입하여 네이티브 속도 경쟁에 본격적으로 뛰어듭니다.
+- **JavaScript 엔진의 발전:** V8 엔진은 명시적 자원 관리와 컴파일 힌트 같은 새로운 기능을 통해 성능과 안정성을 한 단계 끌어올리고 있습니다.
+- **AI와 개발 경험의 결합:** **AI 기반 코드 에디터 도우미 `stagewise`가 주요 소식으로 다뤄지는 등,** 개발 워크플로 전반에 AI를 접목하려는 시도가 더욱 구체화되고 있습니다.
+
+## 1. 🔍 심층 분석
+
+1.  **[Explicit Resource Management in V8](https://v8.dev/features/explicit-resource-management)** (출처: *Naver FE News (2025-06)*)
+    -   **배경**: JavaScript에서 파일 핸들, 네트워크 소켓과 같은 자원을 관리할 때 `try-finally` 블록의 복잡성과 잠재적 오류를 줄이기 위해 등장했습니다. 더 선언적이고 안전한 자원 해제 패턴이 필요했습니다.
+    -   **핵심 기능**: `using` 선언과 `Disposable` 인터페이스를 도입하여, 특정 스코프를 벗어날 때 자원이 자동으로 정리되도록 합니다. `Symbol.dispose` 또는 `Symbol.asyncDispose` 메서드를 가진 객체를 `using` 또는 `await using`으로 선언하면, 블록이 끝날 때 해당 메서드가 자동으로 호출됩니다.
+    -   **코드 예제**:
+        ```js
+        function doWork() {
+          const myResource = getResource();
+          // `myResource`는 Symbol.dispose 메서드를 가지고 있어야 합니다.
+          using T = myResource;
+
+          // ... T를 사용한 작업 ...
+
+        } // `doWork` 함수가 종료될 때, T.dispose()가 자동으로 호출됩니다.
+        ```
+    -   **실무 적용**: 데이터베이스 커넥션, 파일 스트림, 락(lock)과 같이 명시적인 해제가 필수적인 자원을 다룰 때 코드의 안정성과 가독성을 크게 향상시킬 수 있습니다.
+    -   **주의사항**: 이 기능은 ECMAScript 제안의 최신 단계에 있으므로, 실제 프로덕션 환경에 적용하기 전에는 런타임(Node.js, 브라우저)의 지원 버전을 반드시 확인해야 합니다.
+
+2.  **[Exploring the OKLCH Ecosystem and Its Tools](https://frontendfoc.us/link/170049/web)** (출처: *Frontend Focus #695*)
+    ![OKLCH 색상 공간을 시각적으로 표현한 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bdhhoecb4yqn6wkjrkyv.jpg)
+    -   **배경**: 기존 HSL, RGB 색상 모델은 인간의 색상 인지 모델과 차이가 있어 일관성 있는 색상 시스템을 구축하기 어려웠습니다. OKLCH는 인간의 시각에 더 가깝게 설계되어 예측 가능하고 접근성 높은 색상 팔레트를 만들 수 있습니다.
+    -   **핵심 기능**: OKLCH는 `L`ightness(인지적 밝기), `C`hroma(색의 양), `H`ue(색상)의 세 가지 축으로 색을 정의합니다. `L`값을 고정한 채 `C`와 `H`를 조절하면, 사용자가 인지하는 밝기는 동일하게 유지하면서 색상을 변경할 수 있어 일관된 디자인 시스템 구현에 매우 유리합니다.
+    -   **실무 적용**: 디자인 시스템 구축 시, 기본 색상 하나를 정하고 OKLCH 값을 프로그래밍 방식으로 조절하여 다양한 상태(hover, active, disabled 등)에 대한 색상 팔레트를 자동으로 생성할 수 있습니다. 이를 통해 색상 관리가 쉬워지고 전체 UI의 시각적 조화가 개선됩니다.
+    -   **주의사항**: 현재 대부분의 모던 브라우저에서 지원하지만, 구형 브라우저 호환성이 필요할 경우 폴리필(polyfill)이나 `@supports` 규칙을 사용한 점진적 향상(progressive enhancement) 전략을 고려해야 합니다.
+
+---
+
+#### 놓치기 아까운 콘텐츠
+
+-   **[The 3 Ways JavaScript Frameworks Render the DOM](https://javascriptweekly.com/link/169946/web)** (출처: *JavaScript Weekly #738*, *Frontend Focus #695*)
+    +   요약: SolidJS의 창시자가 여러 JavaScript 프레임워크(React, Svelte, Solid)가 DOM을 렌더링하는 세 가지 주요 접근 방식(가상 DOM 비교, 세분화된 반응성, 템플릿 클로닝)을 비교 분석합니다. 각 방식의 장단점을 이해하여 프레임워크의 내부 동작 원리에 대한 깊이를 더할 수 있는 영상입니다.
+-   **[Unpacking Node.js Memory - From Raw Bytes to Usable Data](https://www.banjocode.com/post/node/memory-management)** (출처: *Naver FE News (2025-06)*)
+    +   요약: Node.js의 V8 엔진이 힙 메모리를 관리하는 방식, 가비지 컬렉션, 메모리 누수 방지 기법을 심층적으로 다룹니다. 특히 `Buffer`와 `ArrayBuffer`의 내부 동작을 설명하며 대용량 데이터 처리 시 성능을 최적화하는 실질적인 방법을 제시합니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+1.  **[stagewise](https://github.com/stagewise-io/stagewise)** (출처: *Naver FE News (2025-06)*)
+    ![stagewise 데모 GIF](https://raw.githubusercontent.com/stagewise-io/assets/refs/heads/main/media/demo.gif)
+    -   **개요**: "AI 코드 에디터를 위한 시각"이라는 컨셉의 도우미 툴입니다. 개발자가 AI 코드 생성 및 자동 완성 기능을 사용할 때, AI의 제안이 기존 코드와 어떻게 통합되고 어떤 영향을 미치는지 직관적인 시각적 피드백으로 제공합니다.
+    -   **사용법**: VS Code와 같은 주요 에디터에 확장 프로그램 형태로 통합하여 사용합니다. AI가 코드를 제안하면, `stagewise`가 해당 코드 변경 사항이 기존 코드베이스에 미치는 영향을 자동으로 시각화하여 보여줍니다.
+    -   **실전 팁**: GitHub Copilot과 함께 사용할 때 특히 강력합니다. 대규모 코드 리팩토링이나 복잡한 버그 수정 시, `stagewise`의 시각적 피드백을 통해 AI 제안의 타당성을 검토하고 잠재적인 부작용을 미리 예측하여 코드의 안정성을 높일 수 있습니다.
+
+2.  **[Svelte Flow 1.0: Create Node-Based UIs and Diagrams in Svelte](https://javascriptweekly.com/link/169953/web)** (출처: *JavaScript Weekly #738*)
+    ![Svelte Flow 사용 예시 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/rmdinxlutuicysrrjj7l.jpg)
+    -   **개요**: React Flow의 Svelte 버전으로, 노드 기반의 편집기나 대화형 다이어그램을 쉽게 만들 수 있는 Svelte 컴포넌트 라이브러리입니다. 사용자가 직접 노드를 드래그하고, 연결하고, 커스터마이징할 수 있는 복잡한 UI를 선언적으로 구축할 수 있습니다.
+    -   **사용법**: 컴포넌트를 가져와 노드와 엣지(연결선) 데이터를 props로 전달하면 기본적인 플로우 차트가 렌더링됩니다. 다양한 예제와 커스터마이징 옵션을 제공하여 복잡한 요구사항에도 대응할 수 있습니다.
+    -   **실전 팁**: 데이터 시각화, 워크플로 편집기, 조직도 등 동적인 다이어그램이 필요한 애플리케이션에 매우 유용합니다. 특히 배경, 미니맵, 컨트롤 등 부가 기능을 쉽게 추가할 수 있어 완성도 높은 UI를 빠르게 개발할 수 있습니다.
+
+---
+
+#### 놓치기 아까운 콘텐츠
+
+-   **[Announcing Rolldown-Vite](https://voidzero.dev/posts/announcing-rolldown-vite)** (출처: *Naver FE News (2025-06)*)
+    +   요약: Vite의 창시자 Evan You가 공개한 새로운 Rust 기반 번들러입니다. 기존 Rollup의 성능 한계를 극복하고 네이티브 수준의 속도를 목표로 하며, 향후 Vite의 기본 번들러로 채택될 예정입니다.
+-   **[Beachpatrol: A CLI Tool to Automate Your Everyday Web Browser](https://frontendfoc.us/link/170074/web)** (출처: *Frontend Focus #695*)
+    +   요약: Playwright를 기반으로, 헤드리스가 아닌 실제 브라우저 창을 제어하여 일상적인 웹 브라우저 작업을 자동화하는 CLI 도구입니다. 눈에 보이는 브라우저를 스크립트로 제어하고 싶을 때 유용합니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+1.  **[The Work Is Never Just “The Work”](https://davestewart.co.uk/blog/the-work-is-never-just-the-work/)** (출처: *Smashing Newsletter #510*)
+    ![작업을 구성하는 여러 요소를 시각화한 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/15f40971-5672-8a3d-abc0-913c06dcd7c2.png)
+    -   **핵심 인사이트**: 프로젝트를 계획할 때 실제 코드 작성(The Work) 외에 숨겨진 '보이지 않는 작업'들(미팅, 리뷰, 리서치, 디버깅, 지원 등)이 전체 공수의 80%를 차지할 수 있다는 점을 인지해야 합니다. 이러한 '작업을 둘러싼 작업'을 고려하지 않으면 프로젝트 일정과 비용 예측에 큰 차질이 생깁니다. 이 글은 이러한 숨겨진 작업을 식별하고 추정하는 프레임워크를 제공하여 보다 현실적인 계획을 세울 수 있도록 돕습니다.
+
+2.  **[Why Are 2025/05/28 and 2025-05-28 Different Days in JavaScript?](https://javascriptweekly.com/link/169941/web)** (출처: *JavaScript Weekly #738*)
+    -   **핵심 인사이트**: JavaScript의 `new Date()` 생성자는 문자열 형식에 따라 날짜를 다르게 해석합니다. `YYYY/MM/DD` 형식은 현지 시간(Local Time)으로 해석하는 반면, `YYYY-MM-DD` 형식은 UTC(협정 세계시) 자정으로 해석하는 것이 표준입니다. 이 차이 때문에 시차(timezone)에 따라 두 날짜가 다른 날로 계산될 수 있습니다. 이러한 혼란을 피하기 위해 곧 표준이 될 `Temporal` API 사용이 권장됩니다.
+
+3.  **[Getting Creative with HTML Dialog](https://frontendfoc.us/link/170064/web)** (출처: *Frontend Focus #695*)
+    ![다양한 스타일의 다이얼로그 디자인 예시](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1749034842/xafrnpr8t0erbo1ddwri.png)
+    -   **핵심 인사이트**: 네이티브 `<dialog>` 요소를 사용하면 JavaScript로 복잡한 모달 로직을 작성할 필요 없이 접근성 높은 대화 상자를 만들 수 있습니다. 이 글에서는 CSS 애니메이션, `::backdrop` 가상 요소, `backdrop-filter` 속성 등을 활용하여 기본 `<dialog>`의 스타일을 창의적으로 꾸미는 다양한 방법을 구체적인 코드 예제와 함께 소개합니다.
+
+---
+
+#### 놓치기 아까운 콘텐츠
+
+-   **[Better Time Estimates](https://www.linkedin.com/pulse/how-improve-your-time-estimates-vitaly-friedman?trackingId=dzchsI1tQW2i85QwcbVcGQ%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_content%3BciebR%2BFzRJuQDguoGKenYA%3D%3D&trk=article-ssr-frontend-pulse_little-text-block)** (출처: *Smashing Newsletter #510*)
+    +   요약: 프로젝트 시간 추정의 정확도를 높이는 실용적인 팁을 제공합니다. 작업 범위를 명확히 이해하고, 하루 생산 시간을 6~6.5시간으로 잡고, 예상치 못한 문제에 대비해 최소 15%의 버퍼 시간을 추가하는 구체적인 방법을 제안합니다.
+-   **[Functional HTML](https://overreacted.io/functional-html/)** (출처: *Naver FE News (2025-06)*)
+    +   요약: Redux의 창시자 Dan Abramov가 HTML을 함수형 프로그래밍의 관점에서 재해석한 글입니다. HTML 요소를 순수 함수처럼 취급하는 패러다임을 통해 React와 같은 현대 프론트엔드 라이브러리의 철학적 기반을 명쾌하게 설명합니다.
+
+---
+
+## 4. ✨ 아이디어
+
+-   **[Coding Without a Laptop - Two Weeks with AR Glasses and Linux on Android](https://holdtherobot.com/blog/2025/05/11/linux-on-android-with-ar-glasses/)** (출처: *Naver FE News (2025-06)*)
+    ![AR 글래스를 착용한 채 코딩하는 모습](https://holdtherobot.com/assets/images/image1-fda7b7bad1f1031c2a9b93f312ec17f8.avif)
+    -   **특징**: 개발자가 노트북 없이 AR 글래스와 안드로이드 폰만으로 2주간 코딩 작업을 수행한 흥미로운 실험기입니다. Termux를 이용해 안드로이드에서 리눅스 환경을 구축하고 AR 글래스로 가상 화면을 확장하여 개발하는 과정을 보여주며 미래의 모바일 중심 개발 환경에 대한 가능성을 제시합니다.
+-   **[Glow Icons: 440+ Open Source SVG Icons Made for Interfaces](https://frontendfoc.us/link/170075/web)** (출처: *Frontend Focus #695*)
+    ![Glow Icons 아이콘 세트 미리보기](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1749029631/k7udlxczhk6iacy7ht7l.png)
+    -   **특징**: 인터페이스를 위해 제작된 440개 이상의 오픈소스 SVG 아이콘 세트입니다. Outline과 Solid 두 가지 스타일로 제공되며, Figma 파일로도 다운로드할 수 있어 디자이너와 개발자 모두에게 유용합니다.
+
+## 5. ⚡️ 짧은 소식
+
+-   **[The Browser Company explains why it stopped developing Arc.](https://frontendfoc.us/link/170070/web)** (출처: *Frontend Focus #695*)
+    +   요약: 'The Browser Company'가 모바일 운영 체제와 동기화되는 새로운 방향에 집중하기 위해 데스크톱 브라우저 'Arc'의 개발을 중단한다고 밝혔습니다.
+-   **[TC39's 108th meeting](https://javascriptweekly.com/link/169930/web)** (출처: *JavaScript Weekly #738*)
+    +   요약: TC39 108차 회의에서 'Seeded Pseudo-Random Numbers' 제안이 2단계로, `Error.isError` 제안이 4단계로 승격되는 등 여러 JavaScript 제안들이 진전을 보였습니다.
+-   **[Matteo Collina has unveiled php-node](https://javascriptweekly.com/link/169929/web)** (출처: *JavaScript Weekly #738*)
+    +   요약: Node.js와 동일한 프로세스 내에서 PHP 애플리케이션을 실행할 수 있는 `php-node`가 공개되었습니다. 이를 통해 Next.js 프론트엔드와 WordPress 백엔드를 함께 운영하는 등의 구성이 가능해집니다.
+-   **[The OpenJS Foundation is now a CVE Numbering Authority (CNA)](https://javascriptweekly.com/link/169933/web)** (출처: *JavaScript Weekly #738*)
+    +   요약: OpenJS 재단이 ESLint, Express, Electron 등 40개 이상의 주요 JavaScript 프로젝트에 대한 CVE(보안 취약점 식별 번호)를 직접 부여하는 기관이 되었습니다.
+
+## 6. 🎉 릴리스
+
+-   **[Angular v20](https://javascriptweekly.com/link/169927/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: Signals, 점진적 하이드레이션(incremental hydration) 등 최신 실험 기능들이 안정화되었습니다. 또한 리소스 스트리밍 및 시그널 기반의 새로운 `httpResource` API와 같은 실험적인 기능도 추가되었습니다.
+-   **[Remix Rebooted](https://javascriptweekly.com/link/169919/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: Remix가 React 프레임워크에서 벗어나, Preact를 기반으로 한 모델 우선의 경량 풀스택 프레임워크로 재탄생합니다. 기존 Remix의 기능은 React Router에 통합됩니다.
+-   **[Bun v1.2.15](https://javascriptweekly.com/link/169935/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: 프로젝트 의존성의 보안 감사를 수행하는 `bun audit` 명령어가 추가되었습니다.
+-   **[Ink 6.0](https://javascriptweekly.com/link/169936/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: React를 사용하여 CLI 앱을 빌드하는 도구로, React 19를 지원하도록 업데이트되었습니다.
+-   **[Google Gen AI SDK for TypeScript and JavaScript v1](https://javascriptweekly.com/link/169960/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: Node.js 환경에서 구글의 Gemini API와 Vertex 플랫폼의 모든 기능을 활용할 수 있는 공식 SDK가 v1으로 출시되었습니다.
+-   **[Docusaurus v3.8](https://javascriptweekly.com/link/169937/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: 문서 중심의 인기 있는 정적 사이트 생성기 Docusaurus가 새로운 버전으로 업데이트되었습니다.
+-   **[NeutralinoJS 6.1](https://javascriptweekly.com/link/169962/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: 경량 크로스플랫폼 데스크톱 앱 프레임워크인 NeutralinoJS의 새 버전이 출시되었습니다.
+-   **[Faker 9.8](https://javascriptweekly.com/link/169965/web)** (출처: *JavaScript Weekly #738*)
+    +   업데이트: 테스트 및 개발용 가짜 데이터를 생성하는 라이브러리 Faker의 새 버전이 릴리스되었습니다.
+
+## ✍️ 마치며
+
+이번 주는 프레임워크와 빌드 도구의 근본적인 변화가 두드러졌습니다. Remix의 과감한 방향 전환과 Vite의 Rust 기반 Rolldown 도입은 웹 생태계가 성능과 개발자 경험을 위해 끊임없이 진화하고 있음을 보여줍니다. **특히 `stagewise`와 같은 도구의 등장은 AI가 코딩 워크플로에 깊숙이 통합되는 현재의 트렌드를 명확히 보여줍니다.** 또한 V8 엔진의 저수준 개선과 `Temporal` API의 등장은 JavaScript 언어 자체가 더욱 견고하고 예측 가능하게 발전하고 있음을 시사합니다. 이러한 변화 속에서 '보이지 않는 작업'의 중요성을 인지하고 현실적인 계획을 세우는 지혜가 그 어느 때보다 중요해 보입니다.
+
+#### 출처
+- [JavaScript Weekly #738](https://javascriptweekly.com/issues/738)
+- [Smashing Newsletter #510](https://mailchi.mp/smashingmagazine/510-how-to-make-better-decisions?e=02d8dcf17a)
+- [NAVER FE News 2025-05](https://github.com/naver/fe-news/blob/master/issues/2025-06.md?utm_source=substack&utm_medium=email)
+- [Frontend Focus #695](https://frontendfoc.us/issues/695)
