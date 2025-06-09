@@ -1,168 +1,168 @@
 ---
 title: '🚀 2025-05 W2 #6'
-desc: 2025년 5월 2주차 뉴스레터
+desc: 2025年5月第2週のニュースレター
 date: 2025-05-11
 thumbnail: /posts/weekly/may.avif
 ---
 
-## 🔥 이번 주 핵심 테마
-- 최신 프론트엔드 기술과 AI의 접목. 그리고 강력한 새 버전 릴리스 소식들로 개발 생태계가 한층 더 풍부해지고 있습니다.
+## 🔥 今週の主要テーマ
+- 最新のフロントエンド技術とAIの融合、そして強力な新バージョンのリリース情報など、開発エコシステムがさらに豊かになっています。
 
-## 1. 🔍 심층 분석
-1.  **[LLM-first Web Framework](https://blog.mgechev.com/2025/04/19/llm-first-web-framework/)**
-    * *NAVER FE News 2025-05*
-    * 배경: 기존 웹 프레임워크가 LLM(대규모 언어 모델)과 함께 사용될 때 API 버전 불일치나 학습 데이터 부족 등의 문제가 발생하는 것을 해결하고자 등장했습니다.
-    * 핵심 기능: LLM 친화적인 웹 프레임워크 설계를 제안하며, Revolt를 기반으로 텍스트 노드와 속성값을 getter 함수로 호출하여 정적 값과 반응형 값을 동일하게 처리합니다. 이를 통해 LLM이 정적 값과 동적 값을 구분하지 않고도 코드를 생성할 수 있도록 지원합니다. Revolt를 중간 표현(IR)으로 사용하여 Angular나 React 등으로 변환하는 방안도 제시합니다.
-    * 코드 예제:
-        ```javascript
-        // (Conceptual example based on Revolt's principles)
-        import { signal, render } from 'revolt';
+## 1. 🔍 深掘り
+1.	 **[LLM-first Web Framework](https://blog.mgechev.com/2025/04/19/llm-first-web-framework/)**
+	 * *NAVER FE News 2025-05*
+	 * 背景: 既存のウェブフレームワークがLLM(大規模言語モデル)と共に使用される際に、APIバージョンの不一致や学習データの不足といった問題が発生することを解決するために登場しました。
+	 * 主要機能: LLMフレンドリーなウェブフレームワーク設計を提案し、Revoltをベースにテキストノードと属性値をgetter関数で呼び出すことで、静的な値とリアクティブな値を同様に扱います。これにより、LLMが静的な値と動的な値を区別することなくコードを生成できるよう支援します。Revoltを中間表現(IR)として使用し、AngularやReactなどに変換する案も提示しています。
+	 * コード例:
+	 	 ```javascript
+	 	 // (Conceptual example based on Revolt's principles)
+	 	 import { signal, render } from 'revolt';
 
-        const count = signal(0);
-        const App = () => (
-          <button onClick={() => count.set(count.get() + 1)}>
-            Clicks: {count}
-          </button>
-        );
-        render(App, document.body);
-        ```
-    * 실무 적용: LLM을 활용하여 코드를 생성하거나 동적 콘텐츠를 다루는 애플리케이션 개발 시, 보다 간결하고 일관된 방식으로 프론트엔드를 구축하는 데 유용할 수 있습니다.
-    * 주의사항: 아직 실험적인 접근 방식이며, 실제 프로덕션 환경에서의 안정성이나 성능, 커뮤니티 지원 등은 추가적인 검증이 필요합니다.
+	 	 const count = signal(0);
+	 	 const App = () => (
+	 	 	 <button onClick={() => count.set(count.get() + 1)}>
+	 	 	 	 Clicks: {count}
+	 	 	 </button>
+	 	 );
+	 	 render(App, document.body);
+	 	 ```
+	 * 実務での適用: LLMを活用してコードを生成したり、動的なコンテンツを扱うアプリケーションを開発する際に、より簡潔で一貫した方法でフロントエンドを構築するのに役立つ可能性があります。
+	 * 注意事項: まだ実験的なアプローチであり、実際のプロダクション環境での安定性やパフォーマンス、コミュニティのサポートなどは追加の検証が必要です。
 
-2.  **[Polyfilling CSS with CSS Parser Extensions](https://brm.us/css-parser-extensions)**
-    * *Frontend Focus #691*
-    * 배경: 새로운 CSS 기능을 모든 브라우저에서 일관되게 사용하기 위한 폴리필 작성의 어려움을 해결하고자 제안되었습니다. 현재 CSS 폴리필은 복잡하며, 완벽하게 표준 동작을 모방하기 어렵습니다.
-    * 핵심 기능: 브라우저의 CSS 파서를 JavaScript로 확장할 수 있도록 허용하여 개발자가 직접 커스텀 CSS 기능을 정의하고 파싱 로직을 추가할 수 있게 하는 아이디어입니다. 이를 통해 새로운 CSS 문법이나 기능을 브라우저가 정식으로 지원하기 전에 실험적으로 구현하고 사용할 수 있습니다.
-    * 코드 예제:
-        ```css
-        /* Fictional example of what could be enabled by parser extensions */
-        @custom-feature --my-feature {
-          property: <color>;
-          initial-value: blue;
-          applies-to: ::first-line;
-        }
-        p {
-          --my-feature: red; /* This would be parsed and handled by JS */
-        }
-        ```
-    * 실무 적용: CSS 워킹 그룹에서 논의 중인 새로운 기능을 빠르게 프로토타이핑하거나, 특정 프로젝트에 필요한 비표준 CSS 동작을 구현하는 데 활용될 수 있습니다.
-    * 주의사항: 이는 Bramus Van Damme의 아이디어 단계이며, 실제 브라우저에 구현되기까지는 많은 논의와 표준화 과정이 필요합니다. 남용될 경우 CSS의 파편화나 성능 문제를 야기할 수 있습니다.
-
----
-#### 놓치기 아까운 콘텐츠
--   **[React Reconciliation Deep Dive](https://cekrem.github.io/posts/react-reconciliation-deep-dive/)** (*NAVER FE News 2025-05*)
-    * 요약: React의 핵심 메커니즘인 재조정(Reconciliation) 과정을 가상 DOM 변경 사항이 실제 DOM에 어떻게 반영되는지, key의 역할, 자식 요소 재정렬 시 비용 및 최적화 팁 등 내부 동작 원리를 깊이 있게 설명합니다.
--   **[Giving V8 a Heads-Up: Faster Startup with Explicit Compile Hints](https://v8.dev/blog/compilation-hints)** (*JavaScript Weekly #734*)
-    * 요약: V8 엔진 최적화 기능으로, 특정 파일을 초기에 컴파일하도록 지시하여 시작 시간을 단축하는 방법을 소개합니다. Chrome 136부터 제공되며, 예상보다 큰 성능 향상을 가져올 수 있습니다.
----
-
-## 2. 🛠️ 툴 & 라이브러리
-1.  **[Oxlint Beta](https://oxc.rs/blog/2025-03-15-oxlint-beta.html)** (*NAVER FE News 2025-05*)
-    * 개요: Rust로 작성된 고성능 JavaScript 분석 도구 Oxc의 새로운 린터입니다. ESLint를 대체하는 것을 목표로 하며, 빠른 속도와 메모리 효율성을 강조합니다. 현재 약 140개 이상의 규칙이 구현되어 있고, 대부분 TypeScript도 지원합니다.
-    * 사용법 (CLI):
-        ```bash
-        # Lint files in the current directory
-        npx oxlint
-
-        # Lint specific files
-        npx oxlint src/**/*.js
-
-        # Report unused ESLint disable directives
-        npx oxlint --report-unused-disable-directives
-        ```
-    * 실전 팁: ESLint보다 정밀하고 안전한 규칙 도입 가능성이 있으며, 특히 퍼포먼스가 중요한 대규모 프로젝트에서 ESLint의 대안으로 고려해볼 만합니다. Biome, Rome과 유사한 방향성을 가집니다. ESLint 마이그레이션 도구도 제공될 예정입니다.
-
-2.  **[Rsdoctor 1.0](https://rsdoctor.dev/blog/release/release-note-1_0)** (*NAVER FE News 2025-05*)
-    * 개요: Webpack 및 Rspack 기반 프로젝트의 번들링 문제를 시각적으로 분석하고 진단할 수 있는 도구입니다. 1.0 정식 출시를 통해 기존 CLI 중심에서 웹 대시보드 중심의 직관적인 분석 환경으로 개선되었습니다.
-    * 주요 기능: 웹 기반 시각화, 과다 포함 모듈 탐지, 원인 분석 트리, 범용적 성능 점수 및 가이드 제공. 번들 크기 증가 원인을 자동 분석하며, 코드 수정 없이 설정만으로 적용 가능합니다.
-    * 실전 팁: 대형 프로젝트의 번들링 병목 현상을 해결하거나, 번들 최적화 과정에서 깊이 있는 분석이 필요할 때 유용합니다.
+2.	 **[Polyfilling CSS with CSS Parser Extensions](https://brm.us/css-parser-extensions)**
+	 * *Frontend Focus #691*
+	 * 背景: 新しいCSS機能をすべてのブラウザで一貫して使用するためのポリフィル作成の難しさを解決するために提案されました。現在のCSSポリフィルは複雑で、標準の動作を完全に模倣するのは困難です。
+	 * 主要機能: ブラウザのCSSパーサーをJavaScriptで拡張できるようにし、開発者が直接カスタムCSS機能を定義し、パースロジックを追加できるようにするアイデアです。これにより、新しいCSSの構文や機能をブラウザが正式にサポートする前に、実験的に実装して使用することができます。
+	 * コード例:
+	 	 ```css
+	 	 /* Fictional example of what could be enabled by parser extensions */
+	 	 @custom-feature --my-feature {
+	 	 	 property: <color>;
+	 	 	 initial-value: blue;
+	 	 	 applies-to: ::first-line;
+	 	 }
+	 	 p {
+	 	 	 --my-feature: red; /* This would be parsed and handled by JS */
+	 	 }
+	 	 ```
+	 * 実務での適用: CSSワーキンググループで議論中の新しい機能を迅速にプロトタイピングしたり、特定のプロジェクトに必要な非標準のCSS動作を実装するのに活用できます。
+	 * 注意事項: これはBramus Van Dammeのアイデア段階であり、実際のブラウザに実装されるまでには多くの議論と標準化プロセスが必要です。乱用されるとCSSの断片化やパフォーマンス問題を引き起こす可能性があります。
 
 ---
-#### 놓치기 아까운 콘텐츠
--   **[Poku](https://github.com/wellwelwel/poku)** (*NAVER FE News 2025-05*)
-    * 요약: Node.js, Deno, Bun과 호환되는 경량 테스트 러너입니다. CommonJS, ES Modules, TypeScript를 별도 설정 없이 지원하며, JavaScript의 본래 실행 흐름을 보존하는 테스트 작성을 지향합니다.
--   **[WebTUI: A Modular CSS Library Bringing the Beauty of Terminal UIs to the Browser](https://github.com/WebTUI/monorepo)** (*Frontend Focus #691*)
-    * 요약: 터미널 사용자 인터페이스(TUI)의 미학을 웹 브라우저로 가져오는 모듈형 CSS 라이브러리입니다. ASCII 스타일 박스, 배지, 버튼, 체크박스, 팝오버 등 다양한 컴포넌트와 플러그인을 제공합니다.
+#### 見逃せないコンテンツ
+-	**[React Reconciliation Deep Dive](https://cekrem.github.io/posts/react-reconciliation-deep-dive/)** (*NAVER FE News 2025-05*)
+	 * 要約: Reactのコアメカニズムである再調整(Reconciliation)プロセスについて、仮想DOMの変更が実際のDOMにどのように反映されるか、keyの役割、子要素の再配置時のコストと最適化のヒントなど、内部の動作原理を深く説明しています。
+-	**[Giving V8 a Heads-Up: Faster Startup with Explicit Compile Hints](https://v8.dev/blog/compilation-hints)** (*JavaScript Weekly #734*)
+	 * 要約: V8エンジンの最適化機能で、特定のファイルを初期にコンパイルするよう指示して起動時間を短縮する方法を紹介します。Chrome 136から提供され、予想以上のパフォーマンス向上をもたらす可能性があります。
 ---
 
-## 3. 📝 추천 아티클 & 팁
-1.  **[Are 'CSS Carousels' Accessible?](https://www.sarasoueidan.com/blog/css-carousels-accessibility/?utm_source=CSS-Weekly&utm_campaign=Issue-612&utm_medium=web)** (*CSS Weekly #612*)
-    * 배경 설명: 최근 실험적으로 도입된 "CSS Carousels" 기능에 대한 논의가 시작되었습니다. 이 기능은 CSS만으로 캐러셀 UI를 구현할 수 있게 해주지만, 접근성과 사용성에 대한 면밀한 검토가 필요합니다.
-    * 핵심 인사이트: Sara Soueidan이 이 새로운 CSS 캐러셀 기능을 사용성 및 접근성 관점에서 심층적으로 분석합니다. 현재 단계에서 이 기능이 가진 잠재적 문제점과 개선 방향을 객관적으로 제시하여, 개발자들이 기술 도입 시 고려해야 할 사항들을 짚어줍니다.
-    * 왜 이 글이 유익한지: 새로운 웹 표준 기술을 단순히 사용하는 것을 넘어, 그것이 모든 사용자에게 어떤 경험을 제공하는지 비판적으로 사고하는 방법을 배울 수 있습니다. 특히 접근성은 현대 웹 개발에서 매우 중요한 고려 사항입니다.
+## 2. 🛠️ ツール & ライブラリ
+1.	 **[Oxlint Beta](https://oxc.rs/blog/2025-03-15-oxlint-beta.html)** (*NAVER FE News 2025-05*)
+	 * 概要: Rustで書かれた高性能なJavaScript分析ツールOxcの新しいリンターです。ESLintの代替を目指しており、高速さとメモリ効率を強調しています。現在約140以上のルールが実装されており、そのほとんどがTypeScriptもサポートしています。
+	 * 使用法 (CLI):
+	 	 ```bash
+	 	 # Lint files in the current directory
+	 	 npx oxlint
 
-2.  **[Easier Layout With margin-trim](https://webkit.org/blog/16854/margin-trim/?utm_source=CSS-Weekly&utm_campaign=Issue-612&utm_medium=web)** (*CSS Weekly #612*)
-    * 배경 설명: CSS 레이아웃 작업 시 컨테이너 내부 요소들의 불필요한 마진으로 인해 의도치 않은 공백이 생기거나 디자인이 틀어지는 경우가 종종 발생합니다.
-    * 핵심 인사이트: Jen Simmons가 소개하는 `margin-trim` 속성은 컨테이너가 자식 요소들 중 컨테이너 경계에 인접한 마진을 제거하도록 지시할 수 있게 합니다. 이를 통해 불필요한 추가 CSS 규칙 없이도 깔끔한 레이아웃을 쉽게 달성할 수 있습니다.
-    * 코드 예시:
-        ```css
-        .container {
-          margin-trim: block-start block-end; /* Trim top and bottom margins of children at container edges */
-        }
-        ```
-    * 왜 이 글이 유익한지: 복잡한 선택자나 추가적인 div 래핑 없이도 레이아웃 문제를 해결할 수 있는 현대적인 CSS 기능을 소개하여, 보다 간결하고 유지보수하기 쉬운 코드를 작성하는 데 도움을 줍니다.
+	 	 # Lint specific files
+	 	 npx oxlint src/**/*.js
 
-3.  **[What Does React's 'use client' Do?](https://overreacted.io/what-does-reacts-use-client-do/)** (*JavaScript Weekly #734*, *NAVER FE News 2025-05* (Impossible Components 참조))
-    * 배경 설명: React Server Components (RSC)가 도입되면서 `use client`와 `use server` 지시어가 등장했습니다. 이들의 정확한 역할과 사용법에 대한 이해가 필요합니다.
-    * 핵심 인사이트: Dan Abramov가 `use client` 및 `use server` 지시어의 실제적인 의미와 이들이 클라이언트/서버 앱을 "두 환경에 걸친 단일 프로그램"으로 우아하게 구조화하는 방법을 설명합니다. 이 개념은 React 외부에서도 널리 사용될 수 있다고 제안합니다.
-    * 왜 이 글이 유익한지: RSC의 핵심 개념을 명확히 이해하고, 서버와 클라이언트 로직을 효과적으로 분리 및 결합하여 더 나은 아키텍처를 설계하는 데 도움을 줍니다.
+	 	 # Report unused ESLint disable directives
+	 	 npx oxlint --report-unused-disable-directives
+	 	 ```
+	 * 実践のヒント: ESLintよりも精密で安全なルールの導入が期待でき、特にパフォーマンスが重要な大規模プロジェクトでESLintの代替として検討する価値があります。Biome、Romeと類似した方向性を持っています。ESLintからの移行ツールも提供される予定です。
+
+2.	 **[Rsdoctor 1.0](https://rsdoctor.dev/blog/release/release-note-1_0)** (*NAVER FE News 2025-05*)
+	 * 概要: WebpackおよびRspackベースのプロジェクトにおけるバンドルの問題を視覚的に分析・診断できるツールです。1.0の正式リリースにより、従来のCLI中心からWebダッシュボード中心の直感的な分析環境へと改善されました。
+	 * 主な機能: Webベースの可視化、過剰に含まれたモジュールの検出、原因分析ツリー、汎用的なパフォーマンススコアとガイドの提供。バンドルサイズの増加原因を自動分析し、コードを修正することなく設定のみで適用可能です。
+	 * 実践のヒント: 大規模プロジェクトのバンドリングにおけるボトルネックを解決したり、バンドル最適化の過程で詳細な分析が必要な場合に役立ちます。
 
 ---
-#### 놓치기 아까운 콘텐츠
--   **[Automated Visual Regression Testing With Playwright](https://css-tricks.com/automated-visual-regression-testing-with-playwright/)** (*NAVER FE News 2025-05*)
-    * 요약: Playwright의 `toHaveScreenshot()` 기능을 사용하여 시각적 회귀 테스트를 자동화하는 방법을 소개합니다. UI 변경 사항을 감지하고 CI 파이프라인에 통합하는 실용적인 팁을 제공합니다.
--   **[WCAG 3.0's Proposed Scoring Model: A Shift in Accessibility Evaluation](https://www.smashingmagazine.com/2025/05/wcag-3-proposed-scoring-model-accessibility-evaluation/)** (*Frontend Focus #691*, *Smashing Newsletter #506*)
-    * 요약: 웹 콘텐츠 접근성 가이드라인(WCAG) 3.0에서 제안하는 새로운 점수 모델을 설명합니다. 기존의 이진(성공/실패) 모델에서 벗어나 "단순 기능 존재 여부보다 접근의 질"에 초점을 맞추어 사용성을 우선시하는 방향으로 전환될 예정입니다.
+#### 見逃せないコンテンツ
+-	**[Poku](https://github.com/wellwelwel/poku)** (*NAVER FE News 2025-05*)
+	 * 要約: Node.js、Deno、Bunと互換性のある軽量テストランナーです。CommonJS、ES Modules、TypeScriptを別途設定なしでサポートし、JavaScript本来の実行フローを維持するテスト作成を目指しています。
+-	**[WebTUI: A Modular CSS Library Bringing the Beauty of Terminal UIs to the Browser](https://github.com/WebTUI/monorepo)** (*Frontend Focus #691*)
+	 * 要約: ターミナルユーザーインターフェース(TUI)の美学をウェブブラウザにもたらすモジュラーCSSライブラリです。ASCIIスタイルのボックス、バッジ、ボタン、チェックボックス、ポップオーバーなど、様々なコンポーネントとプラグインを提供します。
 ---
 
-## 4. ✨ 아이디어
-1.  **[Hoop Hills - 3D Data Visualization](https://hoophills.vercel.app/)** (*Smashing Newsletter #506*)
-    * 특징: NBA 시즌 동안 팀이 앞서거나 뒤처진 모든 순간을 시각화하는 3D 인터랙티브 데이터 시각화 프로젝트입니다. 방대한 데이터를 마치 언덕 풍경처럼 표현하여 사용자가 팀, 상대, 시즌, 경기 종류 등 다양한 필터를 통해 데이터를 탐색할 수 있게 합니다. 데이터 시각화의 예술적인 접근을 보여주는 인상적인 예시입니다.
+## 3. 📝 おすすめ記事 & チップ
+1.	 **[Are 'CSS Carousels' Accessible?](https://www.sarasoueidan.com/blog/css-carousels-accessibility/?utm_source=CSS-Weekly&utm_campaign=Issue-612&utm_medium=web)** (*CSS Weekly #612*)
+	 * 背景説明: 最近実験的に導入された「CSS Carousels」機能についての議論が始まっています。この機能はCSSだけでカルーセルUIを実装できるようにしますが、アクセシビリティとユーザビリティに関する綿密な検討が必要です。
+	 * 主要なインサイト: Sara Soueidanがこの新しいCSSカルーセル機能をユーザビリティとアクセシビリティの観点から深く分析します。現段階でこの機能が持つ潜在的な問題点と改善の方向性を客観的に提示し、開発者が技術を導入する際に考慮すべき点を指摘します。
+	 * この記事が有益な理由: 新しいウェブ標準技術を単に使用するだけでなく、それがすべてのユーザーにどのような体験を提供するかを批判的に考える方法を学ぶことができます。特にアクセシビリティは現代のウェブ開発において非常に重要な考慮事項です。
 
-2.  **[Behind The Severance Opening Titles](https://www.instagram.com/p/C6p7pZ8S9wK/)** (*Smashing Newsletter #506*)
-    * 특징: Apple TV+ 시리즈 "Severance"의 에미상 수상 경력이 있는 오프닝 타이틀 시퀀스 제작 과정과 시즌 2 인트로의 간략한 분석을 공유합니다. 직장과 사생활의 기억이 분리된 디스토피아적 설정을 강력하고 초현실적인 이미지로 표현하여 주인공의 정체성 회복을 위한 투쟁을 상징합니다.
+2.	 **[Easier Layout With margin-trim](https://webkit.org/blog/16854/margin-trim/?utm_source=CSS-Weekly&utm_campaign=Issue-612&utm_medium=web)** (*CSS Weekly #612*)
+	 * 背景説明: CSSのレイアウト作業時、コンテナ内部の要素の不要なマージンによって意図しない空白が生じたり、デザインが崩れたりすることがよくあります。
+	 * 主要なインサイト: Jen Simmonsが紹介する`margin-trim`プロパティは、コンテナがその子要素のうちコンテナの境界に隣接するマージンを削除するように指示できるようにします。これにより、不要な追加のCSSルールなしで、すっきりとしたレイアウトを簡単に実現できます。
+	 * コード例:
+	 	 ```css
+	 	 .container {
+	 	 	 margin-trim: block-start block-end; /* Trim top and bottom margins of children at container edges */
+	 	 }
+	 	 ```
+	 * この記事が有益な理由: 複雑なセレクタや追加のdivでラップすることなくレイアウト問題を解決できる現代的なCSS機能を紹介し、より簡潔で保守しやすいコードを作成するのに役立ちます。
 
-3.  **[New Swiss Passport Design](https://retinaa.ch/portfolio/passeport-suisse-2022/)** (*Smashing Newsletter #506*)
-    * 특징: 2022년에 도입된 새로운 스위스 여권 디자인은 스위스 그래픽 아트의 혁신 전통을 기리며, 스위스의 풍경과 문화유산을 중심으로 디자인되었습니다. 3D 모델링 된 풍경은 알프스 정상에서 계곡까지 이어지는 가상의 여정을 표현하며, 자외선 아래에서는 국가 지형과 문화적 랜드마크를 드러내는 보안 기능을 포함합니다. 세심함이 돋보이는 뛰어난 디자인 작업입니다.
+3.	 **[What Does React's 'use client' Do?](https://overreacted.io/what-does-reacts-use-client-do/)** (*JavaScript Weekly #734*, *NAVER FE News 2025-05* (Impossible Components 参照))
+	 * 背景説明: React Server Components (RSC)の導入に伴い、`use client`と`use server`ディレクティブが登場しました。これらの正確な役割と使用法の理解が必要です。
+	 * 主要なインサイト: Dan Abramovが`use client`および`use server`ディレクティブの実際の意味と、これらがクライアント/サーバーアプリを「両環境にまたがる単一のプログラム」としてエレガントに構造化する方法を説明します。この概念はReact外部でも広く使用される可能性があると提案しています。
+	 * この記事が有益な理由: RSCの核心概念を明確に理解し、サーバーとクライアントのロジックを効果的に分離・結合して、より良いアーキテクチャを設計するのに役立ちます。
 
-## 5. ⚡️ 짧은 소식
--   **[Google Gemini 2.5 Pro 모델 업데이트](https://blog.google/technology/developers/gemini-2-5-pro-google-ai-studio/)** (*Frontend Focus #691*, *React Status #428*)
-    * 요약: Google이 Gemini 2.5 Pro 모델을 업데이트했습니다. 특히 프론트엔드 앱 구축 능력이 향상되어 '미적인 웹 개발에 대한 진정한 감각'을 갖췄다고 주장합니다.
--   **[jQuery 20주년 기념 이벤트](https://jqueryreunion.com/)** (*JavaScript Weekly #734*)
-    * 요약: 2006년에 처음 출시된 jQuery의 20주년을 기념하여 2026년 1월 16-17일 텍사스에서 jQuery Reunion 이벤트가 열릴 예정입니다.
--   **[JSR 패키지, pnpm 및 Yarn에서도 설치 지원](https://deno.com/blog/jsr-pnpm-yarn)** (*JavaScript Weekly #734*)
-    * 요약: JavaScript Registry (JSR) 패키지를 이제 pnpm과 Yarn을 통해서도 설치할 수 있게 되어 사용 편의성이 증대되었습니다.
--   **[React Conf 2025 개최 예정](https://conf.react.dev/ )** (*React Status #428*)
-    * 요약: React Conf 2025가 작년과 같이 라스베이거스 외곽에서 올해 10월에 개최될 예정입니다.
--   **[Mux (비디오 인프라 플랫폼), 무료 플랜 제공 시작](https://mux.com/blog/introducing-the-mux-free-plan)** (*Frontend Focus #691*)
-    * 요약: 비디오 인프라 플랫폼인 Mux가 무료 플랜을 제공하기 시작하여 개발자들이 더 쉽게 서비스를 이용해 볼 수 있게 되었습니다.
+---
+#### 見逃せないコンテンツ
+-	**[Automated Visual Regression Testing With Playwright](https://css-tricks.com/automated-visual-regression-testing-with-playwright/)** (*NAVER FE News 2025-05*)
+	 * 要約: Playwrightの`toHaveScreenshot()`機能を使用してビジュアルリグレッションテストを自動化する方法を紹介します。UIの変更を検出し、CIパイプラインに統合する実践的なヒントを提供します。
+-	**[WCAG 3.0's Proposed Scoring Model: A Shift in Accessibility Evaluation](https://www.smashingmagazine.com/2025/05/wcag-3-proposed-scoring-model-accessibility-evaluation/)** (*Frontend Focus #691*, *Smashing Newsletter #506*)
+	 * 要約: ウェブコンテンツ・アクセシビリティ・ガイドライン(WCAG) 3.0で提案されている新しいスコアリングモデルを説明します。既存の二者択一(合格/不合格)モデルから脱却し、「単なる機能の有無よりもアクセスの質」に焦点を当て、ユーザビリティを優先する方向へと転換される予定です。
+---
 
-## 6. 🎉 릴리스
+## 4. ✨ アイデア
+1.	 **[Hoop Hills - 3D Data Visualization](https://hoophills.vercel.app/)** (*Smashing Newsletter #506*)
+	 * 特徴: NBAシーズン中にチームがリードまたはビハインドだったすべての瞬間を視覚化する、3Dインタラクティブ・データビジュアライゼーション・プロジェクトです。膨大なデータをまるで丘の風景のように表現し、ユーザーがチーム、対戦相手、シーズン、試合の種類など、様々なフィルターを通してデータを探索できるようにします。データビジュアライゼーションの芸術的なアプローチを示す印象的な例です。
+
+2.	 **[Behind The Severance Opening Titles](https://www.instagram.com/p/C6p7pZ8S9wK/)** (*Smashing Newsletter #506*)
+	 * 特徴: Apple TV+シリーズ「セヴェランス」のエミー賞受賞歴のあるオープニングタイトルシーケンスの制作過程と、シーズン2イントロの簡単な分析を共有しています。職場と私生活の記憶が分離されたディストピア的な設定を、強力でシュールなイメージで表現し、主人公のアイデンティティ回復のための闘いを象徴しています。
+
+3.	 **[New Swiss Passport Design](https://retinaa.ch/portfolio/passeport-suisse-2022/)** (*Smashing Newsletter #506*)
+	 * 特徴: 2022年に導入された新しいスイスのパスポートデザインは、スイスのグラフィックアートの革新の伝統を称え、スイスの風景と文化遺産を中心にデザインされています。3Dモデリングされた風景は、アルプスの頂から谷まで続く架空の旅を表現し、紫外線下では国の地形と文化的ランドマークが現れるセキュリティ機能を含んでいます。細部へのこだわりが光る優れたデザイン作業です。
+
+## 5. ⚡️ ミニノート
+-	**[Google Gemini 2.5 Proモデルのアップデート](https://blog.google/technology/developers/gemini-2-5-pro-google-ai-studio/)** (*Frontend Focus #691*, *React Status #428*)
+	 * 要約: GoogleがGemini 2.5 Proモデルをアップデートしました。特にフロントエンドアプリの構築能力が向上し、「美しいウェブ開発に対する真の感覚」を備えたと主張しています。
+-	**[jQuery 20周年記念イベント](https://jqueryreunion.com/)** (*JavaScript Weekly #734*)
+	 * 要約: 2006年に初めてリリースされたjQueryの20周年を記念して、2026年1月16日～17日にテキサスでjQuery Reunionイベントが開催される予定です。
+-	**[JSRパッケージ、pnpmおよびYarnでもインストールをサポート](https://deno.com/blog/jsr-pnpm-yarn)** (*JavaScript Weekly #734*)
+	 * 要約: JavaScript Registry (JSR)のパッケージが、pnpmとYarnを通じてもインストールできるようになり、利便性が向上しました。
+-	**[React Conf 2025 開催予定](https://conf.react.dev/ )** (*React Status #428*)
+	 * 要約: React Conf 2025が、昨年同様ラスベガス郊外で今年の10月に開催される予定です。
+-	**[Mux (ビデオインフラプラットフォーム)、無料プラン提供開始](https://mux.com/blog/introducing-the-mux-free-plan)** (*Frontend Focus #691*)
+	 * 要約: ビデオインフラプラットフォームであるMuxが無料プランの提供を開始し、開発者がより簡単にサービスを試せるようになりました。
+
+## 6. 🎉 リリース
 * **[React Compiler RC](https://react.dev/blog/2025/04/21/react-compiler-rc)** (*NAVER FE News 2025-05*)
-    * 업데이트: React 팀의 자동 최적화 컴파일러가 RC(Release Candidate) 단계에 도달했습니다. useMemo, useCallback 없이도 컴파일 단계에서 자동 최적화를 수행하여 코드 유지보수 부담을 줄이고 성능을 확보합니다. Babel, Vite, Next.js(v15.3.1+), Remix 등 다양한 빌드 환경과 통합 가능합니다.
+	 * アップデート: Reactチームの自動最適化コンパイラがRC(Release Candidate)段階に到達しました。useMemo、useCallbackなしでもコンパイル段階で自動的に最適化を行い、コードのメンテナンス負担を軽減し、パフォーマンスを確保します。Babel、Vite、Next.js(v15.3.1+)、Remixなど、様々なビルド環境と統合可能です。
 * **[GSAP (GreenSock Animation Platform) v3.13](https://gsap.com/blog/gsap-3-13-free/)** (*JavaScript Weekly #734*, *Frontend Focus #691*)
-    * 업데이트: Webflow에 인수된 후, GSAP 툴킷 전체(이전 유료 애드온 MorphSVG, SplitText 등 포함)가 상업적 사용을 포함하여 무료로 제공됩니다. (단, Webflow와 직접 경쟁하는 용도로 사용하는 것을 금지하는 '무료' 라이선스입니다.)
+	 * アップデート: Webflowに買収された後、GSAPツールキット全体(以前は有料だったアドオンMorphSVG、SplitTextなどを含む)が、商用利用を含めて無料で提供されます。(ただし、Webflowと直接競合する用途での使用を禁じる「無料」ライセンスです。)
 * **[Node.js v24.0.0](https://nodejs.org/en/blog/release/v24.0.0)** (*React Status #428*)
-    * 업데이트: V8 13.6, npm 11, Undici 7로 업데이트되었으며, URL을 패턴과 매칭하는 `URLPattern`이 전역 객체로 노출되었습니다.
+	 * アップデート: V8 13.6、npm 11、Undici 7にアップデートされ、URLをパターンと照合する`URLPattern`がグローバルオブジェクトとして公開されました。
 * **[Mantine 8.0](https://mantine.dev/changelog/8-0-0/)** (*Frontend Focus #691*, *React Status #428*)
-    * 업데이트: Recharts를 활용한 차트 기능 강화, GitHub 스타일 히트맵, 트리, 반원 진행률 표시기 등 20개 이상의 신규 컴포넌트 추가 및 서브메뉴 기능 등이 개선되었습니다.
+	 * アップデート: Rechartsを活用したチャート機能の強化、GitHubスタイルのヒートマップ、ツリー、半円プログレスインジケーターなど20以上の新規コンポーネントの追加、およびサブメニュー機能などが改善されました。
 * **[Redis 8.0](https://redis.com/blog/redis-8-generally-available/)** (*React Status #428*, *JavaScript Weekly #734*)
-    * 업데이트: 라이선스 변경 논란 이후, Redis 8.0부터 AGPL 라이선스 옵션이 추가되어 다시 오픈 소스로 전환되었습니다.
+	 * アップデート: ライセンス変更の論争の後、Redis 8.0からAGPLライセンスオプションが追加され、再びオープンソースに転환されました。
 * **[Storybook 9 Beta](https://storybook.js.org/blog/storybook-9-beta/)** (*JavaScript Weekly #734*)
-    * 업데이트: Storybook 8의 여러 실험적 기능이 안정화되었으며, 컴포넌트 테스팅과 React Native 지원에 중점을 둡니다.
+	 * アップデート: Storybook 8のいくつかの実験的機能が安定化され、コンポーネントテスティングとReact Nativeのサポートに重点を置いています。
 * **[Koa 3.0](https://github.com/koajs/koa/releases/tag/3.0.0)** (*JavaScript Weekly #734*)
-    * 업데이트: Express.js의 계보를 잇는 차세대 웹 프레임워크 Koa의 새 버전이 릴리스되었습니다. 최신 JS 기능을 활용합니다.
+	 * アップデート: Express.jsの系譜を継ぐ次世代ウェブフレームワークKoaの新しいバージョンがリリースされました。最新のJS機能を活用しています。
 * **[Deno 2.3](https://deno.com/blog/deno-2-3)** (*JavaScript Weekly #734*)
-    * 업데이트: 단일 바이너리 컴파일 기능이 향상되어 FFI 및 Node 네이티브 애드온을 지원합니다.
+	 * アップデート: 単一バイナリコンパイル機能が向上し、FFIおよびNodeのネイティブアドオンをサポートします。
 * **[Bun v1.2.12](https://bun.sh/blog/bun-v1.2.12)** (*React Status #428*)
-    * 업데이트: Node.js 호환성이 더욱 향상되었으며, Bun의 풀스택 지원 강화의 일환으로 브라우저 콘솔 로그를 터미널을 통해 스트리밍할 수 있게 되었습니다.
+	 * アップデート: Node.jsとの互換性がさらに向上し、Bunのフルスタックサポート強化の一環として、ブラウザのコンソールログをターミ널を通じてストリーミングできるようになりました。
 * **[Tiptap 3.0 Beta](https://tiptap.dev/blog/tiptap-3-beta)** (*React Status #428*)
-    * 업데이트: 인기 있는 헤드리스 리치 텍스트 편집기 프레임워크 Tiptap의 최신 베타 버전이 출시되었습니다.
+	 * アップデート: 人気のヘッドレスリッチテキストエディタフレームワークTiptapの最新ベータ版がリリースされました。
 
-## ✍️ 마치며
--   이번 주에는 LLM과 웹 프레임워크의 결합, CSS의 진화, 그리고 다양한 개발 도구와 라이브러리들의 주요 업데이트가 눈에 띕니다. 특히 React Compiler RC와 GSAP의 전면 무료화는 개발자들에게 큰 영향을 줄 것으로 기대됩니다.
+## ✍️ おわりに
+-	今週はLLMとウェブフレームワークの組み合わせ、CSSの進化、そして様々な開発ツールやライブラリの主要なアップデートが目立ちました。特にReact Compiler RCとGSAPの完全無料化は、開発者に大きな影響を与えると期待されます。
 
-#### 출처
+#### 出典
 - [JavaScript Weekly #734](https://javascriptweekly.com/issues/734)
 - [Frontend Focus #691](https://frontendfoc.us/issues/691)
 - [Smashing Newsletter #506](https://mailchi.mp/smashingmagazine/506-the-beautiful-world-of-ux?e=02d8dcf17a)
