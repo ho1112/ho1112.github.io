@@ -1,0 +1,165 @@
+---
+title: '🚀 2025-06 W2 #11'
+desc: 2025년 6월 2주차 뉴스레터
+date: 2025-06-15
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 이번 주 핵심 테마
+Vite의 새로운 Rust 기반 번들러 Rolldown 공개, Remix의 방향성 재설정, 그리고 Apple의 WWDC에서 발표된 새로운 웹 기술들이 주목받은 한 주였습니다. 개발 생태계는 더 빠른 빌드 도구와 진화하는 프레임워크, 그리고 강력해진 웹 표준을 통해 또 한 번의 도약을 준비하고 있습니다.
+
+## 1. 🔍 심층 분석
+
+1.  **[Dan Abramov's Recent Flurry of Blog Posts](https://react.statuscode.com/link/170292/web)** (출처: *React Status #431*)
+    ![Dan Abramov's Blog Posts](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/svnbhzzab0s1dkbs8dhi.jpg)
+    - **배경**: React 팀의 Dan Abramov가 React Server Components(RSC)와 클라이언트/서버 경계를 넘나드는 최신 기술적 사고를 여러 블로그 포스트를 통해 공유했습니다. 이는 RSC의 동작 원리를 더 깊이 이해하고자 하는 개발자들에게 귀중한 자료입니다.
+    - **핵심 기능**:
+        - **How Imports Work in RSC**: RSC가 어떻게 JavaScript 모듈 시스템을 확장하여 서버와 클라이언트 컨텍스트를 모두 처리하는지 설명합니다.
+        - **Progressive JSON**: 점진적으로 로딩되는 JPEG처럼, 스트리밍되는 JSON 데이터를 사용하여 앱의 일부를 동적으로 채우는 개념을 Suspense와 함께 소개합니다.
+        - **Why Does RSC Integrate with a Bundler?**: RSC가 클라이언트와 서버 코드를 조율하기 위해 왜, 그리고 어떻게 번들러와 통합되는지에 대한 기술적 깊이를 더합니다.
+    - **실무 적용**: RSC를 도입하거나 차세대 웹 아키텍처를 고민하는 팀에게 서버와 클라이언트의 상호작용, 데이터 스트리밍, 번들링 전략에 대한 근본적인 이해를 제공합니다. 이는 성능 최적화와 사용자 경험 개선에 직접적으로 기여할 수 있습니다.
+
+2.  **[Decoding The SVG `path` Element](https://www.smashingmagazine.com/2025/06/decoding-svg-path-element-line-commands/)** (출처: *Smashing Newsletter #511*)
+    - **배경**: SVG의 `<path>` 요소는 복잡한 도형을 그릴 수 있는 가장 강력한 도구이지만, 그 `d` 속성의 문법은 처음 접하는 사람에게 매우 혼란스러울 수 있습니다. 이 글은 `<path>`의 문법을 해독하여 개발자가 자유롭게 커스텀 아이콘이나 그래픽을 만들 수 있도록 돕습니다.
+    - **핵심 기능**:
+        - `M` (moveto), `L` (lineto), `H` (horizontal lineto), `V` (vertical lineto), `Z` (closepath) 등 기본적인 직선 관련 명령어들을 설명합니다.
+        - 상대 좌표(소문자)와 절대 좌표(대문자)의 차이점을 명확히 하고, 각 명령어가 어떻게 동작하는지 시각적인 예제와 함께 보여줍니다.
+    - **코드 예시**:
+        ```html
+        <svg width="100" height="100">
+          <path d="M 10 10 H 90 V 90 Z" fill="none" stroke="black" />
+        </svg>
+        ```
+    - **실무 적용**: CSS나 다른 방법으로는 만들기 어려운 비정형 UI 요소, 데이터 시각화, 정교한 아이콘 시스템을 구축할 때 SVG `<path>`에 대한 이해는 필수적입니다. 이 글을 통해 디자이너가 전달한 SVG를 더 잘 이해하고 직접 수정하거나 최적화할 수 있게 됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The 3 Ways JavaScript Frameworks Render the DOM](https://react.statuscode.com/link/170310/web)** (출처: *React Status #431*)
+    + **요약**: SolidJS의 창시자가 다양한 자바스크립트 프레임워크들이 DOM을 렌더링하는 세 가지 주요 접근 방식을 비교 분석합니다. 너무 복잡하지 않게 프레임워크의 핵심 동작 원리를 이해할 수 있는 16분 분량의 유익한 영상입니다.
+- **[How Imports Work in React Server Components](https://javascriptweekly.com/link/170167/web)** (출처: *JavaScript Weekly #739*)
+    + **요약**: Dan Abramov가 React Server Components에서 JavaScript 모듈 시스템이 어떻게 서버와 클라이언트 컨텍스트를 아우르도록 확장되는지에 대한 기술적 배경을 설명하는 또 다른 심층 분석 글입니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+1.  **[Knip: Declutter Your JavaScript And TypeScript Projects](https://knip.dev/)** (출처: *Smashing Newsletter #511*)
+    ![Knip tool screenshot](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/6f51dafa-0265-e393-f0be-416c105fa020.png)
+    - **개요**: 프로젝트가 커지면서 사용하지 않는 파일, export, 의존성들이 쌓이기 마련입니다. Knip은 이러한 불필요한 코드를 자동으로 찾아내고 제거하여 프로젝트를 깔끔하게 유지해 주는 도구입니다. 코드베이스를 정리하면 성능 향상, 유지보수 용이성 증대, 리팩토링 간소화 등의 이점을 얻을 수 있습니다.
+    - **사용법**:
+        ```bash
+        # 설치
+        npm install -g knip
+
+        # 프로젝트 루트에서 실행
+        knip
+        ```
+    - **실전 팁**: Knip은 Astro, Next.js, Storybook, Svelte 등 90개 이상의 플러그인을 통해 다양한 프레임워크와 도구를 지원하며, 모노레포 환경에서도 원활하게 작동합니다. CI 파이프라인에 통합하여 코드베이스가 항상 최적의 상태를 유지하도록 자동화할 수 있습니다.
+
+2.  **[php-node: A Way to Seamlessly Bring PHP to Node.js](https://javascriptweekly.com/link/170170/web)** (출처: *JavaScript Weekly #739*)
+    ![php-node logo](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/iyy6abwhatt8agpa4dva.jpg)
+    - **개요**: Node.js 환경 내에서 PHP 애플리케이션을 직접 실행할 수 있게 해주는 네이티브 모듈입니다. 이는 PHP로 작성된 레거시 시스템을 점진적으로 마이그레이션하거나, WordPress 같은 기존 PHP 생태계의 기능을 Node.js 프로젝트에서 활용해야 할 때 매우 유용한 다리가 되어 줍니다.
+    - **사용법**:
+        ```javascript
+        // 예시: Node.js에서 PHP 코드 실행
+        import php from 'php-node';
+
+        const phpApp = await php.load('path/to/your/wordpress/index.php');
+        const result = await phpApp.request({ url: '/api/posts' });
+        console.log(result.body);
+        ```
+    - **실전 팁**: 모든 PHP 프로젝트를 한 번에 전환하기 어려울 때, `php-node`를 사용하면 인증이나 특정 비즈니스 로직과 같이 핵심적인 부분만 먼저 Node.js로 분리하고 나머지는 점진적으로 전환하는 'Strangler Fig' 패턴을 효과적으로 구현할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Hey API: OpenAPI to TypeScript Codegen](https://heyapi.dev/)** (출처: *Smashing Newsletter #511*)
+    + **요약**: OpenAPI 스키마를 기반으로 안정적인 TypeScript API 클라이언트, SDK, 유효성 검사기 등을 생성해주는 코드 생성기입니다. API와 상호작용하는 코드를 더 간단하고 오류 없이 만들 수 있도록 도와줍니다.
+- **[Beachpatrol: A CLI Tool to Automate Your Everyday Web Browser](https://javascriptweekly.com/link/170173/web)** (출처: *JavaScript Weekly #739*)
+    + **요약**: Playwright를 기반으로, 헤드리스가 아닌 일반 브라우저 창을 자동화하는 데 초점을 맞춘 CLI 도구입니다. 사람이 직접 사용하는 브라우저에 자동화 기능을 더하고 싶을 때 유용합니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+1.  **[Wake Up, Remix! Everything's Changing..](https://react.statuscode.com/link/170305/web)** (출처: *React Status #431*)
+    - **핵심 인사이트**: React Router와 합병했던 Remix가 다시 한번 큰 변화를 맞이했습니다. React Router가 이제 Remix가 추구했던 본래의 비전을 계승하게 되면서, Remix는 Preact 기반의 모델-우선(model-first), 저의존성, 웹 API 중심의 풀스택 프레임워크로 '재부팅'됩니다. 이는 웹 개발 프레임워크 생태계의 빠른 진화와 각 도구의 정체성 변화를 보여주는 중요한 소식입니다. React Router 사용자에게도 새로운 거버넌스 모델과 발전 계획이 발표되어 긍정적인 소식입니다.
+    - **왜 이 글이 유익한가**: 풀스택 프레임워크의 선택은 프로젝트의 아키텍처에 큰 영향을 미칩니다. Remix의 이러한 방향 전환은 현재와 미래의 웹 개발 트렌드, 특히 서버 컴포넌트와 클라이언트 렌더링의 균형점을 어떻게 찾아가고 있는지에 대한 통찰을 제공합니다.
+
+2.  **[Partial Keyframes](https://frontendfoc.us/link/170229/web)** (출처: *Frontend Focus #696*)
+    ![Partial Keyframes visual explanation](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1749632145/elce8rqveafwbqstreb5.png)
+    - **핵심 인사이트**: CSS 변수(@property)를 `@keyframes` 내에서 사용하여 애니메이션의 일부를 동적으로 제어하고 재사용성을 높이는 기법을 소개합니다. 이를 통해 여러 애니메이션에서 공통 부분을 추출하거나, JavaScript를 통해 애니메이션의 특정 값(예: 시작 위치, 종료 위치)을 쉽게 변경할 수 있습니다.
+    - **코드 예시**:
+        ```css
+        @property --from-y {
+          syntax: '<length>';
+          initial-value: 0px;
+          inherits: false;
+        }
+
+        @keyframes slide-in {
+          from { transform: translateY(var(--from-y)); }
+          to   { transform: translateY(0px); }
+        }
+        ```
+    - **왜 이 글이 유익한가**: 정적인 CSS 애니메이션의 한계를 넘어, 보다 동적이고 상호작용적인 UI를 만들 수 있는 실용적인 방법을 제시합니다. 코드의 중복을 줄이고 유지보수성을 높이는 데에도 기여합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[`document.currentScript` is More Useful Than I Thought](https://javascriptweekly.com/link/170160/web)** (출처: *JavaScript Weekly #739*)
+    + **요약**: 오랫동안 존재했지만 잘 알려지지 않았던 브라우저 API인 `document.currentScript`의 유용성을 재조명합니다. 이 속성을 사용하면 현재 실행 중인 `<script>` 요소 자체에 접근할 수 있어, 외부 스크립트가 자신의 위치나 속성을 파악해야 할 때 매우 유용합니다.
+- **[Exploring the CSS `contrast-color()` Function](https://frontendfoc.us/link/170231/web)** (출처: *Frontend Focus #696*)
+    + **요약**: 동적인 배경색에 맞춰 텍스트 색상을 자동으로 선택해주는 CSS `contrast-color()` 함수의 현재 상태, 한계, 그리고 잠재적인 미래 개선점에 대해 탐구합니다. 접근성 높은 UI를 만드는 데 도움이 될 중요한 기능입니다.
+
+---
+
+## 4. ✨ 아이디어
+
+1.  **[A Million Little Secrets](https://www.joshwcomeau.com/blog/whimsical-animations/)** (출처: *Smashing Newsletter #511*)
+    ![Whimsical Animations](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/5686e993-aa8d-5705-6130-319ae7a7c819.png)
+    - **특징**: Josh W. Comeau의 Whimsical Animations 코스 랜딩 페이지는 그 자체로 영감을 주는 작품입니다. 이 글은 겉보기에는 단순해 보이지만, 페이지 곳곳에 숨겨진 수많은 인터랙션과 애니메이션의 비밀을 파헤칩니다. 사용자의 스크롤, 마우스 움직임에 반응하는 섬세한 디테일들이 어떻게 구현되었는지 보여주며, 웹을 단순한 정보 전달의 도구가 아닌 즐거움과 감동을 주는 매체로 만들 수 있는 가능성을 제시합니다.
+
+2.  **[Partycles: Beautiful Particle Animations for React](https://react.statuscode.com/link/170319/web)** (출처: *React Status #431*)
+    - **특징**: 단 하나의 훅(hook)으로 콘페티, 불꽃놀이, 별, 풍선 등 19가지의 아름다운 파티클 애니메이션을 구현할 수 있는 라이브러리입니다. 사용자의 특정 액션에 대한 축하 피드백이나 시각적 즐거움을 더하고 싶을 때 간편하게 적용할 수 있습니다. 프로젝트의 랜딩 페이지 자체가 훌륭한 데모와 문서의 예시를 보여줍니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **[TC39 Advances Several Proposals at Latest Meeting](https://javascriptweekly.com/link/170142/web)** (출처: *JavaScript Weekly #739*)
+    + **요약**: ECMAScript 표준을 논의하는 TC39 위원회에서 `Array.fromAsync`, `Error.isError`, 명시적 리소스 관리(explicit resource management) 등 여러 제안이 Stage 4로 최종 승격되었습니다. 이는 곧 표준 JavaScript 사양에 포함될 예정임을 의미합니다.
+- **[WebKit in Safari 26 Beta](https://frontendfoc.us/link/170225/web)** (출처: *Frontend Focus #696*)
+    + **요약**: Apple의 WWDC 2025에서 공개된 Safari 26 베타는 WebGPU 지원, 앵커 포지셔닝, 스크롤 기반 애니메이션 등 60개 이상의 새로운 기능과 100개 이상의 개선 사항을 포함합니다. 버전 번호가 18에서 26으로 크게 점프한 것도 특징입니다.
+- **[State of CSS 2025](https://frontendfoc.us/link/170228/web)** (출처: *Frontend Focus #696*)
+    + **요약**: 매년 진행되는 CSS 설문조사가 시작되었습니다. 최근 쏟아져 나온 새로운 CSS 기능들의 실제 사용 현황과 개발자들의 인식을 파악할 수 있는 좋은 기회입니다.
+- **[React Native team has frozen the legacy architecture codebase](https://javascriptweekly.com/link/170145/web)** (출처: *React Status #431*, *JavaScript Weekly #739*)
+    + **요약**: React Native 팀이 'New Architecture'에 집중하기 위해 기존 레거시 아키텍처 코드베이스를 동결한다고 발표했습니다. 이는 생태계 전체가 새로운 아키텍처로 전환하는 중요한 전환점이 될 것입니다.
+
+## 6. 🎉 릴리스
+
+- **[Announcing Rolldown-Vite](https://javascriptweekly.com/link/170139/web)** (출처: *JavaScript Weekly #739*)
+    + **업데이트**: Vite의 창시자 Evan You가 Rust 기반의 새로운 JavaScript 번들러 'Rolldown'을 Vite에서 사용할 수 있는 `rolldown-vite` 패키지를 공개했습니다. 기존 Vite 프로젝트에서 간단히 교체 가능하며, 빌드 속도가 크게 향상되었다는 초기 보고가 이어지고 있습니다.
+- **[Storybook 9: The UI Component Workshop](https://javascriptweekly.com/link/170172/web)** (출처: *JavaScript Weekly #739*, *Frontend Focus #696*)
+    + **업데이트**: UI 컴포넌트 개발 도구 Storybook이 9.0 버전을 출시했습니다. 특히 'Storybook Test'를 통해 인터랙션, 시각적, 접근성 테스트 기능이 크게 강화되었고, 'watch mode'를 지원하여 개발 생산성을 높였습니다.
+- **[Babel 8 Beta](https://javascriptweekly.com/link/170149/web)** (출처: *JavaScript Weekly #739*)
+    + **업데이트**: 알파 버전 이후 2년 만에 Babel 8의 베타 버전이 출시되었습니다. Babel 8에 계획되었던 모든 주요 변경 사항(breaking changes)이 완료되었다고 합니다.
+- **[AngularFire 20.0](https://javascriptweekly.com/link/170151/web)** (출처: *JavaScript Weekly #739*)
+    + **업데이트**: Angular 앱에 Firebase를 통합하는 라이브러리로, 최근 출시된 Angular 20을 지원합니다.
+- **[React Final Form 7.0](https://react.statuscode.com/link/170320/web)** (출처: *React Status #431*)
+    + **업데이트**: 고성능 폼 상태 관리 라이브러리로, 기존 Flow에서 TypeScript로 전환되었습니다.
+- **[Ink 6.0](https://react.statuscode.com/link/170324/web)** (출처: *React Status #431*)
+    + **업데이트**: React를 사용하여 Node.js 기반 CLI 앱을 빌드하는 도구입니다. React 19와 Node.js 20을 지원합니다.
+- **[ESLint v9.28.0](https://javascriptweekly.com/link/170150/web)** (출처: *JavaScript Weekly #739*)
+    + **업데이트**: 핵심 규칙에 더 많은 TypeScript 구문 지원이 추가되었습니다.
+- **[Astro 5.9](https://frontendfoc.us/link/170242/web)** (출처: *Frontend Focus #696*, *JavaScript Weekly #739*)
+    + **업데이트**: 실험적으로 CSP(Content Security Policy) 지원이 추가되었고, 마크다운 렌더링을 위한 새로운 헬퍼 함수가 포함되었습니다.
+- **[SF Symbols 7](https://frontendfoc.us/link/170241/web)** (출처: *Frontend Focus #696*)
+    + **업데이트**: Apple의 아이콘 라이브러리로, 수백 개의 새로운 심볼이 추가되어 총 글리프 수가 7,000개에 육박합니다.
+- **[Prisma 6.9.0](https://javascriptweekly.com/link/170156/web)** (출처: *JavaScript Weekly #739*)
+    + **업데이트**: Node.js 및 TypeScript용 ORM의 최신 버전입니다.
+
+## ✍️ 마치며
+이번 주는 웹 개발의 '속도'와 '진화'라는 두 가지 키워드가 돋보였습니다. Rolldown의 등장은 JavaScript 생태계가 성능 향상을 위해 Rust를 적극적으로 수용하고 있음을 보여주는 상징적인 사건입니다. 동시에 Remix와 같은 주요 프레임워크가 자신의 정체성을 재정의하며 끊임없이 변화하는 모습은, 개발자들이 특정 기술에 안주하기보다 생태계의 큰 흐름을 읽고 끊임없이 배워야 함을 일깨워 줍니다.
+
+#### 출처
+- [JavaScript Weekly #739](https://javascriptweekly.com/issues/739)
+- [Smashing Newsletter #511](https://mailchi.mp/smashingmagazine/511-front-end-tools-and-techniques?e=02d8dcf17a)
+- [Frontend Focus #696](https://frontendfoc.us/issues/696)
+- [React Status #431](https://react.statuscode.com/issues/431)
