@@ -1,0 +1,173 @@
+---
+title: '🚀 2025-06 W3 #12'
+desc: 2025年6月第3週のニュースレター
+date: 2025-06-21
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週は、Reactの現在と未来についての深い分析とともに、CSSの新機能や開発の生産性を向上させる様々なツールが注目を集めました。特に、Reactコミュニティの方向性に関する議論とともに、開発者とデザイナーの両方にインスピレーションを与えるUX事例や創造的なコーディング技術が数多く共有されました。
+
+## 1. 🔍 深掘り
+
+1. **[The State of React and the Community in 2025](https://javascriptweekly.com/link/170430/web)** (出典: *JavaScript Weekly #740*)
+
+	![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/pzit9npfrfb67yzwgh99.jpg)
+
+	* **背景**: Reactは依然としてJavaScriptエコシステムの核心ですが、最近の革新（React 19、サーバーコンポーネントなど）は、コミュニティ内で今後の方向性について多くの議論を巻き起こしました。
+	* **核心分析**: ReduxのメンテナーであるMark Eriksonが、Reactの発展過程、革新を導いた背景、そしてVercelとMetaの役割に対するコミュニティの誤解や懸念（FUD）を解消し、Reactの現在と未来を深く分析します。
+	* **主な内容**:
+		* Reactの歴史と主要機能（Hooks、Concurrentレンダリング、サーバーコンポーネント）の発展過程
+		* Metaの内部プロセスと、VercelのNext.jsが主導するサーバーコンポーネント作業との関係
+		* 「VercelがReactを掌握した」または「ReactはNext.jsでしか動作しない」という神話への反論
+	* **実務への適用**: React開発者が現在のフレームワークの変化をより大きな文脈で理解し、特定のフレームワーク（Next.jsなど）への依存度やクライアントサイドレンダリングの未来について、バランスの取れた視点を持つ上で役立ちます。
+
+2. **[Animating Zooming using CSS: Transform Order is Important… Sometimes](https://frontendfoc.us/link/170531/web)** (出典: *Frontend Focus #697*)
+
+	![猫の画像を活用したCSS Transformアニメーションの例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750240479/m11wnghg8nmbk8enxczd.jpg)
+
+	* **背景**: CSSの`transform`を使用して拡大・縮小アニメーションを実装する際、プロパティの順序が予期しない結果を生むことがあります。これは、ブラウザがアニメーションを処理する複雑なアルゴリズムのためです。
+	* **核心機能**: Jake Archibaldは、`scale`と`translate`を同時に使用する際に発生する問題を分析し、`transform`の順序がアニメーションの自然さに与える影響を説明します。
+	* **コード例**:
+		```css
+		/* 間違った順序 - 不自然な動きを引き起こす可能性 */
+		.animate {
+		  transition: transform 1s;
+		  transform: scale(2) translate(50px, 50px);
+		}
+
+		/* 正しい順序 - 予測可能で自然な動き */
+		.animate:hover {
+		  transform: translate(50px, 50px) scale(2);
+		}
+		```
+	* **実務への適用**: 複雑なUIアニメーションを作成する際に、要素が不自然に動く問題を避け、ユーザーが予測可能で自然だと感じるインタラクションを実装できます。特に、ズームやパンなど、複数の変形が同時に起こるインターフェースに有用です。
+	* **注意事項**: `transform`の順序を間違って指定すると、アニメーションの中間段階が開発者の意図と異なって見える可能性があるため、複数の変形を組み合わせる際は常に順序を慎重に考慮する必要があります。
+
+---
+#### **見逃せないコンテンツ**
+* **[What I Wish Someone Told Me When I Was Getting Into ARIA](https://www.smashingmagazine.com/2025/06/what-i-wish-someone-told-me-aria/)** (出典: *Smashing Newsletter #512*)
+	* **要約**: 「Accessible Rich Internet Applications」（ARIA）について知っておくべき核心事項を説明し、よくある誤解を正す記事です。ARIAへの理解を深めたい開発者にとって、素晴らしいガイドとなるでしょう。
+* **[Composable Streaming with Suspense](https://react.statuscode.com/link/170643/web)** (出典: *React Status #432*)
+	* **要約**: React Suspenseを活用してストリーミングを構成する方法について深く掘り下げます。Suspenseを通じてデータローディング状態を宣言的に管理し、より良いユーザー体験を提供する方法を学ぶことができます。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+* **[npmgraph: A Tool to Visualize npm Module Dependencies](https://javascriptweekly.com/link/170446/web)** (出典: *JavaScript Weekly #740*)
+
+	![npmgraphツールの使用例画面](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ndksybgvl78ihuxomdnz.jpg)
+
+	* **概要**: npmパッケージの依存関係を視覚的に分析できるWebベースのツールです。1つ以上のパッケージ名または`package.json`ファイルを入力すると、そのパッケージの依存関係グラフと、それらがどのように交差するかを一目で確認できます。
+	* **使用法**:
+		1.	[npmgraph.js.org](https://javascriptweekly.com/link/170446/web)にアクセスします。
+		2.	分析したいパッケージ名を入力するか、`package.json`ファイルをアップロードします。
+		3.	生成された依存関係グラフを探索します。
+	* **実践的なヒント**: プロジェクトの依存構造を把握したり、特定のパッケージがなぜインストールされたのかを追跡する際に非常に役立ちます。メンテナーの数などを基準にパッケージを色分けしたり、グラフをSVGとしてダウンロードしてドキュメントに活用することもできます。
+
+* **[Critical CSS Generator](https://frontendfoc.us/link/170550/web)** (出典: *Frontend Focus #697*)
+	* **概要**: Webページの初期レンダリング速度を向上させるために、「クリティカルCSS」（ユーザーが最初に目にする画面に必要な最小限のCSS）を抽出するオンラインツールです。
+	* **使用法**:
+		1.	分析するページのURLを入力します。
+		2.	ビューポートの幅と高さを指定します。
+		3.	CSSを抽出する前の待機時間（Render Wait Time）を設定します。
+		4.	「Generate Critical CSS」ボタンをクリックすると、最適化されたCSSが生成されます。
+	* **実践的なヒント**: 生成されたクリティカルCSSをHTMLドキュメントの`<head>`内に`<style>`タグで直接挿入すると、外部CSSファイルの読み込みを待たずにページの主要コンテンツを素早くスタイリングできるため、「First Contentful Paint (FCP)」時間を大幅に短縮できます。
+
+---
+#### **見逃せないコンテンツ**
+* **[Orange ORM: An Active Record ORM for JavaScript and TypeScript](https://javascriptweekly.com/link/170448/web)** (出典: *JavaScript Weekly #740*)
+	* **要約**: Node、Bun、Deno環境のすべてをサポートする強力なActive RecordスタイルのORMです。TypeScriptとJavaScript、CommonJSとESMの両方をサポートし、主要なSQLデータベースと併用できます。
+* **[Apple's 'Liquid Glass' Effect for React](https://react.statuscode.com/link/170608/web)** (出典: *React Status #432*)
+	* **要約**: AppleがWWDCで発表した新しい「リキッドグラス」デザインをReactアプリで再現できるライブラリです。高度なカスタマイズ性を提供し、ユニークなUIを実装できます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+* **[A New Way to Style Gaps in CSS](https://frontendfoc.us/link/170525/web)** (出典: *Frontend Focus #697*)
+
+	![CSS gap decorationsの例の画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750241181/hmdzliqx0orlhy9v37ub.jpg)
+
+	* **核心的なインサイト**: Microsoft EdgeチームがFlexboxやGridレイアウトの`gap`間に区切り線などの装飾（decorations）を追加できる新しいCSS機能`gap-decoration`を紹介します。この機能が導入されれば、これまで使用してきた複雑な`::before`/`::after`疑似要素ハックや追加のマークアップなしに、すっきりと区切り線を実装できるようになります。現在はChromiumベースのブラウザでフラグを介して実験的に使用できます。
+
+* **[Things Every Design Student Should Know](https://www.cameronmoll.com/journal/10-more-things-every-design-student-should-know)** (出典: *Smashing Newsletter #512*)
+
+	![デザインを学ぶ学生へのアドバイス関連画像](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d7f0358b-5008-043e-0887-42ad4d8fa492.png)
+
+	* **核心的なインサイト**: デザイナーのCameron Mollが、デザインを学ぶ学生が知っておくべき時代を超えた原則を共有します。これらのアドバイスは特定のツールやトレンドに縛られず、キャリアやレベルに関係なくすべてのデザイナーに適用できる知恵を含んでいます。「デザインは問題解決であり、優れたアイデアを盗み、フィードバックを求め、常に学ぶ姿勢を持つこと」といったアドバイスは実務で非常に役立ちます。
+
+* **[Suppressions of Suppressions](https://javascriptweekly.com/link/170467/web)** (出典: *JavaScript Weekly #740*)
+	* **核心的なインサイト**: リンター（Linter）を使用する際、特定のルールを無効化（suppress）するのは便利ですが、これにより深刻なバグを見逃す可能性があります。Dan Abramovは、最も重要なリントルールは決して無効化できないように防ぐ、つまり「抑制の抑制（suppressions of suppressions）」ルールを追加すべきだと主張し、コードの品質を維持する強力な方法を提示します。
+
+---
+#### **見逃せないコンテンツ**
+* **[How to Keep Up With New CSS Features](https://frontendfoc.us/link/170535/web)** (出典: *Frontend Focus #697*)
+	* **要約**: 急速に進化するCSSの新機能を乗り遅れずにキャッチアップするための、役立つリソースと戦略を紹介する記事です。
+* **[Why Visual Website Builders Didn't Take Off](https://frontendfoc.us/link/170630/web)** (出典: *Frontend Focus #697*)
+	* **要約**: ビジュアルウェブサイトビルダーがなぜ開発者の間で主流になれなかったのか、その理由を分析する動画です。コードベース開発の柔軟性と制御力の重要性を改めて考えさせられます。
+---
+
+## 4. ✨ アイデア
+
+* **[Bite-Sized UX Examples](https://builtformars.com/ux-bites)** (出典: *Smashing Newsletter #512*)
+
+	![UX Bitesウェブサイトのスクリーンショット](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/5084f57d-0f80-f47e-4a9a-ba4ac12c7cd1.png)
+
+	* **特徴**: 離脱率の削減、通知許可の要請、機能変更の案内など、具体的な問題を解決する実際のサービスの小さくも賢いUX事例を集めた宝箱のようなサイトです。オンボーディング、予約、購入など様々なフローや心理学的原則（確証バイアス、ユーザーの喜びなど）によって事例をフィルタリングでき、製品改善のための即時のインスピレーションを得ることができます。
+
+* **[Breaking Boundaries: Building a Tangram Puzzle With (S)CSS](https://frontendfoc.us/link/170536/web)** (出典: *Frontend Focus #697*)
+
+	![CSSで作られたタングラムパズルの画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750241971/iytvo088hrep6qcupvit.png)
+
+	* **特徴**: CSSだけでインタラクティブなタングラムパズルを作成する過程を示す興味深い実験です。CSSの可能性をどこまで拡張できるかを示す創造的な例であり、インタラクティブUI制作に関する新たなインスピレーションを与えます。
+
+---
+
+## 5. ⚡️ ミニノート
+
+* **[Figma、Payloadを買収](https://frontendfoc.us/link/170529/web)** (出典: *Frontend Focus #697*)
+	* **要約**: デザインツールの巨人Figmaが、Next.jsネイティブのヘッドレスCMSであるPayloadを買収しました。Payloadはオープンソースとして維持され、デザインシステムとの前例のない統合を目指します。
+* **[React Aria Tree、ドラッグ＆ドロップをサポート](https://react.statuscode.com/link/170639/web)** (出典: *React Status #432*)
+	* **要約**: アクセシビリティを考慮したUIコンポーネントライブラリであるReact AriaのTreeコンポーネントにドラッグ＆ドロップ機能が追加され、より豊かなインタラクションを実装できるようになりました。
+* **[Safari 26ベータの新機能](https://javascriptweekly.com/link/170435/web)** (出典: *JavaScript Weekly #740*)
+	* **要約**: AppleのWWDC25で公開されたSafari 26ベータには、正規表現（RegExp）オブジェクトでパターン修飾子（pattern modifiers）をサポートするなど、新機能が含まれています。
+* **[Relay v20リリース](https://react.statuscode.com/link/170600/web)** (出典: *React Status #432*)
+	* **要約**: Facebookが開発したGraphQLベースのReactフレームワークであるRelayの最新バージョン、v20がリリースされました。
+
+---
+
+## 6. 🎉 リリース
+
+* **[Oxlint v1.0](https://javascriptweekly.com/link/170477/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: ESLintより50〜100倍高速なRustベースのJavaScript/TypeScriptリンターであるOxlintが、安定版のバージョン1.0をリリースしました。
+* **[Jest v30](https://javascriptweekly.com/link/170470/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: 人気のテスティングフレームワークJestが、著しく高速化されたパフォーマンス、改善されたESMおよびTypeScriptサポートを含むバージョン30を公開しました。
+* **[React Native v0.80](https://react.statuscode.com/link/170599/web)** (出典: *React Status #432*)
+	* **アップデート**: React 19.1をベースとし、より厳格なTypeScript型（オプトイン）、iOSビルド速度向上のための事前ビルド依存関係の実験的サポートなどが追加されました。
+* **[pnpm v10.12](https://javascriptweekly.com/link/170461/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: 実験的な「グローバル仮想ストア」機能を導入し、複数のプロジェクトが依存関係を共有することで、ディスクスペースをさらに効率的に使用できるようにします。
+* **[Anime.js v4.0](https://frontendfoc.us/link/170543/web)** (出典: *Frontend Focus #697*)
+	* **アップデート**: CSSプロパティ、SVG、DOM、JSオブジェクトをアニメーション化するための軽量JavaScriptアニメーションライブラリが、大規模アップデートと新しいドキュメントとともに帰ってきました。
+* **[Node.js v24.2](https://javascriptweekly.com/link/170436/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: `import.meta.main`という新しいboolean値を通じて、現在のモジュールがプロセスのエントリーポイントであるかどうかを確認できます。
+* **[Deno v2.3.6](https://javascriptweekly.com/link/170465/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: Node.js互換性改善のためのバグ修正とともに、esbuildベースのバンドラなど、いくつかの実験的な機能が追加されました。
+* **[H3 v2 Beta](https://javascriptweekly.com/link/170464/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: Web標準に重点を置いたクロスランタイムHTTPサーバーフレームワークのv2ベータが公開されました。
+* **[Enact v5.0](https://react.statuscode.com/link/170619/web)** (出典: *React Status #432*)
+	* **アップデート**: Reactベースのアプリ開発フレームワークEnactがバージョン5.0をリリースしました。
+* **[Visual Studio Code (May 2025)](https://javascriptweekly.com/link/170437/web)** (出典: *JavaScript Weekly #740*)
+	* **アップデート**: VS Code拡張機能でESモジュールが使用できるようになるなど、主要な改善点が含まれています。
+
+---
+
+## ✍️ おわりに
+
+今週は、Reactのエコシステムがどのように進化しているかについての深い洞察とともに、CSSのようなウェブ標準技術の着実な発展を垣間見ることができました。開発者の生産性を高めるスマートなツールや、ユーザー体験を一段階引き上げる創造的なアイデアが豊富でした。急速に変化する技術の中で、基本の重要性を再認識し、新たな可能性を探求する一週間とすべきでしょう。
+
+#### 出典
+- [JavaScript Weekly #740](https://javascriptweekly.com/issues/740)
+- [Smashing Newsletter #512](https://mailchi.mp/smashingmagazine/512-useful-ux-nuggets?e=02d8dcf17a)
+- [Frontend Focus #697](https://frontendfoc.us/issues/697)
+- [React Status #432](https://react.statuscode.com/issues/432)
