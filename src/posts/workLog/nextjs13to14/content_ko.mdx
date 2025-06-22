@@ -1,7 +1,7 @@
 ---
-title: '안녕, Next.js 13'
+title: 'Next.js 13을 떠나보내며: Docker와 Bun이 만든 5개의 관문 통과하기'
 desc: Next.js v13을 v14로 업그레이드
-date: 2025-06-22
+date: 2025-06-23
 thumbnail: /posts/workLog/nextjs13to14/next14.avif
 ---
 
@@ -23,9 +23,9 @@ thumbnail: /posts/workLog/nextjs13to14/next14.avif
 ---
 
 ### 제1관문: 가장 익숙한 배신 `sh: next: not found`
+![](/posts/workLog/nextjs13to14/gate1.avif)
 
 #### **🚨 문제 발생**
-
 가장 먼저 package.json의 next 버전을 `14.2.5`로 올리고 `docker compose up --build`를 실행했습니다. 하지만 저를 맞이한 것은 차가운 에러 메시지였습니다.
 `sh: next: not found`
 
@@ -48,7 +48,7 @@ ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
 ---
 
 ### 제2관문: Storybook v8의 역습, 끝나지 않는 타입 에러
-
+![](/posts/workLog/nextjs13to14/gate2.avif)
 #### **🚨 문제 발생**
 
 Next.js 14와의 호환성을 위해 Storybook을 v7에서 v8로 올렸습니다. `npx storybook@8 upgrade`를 실행하자 빌드 로그가 수많은 TypeScript 타입 에러와 실행 오류로 뒤덮였습니다.
@@ -71,7 +71,7 @@ storybook의 공식 문서를 참고하여 하나씩 문제가 된 파일들을 
 ---
 
 ### 제3관문: node_modules를 둘러싼 대전쟁
-
+![](/posts/workLog/nextjs13to14/gate3.avif)
 #### **🚨 문제 발생**
 
 Next.js와 Storybook의 코드 문제를 해결하자 저는 더 깊고 근본적인 문제의 늪에 빠졌습니다. 기존 워크플로우는 `docker compose exec`로 컨테이너에 접속해 `bun i --save-text-lockfile`(텍스트 기반의 bun.lock을 사용중)을 실행하는 것이었습니다. 하지만 Next.js 14로 올린 뒤 이 방법을 사용하자, **bun.lock 파일은 갱신되었지만 정작 node_modules 폴더는 텅 비어버리는** 치명적인 문제가 발생했습니다. **로컬에 node_modules를 생성하려는 모든 시도**가 각기 다른 그러나 서로 연결된 오류를 뿜어내며 실패했습니다.
@@ -97,7 +97,7 @@ Next.js와 Storybook의 코드 문제를 해결하자 저는 더 깊고 근본�
 ---
 
 ### 제4관문: 배포 환경의 함정 (feat. Multi-stage Build)
-
+![](/posts/workLog/nextjs13to14/gate4.avif)
 #### **🚨 문제 발생**
 
 스테이징 배포용 Dockerfile로 빌드하자 builder 스테이지에서 `bun: not found`와 `Invalid next.config.js` 오류가 동시에 발생했습니다.
@@ -161,5 +161,5 @@ bun install --cwd ./web
     3.  `docker compose up --build -d`로 컨테이너를 재빌드하고 실행합니다.
 
 
-Next.js 업그레이드를 계획하고 계신다면 package.json의 버전 숫자 외에도 몇 가지를 더 점검해보시길 권합니다. 로컬 환경과 다른 배포 환경의 차이, 사용 중인 패키지 매니저의 세세한 동작 방식, 그리고 팀이나 프로젝트에 암묵적으로 존재하는 오래된 규칙들이 바로 예상치 못한 복병이 될 수 있습니다.
-때로는 예상치 못한 문제와 마주하며 보내는 '삽질'의 시간이, 미래를 위한 가장 확실한 투자가 되기도 합니다.
+package.json의 숫자 하나를 바꾸는 일이 개발 환경 전체를 되돌아보는 계기가 될 줄은 몰랐습니다. 이번 경험으로 깨달은 것은 진짜 복병은 코드 바깥에 있다는 사실이었습니다. 눈에 보이지 않는 환경의 차이, 익숙함 속에 감춰진 패키지 매니저의 특성, 그리고 기술 부채가 되어버린 과거의 규칙들까지.
+결국 예상치 못한 문제와 씨름하며 보낸 그 '삽질'의 시간은, 흩어져 있던 점들을 선으로 잇고 더 단단한 기반을 다지는, 미래를 위한 확실한 투자였습니다.
