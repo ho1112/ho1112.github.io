@@ -1,0 +1,165 @@
+---
+title: 'さよならNext.js 13：DockerとBunがもたらした5つの関門の突破記録'
+desc: Next.js v13からv14へのアップグレード
+date: 2025-06-23
+thumbnail: /posts/workLog/nextjs13to14/next14.avif
+---
+
+<h1> Next.js 14 アップグレード記録：5つの関門を乗り越えたDocker/Bunデバッグ日誌</h1>
+
+### プロローグ：「すぐに終わるだろう？」
+
+2025年6月、私はNext.js 13を使用しているサービスに新たな活力を吹き込むことを決意しました。目標はささやかなものでした。**「Next.js 14にアップグレードして、Turbopackの高速な開発速度を享受しよう！」**
+
+2024年3月、私がこの現場に初めて参加したとき、サービスはNext.js 13をベースにしていました。その後、時折マイナーバージョンのアップデートを行ってきましたが、時は流れNext.js 15がリリースされ、13バージョンは2024年10月をもって公式のセキュリティサポートが終了しました。
+[Next.js Support Policy](https://nextjs.org/support-policy)
+
+これ以上アップグレードを先延ばしにはできない状況。ちょうど他の主要な業務が一段落した6月に、まずは14バージョンへの引き上げ作業に着手しました。
+
+`package.json`のバージョン番号を一つ変えるだけのこの作業が、すぐに終わるだろうと甘く考えていました。しかし、私が直面したのは、ローカルとは異なるDocker環境、`bun`と`npm`の微妙な違い、そしてmacOSとLinuxの根本的な差異が生み出す、巨大な混沌の渦でした。
+
+この記事は、私が5つの関門を一つずつ突破していった物語の記録です。
+
+---
+
+### 第1の関門：最も身近な裏切り `sh: next: not found`
+![](/posts/workLog/nextjs13to14/gate1.avif)
+
+#### **🚨 問題発生**
+まず最初にpackage.jsonのnextのバージョンを`14.2.5`に上げ、`docker compose up --build`を実行しました。しかし、私を迎えたのは冷たいエラーメッセージでした。
+`sh: next: not found`
+
+#### **🤔 原因分析：「なぜ13バージョンでは問題なかったのか？」**
+
+この点が最大の疑問でした。既存の設定のままNext.js 13環境では`command: npm run dev`が何の問題もなく動作していたからです。本当の原因は、**Next.js 14の依存関係ツリー構造の変化**にありました。
+`bun install`でインストールされたnode_modulesの内部フォルダ構造が以前と微妙に変わり、これによりnpmや基本的なシェル(shell)がnextの実行ファイルを安定して見つけられなくなったのです。つまり、「既存の設定が完璧だったのではなく、**偶然動作していた脆弱な構造**であり、アップグレードによってその脆弱性が露呈した」ということでした。
+
+#### ✨ 試行錯誤と解決！
+
+commandを`bun run dev`に統一するだけでは不十分でした。
+私はDockerfileに**`ENV PATH="/usr/src/app/node_modules/.bin:$PATH"`** を追加し、シェルがどのような状況でもnextコマンドの場所を明示的に認識できるように修正することで、この最初の関門を突破することができました。
+```shell
+WORKDIR /usr/src/app
+
+# new!!
+ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
+```
+
+---
+
+### 第2の関門：Storybook v8の逆襲、終わらない型エラー
+![](/posts/workLog/nextjs13to14/gate2.avif)
+#### **🚨 問題発生**
+
+Next.js 14との互換性のためにStorybookをv7からv8に上げました。`npx storybook@8 upgrade`を実行すると、ビルドログが数多くのTypeScriptの型エラーと実行時エラーで埋め尽くされました。
+
+#### **🤔 原因分析**
+
+原因は、Storybook 8へのバージョンアップに伴い、APIと型定義がより厳格になり、デフォルト設定が変更されたためでした。
+
+#### ✨ 試行錯誤と解決！
+
+Storybookの公式ドキュメントを参考に、一つずつ問題となったファイルを修正しました。
+
+1.  **argTypesRegexの廃止:** .storybook/preview.tsから該当する設定を削除し、`args: { actions: { argTypesRegex: '^on[A-Z].*' } }`を追加してv8の新しいグローバルアクション方式に変更しました。
+2.  **autodocs設定の変更:** `parameters: { docs: { autodocs: 'tag' } }`の設定を削除し、preview.tsの最上位レベルに`tags: ['autodocs']`を追加して、新しいタグ方式に切り替えました。
+3.  **args型の厳格化:** render関数のみで構成されたストーリーで`Property 'args' is missing`エラーが発生しました。v8の厳格化された型に合わせて、renderを使用する場合でも`{ args: { prop: fn() } }`のように明示的にargsを追加して解決しました。
+4.  **xdg-openエラー:** Storybook実行の最後に`Error: spawn xdg-open ENOENT`エラーが発生しました。これはStorybookがコンテナ内でブラウザを開こうとした際、**コンテナの基盤である'Alpine Linux'が容量を最小化するためにxdg-openのようなデスクトップユーティリティをデフォルトで含んでいない**ために発生した問題でした。package.jsonのstorybookスクリプトに`--no-open`フラグを追加して、この機能を無効化しました。
+
+[Migration guide from Storybook 7.x to 8.0](https://storybook.js.org/docs/migration-guide/from-older-version)
+
+---
+
+### 第3の関門：node_modulesを巡る大戦争
+![](/posts/workLog/nextjs13to14/gate3.avif)
+#### **🚨 問題発生**
+
+Next.jsとStorybookのコードの問題を解決すると、私はより深く根本的な問題の沼に陥りました。既存のワークフローは`docker compose exec`でコンテナに接続し、`bun i --save-text-lockfile`（テキストベースのbun.lockを使用中）を実行するものでした。しかし、Next.js 14に上げた後、この方法を使うと、**bun.lockファイルは更新されるものの、肝心のnode_modulesフォルダが空っぽになってしまう**という致命的な問題が発生しました。**ローカルにnode_modulesを生成しようとする全ての試み**が、それぞれ異なる、しかし互いに連携したエラーを吐き出して失敗しました。
+
+* bun.lockを削除後`bun install`を試みる → `No version matching` (依存関係の衝突)
+* ローカルで`bun install`を試みる → `SystemFdQuotaExceeded` (ファイルシステムの過負荷)
+* インストール成功時 → 望まないbun.lockbファイルが生成される (開発ポリシー違反)
+
+#### **🤔 原因分析**
+
+この現象の根本的な原因は、**Docker for Macのファイルシステム同期性能の限界**でした。bun.lockという「一通の手紙」を書く小さな作業は成功しましたが、Next.js 14の膨大になったnode_modulesという「数万個の小包」を一度に書き込む作業は、Dockerの同期システムに過負荷を引き起こし、失敗してしまったのです。
+
+1.  **依存関係地獄:** bun.lockという「正解集」がなくなったことで、package.jsonに隠れていたパッケージ間のバージョン衝突問題が水面上に現れました。
+2.  **ファイルシステムの過負荷:** Next.js 14の膨大になったnode_modulesをBunの高速なスピードでローカルにインストールしようとしたため、Docker for Macのファイル同期機能が耐えられませんでした。
+3.  **ロックファイルの形式:** 最新のBunはバイナリ形式のbun.lockbをデフォルトで使用するため、テキスト形式のbun.lockに固執しようとする試みは、絶えず問題を引き起こしました。
+
+#### ✨ 試行錯誤と解決！**
+
+私はコンテナ内部でのインストールが不安定であることに気づき、**ローカルのMacターミナルから直接`bun install`を実行する**方式に切り替えました。この方法は幸いにもnode_modulesを正常に生成してくれましたが、今度は望まないbun.lockbファイルを作成し、既存のbun.lockポリシーと衝突しました。
+
+ここでリーダーに相談を求め、古くて不安定なbun.lockポリシーに固執する代わりに、**Bunのバイナリ方式であるbun.lockbを新しい標準として採用する**ことを提案しました。既存のbun.lockもこの方式を使ってきただけで、何か特別な理由があって維持していたわけではなかったため、容易に変更が可能でした。この決定のおかげで、もはや`--save-text-lockfile`のような複雑なフラグは不要になり、公式のインストールコマンドはシンプルな`bun install`となりました。
+
+---
+
+### 第4の関門：デプロイ環境の罠 (feat. マルチステージビルド)
+![](/posts/workLog/nextjs13to14/gate4.avif)
+#### **🚨 問題発生**
+
+ステージングデプロイ用のDockerfileでビルドしたところ、builderステージで`bun: not found`と`Invalid next.config.js`エラーが同時に発生しました。
+
+#### **🤔 原因分析**
+
+1.  **bun: not found:** デプロイ用のDockerfileはマルチステージビルドを使用していました。bunを使用したinstallerステージとは異なり、builderステージは`FROM node:alpine`で始まる**全く別の環境**であり、ここには当然bunがインストールされていませんでした。
+2.  **Invalid next.config.js:** `RUN bun run build`が実行される**ビルド時点**では、COPYでイメージに取り込んだ.envファイルがまだ環境変数として読み込まれておらず、next.config.jsが変数を読み取れなかったためです。
+
+#### ✨ 試行錯誤と解決！**
+
+1.  builderステージにinstallerステージからbunの実行ファイルをコピーしてくる**`COPY --from=installer /usr/local/bin/bun /usr/local/bin/bun`** の一行を追加しました。
+2.  dotenvパッケージをインストールし、**next.config.jsの最上部で`require('dotenv').config()`を呼び出す**ことで、設定ファイルが自ら環境変数を読み込むように修正しました。
+
+```shell
+# build
+FROM node:22.15.0-alpine3.20 AS builder
+...
+# path
+ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
+# bun copy
+COPY --from=installer /usr/local/bin/bun /usr/local/bin/bun
+...
+RUN bun run build
+```
+
+---
+
+### 第5の関門：最終ワークフローの確立
+
+#### **🚨 問題発生**
+
+すべての問題を解決しましたが、この複雑な過程を毎回そのまま繰り返すのは困難でした。「では、依存関係を変更するたびに、正確にどうすればいいのか？」という、明確で再現可能な手順が必要でした。
+
+#### **🤔 原因分析**
+
+私が確立した最終的なアーキテクチャは**「ローカルにnode_modulesとbun.lockbを置き、これをDockerコンテナにマウントして使用する」**というものでした。このアーキテクチャを維持しながら依存関係を更新する、最も安定した方法を見つけ出す必要がありました。
+
+#### **✨ 試行錯誤と解決！**
+
+私は安定的で再現可能な最終ワークフローを確立し、README.mdに記録しました。いくつかの方法を試した結果、bun自体の機能である`--cwd`オプションを使用するのが最もスマートでした。
+
+**アプリケーションディレクトリ** : web
+```bash
+# package.jsonを修正後、プロジェクトルートでこのコマンドを一つ実行するだけです。
+bun install --cwd ./web
+```
+
+このコマンドは、フォルダを移動することなくプロジェクトのルートフォルダを基準に`bun install`を実行し、ローカルのnode_modulesとbun.lockbを更新してくれます。
+
+### エピローグ：私が得たもの
+
+一週間の死闘の末、私はついにNext.js 14へのアップグレードを無事に終えることができました。その過程で、「開発ガイドライン」と信じていたものが、実は現代的な開発環境の足を引っ張る「技術的負債」になり得ること、そしてそれを維持するためにどれだけ多くの隠れた努力が必要かを悟ることができました。
+
+私が最終的に確立したREADME.mdの新しいルールは以下の通りです。
+
+* **普段の開発時:** `docker compose up -d`でサービスを開始し、コーディングにのみ集中します。
+* **依存関係の変更時:**
+    1.  package.jsonを修正します。
+    2.  プロジェクトルートで`bun install --cwd ./web`を実行し、ローカルの依存関係を更新します。
+    3.  `docker compose up --build -d`でコンテナを再ビル드して実行します。
+
+
+package.jsonの数字を一つ変えることが、開発環境全体を見直すきっかけになるとは思いもしませんでした。今回の経験で気づいたのは、本当の伏兵はコードの外にいるという事実でした。目に見えない環境の違い、慣れ親しんだ中に隠されたパッケージマネージャーの特性、そして技術的負債となってしまった過去のルールまで。
+結局、予期せぬ問題と格闘しながら過ごしたその「試行錯誤」の時間は、散らばっていた点と点を線で結び、より強固な基盤を築く、未来のための確実な投資でした。
