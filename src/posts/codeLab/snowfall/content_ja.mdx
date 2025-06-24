@@ -1,342 +1,341 @@
 ---
-title: 'Next.js와 Canvas로 눈 내리는 효과 만들기 ❄️'
-desc: Next.js와 Canvas로 눈 내리는 효과 만들기 ❄️
+title: 'Next.jsとCanvasで雪を降らせるエフェクト作り ❄️'
+desc: Next.jsとCanvasで雪を降らせるエフェクト作り ❄️
 date: 2025-05-25
 thumbnail: /posts/codeLab/snowfall/nightSnow.avif
 ---
 
 <Snowfall />
 
-# Next.js와 Canvas로 블로그에 인터랙티브한 눈 내리는 효과 만들기 ❄️
+# Next.jsとCanvasでブログにインタラクティブな雪のエフェクトを実装する ❄️
 
 ![https://appllio.com/line-snow-effect-christmas](/posts/codeLab/snowfall/lineSnow.avif)
-매년 겨울, 특히 크리스마스 시즌이 되면 메신저 채팅방에 예쁘게 눈이 내리는 효과를 본 적이 있을거라고 생각합니다.
-그걸 볼 때마다 항상 저런 애니메이션 효과를 만들어보고 싶다는 생각을 했습니다. 단순히 배경 이미지를 까는 것보다 동적인 효과를 주는 것이 현실과의 상호작용을 더 크게 느끼게 해준다고 생각했기 때문입니다.
+毎年冬、特にクリスマスシーズンになると、メッセンジャーのチャットルームに綺麗に雪が降るエフェクトを見たことがあると思います。
+それを見るたびに、いつもあのようなアニメーション効果を作ってみたいと思っていました。単に背景画像を敷くだけでなく、動的な効果を与えることが、現実との相互作用をより大きく感じさせてくれると考えたからです。
 
-그래서 이번에 Next.js, TailwindCSS, 그리고 HTML Canvas를 활용하여 페이지 전체에 눈 내리는 효과를 만들어보았습니다.
+そこで今回は、Next.js、TailwindCSS、そしてHTML Canvasを活用して、ページ全体に雪が降るエフェクトを作ってみました。
 
-## 🎯 목표 및 기술
+## 🎯 目標と技術
 
-**목표:**
+**目標:**
 
-* 페이지 전체에 눈이 내리는 시각적 효과를 구현한다.
-* 눈 효과는 페이지 콘텐츠 위에 오버레이 되지만 마우스 클릭이나 스크롤 등 기존 페이지 상호작용을 방해하지 않아야 한다.
-* 브라우저 창 크기가 변경되어도 자연스럽게 반응해야 한다.
-* mdx환경에서 재사용 가능한 React 컴포넌트로 만든다.
+* ページ全体に雪が降る視覚的効果を実装する。
+* 雪のエフェクトはページコンテンツの上にオーバーレイされるが、マウスクリックやスクロールなど、既存のページのインタラクションを妨げないようにする。
+* ブラウザのウィンドウサイズが変更されても自然に反応するようにする。
+* mdx環境で再利用可能なReactコンポーネントとして作成する。
 
-**기술 스택:**
+**技術スタック:**
 
-* **HTML5 Canvas:** 수많은 눈송이를 효율적으로 그리고 애니메이션 처리하기 위해 선택했습니다. DOM 요소를 직접 조작하는 것보다 성능 면에서 유리합니다.
+* **HTML5 Canvas:** 数多くの雪の結晶を効率的に描画し、アニメーション処理するために選択しました。DOM要素を直接操作するよりもパフォーマンス面で有利です。
 
-## 🛠️ 구현 과정 상세
+## 🛠️ 実装プロセスの詳細
 
-눈 내리는 효과는 `Snowfall.tsx`라는 단일 React 컴포넌트로 구현했습니다. (전체 코드는 이 글의 말미나 이전 대화의 Canvas에서 확인하실 수 있습니다.)
+雪を降らせるエフェクトは、`Snowfall.tsx`という単一のReactコンポーネントで実装しました。（全コードはこの記事の最後、または以前の会話のCanvasで確認できます。）
 
-### 1단계: Canvas 컴포넌트 기본 구조 잡기
+### ステップ1: Canvasコンポーネントの基本構造を作成
 
-먼저 `Snowfall.tsx`이라는 파일을 생성하고 기본적인 React 컴포넌트 구조를 만듭니다.
+まず`Snowfall.tsx`というファイルを作成し、基本的なReactコンポーネントの構造を作ります。
 
 ```typescript
 // components/Snowfall.tsx
-"use client" // useEffect가 사용되기 때문에 클라이언트 컴포넌트임을 명시합니다.
+"use client" // useEffectが使用されるため、クライアントコンポーネントであることを明示します。
 
 import { useEffect, useRef } from 'react'
 
-// 눈송이 속성 인터페이스
+// 雪の結晶のプロパティインターフェース
 interface Snowflake { /* ... */ }
 
 const Snowfall: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+	const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  useEffect(() => {
-    const canvasInstance = canvasRef.current
-    const contextInstance = canvasInstance?.getContext('2d')
+	useEffect(() => {
+		const canvasInstance = canvasRef.current
+		const contextInstance = canvasInstance?.getContext('2d')
 
-    if (canvasInstance && contextInstance) {
-      // code here!
-    }
-  }, [])
+		if (canvasInstance && contextInstance) {
+			// code here!
+		}
+	}, [])
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999]"
-    />
-  )
+	return (
+		<canvas
+			ref={canvasRef}
+			className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999]"
+		/>
+	)
 }
 
 export default Snowfall
 ```
 
-* `"use client"`: Next.js App Router 환경에서 `useEffect`, `useRef` 같은 클라이언트 사이드 훅을 사용하기 위해 필수입니다.
-* `useRef<HTMLCanvasElement | null>(null)`: Canvas DOM 요소에 직접 접근하기 위해 `useRef`를 사용합니다.
-* `useEffect`: 컴포넌트가 마운트된 후 Canvas 관련 로직을 실행합니다.
-* `<canvas>` 요소: 화면 전체에 고정시키고 z-index를 설정해 가장 위에 위치시킵니다. `pointer-events-none`으로 다른 컴포넌트의 마우스 이벤트를 방해하지 않도록 합니다.
+* `"use client"`: Next.js App Router環境で`useEffect`、`useRef`のようなクライアントサイドのフックを使用するために必須です。
+* `useRef<HTMLCanvasElement | null>(null)`: CanvasのDOM要素に直接アクセスするために`useRef`を使用します。
+* `useEffect`: コンポーネントがマウントされた後にCanvas関連のロジックを実行します。
+* `<canvas>`要素: 画面全体に固定し、z-indexを設定して最前面に配置します。`pointer-events-none`で他のコンポーネントのマウスイベントを妨げないようにします。
 
-### 2단계: 눈송이 정의 및 생성
+### ステップ2: 雪の結晶の定義と生成
 
-눈송이의 모양과 상태를 정의하는 `Snowflake` 인터페이스를 만들고, 이 인터페이스에 따라 여러 개의 눈송이 객체를 생성하는 함수를 작성합니다.
+雪の結晶の形状と状態を定義する`Snowflake`インターフェースを作成し、このインターフェースに従って複数の雪の結晶オブジェクトを生成する関数を作成します。
 
 ```typescript
 interface Snowflake {
-  x: number
-  y: number
-  radius: number
-  density: number // 눈송이의 움직임 다양성을 위한 값
-  color: string   // 눈송이 색상
+	x: number
+	y: number
+	radius: number
+	density: number // 雪の結晶の動きの多様性のための値
+	color: string	 // 雪の結晶の色
 }
 
 let snowflakes: Snowflake[] = []
-const numSnowflakes: number = 150 // 눈송이 개수 (조절 가능)
+const numSnowflakes: number = 150 // 雪の結晶の数（調整可能）
 
 const createSnowflakes = (): void => {
-  snowflakes = []
-  for (let i = 0 i < numSnowflakes i++) {
-    snowflakes.push({
-      // 초기 위치를 랜덤으로 생성
-      x: Math.random() * canvasInstance.width,
-      y: Math.random() * canvasInstance.height,
-      radius: Math.random() * 3 + 1,          // 크기 (1px ~ 4px)
-      density: Math.random() * numSnowflakes,
-      color: 'rgba(255, 255, 255, 0.8)',     // 흰색, 약간 투명
-    })
-  }
+	snowflakes = []
+	for (let i = 0; i < numSnowflakes; i++) {
+		snowflakes.push({
+			// 初期位置をランダムに生成
+			x: Math.random() * canvasInstance.width,
+			y: Math.random() * canvasInstance.height,
+			radius: Math.random() * 3 + 1,			 // 大きさ (1px ~ 4px)
+			density: Math.random() * numSnowflakes,
+			color: 'rgba(255, 255, 255, 0.8)',	   // 白色、やや透明
+		})
+	}
 }
 ```
-각 눈송이는 랜덤한 x, y 위치, 반지름(크기), 밀도(움직임 패턴에 영향), 색상을 가집니다.
+各雪の結晶は、ランダムなx, y位置、半径(大きさ)、密度(動きのパターンに影響)、色を持ちます。
 
-### 3단계: 눈송이 그리기 및 애니메이션
+### ステップ3: 雪の結晶の描画とアニメーション
 
-이제 생성된 눈송이들을 Canvas에 그려줍니다.
+次に、生成された雪の結晶をCanvasに描画します。
 
-**눈송이 그리기 (`drawSnowflakes`)**:
+**雪の結晶の描画 (`drawSnowflakes`)**:
 
 ```typescript
 const drawSnowflakes = (): void => {
-  contextInstance.clearRect(0, 0, canvasInstance.width, canvasInstance.height) // 중요: 이전 프레임 지우기
-  for (let i = 0 i < snowflakes.length i++) {
-    const s = snowflakes[i]
-    contextInstance.fillStyle = s.color
-    contextInstance.beginPath() // 중요: 이 눈송이만을 위한 새 경로 시작
-    contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true) // 원형 눈송이
-    contextInstance.fill()
-  }
-  updateSnowflakes() // 그린 후 다음 위치로 업데이트
+	contextInstance.clearRect(0, 0, canvasInstance.width, canvasInstance.height) // 重要：前のフレームを消去
+	for (let i = 0; i < snowflakes.length; i++) {
+		const s = snowflakes[i]
+		contextInstance.fillStyle = s.color
+		contextInstance.beginPath() // 重要：この雪の結晶だけのための新しいパスを開始
+		contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true) // 円形の雪の結晶
+		contextInstance.fill()
+	}
+	updateSnowflakes() // 描画後、次の位置に更新
 }
 ```
-매 프레임마다 `clearRect`로 모든 프레임을 지우고 다시 그려서 눈이 내리는 애니메이션을 연출합니다. `arc` 메소드를 사용해 원형 눈송이를 표현했습니다.
+毎フレーム`clearRect`で全てのフレームを消去し、再度描画することで雪が降るアニメーションを演出します。`arc`メソッドを使用して円形の雪の結晶を表現しました。
 
-**눈송이 위치 업데이트 (`updateSnowflakes`)**:
+**雪の結晶の位置更新 (`updateSnowflakes`)**:
 
 ```typescript
 const updateSnowflakes = (): void => {
-  for (let i = 0 i < snowflakes.length i++) {
-    const s = snowflakes[i]
-    s.y += Math.pow(s.radius, 0.5) * 0.5 + 1 // 아래로 떨어짐 (큰 눈이 약간 더 빨리)
-    s.x += Math.sin(s.density * 0.02) * s.radius * 0.1 // 좌우 떨어지는 방향
+	for (let i = 0; i < snowflakes.length; i++) {
+		const s = snowflakes[i]
+		s.y += Math.pow(s.radius, 0.5) * 0.5 + 1 // 下に落ちる（大きい雪が少し速く）
+		s.x += Math.sin(s.density * 0.02) * s.radius * 0.1 // 左右に落ちる方向
 
-    // 화면 아래로 벗어나면 다시 위에서 시작
-    if (s.y > canvasInstance.height + s.radius) {
-      snowflakes[i].x = Math.random() * canvasInstance.width
-      snowflakes[i].y = -s.radius
-    }
-    // 화면 좌우로 벗어나면 반대편에서 시작
-    if (s.x > canvasInstance.width + s.radius) {
-      // right -> left
-      snowflakes[i].x = -s.radius
-    } else if (s.x < -s.radius) {
-      // left -> right
-      snowflakes[i].x = canvasInstance.width + s.radius
-    }
-  }
+		// 画面の下に外れたら、再び上から開始
+		if (s.y > canvasInstance.height + s.radius) {
+			snowflakes[i].x = Math.random() * canvasInstance.width
+			snowflakes[i].y = -s.radius
+		}
+		// 画面の左右に外れたら、反対側から開始
+		if (s.x > canvasInstance.width + s.radius) {
+			// right -> left
+			snowflakes[i].x = -s.radius
+		} else if (s.x < -s.radius) {
+			// left -> right
+			snowflakes[i].x = canvasInstance.width + s.radius
+		}
+	}
 }
 ```
-y 좌표를 증가시켜 아래로 떨어지게 하고 `Math.sin`을 이용해 좌우 방향을 추가하여 자연스러움을 더했습니다.
-화면을 벗어난 눈송이는 다시 화면 위쪽과 좌우에서 나타나도록 처리합니다.
+y座標を増加させて下に落ちるようにし、`Math.sin`を利用して左右の動きを加えて自然さを出しました。
+画面外に出た雪の結晶は、再び画面の上部や左右から現れるように処理します。
 
-**애니메이션 루프 (`animate`)**:
+**アニメーションループ (`animate`)**:
 
 ```typescript
 let animationFrameId: number
 const animate = (): void => {
-  drawSnowflakes()
-  animationFrameId = requestAnimationFrame(animate) // 재귀 호출로 루프 생성
+	drawSnowflakes()
+	animationFrameId = requestAnimationFrame(animate) // 再帰呼び出しでループを生成
 }
 ```
-`requestAnimationFrame`은 브라우저의 다음 리페인트 시점에 `animate` 함수를 다시 호출하여 부드러운 애니메이션을 만듭니다.
+`requestAnimationFrame`は、ブラウザの次の再描画のタイミングで`animate`関数を再び呼び出し、滑らかなアニメーションを作成します。
 
-### 4단계: 반응형 처리 (리사이즈 대응)
+### ステップ4: レスポンシブ対応 (リサイズ対応)
 
-브라우저 창 크기가 변경되면 Canvas 크기도 함께 변경, 눈송이들을 새 크기에 맞게 다시 배치해줍니다.
+ブラウザのウィンドウサイズが変更されると、Canvasのサイズも一緒に変更し、雪の結晶を新しいサイズに合わせて再配置します。
 
 ```typescript
 const setCanvasSize = () => {
-  canvasInstance.width = window.innerWidth
-  canvasInstance.height = window.innerHeight
+	canvasInstance.width = window.innerWidth
+	canvasInstance.height = window.innerHeight
 }
 
 const handleResize = (): void => {
-  setCanvasSize()
-  createSnowflakes() // 눈송이를 새 크기에 맞게 재생성
+	setCanvasSize()
+	createSnowflakes() // 雪の結晶を新しいサイズに合わせて再生成
 }
 
-// useEffect 내 초기 설정 및 이벤트 리스너 등록
+// useEffect内の初期設定およびイベントリスナー登録
 setCanvasSize()
 createSnowflakes()
 animate()
 window.addEventListener('resize', handleResize)
 
-// useEffect의 cleanup 함수에서 이벤트 리스너 제거
+// useEffectのクリーンアップ関数でイベントリスナーを削除
 return () => {
-  window.removeEventListener('resize', handleResize)
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId)
-  }
+	window.removeEventListener('resize', handleResize)
+	if (animationFrameId) {
+		cancelAnimationFrame(animationFrameId)
+	}
 }
 ```
 
-## 겪었던 문제들과 해결 과정 (Troubleshooting)
+## 直面した問題と解決策 (Troubleshooting)
 
-### 🏔 문제 1: 눈사태가 되어버렸다!
+### 🏔 問題1: 雪崩が発生！
 ![](/posts/codeLab/Snowfall/avalanche.avif)
 
-처음 눈송이들을 반복문으로 여러 개 그리자 예상과 다르게 그려지는 문제를 겪었습니다. 모든 눈송이가 하나의 거대한 덩어리가 되어 마치 화면이 깨진 것처럼 보였습니다.
+最初に雪の結晶をループで複数描画したところ、意図しない描画の問題に直面しました。すべての雪の結晶が一つのかたまりのようになり、まるで画面が壊れたように見えました。
 
-* **원인:** Canvas에서 경로(path)를 그리는 명령어들(`arc`, `lineTo`, `moveTo` 등)은 기본적으로 누적됩니다.
-연속해서 도형을 그리면 이전에 그린 도형의 경로 정보가 남아 다음 도형에 영향을 주어서 Canvas가 이 모든 원들을 하나의 경로로 인식하고 채워버립니다.
-* **잘못된 시도 (예시):**
-    ```javascript
-    // 각 눈송이를 그릴 때 beginPath()가 없다면?
-    for (let i = 0; i < snowflakes.length; i++) {
-      const s = snowflakes[i];
-      contextInstance.fillStyle = s.color;
-      // contextInstance.beginPath(); // <- 이 줄이 없다고 가정!
-      contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true);
-      contextInstance.fill(); // fill()을 루프 안에서 호출해도 문제가 발생할 수 있음
-                              // 특히 fillStyle이 동일하고, clearRect가 없다면 겹쳐 그려짐
-                              // 더 큰 문제는 fill()을 루프 밖에서 한번만 호출하는 경우 발생
-    }
-    // 만약 fill()을 루프 밖에서 한 번만 호출했다면
-    // 모든 arc가 하나의 경로로 합쳐져서 예상치 못한 결과가 나옴
-    ```
-* **해결:** 각 눈송이를 **독립적인 도형**으로 그리려면 각 눈송이를 그리기 직전에 `contextInstance.beginPath()`를 호출합니다.
-이 함수는 "지금부터 완전히 새로운 그림 경로를 시작할 거야!"라고 Canvas에 알리는 역할을 합니다. 이렇게 하면 이전 눈송이의 경로가 다음 눈송이에 영향을 주지 않아 각 눈송이가 깨끗하고 정확하게 그려집니다.
+* **原因:** Canvasでパスを描画する命令(`arc`, `lineTo`, `moveTo`など)は、基本的に累積されます。
+連続して図形を描画すると、以前に描画した図形のパス情報が残り、次の図形に影響を与え、Canvasがこれらのすべての円を一つのパスとして認識して塗りつぶしてしまいます。
+* **誤った試み (例):**
+	```javascript
+	// 各雪の結晶を描画する際にbeginPath()がなかったら？
+	for (let i = 0; i < snowflakes.length; i++) {
+		const s = snowflakes[i];
+		contextInstance.fillStyle = s.color;
+		// contextInstance.beginPath(); // <- この行がないと仮定！
+		contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true);
+		contextInstance.fill(); // fill()をループ内で呼び出しても問題が発生することがある
+									// 特にfillStyleが同じで、clearRectがなければ重なって描画される
+									// さらに大きな問題は、fill()をループの外で一度だけ呼び出す場合に発生
+	}
+	// もしfill()をループの外で一度だけ呼び出した場合
+	// 全てのarcが一つのパスとして結合され、予期せぬ結果になる
+	```
+* **解決:** 各雪の結晶を**独立した図形**として描画するには、各雪の結晶を描画する直前に`contextInstance.beginPath()`を呼び出します。
+この関数は「これから全く新しい描画パスを開始するよ！」とCanvasに知らせる役割を果たします。これにより、前の雪の結晶のパスが次の雪の結晶に影響を与えず、各雪の結晶がクリーンかつ正確に描画されます。
 
-    ```typescript
-    // Snowfall.tsx의 drawSnowflakes 함수 내부
-    function drawSnowflakes(): void {
-      contextInstance.clearRect(0, 0, canvasInstance.width, canvasInstance.height);
-      for (let i = 0; i < snowflakes.length; i++) {
-        const s = snowflakes[i];
-        contextInstance.fillStyle = s.color;
+	```typescript
+	// Snowfall.tsxのdrawSnowflakes関数内部
+	function drawSnowflakes(): void {
+		contextInstance.clearRect(0, 0, canvasInstance.width, canvasInstance.height);
+		for (let i = 0; i < snowflakes.length; i++) {
+			const s = snowflakes[i];
+			contextInstance.fillStyle = s.color;
 
-        contextInstance.beginPath(); // 각 눈송이마다 새로운 경로 시작!
+			contextInstance.beginPath(); // 雪の結晶ごとに新しいパスを開始！
 
-        contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true);
-        contextInstance.fill(); // 현재 정의된 경로(이 눈송이)만 채움
-      }
-      updateSnowflakes();
-    }
-    ```
+			contextInstance.arc(s.x, s.y, s.radius, 0, Math.PI * 2, true);
+			contextInstance.fill(); // 現在定義されているパス（この雪の結晶）だけを塗りつぶす
+		}
+		updateSnowflakes();
+	}
+	```
 
-### 🥶 문제 2: 오버레이!
+### 🥶 問題2: オーバーレイ！
 
-Canvas가 화면 전체를 덮으면서 그 아래에 있는 헤더와 TOC등이 클릭되지 않는 현상이 있었습니다.
+Canvasが画面全体を覆ってしまい、その下にあるヘッダーやTOCなどがクリックできない現象がありました。
 
-* **원인:** Canvas 요소가 최상단에 위치해서 모든 마우스 이벤트를 가로채기 때문입니다.
-* **해결:** CSS의 `pointer-events` 속성을 사용했습니다. Canvas 요소에 `pointer-events-none` 스타일을 적용하면 해당 요소는 마우스 이벤트를 무시하고 이벤트가 그 아래에 있는 요소로 전달됩니다. Tailwind CSS로는 `className="... pointer-events-none ..."` 이렇게 간단히 적용할 수 있습니다.
+* **原因:** Canvas要素が最上層に位置し、すべてのマウスイベントを横取りしていたためです。
+* **解決:** CSSの`pointer-events`プロパティを使用しました。Canvas要素に`pointer-events-none`スタイルを適用すると、その要素はマウスイベントを無視し、イベントがその下にある要素に渡されます。Tailwind CSSでは`className="... pointer-events-none ..."`のように簡単に適用できます。
 
-### 🚫 문제 3: Next.js에서 "useEffect는 클라이언트 컴포넌트에서만 작동합니다" 에러
+### 🚫 問題3: Next.jsで「useEffectはクライアントコンポーネントでのみ動作します」エラー
 
-MDX 파일에 `Snowfall` 컴포넌트를 삽입했더니 다음과 같은 에러가 발생했습니다:
+MDXファイルに`Snowfall`コンポーネントを挿入したところ、次のようなエラーが発生しました：
 `You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.`
 
-* **원인:** Next.js 13+ App Router (또는 특정 Pages Router 설정)에서는 컴포넌트가 기본적으로 서버 컴포넌트로 취급됩니다. 서버 컴포넌트는 서버에서 렌더링되므로 `useEffect`, `useState` 같이 브라우저 환경에 의존적인 훅을 직접 사용할 수 없습니다. `Snowfall` 컴포넌트는 `useEffect`와 `useRef`를 사용하므로 클라이언트 사이드에서 실행되어야 합니다.
-* **해결:** `Snowfall.tsx` 파일의 가장 첫 줄에 `"use client"` 지시어를 추가했습니다. 이 지시어는 Next.js에게 해당 파일 및 그 파일에서 export하는 모든 컴포넌트가 클라이언트 컴포넌트임을 알려줍니다.
+* **原因:** Next.js 13+ App Router (または特定のPages Router設定) では、コンポーネントはデフォルトでサーバーコンポーネントとして扱われます。サーバーコンポーネントはサーバーでレンダリングされるため、`useEffect`や`useState`のようにブラウザ環境に依存するフックを直接使用できません。`Snowfall`コンポーネントは`useEffect`と`useRef`を使用するため、クライアントサイドで実行される必要があります。
+* **解決:** `Snowfall.tsx`ファイルの最初の行に`"use client"`ディレクティブを追加しました。このディレクティブは、Next.jsにそのファイルおよびそのファイルからエクスポートされるすべてのコンポーネントがクライアントコンポーネントであることを伝えます。
 
-    ```typescript
-    // components/Snowfall.tsx
-    "use client" // 바로 이 부분!
+	```typescript
+	// components/Snowfall.tsx
+	"use client" // まさにこの部分！
 
-    import { useEffect, useRef } from 'react'
-    // ...
-    ```
+	import { useEffect, useRef } from 'react'
+	// ...
+	```
 
-### 😵 문제 4: 하얀 배경에 흰 눈송이가 안 보여요! (다크 모드 강제 적용)
-눈송이를 흰색(rgba(255, 255, 255, 0.8))으로 만들었더니, 제 블로그의 기본 라이트 테마에서는 눈송이가 배경에 묻혀 전혀 보이지 않는 문제가 있었습니다. 눈 내리는 효과를 제대로 보여주려면 어두운 배경이 필요했습니다.
+### 😵 問題4: 白い背景に白い雪の結晶が見えない！ (ダークモード強制適用)
+雪の結晶を白(rgba(255, 255, 255, 0.8))で作成したところ、私のブログのデフォルトのライトテーマでは、雪の結晶が背景に埋もれて全く見えないという問題がありました。雪が降る効果をきちんと見せるためには、暗い背景が必要でした。
 
-* **초기 시도**: Snowfall 컴포넌트의 useEffect 내에서 localStorage.setItem('theme', 'dark') 코드를 추가하여 다크 모드를 유도해 보았습니다.
+* **初期の試み**: SnowfallコンポーネントのuseEffect内で`localStorage.setItem('theme', 'dark')`コードを追加してダークモードを誘導してみました。
 
-* **문제점**: localStorage 값만 변경해서는 즉시 테마가 바뀌지 않았습니다. 새로고침을 해야만 다크 모드가 적용되었는데, 이는 사용자 경험상 좋지 않았습니다. DOM의 즉각적인 변화를 유발하지 않기 때문입니다.
+* **問題点**: localStorageの値だけを変更しても、すぐにはテーマが変わりませんでした。リフレッシュして初めてダークモードが適用されましたが、これはユーザー体験上良くありませんでした。DOMの即時的な変化を引き起こさないためです。
 
-* **해결**: Snowfall 컴포넌트가 마운트될 때 즉시 다크 모드를 적용하고, 언마운트될 때 원래 테마 설정으로 복원하도록 로직을 수정했습니다.
+* **解決**: Snowfallコンポーネントがマウントされる際に即座にダークモードを適用し、アンマウントされる際に元のテーマ設定に復元するようにロジックを修正しました。
 
-    ```typescript
-    useEffect(() => {
-      const htmlElement = document.documentElement
-      const originalThemeInStorage = localStorage.getItem('theme')
-      const hasHtmlDarkTheme = htmlElement.classList.contains('dark')
+	```typescript
+	useEffect(() => {
+		const htmlElement = document.documentElement
+		const originalThemeInStorage = localStorage.getItem('theme')
+		const hasHtmlDarkTheme = htmlElement.classList.contains('dark')
 
-      // 1. 다크 모드 테마 저장
-      localStorage.setItem('theme', 'dark')
+		// 1. ダークモードのテーマを保存
+		localStorage.setItem('theme', 'dark')
 
-      // 2. 즉각적인 시각적 변경을 위해 'dark' 클래스 직접 추가
-      if (!hasHtmlDarkTheme) {
-        htmlElement.classList.add('dark')
-      }
+		// 2. 即時的な視覚的変更のために'dark'クラスを直接追加
+		if (!hasHtmlDarkTheme) {
+			htmlElement.classList.add('dark')
+		}
 
-      // ... (기존 Canvas 애니메이션 로직) ...
+		// ... (既存のCanvasアニメーションロジック) ...
 
-      // useEffect의 cleanup 함수 (컴포넌트 언마운트 시)
-      return () => {
-        // ... (Canvas 애니메이션 관련 cleanup) ...
+		// useEffectのクリーンアップ関数（コンポーネントのアンマウント時）
+		return () => {
+			// ... (Canvasアニメーション関連のクリーンアップ) ...
 
-        // 테마 복원 로직
-        if (!hasHtmlDarkTheme) {
-          // Snowfall 컴포넌트가 'dark' 클래스를 추가했다면, 제거합니다.
-          htmlElement.classList.remove('dark')
-        }
+			// テーマ復元ロジック
+			if (!hasHtmlDarkTheme) {
+				// Snowfallコンポーネントが'dark'クラスを追加した場合、削除します。
+				htmlElement.classList.remove('dark')
+			}
 
-        // localStorage의 테마 값을 원래대로 복원합니다.
-        if (originalThemeInStorage) {
-          localStorage.setItem('theme', originalThemeInStorage)
-        } else {
-          localStorage.removeItem('theme') // 원래 테마 설정이 없었다면 제거
-        }
-        // 만약 애플리케이션 전체 테마 시스템이 localStorage 변경에 반응한다면
-        // 이 시점에서 다시 원래 테마로 돌아갈 것입니다.
-      }
-    }, [])
-    // ...
-    ```
+			// localStorageのテーマ値を元に戻します。
+			if (originalThemeInStorage) {
+				localStorage.setItem('theme', originalThemeInStorage)
+			} else {
+				localStorage.removeItem('theme') // 元のテーマ設定がなかった場合は削除
+			}
+			// もしアプリケーション全体のテーマシステムがlocalStorageの変更に反応する場合
+			// この時点で再び元のテーマに戻るはずです。
+		}
+	}, [])
+	// ...
+	```
 
-이 페이지에 접속해 Snowfall 컴포넌트가 동작하면 다크 모드가 적용되어 눈송이가 잘 보이게 했습니다. 다른 페이지로 이동하여 컴포넌트가 사라지면 원래 테마 설정으로 돌아가도록 처리하였습니다.
+このページにアクセスしてSnowfallコンポーネントが動作すると、ダークモードが適用されて雪の結晶がよく見えるようにしました。他のページに移動してコンポーネントが非表示になると、元のテーマ設定に戻るように処理しました。
 
-## MDX에 적용하기
+## MDXへの適用
 
-`Snowfall` 컴포넌트를 MdxComponents 등록하여 MDX 파일에서 간단히 import하여 사용할 수 있게 하였습니다.
+`Snowfall`コンポーネントをMdxComponentsに登録し、MDXファイルで簡単にインポートして使用できるようにしました。
 
 ```jsx
 // components/mdx/index.tsx
 
 export const MdxComponents: MDXComponents = {
-  a: ExternalLink as any,
-  img: Image as any,
-  blockquote: Callout,
-  Callout,
-  // codeLab
-  Snowfall,
+	a: ExternalLink as any,
+	img: Image as any,
+	blockquote: Callout,
+	Callout,
+	// codeLab
+	Snowfall,
 }
 ```
-MDX 파일에서도 일반 React 컴포넌트처럼 `<Snowfall />`을 삽입하면 됩니다.
+MDXファイルでも、通常のReactコンポーネントのように`<Snowfall />`を挿入すれば大丈夫です。
 
-## 마무리하며
+## 最後に
 
-Next.js와 HTML Canvas를 사용하여 인터랙티브하면서도 사용자 경험을 해치지 않는 눈 내리는 효과를 만들어보았습니다. 간단해 보일 수 있지만 실제 구현 과정에서는 CSS 동작 방식과 애니메이션, 자연스러운 움직임, Next.js의 렌더링 등 다양한 이해가 필요했습니다.
+Next.jsとHTML Canvasを使用して、インタラクティブでありながらユーザー体験を損なわない雪のエフェクトを作成してみました。簡単に見えるかもしれませんが、実際の実装過程ではCSSの動作方式、アニメーション、自然な動き、Next.jsのレンダリングなど、様々な理解が必要でした。
 
-**💡 추가 개선 아이디어:**
+**💡 追加の改善アイデア:**
 
-* **다양한 눈송이 모양:** 원형 대신 이미지나 다른 도형 사용하기
-* **바람 효과:** 눈송이가 한쪽으로 흩날리는 효과 추가하기
-* **사용자 인터랙션:** 마우스 커서나 버튼으로 눈송이가 흩어지는 효과
-
+* **多様な雪の結晶の形:** 円形の代わりに画像や他の図形を使用する
+* **風の効果:** 雪の結晶が一方に舞う効果を追加する
+* **ユーザーインタラクション:** マウスカーソルやボタンで雪の結晶が散らばる効果
