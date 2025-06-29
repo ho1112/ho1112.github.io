@@ -49,12 +49,16 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   // 메인 페이지일 경우
   const allPosts = await getSortedPostList(language)
   const latestPostList = allPosts.slice(0, 4)
-  const workLogPosts = allPosts
-    .filter((post) => post.categoryPublicName === 'WorkLog')
-    .slice(0, 3)
-  const codeLabPosts = allPosts
-    .filter((post) => post.categoryPublicName === 'CodeLab')
-    .slice(0, 3)
+
+  const allWorkLogPosts = allPosts.filter(
+    (post) => post.categoryPublicName === 'WorkLog',
+  )
+  const workLogPosts = allWorkLogPosts.slice(0, 3)
+
+  const allCodeLabPosts = allPosts.filter(
+    (post) => post.categoryPublicName === 'CodeLab',
+  )
+  const codeLabPosts = allCodeLabPosts.slice(0, 3)
 
   const otherCategories = categoryList.filter(
     (cat) => cat.publicName !== 'WorkLog' && cat.publicName !== 'CodeLab',
@@ -86,15 +90,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
       {/* workLog Posts */}
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Work Log</h2>
-          <Link
-            href={`/${language}/blog/workLog`}
-            className="text-sm text-gray-500"
-          >
-            더보기
-          </Link>
-        </div>
+        <h2 className="text-2xl font-bold mb-4">workLog</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {workLogPosts.map((post, index) => (
             <PostCard
@@ -106,19 +102,21 @@ const PostListPage = async ({ language, category }: PostListProps) => {
             />
           ))}
         </ul>
+        {allWorkLogPosts.length > 3 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={`/blog/${language}/workLog`}
+              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            >
+              workLog 더보기
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* codeLab Posts */}
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Code Lab</h2>
-          <Link
-            href={`/${language}/blog/codeLab`}
-            className="text-sm text-gray-500"
-          >
-            더보기
-          </Link>
-        </div>
+        <h2 className="text-2xl font-bold mb-4">codeLab</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {codeLabPosts.map((post, index) => (
             <PostCard
@@ -130,6 +128,16 @@ const PostListPage = async ({ language, category }: PostListProps) => {
             />
           ))}
         </ul>
+        {allCodeLabPosts.length > 3 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={`/blog/${language}/codeLab`}
+              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            >
+              codeLab 더보기
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* Other Categories */}
