@@ -1,0 +1,134 @@
+---
+title: '🚀 2025-06 W4 #13'
+desc: 2025年6月4週目のニュースレター
+date: 2025-06-29
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 今週の主要テーマ
+- 今週は、React 19.1をベースにしたReact Nativeの進化、CSSの新機能であるスクロール駆動アニメーションと`if()`関数、そしてTypeScriptコンパイラなしで型チェックを実行するBiome v2など、フロントエンドエコシステムの主要なツールが一層の進化を遂げた一週間でした。
+
+## 1. 🔍 深掘り
+1. **[A Guide to Scroll-Driven Animations with Just CSS](https://frontendfoc.us/link/170836/web)** (出典: *Frontend Focus #698*)
+   ![スクロールアニメーションガイドの画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750845956/sgvcpphkcnqmascvhqtk.png)
+    - **背景**: ユーザーのスクロール操作に応じて動的なアニメーションを実装するためにJavaScriptに依存していた従来の方法とは異なり、CSSだけでこれを実現できる新しいウェブ標準機能が登場しました。
+    - **主要機能**: `scroll()`と`view()`という2つの新しいCSS関数を使用して、スクロール位置に応じて要素のスタイル（例：透明度、位置）を変更できます。これにより、スクロールプログレスバーや、ビューポートに入った際の要素のアニメーションなどを純粋なCSSで実装可能です。
+    - **実務への適用**: ランディングページのインタラクティブな紹介セクションや、ユーザーが長いコンテンツを読む際に上部に読書進行状況を視覚的に表示するUIを作成するのに役立ちます。
+    - **注意事項**: まだすべてのブラウザで完全にはサポートされていない可能性があり、過度な動きはユーザーに乗り物酔いを引き起こす可能性があるため、アクセシビリティを考慮して`prefers-reduced-motion`メディアクエリを併用することが推奨されます。
+
+2. **[Exploring JavaScript (ES2025 Edition)](https://javascriptweekly.com/link/170731/web)** (出典: *JavaScript Weekly #741*)
+   ![Exploring JavaScriptの本の表紙](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xsopw1iyhxj3sktjufko.jpg)
+    - **背景**: JavaScriptは毎年新しい機能が追加され、進化し続けています。Dr. Axel Rauschmayerは、最新仕様であるES2025を含むモダンJavaScriptの核心を扱う新しい本を出版しました。
+    - **主要機能**: この本は、JavaScriptの組み込みデータ型、モジュールシステム、オブジェクト、クラス、プロミスの動作方法など、言語の根本的な部分を深く掘り下げています。特に、無料で提供されるオンラインHTML版を通じて、誰でも簡単に最新のJavaScript知識を学ぶことができます。
+    - **学習資料**: 著者は言語の主要な機能を簡単に学習できるよう、[フラッシュカードセット](https://javascriptweekly.com/link/170733/web)も提供しており、反復学習による知識の習得を支援します。
+    - **有用性**: 最新のJavaScript標準を体系的に理解し、言語の内部動作原理について深い知識を得たいすべての開発者にとって、素晴らしい資料です。
+
+---
+#### 見逃せないコンテンツ
+- **[A Short History of Web Bots and Bot Detection Techniques](https://frontendfoc.us/link/170837/web)** (出典: *Frontend Focus #698*)
+  + **要約**: Webボットの進化と、IPレピュテーション、フィンガープリンティング、CAPTCHA、行動分析など、それらを検出するための様々な技術の歴史を概説し、ボット検出技術の進化過程を理解するのに役立ちます。
+- **[Compiling JavaScript Ahead-of-Time](https://javascriptweekly.com/link/170748/web)** (出典: *JavaScript Weekly #741*)
+  + **要約**: Porffor JavaScriptコンパイラの制作者が、JavaScriptの実行速度を向上させるための様々なアプローチとAOT(Ahead-of-Time)コンパイル方式について説明する映像です。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+1. **[Biome v2: The First Type-Aware Linter That Doesn't Require `tsc`](https://javascriptweekly.com/link/170735/web)** (出典: *JavaScript Weekly #741*)
+    - **概要**: Biome v2は、TypeScriptコンパイラ(`tsc`)を必要とせずに型認識リンティングルールを提供する、史上初のJavaScriptおよびTypeScriptリンターです。これにより、より高速なリンティング性能が期待できます。
+    - **主な特徴**:
+        - `tsc`への依存をなくしたことによるパフォーマンス向上
+        - リンタープラグインの初期サポート
+        - モノレポサポートの改善
+    - **注意**: 現在、VueおよびSvelteテンプレートはまだサポートされていないため、これらのフレームワークのユーザーは注意が必要です。
+
+2. **[\<syntax-highlight\>: A Custom Element for Syntax Highlighting](https://frontendfoc.us/link/170858/web)** (出典: *Frontend Focus #698*)
+    - **概要**: 従来のシンタックスハイライトライブラリがすべてのトークンを`<span>`タグで囲む方式とは異なり、このカスタム要素は最新のブラウザでサポートされているCSS Custom Highlight APIを使用して、より効率的でセマンティックなシンタックスハイライトを提供します。
+    - **使用法**:
+			```html
+			<syntax-highlight language="js">
+				const greet = () => "Hello, World!";
+			</syntax-highlight>
+			```
+    - **実践的なヒント**: ほとんどのモダンブラウザでサポートされているため、ブログや技術ドキュメントサイトでコードスニペットを表示する際に、パフォーマンスの低下なくきれいにシンタックスハイライトを適用するのに役立ちます。
+
+---
+#### 見逃せないコンテンツ
+- **[Recharts 3.0: D3-Powered Chart Library for React](https://react.statuscode.com/link/170873/web)** (出典: *React Status #433*)
+  + **要約**: D3ベースの人気ReactチャートライブラリであるRechartsが、大規模なリファクタリングを経てバージョン3.0としてリリースされました。様々な種類のチャートをSVGおよびコンポーネントベースで簡単に実装できます。
+- **[Warka: A Framework for React-Powered E-Ink Displays](https://react.statuscode.com/link/170893/web)** (出典: *React Status #433*)
+  + **要約**: Reactでフロントエンドを、Pythonでサーバーを、ESP32でデバイスを構成し、E-Inkディスプレイにインターフェースを表示できるようにする興味深いフレームワークです。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+1. **[Lightly Poking at the CSS `if()` Function in Chrome 137](https://frontendfoc.us/link/170846/web)** (出典: *Frontend Focus #698*)
+    - **主要なインサイト**: 最近、Chrome 137にCSSの`if()`関数が追加されました。この関数を使用すると、メディアクエリの外でも条件付きロジックをCSSプロパティ値内で直接処理できるようになり、レスポンシブデザインやテーマ変更時により簡潔で強力なスタイリングが可能になります。
+    - **コード例**:
+      ```css
+      .element {
+			/* コンテナの幅が400pxより大きい場合は1.5rem、そうでない場合は1rem */
+        font-size: if(container-query(width > 400px), 1.5rem, 1rem);
+      }
+      ```
+    - **この記事が有益な理由**: まだ実験的な機能ですが、CSSの未来を垣間見ることができる強力な機能の基本構文と使用可能性を事前に把握できます。
+
+2. **[How TypeScript Solved Its Global `Iterator` Name Clash](https://javascriptweekly.com/link/170753/web)** (出典: *JavaScript Weekly #741*)
+    - **主要なインサイト**: ES2025では、イテレータヘルパーメソッドを含む`Iterator`クラスが追加されました。しかし、これはTypeScriptに既に存在していた`Iterator`型と衝突する問題でした。この記事は、TypeScriptチームがこの名前の衝突問題をどのように創造的に解決したか、その過程を説明します。
+    - **この記事が有益な理由**: 言語標準の発展と型システム間の互換性問題を解決する過程を通じて、複雑な技術的意思決定に対する深い理解を得ることができます。
+
+---
+#### 見逃せないコンテンツ
+- **[Using `await` at the Top Level in ES Modules](https://javascriptweekly.com/link/170750/web)** (出典: *JavaScript Weekly #741*)
+  + **要約**: モダンブラウザとNode.js v16以上でサポートされているTop-level `await`の使用法を説明します。モジュールのトップレベルスコープで`async`関数なしに`await`を使用し、非同期初期化ロジックをよりすっきりと記述できます。
+- **[CSS Cascade Layers vs. BEM vs. Utility Classes: Specificity Control](https://frontendfoc.us/link/170850/web)** (出典: *Frontend Focus #698*)
+  + **要約**: CSSの最大の悩みの種の一つである詳細度(Specificity)問題を解決するための3つのアプローチ（Cascade Layers、BEM、ユーティリティクラス）を比較分析し、各方法の長所と短所、使用シナリオを提示します。
+- **[Understanding React Re-Renders: What Triggers Them and Why They Matter](https://react.statuscode.com/link/170886/web)** (出典: *React Status #433*)
+  + **要約**: Reactアプリケーションのパフォーマンス最適化において核心的な概念である「再レンダリング」がいつ、なぜ発生するのか、その原因を分析し、不要な再レンダリングを防ぐための方法を説明します。
+
+---
+
+## 4. ✨ アイデア
+- **[Liquid Glass, But in CSS](https://frontendfoc.us/link/170845/web)** (出典: *Frontend Focus #698*)
+  ![Liquid Glass CSS効果の画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750846907/p3g2wzxxibzzhrxrst3u.png)
+  + **特徴**: Appleの新しい「Liquid Glass」デザイン言語をCSSで実装した実験的なプロジェクトです。ブラウザの互換性は限定的ですが、CSSだけで流動的で透明なガラスの質感を持つUIを作り出す創造的なアイデアを垣間見ることができます。
+
+- **[Mossaik: A Web-Based Tool to Create Stylish SVG Backgrounds](https://frontendfoc.us/link/170857/web)** (出典: *Frontend Focus #698*)
+  + **特徴**: 波、多角形、円、ブロブなど、様々なプリセット形状を選択し、詳細設定を調整してスタイリッシュなSVG背景画像を簡単に作成できるWebベースのツールです。ウェブサイトやプレゼンテーションの背景をユニークに飾りたい時に便利です。
+
+## 5. ⚡️ ミニノート
+- **[Figma has acquired Payload](https://javascriptweekly.com/link/170737/web)** (出典: *JavaScript Weekly #741*)
+  + **要約**: デザインコラボレーションツールであるFigmaが、人気のオープンソースNext.jsバックエンドフレームワーク/CMSであるPayloadを買収しました。
+- **[JSON module scripts are now Baseline 'Newly Available'](https://javascriptweekly.com/link/170781/web)** (出典: *JavaScript Weekly #741*)
+  + **要約**: JavaScriptで`import data from './data.json' with { type: 'json' }`構文を使用してJSONファイルをモジュールのように直接インポートできる機能が、主要なブラウザでデフォルトでサポートされるようになりました。
+- **[Firefox 140.0 Released](https://frontendfoc.us/link/170840/web)** (出典: *Frontend Focus #698*)
+  + **要約**: Firefox 140.0バージョンがリリースされました。新しい垂直タブ機能、CSS Custom Highlight APIのサポート、SVG `fetchpriority`属性のサポートなどが追加されました。
+- **[ViteConf takes place this October 9-10 in Amsterdam](https://javascriptweekly.com/link/170739/web)** (出典: *JavaScript Weekly #741*)
+  + **要約**: Viteの公式カンファレンスであるViteConfが10月9日〜10日にアムステルダムで開催され、登壇者の募集は7月1日まで行われます。
+- **[State of CSS survey has one week left](https://frontendfoc.us/link/170844/web)** (出典: *Frontend Focus #698*)
+  + **要約**: 今年のState of CSSサーベイが締め切りまで残り1週間となりました。
+
+## 6. 🎉 リリース
+- **[React Native 0.80](https://javascriptweekly.com/link/170761/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: React 19.1を搭載し、より厳格なTypeScript型セット(オプトイン)を導入、iOSビルド速度向上のための事前ビルド済み依存関係の実験的サポートが追加されました。
+- **[Bun v1.2.16](https://javascriptweekly.com/link/170740/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: `Bun.serve`を通じてルートからファイルを返す機能をサポートし、多数のバグ修正とNode.js互換性が改善されました。
+- **[Astro 5.10](https://javascriptweekly.com/link/170741/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: レスポンシブ画像機能が安定化し、リアルタイムの動的コンテンツのための新しい実験的機能であるライブコンテンツコレクションが追加されました。
+- **[Vite 7.0](https://react.statuscode.com/link/170877/web)** (出典: *React Status #433*)
+  + **アップデート**: 人気のフロントエンドビルドツールであるViteのメジャーバージョン7.0がリリースされました。v6からのマイグレーションガイドが提供されます。
+- **[ESLint v9.29.0](https://javascriptweekly.com/link/170742/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: 明示的なリソース管理のための`using`および`await using`構文をサポートするようになりました。
+- **[Fastify 5.4](https://javascriptweekly.com/link/170745/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: パフォーマンスに重点を置いたNode.jsウェブフレームワークFastifyの新バージョンがリリースされました。
+- **[Axios 1.10.0](https://javascriptweekly.com/link/170747/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: 広く使われているHTTPクライアントライブラリAxiosの新バージョンがリリースされました。
+- **[Chart.js 4.5](https://javascriptweekly.com/link/170771/web)** (出典: *JavaScript Weekly #741*)
+  + **アップデート**: シンプルなCanvasベースのチャートライブラリであるChart.jsの新バージョンです。
+
+## ✍️ おわりに
+- 最新のウェブ技術の発展は、開発者により多くの、そしてより強力なツールを提供しています。CSSだけでも豊かなインタラクションを実装できるようになり、ビルドやリンティングツールはさらに高速化しています。継続的に新しい情報に触れ、自身の技術スタックを見直し、発展させていくことが重要だと思われます。
+
+#### 出典
+- [JavaScript Weekly #741](https://javascriptweekly.com/issues/741)
+- [Frontend Focus #698](https://frontendfoc.us/issues/698)
+- [React Status #433](https://react.statuscode.com/issues/433)
