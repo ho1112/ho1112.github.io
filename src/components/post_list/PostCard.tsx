@@ -91,7 +91,7 @@ const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
                     {t.day}
                   </span>
                 </div>
-                <div className="flex   gap-1">
+                <div className="flex items-center gap-1">
                   <Clock3 className="w-3.5" />
                   <span>
                     {post.readingMinutes}
