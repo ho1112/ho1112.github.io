@@ -1,8 +1,10 @@
+import Link from 'next/link'
 import {
   getAllPostCount,
   getCategoryDetailList,
   getSortedPostList,
 } from '@/lib/post'
+import { getLanguageText } from '@/utils/language'
 import CategoryList from './CategoryList'
 import PostCard from './PostCard'
 
@@ -12,14 +14,58 @@ interface PostListProps {
 }
 
 const PostListPage = async ({ language, category }: PostListProps) => {
-  const postList = await getSortedPostList(language, category)
   const categoryList = await getCategoryDetailList(language)
   const allPostCount = await getAllPostCount(language)
 
-  // 최신 포스터4개를 표시
-  const latestPostList = postList.slice(0, 4)
-  // 최신을 제외한 모든 포스터
-  const allPostList = postList.slice(4)
+  const t = getLanguageText(language, 'category')
+
+  // 카테고리 페이지일 경우
+  if (category) {
+    const postList = await getSortedPostList(language, category)
+    return (
+      <>
+        <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
+          <CategoryList
+            language={language}
+            allPostCount={allPostCount}
+            categoryList={categoryList}
+            currentCategory={category}
+          />
+        </section>
+        <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {postList.map((post, index) => (
+              <PostCard
+                key={post.url + post.date}
+                language={language}
+                post={post}
+                index={index}
+                variant="grid"
+              />
+            ))}
+          </ul>
+        </section>
+      </>
+    )
+  }
+
+  // 메인 페이지일 경우
+  const allPosts = await getSortedPostList(language)
+  const latestPostList = allPosts.slice(0, 4)
+
+  const allWorkLogPosts = allPosts.filter(
+    (post) => post.categoryPublicName === 'workLog',
+  )
+  const workLogPosts = allWorkLogPosts.slice(0, 3)
+
+  const allCodeLabPosts = allPosts.filter(
+    (post) => post.categoryPublicName === 'codeLab',
+  )
+  const codeLabPosts = allCodeLabPosts.slice(0, 3)
+
+  const otherCategories = categoryList.filter(
+    (cat) => cat.publicName !== 'workLog' && cat.publicName !== 'codeLab',
+  )
 
   return (
     <>
@@ -33,7 +79,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       </section>
       {/* 최신 포스트 */}
       <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
-        <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 h-[30vw]">
+        <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 md:h-[30vw]">
           {latestPostList.map((post, index) => (
             <PostCard
               key={post.url + post.date}
@@ -44,10 +90,12 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           ))}
         </ul>
       </section>
-      {/* 나머지 포스트를 3열 그리드로 표시하는 새로운 섹션 */}
+
+      {/* workLog Posts */}
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {allPostList.map((post, index) => (
+        <h2 className="text-2xl font-bold mb-4">workLog</h2>
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {workLogPosts.map((post, index) => (
             <PostCard
               key={post.url + post.date}
               language={language}
@@ -57,6 +105,58 @@ const PostListPage = async ({ language, category }: PostListProps) => {
             />
           ))}
         </ul>
+        {allWorkLogPosts.length > 3 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={`/blog/${language}/workLog`}
+              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            >
+              workLog {t.more}
+            </Link>
+          </div>
+        )}
+      </section>
+
+      {/* codeLab Posts */}
+      <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
+        <h2 className="text-2xl font-bold mb-4">codeLab</h2>
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {codeLabPosts.map((post, index) => (
+            <PostCard
+              key={post.url + post.date}
+              language={language}
+              post={post}
+              index={index}
+              variant="grid"
+            />
+          ))}
+        </ul>
+        {allCodeLabPosts.length > 3 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={`/blog/${language}/codeLab`}
+              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            >
+              codeLab {t.more}
+            </Link>
+          </div>
+        )}
+      </section>
+
+      {/* Other Categories */}
+      <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
+        <h2 className="text-2xl font-bold mb-4">{t.etc}</h2>
+        <div className="flex flex-wrap gap-2">
+          {otherCategories.map((cat) => (
+            <Link
+              key={cat.publicName}
+              href={`/blog/${language}/${cat.dirName}`}
+              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            >
+              {cat.publicName}
+            </Link>
+          ))}
+        </div>
       </section>
     </>
   )
