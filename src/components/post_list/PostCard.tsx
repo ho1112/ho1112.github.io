@@ -38,7 +38,14 @@ const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
           {/* 텍스트 가독성을 위한 그라디언트 (md 이상에서만) */}
           <div className="z-[1] hidden md:block before:absolute before:inset-0 before:bg-[linear-gradient(to_top,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0)_60%)]" />
           {/* image */}
-          <div className="relative w-[30%] md:w-full aspect-square md:aspect-video rounded-t-md">
+          <div
+            className={cn(
+              'relative w-[30%] md:w-full aspect-square rounded-t-md',
+              variant === 'featured' && index !== 1
+                ? 'md:h-full md:aspect-auto md:rounded-md'
+                : 'md:aspect-video',
+            )}
+          >
             <Image
               className="transition-transform duration-300 group-hover:md:scale-110"
               src={post.thumbnail}
@@ -53,7 +60,7 @@ const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
           </div>
           {/* post info */}
           <div className="w-[70%] md:w-full md:absolute z-[2] bottom-0 flex flex-col p-4">
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col md:flex-initial">
               <div className="font-medium text-xs lg:text-sm text-chomin">
                 <span className="bg-black px-2 py-1">
                   {post.categoryPublicName}
@@ -62,9 +69,14 @@ const PostCard = ({ language, post, index, variant = 'featured' }: Props) => {
               <h2
                 className={cn(
                   'my-1 font-bold text-gray-800 dark:text-white md:text-white',
+                  'line-clamp-2', // 모바일에서는 2줄로 제한
                   variant === 'grid'
-                    ? 'text-base lg:text-lg'
+                    ? 'text-base lg:text-lg md:line-clamp-none'
                     : 'text-lg lg:text-xl',
+                  variant === 'featured' &&
+                    (index === 0
+                      ? 'md:line-clamp-none'
+                      : 'md:line-clamp-1 lg:line-clamp-none'),
                 )}
               >
                 {post.title}

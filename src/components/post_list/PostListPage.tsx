@@ -72,7 +72,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       </section>
       {/* 최신 포스트 */}
       <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
-        <ul className="grid grid-cols-1 gap-1 md:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 md:h-[30vw]">
           {latestPostList.map((post, index) => (
             <PostCard
               key={post.url + post.date}
