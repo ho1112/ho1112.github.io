@@ -51,17 +51,17 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   const latestPostList = allPosts.slice(0, 4)
 
   const allWorkLogPosts = allPosts.filter(
-    (post) => post.categoryPublicName === 'WorkLog',
+    (post) => post.categoryPublicName === 'workLog',
   )
   const workLogPosts = allWorkLogPosts.slice(0, 3)
 
   const allCodeLabPosts = allPosts.filter(
-    (post) => post.categoryPublicName === 'CodeLab',
+    (post) => post.categoryPublicName === 'codeLab',
   )
   const codeLabPosts = allCodeLabPosts.slice(0, 3)
 
   const otherCategories = categoryList.filter(
-    (cat) => cat.publicName !== 'WorkLog' && cat.publicName !== 'CodeLab',
+    (cat) => cat.publicName !== 'workLog' && cat.publicName !== 'codeLab',
   )
 
   return (

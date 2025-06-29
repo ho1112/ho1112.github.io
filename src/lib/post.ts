@@ -59,12 +59,17 @@ const parsePostDetail = async (postPath: string) => {
   return { ...grayMatter, year, month, day, content, readingMinutes }
 }
 
-// category folder name을 public name으로 변경 : dir_name -> Dir Name
-export const getCategoryPublicName = (dirPath: string) =>
-  dirPath
-    .split('_')
-    .map((token) => token[0].toUpperCase() + token.slice(1, token.length))
-    .join(' ')
+// category folder name을 public name으로 변경 : dir_name -> dirName (camelCase)
+export const getCategoryPublicName = (dirPath: string) => {
+  const parts = dirPath.split('_')
+  return (
+    parts[0] +
+    parts
+      .slice(1)
+      .map((token) => token[0].toUpperCase() + token.slice(1))
+      .join('')
+  )
+}
 
 // post를 날짜 최신순으로 정렬
 const sortPostList = (PostList: Post[]) => {
