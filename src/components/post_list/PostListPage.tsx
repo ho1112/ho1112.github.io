@@ -4,6 +4,7 @@ import {
   getCategoryDetailList,
   getSortedPostList,
 } from '@/lib/post'
+import { getLanguageText } from '@/utils/language'
 import CategoryList from './CategoryList'
 import PostCard from './PostCard'
 
@@ -15,6 +16,8 @@ interface PostListProps {
 const PostListPage = async ({ language, category }: PostListProps) => {
   const categoryList = await getCategoryDetailList(language)
   const allPostCount = await getAllPostCount(language)
+
+  const t = getLanguageText(language, 'category')
 
   // 카테고리 페이지일 경우
   if (category) {
@@ -108,7 +111,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
               href={`/blog/${language}/workLog`}
               className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
             >
-              workLog 더보기
+              workLog {t.more}
             </Link>
           </div>
         )}
@@ -134,7 +137,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
               href={`/blog/${language}/codeLab`}
               className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
             >
-              codeLab 더보기
+              codeLab {t.more}
             </Link>
           </div>
         )}
@@ -142,7 +145,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
       {/* Other Categories */}
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
-        <h2 className="text-2xl font-bold mb-4">Other Categories</h2>
+        <h2 className="text-2xl font-bold mb-4">{t.etc}</h2>
         <div className="flex flex-wrap gap-2">
           {otherCategories.map((cat) => (
             <Link

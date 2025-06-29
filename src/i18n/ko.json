@@ -4,5 +4,9 @@
     "month": "월",
     "day": "일",
     "min": "분"
+  },
+  "category": {
+    "more": "더 보기",
+    "etc": "Other Categories"
   }
 }
