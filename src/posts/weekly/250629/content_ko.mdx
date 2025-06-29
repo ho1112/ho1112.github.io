@@ -1,0 +1,134 @@
+---
+title: '🚀 2025-06 W4 #13'
+desc: 2025년 6월 4주차 뉴스레터
+date: 2025-06-29
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 이번 주 핵심 테마
+- 이번 주는 React 19.1을 기반으로 한 React Native의 발전, CSS의 새로운 기능인 스크롤 기반 애니메이션과 `if()` 함수, 그리고 타입스크립트 컴파일러 없이 타입 검사를 수행하는 Biome v2 등 프론트엔드 생태계의 주요 도구들이 한 단계 더 발전하는 모습을 보여주었습니다.
+
+## 1. 🔍 심층 분석
+1. **[A Guide to Scroll-Driven Animations with Just CSS](https://frontendfoc.us/link/170836/web)** (출처: *Frontend Focus #698*)
+   ![스크롤 애니메이션 가이드 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750845956/sgvcpphkcnqmascvhqtk.png)
+    - **배경**: 사용자의 스크롤 상호작용에 따라 동적인 애니메이션을 구현하기 위해 JavaScript에 의존하던 기존 방식과 달리, CSS만으로 이를 구현할 수 있는 새로운 웹 표준 기능이 등장했습니다.
+    - **핵심 기능**: `scroll()`과 `view()`라는 두 가지 새로운 CSS 함수를 사용하여 스크롤 위치에 따라 요소의 스타일(예: 투명도, 위치)을 변경할 수 있습니다. 이를 통해 스크롤 진행률 표시줄, 뷰포트 진입 시 요소 애니메이션 등을 순수 CSS로 구현 가능합니다.
+    - **실무 적용**: 랜딩 페이지의 인터랙티브한 소개 섹션이나, 사용자가 긴 콘텐츠를 읽을 때 상단에 독서 진행률을 시각적으로 보여주는 UI를 만드는 데 유용합니다.
+    - **주의사항**: 아직 모든 브라우저에서 완벽하게 지원되지 않을 수 있으며, 과도한 움직임은 사용자의 멀미를 유발할 수 있으므로 접근성을 고려하여 `prefers-reduced-motion` 미디어 쿼리를 함께 사용하는 것이 권장됩니다.
+
+2. **[Exploring JavaScript (ES2025 Edition)](https://javascriptweekly.com/link/170731/web)** (출처: *JavaScript Weekly #741*)
+   ![Exploring JavaScript 책 표지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xsopw1iyhxj3sktjufko.jpg)
+    - **배경**: JavaScript는 매년 새로운 기능이 추가되며 발전하고 있습니다. Dr. Axel Rauschmayer는 최신 사양인 ES2025를 포함한 모던 JavaScript의 핵심을 다루는 새로운 책을 출간했습니다.
+    - **핵심 기능**: 이 책은 JavaScript의 내장 데이터 타입, 모듈 시스템, 객체, 클래스, 프로미스의 작동 방식 등 언어의 근본적인 부분을 깊이 있게 다룹니다. 특히, 무료로 제공되는 온라인 HTML 버전을 통해 누구나 쉽게 최신 JavaScript 지식을 학습할 수 있습니다.
+    - **학습 자료**: 저자는 언어의 주요 기능을 쉽게 학습할 수 있도록 [플래시카드 세트](https://javascriptweekly.com/link/170733/web)도 함께 제공하여, 반복 학습을 통한 지식 습득을 돕습니다.
+    - **왜 유용한가**: 최신 JavaScript 표준을 체계적으로 이해하고, 언어의 내부 동작 원리에 대한 깊은 지식을 얻고자 하는 모든 개발자에게 훌륭한 자료입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[A Short History of Web Bots and Bot Detection Techniques](https://frontendfoc.us/link/170837/web)** (출처: *Frontend Focus #698*)
+  + **요약**: 웹 봇의 발전과 IP 평판, 지문 인식, CAPTCHA, 행동 분석 등 이를 탐지하기 위한 다양한 기술들의 역사를 개괄적으로 설명하여, 봇 탐지 기술의 진화 과정을 이해할 수 있게 돕습니다.
+- **[Compiling JavaScript Ahead-of-Time](https://javascriptweekly.com/link/170748/web)** (출처: *JavaScript Weekly #741*)
+  + **요약**: Porffor JavaScript 컴파일러의 제작자가 JavaScript 실행 속도를 높이기 위한 다양한 접근법과 AOT(Ahead-of-Time) 컴파일 방식에 대해 설명하는 영상입니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+1. **[Biome v2: The First Type-Aware Linter That Doesn't Require `tsc`](https://javascriptweekly.com/link/170735/web)** (출처: *JavaScript Weekly #741*)
+    - **개요**: Biome v2는 타입스크립트 컴파일러(`tsc`)를 필요로 하지 않으면서도 타입 인식 린팅 규칙을 제공하는 최초의 JavaScript 및 TypeScript 린터입니다. 이를 통해 더 빠른 린팅 성능을 기대할 수 있습니다.
+    - **주요 특징**:
+        - `tsc` 의존성 제거로 인한 성능 향상
+        - 린터 플러그인 초기 지원
+        - 모노레포 지원 개선
+    - **참고**: 현재 Vue 및 Svelte 템플릿은 아직 지원되지 않으므로 해당 프레임워크 사용자들은 주의가 필요합니다.
+
+2. **[\<syntax-highlight\>: A Custom Element for Syntax Highlighting](https://frontendfoc.us/link/170858/web)** (출처: *Frontend Focus #698*)
+    - **개요**: 기존의 구문 강조 라이브러리들이 모든 토큰을 `<span>` 태그로 감싸는 방식과 달리, 이 커스텀 엘리먼트는 최신 브라우저에서 지원하는 CSS Custom Highlight API를 사용하여 더 효율적이고 시맨틱한 구문 강조를 제공합니다.
+    - **사용법**:
+      ```html
+      <syntax-highlight language="js">
+        const greet = () => "Hello, World!";
+      </syntax-highlight>
+      ```
+    - **실전 팁**: 대부분의 모던 브라우저에서 지원되므로, 블로그나 기술 문서 사이트에서 코드 스니펫을 보여줄 때 성능 저하 없이 깔끔하게 구문 강조를 적용하는 데 유용합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Recharts 3.0: D3-Powered Chart Library for React](https://react.statuscode.com/link/170873/web)** (출처: *React Status #433*)
+  + **요약**: D3 기반의 인기 있는 React 차트 라이브러리인 Recharts가 대규모 리팩토링을 거쳐 3.0 버전으로 출시되었습니다. 다양한 종류의 차트를 SVG 및 컴포넌트 기반으로 쉽게 구현할 수 있습니다.
+- **[Warka: A Framework for React-Powered E-Ink Displays](https://react.statuscode.com/link/170893/web)** (출처: *React Status #433*)
+  + **요약**: React로 프론트엔드를, Python으로 서버를, ESP32로 디바이스를 구성하여 E-Ink 디스플레이에 인터페이스를 표시할 수 있게 해주는 흥미로운 프레임워크입니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+1. **[Lightly Poking at the CSS `if()` Function in Chrome 137](https://frontendfoc.us/link/170846/web)** (출처: *Frontend Focus #698*)
+    - **핵심 인사이트**: 최근 Chrome 137에 CSS `if()` 함수가 추가되었습니다. 이 함수를 사용하면 미디어 쿼리 밖에서도 조건부 로직을 CSS 속성 값 내에서 직접 처리할 수 있게 되어, 반응형 디자인이나 테마 변경 시 더 간결하고 강력한 스타일링이 가능해집니다.
+    - **코드 예시**:
+      ```css
+      .element {
+        /* 컨테이너 너비가 400px보다 크면 1.5rem, 아니면 1rem */
+        font-size: if(container-query(width > 400px), 1.5rem, 1rem);
+      }
+      ```
+    - **왜 이 글이 유익한가**: 아직 실험적인 기능이지만, CSS의 미래를 엿볼 수 있는 강력한 기능의 기본 구문과 사용 가능성을 미리 파악할 수 있습니다.
+
+2. **[How TypeScript Solved Its Global `Iterator` Name Clash](https://javascriptweekly.com/link/170753/web)** (출처: *JavaScript Weekly #741*)
+    - **핵심 인사이트**: ES2025에서는 이터레이터 헬퍼 메서드를 포함하는 `Iterator` 클래스가 추가되었습니다. 하지만 이는 TypeScript에 이미 존재하던 `Iterator` 타입과 충돌하는 문제였습니다. 이 글은 TypeScript 팀이 이 이름 충돌 문제를 어떻게 창의적으로 해결했는지 그 과정을 설명합니다.
+    - **왜 이 글이 유익한가**: 언어 표준의 발전과 타입 시스템 간의 호환성 문제를 해결하는 과정을 통해, 복잡한 기술적 의사결정에 대한 깊은 이해를 얻을 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Using `await` at the Top Level in ES Modules](https://javascriptweekly.com/link/170750/web)** (출처: *JavaScript Weekly #741*)
+  + **요약**: 모던 브라우저와 Node.js v16 이상에서 지원되는 Top-level `await`의 사용법을 설명합니다. 모듈의 최상위 스코프에서 `async` 함수 없이 `await`를 사용하여 비동기 초기화 로직을 더 깔끔하게 작성할 수 있습니다.
+- **[CSS Cascade Layers vs. BEM vs. Utility Classes: Specificity Control](https://frontendfoc.us/link/170850/web)** (출처: *Frontend Focus #698*)
+  + **요약**: CSS의 가장 큰 골칫거리 중 하나인 명시도(Specificity) 문제를 해결하기 위한 세 가지 접근법(Cascade Layers, BEM, 유틸리티 클래스)을 비교 분석하고, 각 방법의 장단점과 사용 시나리오를 제시합니다.
+- **[Understanding React Re-Renders: What Triggers Them and Why They Matter](https://react.statuscode.com/link/170886/web)** (출처: *React Status #433*)
+  + **요약**: React 애플리케이션의 성능 최적화에 있어 핵심적인 개념인 '리렌더링'이 언제, 왜 발생하는지 그 원인을 분석하고, 불필요한 리렌더링을 방지하기 위한 방법을 설명합니다.
+
+---
+
+## 4. ✨ 아이디어
+- **[Liquid Glass, But in CSS](https://frontendfoc.us/link/170845/web)** (출처: *Frontend Focus #698*)
+  ![Liquid Glass CSS 효과](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1750846907/p3g2wzxxibzzhrxrst3u.png)
+  + **특징**: Apple의 새로운 'Liquid Glass' 디자인 언어를 CSS로 구현한 실험적인 프로젝트입니다. 브라우저 호환성은 제한적이지만, CSS만으로 유동적이고 투명한 유리 질감의 UI를 만들어내는 창의적인 아이디어를 엿볼 수 있습니다.
+
+- **[Mossaik: A Web-Based Tool to Create Stylish SVG Backgrounds](https://frontendfoc.us/link/170857/web)** (출처: *Frontend Focus #698*)
+  + **특징**: 물결, 다각형, 원, 블롭 등 다양한 사전 설정 모양을 선택하고 세부 설정을 조정하여 스타일리시한 SVG 배경 이미지를 손쉽게 만들 수 있는 웹 기반 도구입니다. 웹사이트나 프레젠테이션의 배경을 독특하게 꾸미고 싶을 때 유용합니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Figma has acquired Payload](https://javascriptweekly.com/link/170737/web)** (출처: *JavaScript Weekly #741*)
+  + **요약**: 디자인 협업 툴인 Figma가 인기 있는 오픈소스 Next.js 백엔드 프레임워크/CMS인 Payload를 인수했습니다.
+- **[JSON module scripts are now Baseline 'Newly Available'](https://javascriptweekly.com/link/170781/web)** (출처: *JavaScript Weekly #741*)
+  + **요약**: 이제 JavaScript에서 `import data from './data.json' with { type: 'json' }` 구문을 사용하여 JSON 파일을 모듈처럼 직접 가져올 수 있는 기능이 주요 브라우저에서 기본적으로 지원됩니다.
+- **[Firefox 140.0 Released](https://frontendfoc.us/link/170840/web)** (출처: *Frontend Focus #698*)
+  + **요약**: Firefox 140.0 버전이 출시되었습니다. 새로운 수직 탭 기능, CSS Custom Highlight API 지원, SVG `fetchpriority` 속성 지원 등이 추가되었습니다.
+- **[ViteConf takes place this October 9-10 in Amsterdam](https://javascriptweekly.com/link/170739/web)** (출처: *JavaScript Weekly #741*)
+  + **요약**: Vite의 공식 컨퍼런스인 ViteConf가 10월 9-10일 암스테르담에서 개최되며, 발표자 모집이 7월 1일까지 진행됩니다.
+- **[State of CSS survey has one week left](https://frontendfoc.us/link/170844/web)** (출처: *Frontend Focus #698*)
+  + **요약**: 올해의 State of CSS 설문조사가 마감까지 일주일 남았습니다.
+
+## 6. 🎉 릴리스
+- **[React Native 0.80](https://javascriptweekly.com/link/170761/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: React 19.1을 탑재하고, 더 엄격한 TypeScript 타입 세트(opt-in)를 도입했으며, iOS 빌드 속도 향상을 위한 사전 빌드된 의존성 실험적 지원이 추가되었습니다.
+- **[Bun v1.2.16](https://javascriptweekly.com/link/170740/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: `Bun.serve`를 통해 라우트에서 파일을 반환하는 기능을 지원하고, 다수의 버그 수정 및 Node.js 호환성이 개선되었습니다.
+- **[Astro 5.10](https://javascriptweekly.com/link/170741/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: 반응형 이미지 기능이 안정화되었고, 실시간 동적 콘텐츠를 위한 새로운 실험적 기능인 라이브 콘텐츠 컬렉션이 추가되었습니다.
+- **[Vite 7.0](https://react.statuscode.com/link/170877/web)** (출처: *React Status #433*)
+  + **업데이트**: 인기 프론트엔드 빌드 도구인 Vite의 7.0 메이저 버전이 릴리스되었습니다. v6에서 마이그레이션 가이드가 제공됩니다.
+- **[ESLint v9.29.0](https://javascriptweekly.com/link/170742/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: 명시적 리소스 관리를 위한 `using` 및 `await using` 구문을 이제 지원합니다.
+- **[Fastify 5.4](https://javascriptweekly.com/link/170745/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: 성능에 중점을 둔 Node.js 웹 프레임워크 Fastify의 새 버전이 출시되었습니다.
+- **[Axios 1.10.0](https://javascriptweekly.com/link/170747/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: 널리 사용되는 HTTP 클라이언트 라이브러리 Axios의 새 버전이 릴리스되었습니다.
+- **[Chart.js 4.5](https://javascriptweekly.com/link/170771/web)** (출처: *JavaScript Weekly #741*)
+  + **업데이트**: 간단한 Canvas 기반 차트 라이브러리인 Chart.js의 새 버전입니다.
+
+## ✍️ 마치며
+- 최신 웹 기술의 발전은 개발자에게 더 많고 강력한 도구를 제공하고 있습니다. CSS만으로도 풍부한 상호작용을 구현할 수 있게 되었고, 빌드 및 린팅 도구는 더욱 빨라지고 있습니다. 꾸준히 새로운 소식을 접하며 자신의 기술 스택을 점검하고 발전시켜 나가는 것이 중요해 보입니다.
+
+#### 출처
+- [JavaScript Weekly #741](https://javascriptweekly.com/issues/741)
+- [Frontend Focus #698](https://frontendfoc.us/issues/698)
+- [React Status #433](https://react.statuscode.com/issues/433)
