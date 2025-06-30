@@ -61,7 +61,8 @@ const CategoryList = ({
       isCurrent: currentCategory === 'Dev',
       subCategories: [
         { value: 'deepDive', displayName: 'deepDive', language },
-        { value: 'web', displayName: 'web', language },
+        // { value: 'web', displayName: 'web', language },
+        { value: 'inspiration', displayName: 'inspiration', language },
         { value: 'releaseNote', displayName: 'releaseNote', language },
       ],
     },
