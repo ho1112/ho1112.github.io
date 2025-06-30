@@ -63,8 +63,16 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   )
   const codeLabPosts = allCodeLabPosts.slice(0, 3)
 
+  const allInspirationPosts = allPosts.filter(
+    (post) => post.categoryPublicName === 'inspiration',
+  )
+  const inspirationPosts = allInspirationPosts.slice(0, 3)
+
   const otherCategories = categoryList.filter(
-    (cat) => cat.publicName !== 'workLog' && cat.publicName !== 'codeLab',
+    (cat) =>
+      cat.publicName !== 'workLog' &&
+      cat.publicName !== 'codeLab' &&
+      cat.publicName !== 'inspiration',
   )
 
   return (
@@ -121,7 +129,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
         <h2 className="text-2xl font-bold mb-4">codeLab</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {codeLabPosts.map((post, index) => (
+          {inspirationPosts.map((post, index) => (
             <PostCard
               key={post.url + post.date}
               language={language}
@@ -138,6 +146,32 @@ const PostListPage = async ({ language, category }: PostListProps) => {
               className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
             >
               codeLab {t.more}
+            </Link>
+          </div>
+        )}
+      </section>
+
+      {/* inspiration Posts */}
+      <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
+        <h2 className="text-2xl font-bold mb-4">inspiration</h2>
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {codeLabPosts.map((post, index) => (
+            <PostCard
+              key={post.url + post.date}
+              language={language}
+              post={post}
+              index={index}
+              variant="grid"
+            />
+          ))}
+        </ul>
+        {allInspirationPosts.length > 3 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={`/blog/${language}/codeLab`}
+              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            >
+              inspiration {t.more}
             </Link>
           </div>
         )}
