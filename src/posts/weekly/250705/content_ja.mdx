@@ -1,0 +1,155 @@
+---
+title: '🚀 2025-07 W1 #14'
+desc: 2025年7月第1週のニュースレター
+date: 2025-07-05
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 今週の主要テーマ
+- 最新のJavaScript(ES2025)仕様が公式に承認され、新しいCSS機能が多数紹介されました。また、Reactの状態管理とURLを状態として扱う新しいパターンに関する深い議論とともに、開発の生産性を向上させる様々なツールやライブラリのリリース情報をまとめました。
+
+## 1. 🔍 深掘り
+1.	**[The State of React and the Community in 2025](https://blog.isquaredsoftware.com/2025/06/react-community-2025/)** (出典: *Naver FE News (2025-07)* )
+	- **背景**: Reactのエコシステムは急速に変化しており、Vercelの影響力の増大とサーバーコンポーネントの登場は、コミュニティ内で多くの議論を呼んでいます。この記事は、現在のReactの技術的、文化的現状を深く分析します。
+	- **核心機能**: MetaとVercelの関係がReactの未来に与える影響、主要なフレームワークの動向、そして開発者が今後考慮すべき技術的な選択肢について取り上げます。サーバーコンポーネントの長所と短所、実際の導入時に考慮すべき事項についてのインサイトを提供します。
+	- **実務への適用**: 複雑なReactプロジェクトを進めたり、技術スタックを決定する必要があるチームにとって、現在のエコシステムの文脈を理解し、Vercelへの依存に対する批判的な視点とともに、長期的な観点から技術戦略を立てるのに役立ちます。
+	- **注意事項**: この記事は特定の技術を推奨するのではなく、現状に対する多角的な分析を提供するため、読者自身が批判的に情報を受け入れ、自身のプロジェクトに合った最適な決定を下すことが重要です。
+
+2.	**[Search Params Are State](https://tanstack.com/blog/search-params-are-state)** (出典: *Naver FE News (2025-07)* )
+	![Search Params Are State](https://tanstack.com/blog-assets/search-params-are-state/search-params-are-state-header.jpg)
+	- **背景**: URL検索パラメータ（search params）は、アプリケーションのフィルター、ソート、ページネーションなどの状態を保存するためによく使われます。しかし、これを手動で管理すると、状態の同期、型安全性、パースエラーなど、多くの問題が発生する可能性があります。
+	- **核心機能**: TanStack Routerは、URL検索パラメータを第一級市民（first-class）の状態として扱い、これらの問題を解決します。ルートレベルでスキーマを定義し検証することで、パラメータを型安全（type-safe）に管理し、コンポーネントの状態と自動的に同期させます。
+	- **コード例**:
+		```jsx
+		import { Route } from '@tanstack/react-router'
+
+		const productsRoute = new Route({
+			// Zodを使用したスキーマ検証
+			validateSearch: (search) => z.object({
+				page: z.number().int().optional(),
+				filter: z.string().optional(),
+			}).parse(search),
+		})
+		```
+	- **実務への適用**: 複雑なフィルタリング機能や状態ベースのUIをURLと連携させる必要があるダッシュボード、検索結果ページなどで非常に役立ちます。ユーザーがURLを共有しても、同じ状態のUIを再現できます。
+	- **注意事項**: TanStack Routerに依存する機能であるため、他のルーティングライブラリを使用している場合は適用方法が異なることがあります。URLの状態管理が複雑でないシンプルなアプリでは、過剰な設計になる可能性があります。
+
+---
+#### 見逃せないコンテンツ
+-	**[Goodbye UseState](https://www.youtube.com/watch?v=d3mhZbBOxbE)** (出典: *Naver FE News (2025-07)* )
+	+ **要約**: XStateの創設者であるDavid Khourshidが、`useState`を超えてより良い状態管理パターンを提案する動画です。複雑な状態ロジックを効果的に処理し、コードの可読性とメンテナンス性を向上させる方法について解説します。
+-	**[Beware The URL Type-Safety Iceberg](https://nuqs.47ng.com/blog/beware-the-url-type-safety-iceberg)** (出典: *Naver FE News (2025-07)* )
+	+ **要約**: URLを状態として管理する際に直面する隠れた複雑さを「氷山」に例えて説明します。単純な型安全性を超え、ブラウザの速度制限、履歴管理、並行性の問題など、本番環境で発生する様々なエッジケースを深く分析します。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+1.	**[Vite 7.0](https://vite.dev/blog/announcing-vite7.html)** (出典: *Naver FE News (2025-07)*, *JavaScript Weekly #742*)
+	![Vite 7.0](https://vite.dev/og-image-announcing-vite7.png)
+	+ **概要**: 人気のフロントエンドビルドツールであるViteの7.0バージョンがリリースされました。このバージョンはNode.js 20.19+または22.12+が必要で、主な変更点としては、デフォルトのブラウザターゲットの変更と、Rustベースの高性能Rolldownバンドラの実験的導入があります。
+	+ **使用法**: Vite 6からのアップグレードは比較的簡単であると予想されます。`package.json`のViteのバージョンを更新し、`npm install`を実行すれば完了です。
+		```bash
+		npm install vite@latest
+		```
+	+ **実践のヒント**: デフォルトのブラウザサポート範囲が`modules`から`baseline-widely-available`に変更されたため、古いブラウザのサポートが必要な場合は`build.target`オプションを明示的に設定する必要があります。Rolldownを試してみたい場合は、`vite.config.js`で`experimental.rolldown: true`オプションを追加できます。
+
+2.	**[Hono 4.8](https://github.com/honojs/hono/releases/tag/v4.8.0)** (出典: *JavaScript Weekly #742*)
+	+ **概要**: HonoはWeb標準をベースにした高速で軽量なWebフレームワークで、Node.js、Bun、Cloudflare Workers、Denoなど、様々なJavaScriptランタイムで動作します。今回のv4.8では、新しいルートヘルパー関数、JSXストリーミングの改善、静的サイト生成のための新しいプラグインシステムなどが追加されました。
+	+ **使用法**: Honoは特にサーバーレス環境やエッジコンピューティングでAPIサーバーを構築するのに役立ちます。以下は基本的なHonoアプリの例です。
+		```js
+		import { Hono } from 'hono'
+		const app = new Hono()
+
+		app.get('/', (c) => c.text('Hello Hono!'))
+
+		export default app
+		```
+	+ **実践のヒント**: `hono/jsx`を使用すると、サーバーから直接JSXテンプレートをストリーミングしてレンダリングできるため、初期読み込みパフォーマンスの改善に役立ちます。v4.8からは`hono/helper`を通じて、ルーティングロジックをよりクリーンに構成できます。
+
+---
+#### 見逃せないコンテンツ
+-	**[HTML Form Inspector](https://frontendfoc.us/link/171225/web)** (出典: *Frontend Focus #699*)
+	+ **要約**: HTMLフォームの構造とフィールドを監査（audit）してくれる無料ツールです。HTMLを貼り付けるだけで、間違いと修正方法を含む概要を提供してくれます。
+-	**[i18n-check](https://lingual.dev/blog/validating-your-nextjs-internationalization/)** (出典: *Naver FE News (2025-07)*)
+	+ **要約**: ReactおよびNext.jsアプリの多言語（i18n）設定を検証するCLIツールです。翻訳ファイルから欠落または不正なキーを見つけ出し、CI/CDパイプラインに統合して翻訳品質を自動的に管理できます。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+1.	**[Ecma International Approves ECMAScript 2025: What’s New?](https://2ality.com/2025/06/ecmascript-2025.html)** (出典: *JavaScript Weekly #742*, *Naver FE News (2025-07)*)
+	![ES2025](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/mmqoweyhp6b07c0vgja3.jpg)
+	+ **核心インサイト**: 2025年6月、Ecma InternationalはES2025言語仕様を公式に承認しました。`Import attributes`によるJSONモジュールのサポート、`Iterator`ヘルパーメソッド、`Set`オブジェクトの新しい数学的演算メソッド、正規表現の改善、`Promise.try()`など、8つの主要な機能が追加され、JavaScriptの表現力と効率が大幅に向上しました。この記事は、各機能についての明確な説明とコード例を提供し、開発者が新しい機能を迅速に理解し活用できるよう支援します。
+
+2.	**[The Gap Strikes Back: Now Stylable](https://frontendfoc.us/link/171199/web)** (出典: *Frontend Focus #699*)
+	+ **核心インサイト**: 新しいCSS機能である`gap`デコレーションを使用すると、FlexboxやGridレイアウトのアイテム間にスタイルが適用された区切り線を表示できるようになります。この記事は、デモとコードを通じて、この機能がどのように柔軟で興味深いスタイリングの可能性を切り開くかを示しています。
+	+ **コード例**:
+		```css
+		.container {
+			display: flex;
+			gap: 10px;
+			gap-decoration: dotted red; /* コード例 */
+		}
+		```
+	+ **この記事が有益な理由**: これまでは`::before`や`::after`疑似要素を使って複雑に実装する必要があった区切り線のスタイリングを、CSSの`gap`プロパティ一つで簡単に処理できるようになります。コードの簡潔性とメンテナンス性が大幅に向上するでしょう。
+
+3.	**[Passkeys for Normal People](https://www.troyhunt.com/passkeys-for-normal-people)** (出典: *Naver FE News (2025-07)*)
+	![Passkeys](https://www.troyhunt.com/content/images/2025/05/troy-phish-1.jpg)
+	+ **核心インサイト**: パスキー（Passkeys）はフィッシング攻撃に強く、従来のパスワードよりもはるかに安全で便利な認証方式です。この記事は、一般ユーザーでも簡単に理解できるように、パスキーの概念、利点、そして様々なプラットフォームでの設定方法を実際の例とともに詳細に説明します。開発者だけでなく、サービスを利用するすべての人が知っておくと良いセキュリティの常識を提供します。
+
+---
+#### 見逃せないコンテンツ
+-	**[CSS Color Functions](https://frontendfoc.us/link/171200/web)** (出典: *Frontend Focus #699*)
+	+ **要約**: `oklch()`を含む最新のCSSカラー関数と色空間に関する包括的な概要を提供します。sRGB、OKLabのような色空間と`rgb()`、`hsl()`などの関数を取り上げ、CSSのカラーツールボックスへの理解を深めます。
+-	**[PNG is Back](https://frontendfoc.us/link/171209/web)** (出典: *Frontend Focus #699*)
+	+ **要約**: 20年ぶりに更新されたPNG仕様は、HDR、アニメーション、EXIFデータなどをサポートするようになりました。この記事は、新しいPNG仕様の主な変更点を紹介します。
+
+---
+
+## 4. ✨ アイデア
+1.	**[CSS Bursts With Conic Gradients](https://frontendmasters.com/blog/css-bursts-with-conic-gradients/)** (出典: *Smashing Newsletter #514*)
+	- ![CSS Bursts](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/a196f482-6894-37c5-9da3-8405bbf2750d.png)
+	+ **特徴**: CSSの`conic-gradient()`関数と新しいカラーストップ（color stop）の長さを活用し、画像なしで純粋なCSSだけで「爆発」効果（burst effect）を作り出す方法を紹介します。テキスト用の中央スペースを作成したり、繰り返し`radial-gradient`を重ねて線を分離するなど、創造的なテクニックを通じてCSSの可能性を広げます。
+
+2.	**[A Step Into the Spatial Web: The HTML Model Element in Apple Vision Pro](https://frontendfoc.us/link/171218/web)** (出典: *Frontend Focus #699*)
+	- ![Vision Pro Model Element](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1751460788/eghur7fj3genvxrl5ve8.jpg)
+	+ **特徴**: Apple Vision ProでWebページに3Dモデルを直接レンダリングできる`<model>` HTML要素について紹介します。まだニッチな技術ではありますが、Webコンテンツが2Dを超えて3D空間に拡張される未来を垣間見ることができる興味深い事例です。
+
+---
+
+## 5. ⚡️ ミニノート
+-	**[if() and reading-flow](https://www.youtube.com/watch?v=Apn8ucs7AL0)** (出典: *Smashing Newsletter #514*)
+	+ **要約**: Chrome 137に新たに追加されたCSS機能である`if()`関数と`reading-flow`プロパティについての簡単な紹介動画です。`if()`を使用すると、カスタムプロパティの値に応じて論理的なスタイリングが可能になり、`reading-flow`はDOMの順序と視覚的な順序が異なる場合に、キーボードとスクリーンリーダーのフォーカス順序を意図した通りに制御してアクセシビリティを向上させます。
+-	**[Temporal API proposal reaches Stage 3 Draft](https://javascriptweekly.com/link/171054/web)** (出典: *JavaScript Weekly #742*)
+	+ **要約**: JavaScriptの日付と時刻の扱いを根本的に改善する`Temporal` APIの提案がStage 3 Draft段階に到達しました。これはAPIが安定化段階に近づいたことを意味し、近いうちにブラウザでネイティブにサポートされる可能性が高まりました。
+-	**[JSON module scripts are now Baseline Newly available](https://web.dev/blog/json-imports-baseline-newly-available)** (出典: *Naver FE News (2025-07)*)
+	+ **要約**: これですべてのモダンブラウザで、`import`構文に`with { type: "json" }`属性を使用してJSONファイルを直接モジュールとしてインポートできるようになりました。これは`fetch`後に`Response.json()`を呼び出す従来の方法よりもはるかに簡潔で効率的です。
+-	**[Vercel Ship 2025 Recap](https://react.statuscode.com/link/171163/web)** (出典: *React Status #434*)
+	+ **要約**: Vercelの年次カンファレンスで発表されたすべてのニュースを1か所で確認できます。AI SDKのアップデート、Fluidコンピューティングオプション、Vercel Sandbox、Rolling Releases機能、ボット検出など、様々な内容が含まれています。
+
+## 6. 🎉 リリース
+-	**[Vite v7.0.0](https://javascriptweekly.com/link/171044/web)** (出典: *JavaScript Weekly #742*)
+	+ **アップデート**: Node.js 20.19+および22.12+が要求され、デフォルトのブラウザターゲットが「baseline-widely-available」に変更されました。RustベースのRolldownバンドラが実験的に使用可能です。
+-	**[Prettier v3.6](https://prettier.io/blog/2025/06/23/3.6.0)** (出典: *Naver FE News (2025-07)*)
+	+ **アップデート**: Rustベースの高性能OXCパーサーを使用する実験的なCLIオプションと、FlowサポートのためのHermesプラグインが追加されました。
+-	**[Marked v16.0](https://javascriptweekly.com/link/171084/web)** (出典: *JavaScript Weekly #742*)
+	+ **アップデート**: 高速で拡張可能なMarkdownパーサーおよびコンパイラです。
+-	**[Node.js Releases](https://javascriptweekly.com/link/171057/web)** (出典: *JavaScript Weekly #742*)
+	+ **アップデート**: Node.js v22.17.0 (LTS), v24.3.0 (Current), v20.19.3 (LTS)など、複数のバージョンがリリースされました。
+-	**[Hono v4.8](https://github.com/honojs/hono/releases/tag/v4.8.0)** (出典: *JavaScript Weekly #742*)
+	+ **アップデート**: ルートヘルパー関数の追加、JSXストリーミングとCORSの改善、SSGのための新しいプラグインシステムが導入されました。
+-	**[AG Charts v12.0](https://react.statuscode.com/link/171177/web)** (出典: *React Status #434*)
+	+ **アップデート**: 様々なフレームワークをサポートする広範な機能を備えたチャートライブラリです。
+-	**[Recharts v3.0](https://javascriptweekly.com/link/171095/web)** (出典: *JavaScript Weekly #742*)
+	+ **アップデート**: D3ベースのReactチャートライブラリです。
+-	**[Ink v6.0.1](https://react.statuscode.com/link/171180/web)** (出典: *React Status #434*)
+	+ **アップデート**: Reactを使用してCLIアプリをビルドできるようにするツールです。
+
+## ✍️ おわりに
+- 今週は、ES2025と新しいCSS機能を通じて、Webプラットフォームの着実な進化を確認することができました。同時に、ReactとURLの状態管理に関する議論は、私たちが書くコードの構造とパターンについて改めて考えさせられます。新しいツールを積極的に探求し、より良い開発体験を築いていかれることを願っています。
+
+#### 出典
+- [JavaScript Weekly #742](https://javascriptweekly.com/issues/742)
+- [Smashing Newsletter #514](https://mailchi.mp/smashingmagazine/514-new-css-techniques?e=02d8dcf17a)
+- [NAVER FE News 2025-07](https://github.com/naver/fe-news/blob/master/issues/2025-06.md?utm_source=substack&utm_medium=email)
+- [React Status #434](https://react.statuscode.com/issues/434)
+- [Frontend Focus #699](https://frontendfoc.us/issues/699)
