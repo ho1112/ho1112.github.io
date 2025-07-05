@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 import { baseDomain, languages } from '@/config/constant'
 import {
   getPostDetail,
