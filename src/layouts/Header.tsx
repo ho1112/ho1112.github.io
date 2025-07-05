@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import ScrollProgressBar from '@/components/common/ScrollProgressBar'
 import { Button } from '@/components/ui/button'
 import { Language } from './theme/Language'
+import IconLinkedin from '@/components/icon/LinkedIn'
 
 export const Header = () => {
   const { ref, transform, currentScrollTop } = useScrollTracker(60)
@@ -33,8 +34,18 @@ export const Header = () => {
             <ThemeSwitch />
             <Language />
             <Button asChild variant="ghost" size="icon">
-              <Link href="https://github.com/ho1112" target="_blank">
+              {/* <Link href="https://github.com/ho1112" target="_blank">
                 <Github className="size-[2rem]" />
+              </Link> */}
+              <Link
+                href="https://www.linkedin.com/in/lee-hoyeon/"
+                target="_blank"
+              >
+                <IconLinkedin
+                  className="fill-foreground transition hover:fill-chomin"
+                  height={30}
+                  width={30}
+                />
               </Link>
             </Button>
           </div>
