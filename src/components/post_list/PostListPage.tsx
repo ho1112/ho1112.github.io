@@ -21,7 +21,10 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
   // 카테고리 페이지일 경우
   if (category) {
-    const postList = await getSortedPostList(language, category)
+    const postList = await getSortedPostList(
+      language,
+      category === 'all' ? undefined : category,
+    )
     return (
       <>
         <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
@@ -87,6 +90,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       </section>
       {/* 최신 포스트 */}
       <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
+        <h2 className="text-2xl font-bold mb-4">{t.latest}</h2>
         <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 md:h-[30vw]">
           {latestPostList.map((post, index) => (
             <PostCard
@@ -97,6 +101,14 @@ const PostListPage = async ({ language, category }: PostListProps) => {
             />
           ))}
         </ul>
+        <div className="mt-6 flex justify-center">
+          <Link
+            href={`/blog/${language}/all`}
+            className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+          >
+            {`${t.all}(${allPostCount})`}
+          </Link>
+        </div>
       </section>
 
       {/* workLog Posts */}
@@ -142,7 +154,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         {allInspirationPosts.length > 3 && (
           <div className="mt-6 flex justify-center">
             <Link
-              href={`/blog/${language}/codeLab`}
+              href={`/blog/${language}/inspiration`}
               className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
             >
               inspiration {t.more}
