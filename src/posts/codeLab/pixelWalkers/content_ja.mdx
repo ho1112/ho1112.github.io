@@ -1,0 +1,214 @@
+---
+title: '写真一枚で場所を教えてくれるLINE AIボット開発記 (with Gemini)'
+desc: 写真一枚で場所を教えてくれるLINE AIボット開発記 (with Gemini)
+date: 2025-07-07
+thumbnail: /posts/codeLab/pixelWalkers/pixelWalkers.avif
+---
+
+# LINEとGemini AIで作る画像認識LINEボット
+
+## プロローグ：とにかく何かやってみよう
+
+![楽天証券](/posts/codeLab/pixelWalkers/rakuten.avif)
+![SBI証券](/posts/codeLab/pixelWalkers/sbi.avif)
+
+初めてLINEボットを作ろうと思ったのは、個人的な目標からでした。それは**「SBI証券の口座に配当金が入金されるたびに、その明細を自動でLINEに通知するボット」**を作ることでした。
+PlaywrightとGASを組み合わせれば、自動でログイン->配当金明細の取得->LINEへの送信まで可能だと思われました。しかし、最近セキュリティが強化され、2段階認証(2FA)が必須になったことで、その処理がやや複雑になりました。
+単純なログインだけでなく、複雑な認証要素まで突破しなければならず、万が一不正アクセスとしてアカウントがロックされるリスクも考えられたため、これは計画段階で中断しました。
+
+それでもLINEボットを作ってみようと思ったので、その方向性は維持しつつ、他のアイデアを考えてみました。
+そんな時、ふと普段散歩しているときに「あれは何だろう？」と気になっていた場所があったことを思い出し、こんな考えが浮かびました。
+「LINEでただ写真を撮って送るだけで、AIが自動でそれが何かを教えてくれたらどうだろう？」
+
+そこで、とにかく始めてみることにしました。
+
+***
+
+## 1. 設計と準備：どんな技術で作るか？
+
+まず最初に、どのような技術を組み合わせるかを決める必要がありました。
+
+まずは最も慣れているNext.jsで作り、デプロイが簡単なVercelを使うことにしました。Gemini APIはGoogle AI Studioで発行しました。
+
+* **インターフェース：** **`LINE Messaging API`**
+	* 別のアプリ開発なしで、最も身近なユーザー体験を提供するために選択しました。
+* **サーバー：** **`Next.js (App Router) API Route`**
+	* ファイルベースのルーティングで、簡単にサーバーレスAPIエンドポイントを構築できます。
+* **AIモデル：** **`Google Gemini 2.5 Flash (Vision)`**
+	* 強力なマルチモーダル（画像+テキスト）分析性能と便利なAPIを提供します。
+* **デプロイ：** **`Vercel`**
+	* Next.js、GitHubと連携し、自動デプロイ(CI/CD)をサポートします。
+
+#### **データフロー**
+[LINE User (image)] → [LINE Platform] → Webhook (POST) → [Vercel Endpoint] → [Gemini API] → [Vercel Endpoint] → Reply API → [LINE Platform] → [LINE User]
+
+***
+
+## 2. プロジェクト設定と主要な依存関係
+
+プロジェクトは`create-next-app`で始め、AIとLINEの連携のために2つのライブラリをインストールしました。
+
+1.  **Next.jsプロジェクトの作成：**
+	```bash
+	npx create-next-app@latest pixel-walkers --ts --eslint --app
+	```
+2.  **主要ライブラリのインストール：**
+	```bash
+	npm install @google/generative-ai @line/bot-sdk
+	```
+	* **`@google/generative-ai`**: Gemini APIと通信するためのGoogle公式SDKです。
+	* **`@line/bot-sdk`**: Webhookリクエストの処理やメッセージ送信など、LINE Messaging APIを簡単に使用するための公式SDKです。
+
+APIキーのような機密情報は`.env.local`ファイルに安全に保管し、`.gitignore`に登録してGitHubに公開されないように処理しました。
+
+```env
+# Google AI Studio
+GEMINI_API_KEY=""
+
+# LINE Developers
+LINE_CHANNEL_ACCESS_TOKEN=""
+LINE_CHANNEL_SECRET=""
+```
+
+***
+
+## 3. LINEボットの作成とWebhook
+
+アイデアを実装するためには、まずLINE Developersコンソールでボットを作成する必要がありました。まずプロバイダーを作成し、チャネルを作成しました。チャネル作成後、突然**manager.line.biz**という管理ページに移動しました。
+チャネルを作成した**developers.line.biz**は私たち開発者が扱う場所で、manager.line.bizはマーケティング担当者/LINEチャネル担当者が管理する場所のようです。プロフィール写真をここで設定できます。
+![](/posts/codeLab/pixelWalkers/lineDev.avif)
+紆余曲折の末にボットを作成し、APIキーなどを発行した後、次の関門である**Webhook** に直面しました。Webhookは「LINEサーバー」が私の「開発サーバー」にメッセージを伝達してくれる通路です。
+
+LINEチャネルの名前は`PixelWalkers`と名付けました。まず最初のメッセージとして「hi」を送ってみました。
+![developers.line.biz](/posts/codeLab/pixelWalkers/firstMessage.avif)
+メッセージを送ると、デフォルトで設定されている自動応答メッセージが無事に届きました。これでMessaging APIの初期設定は完了です！
+
+私はこの「通路」が正しく開通しているか確認するために、2つのツールを使用しました。
+
+![webhook.site](/posts/codeLab/pixelWalkers/webhooksite.avif)
+1.  **`webhook.site`：** コードを書く前に、LINEが本当にシグナルを送ってくれるか確認するための、一時的なWebhookアドレスサービスです。ここに私のボットを接続してLINEメッセージを送ると、JSONデータが画面に表示され、送信したメッセージを確認できました。
+![ngrok](/posts/codeLab/pixelWalkers/ngrok.avif)
+2.  **`ngrok`：** 次は実際のコードと接続する番でした。デプロイ前にローカルで確認する必要があるため、外部からアクセスするための`ngrok`というトンネルが必要でした。`npm install -g ngrok`でインストールし、`ngrok http 3000`を実行すると、私のローカル環境へ向かう一時的なアドレスが生成されました。
+
+***
+
+## 4. 中核ロジックの深掘り分析：Webhook API
+
+数回のデバッグを経て、安定して動作する`app/api/webhook/route.ts`のコードが完成しました。
+
+```typescript
+// ... (必要なimport文)
+
+// ... (環境変数とクライアントの初期化)
+
+// ... (streamToBuffer ヘルパー関数)
+
+// LINEからのPOSTリクエストを受け取るメインハンドラー
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const events: WebhookEvent[] = body.events;
+
+    // 複数のイベントを同時に安定して処理するためにPromise.allを使用
+    const results = await Promise.all(
+      events.map(async (event) => {
+        const userId = event.source?.userId;
+        const replyToken = event.type === 'message' ? event.replyToken : undefined;
+
+        try {
+          if (!userId || !replyToken) {
+            return; // 処理できないイベントはスキップ
+          }
+
+          // 画像メッセージの場合のみロジックを実行
+          if (event.type === 'message' && event.message.type === 'image') {
+            // 1. ユーザーの言語情報を照会
+            // LINE公式アカウントをブロックしているユーザーのプロフィール情報は取得できません。 --> 取得できない場合もある（デフォルト値 'ja'）
+            let userLanguage = 'ja';
+            try {
+              const profile = await lineClient.getProfile(userId);
+              if (profile.language) {
+                userLanguage = profile.language;
+              }
+              console.log('言語 ', userLanguage)
+            } catch {
+              console.error(`プロファイル照会失敗 (user: ${userId})`);
+            }
+
+            // 2. 画像分析と返信の送信
+            const responseStream = await lineClient.getMessageContent(event.message.id);
+            const buffer = await streamToBuffer(responseStream as unknown as Stream);
+            const imageBase64 = buffer.toString('base64');
+
+            const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+            const prompt = `You are a helpful and friendly tour guide. Your tone should be engaging and informative.
+            Analyze the user's image.
+            Identify the landmark, object, or place in the image.
+            If it is a famous place or object, provide a concise but engaging paragraph (about 4-5 sentences) that includes its key characteristics, a fun fact, or its historical significance.
+            If you cannot identify it, state that clearly and describe what you see.
+            VERY IMPORTANT: You MUST write your entire response in the following language code: ${userLanguage}`;
+            const result = await model.generateContent([
+              prompt, { inlineData: { data: imageBase64, mimeType: 'image/jpeg' } }
+            ]);
+            const aiResponseText = result.response.text();
+
+            await lineClient.replyMessage(replyToken, { type: 'text', text: aiResponseText });
+          }
+        } catch (error) {
+          console.error('個別イベント処理中にエラー発生：', error);
+          // 3. エラー発生時、ユーザーにエラーメッセージを返信
+          if (replyToken) {
+            const errorMessage = "申し訳ありません、一時的なエラーが発生しました。しばらくしてからもう一度お試しください。\n\n죄송합니다, 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요。\n\nSorry, a temporary error occurred. Please try again later.";
+            await lineClient.replyMessage(replyToken, { type: 'text', text: errorMessage });
+          }
+        }
+      })
+    );
+    return NextResponse.json({ status: 'ok', results });
+  } catch (error) {
+    if (error instanceof Error) console.error('リクエスト全体の処理中にエラー発生：', error.message);
+    return NextResponse.json({ status: 'error' }, { status: 500 });
+  }
+}
+```
+
+### コード解説：PixelWalkersはどのように動作するのか？
+上記のコードは、いくつかの核心的なロジックを通じて動作します。
+
+![](/posts/codeLab/pixelWalkers/language.avif)
+**動的な多言語処理**: `lineClient.getProfile(userId)`を通じて、ユーザーのLINEアプリの言語設定を直接照会します。もし照会に失敗しても、デフォルト言語（日本語）で安定して動作するように設計しました。この`userLanguage`変数をGeminiのプロンプトに含めることで、AIがユーザーの言語に合わせて回答を生成するように指示します。デフォルト値は日本語です。
+
+**画像メッセージ専用のロジックフィルタリング**: `if (event.message.type === 'image')`という条件文が「門番」の役割を果たします。ユーザーが画像を送信した場合にのみAI分析ロジックが実行され、テキストやスタンプなど他のタイプのメッセージは無視することで、不要なAPI呼び出しを防ぎます。
+
+![](/posts/codeLab/pixelWalkers/error.avif)
+**安定したサービスのための例外/エラー応答**: 各ユーザーのイベントを個別の`try...catch`ブロックで囲みました。これにより、あるユーザーのリクエストでAPI割り当て超過などのエラーが発生しても、他のユーザーに影響を与えずにサービス全体が中断するのを防ぎます。また、エラー発生時にはユーザーに多言語の案内メッセージを送り、ボットが停止したわけではないことを親切に伝えます。
+
+![](/posts/codeLab/pixelWalkers/noLandmark.avif)
+**解釈不能な画像**: 場所やランドマークなど、AIが解釈できない写真の場合は、その画像の分析結果を送信します。
+
+
+## 5. デプロイ：Vercel
+完成したソースコードをGitHubにプッシュし、Vercelに連携してデプロイしました。
+![](/posts/codeLab/pixelWalkers/vercel.avif)
+
+デプロイが完了するとドメインが生成されます。ドメインをコピーしてLINE DevelopersのWebhookに貼り付けます。
+検証ボタンを押して接続されたか確認します！
+![](/posts/codeLab/pixelWalkers/webhookSuccess.avif)
+
+## 6. LINE:PixelWalkers
+これでデプロイは完了です。LINEで確認してみます。
+渋谷のハチ公と御茶ノ水の聖橋の写真を送信してみました。
+![ハチ公](/posts/codeLab/pixelWalkers/hachiko_ja.avif)
+![聖橋](/posts/codeLab/pixelWalkers/hijiribashi_ja.avif)
+成功！
+
+## おわりに
+Part 1完了。
+今回のプロジェクトは、単にコードを書くことを超え、「Gemini」という優れた潜在能力を持つチームメンバーと一緒に仕事をするような経験でした。このチームメンバーは膨大な知識と優れた推論能力を持っていますが、時には突拍子もない嘘（ハルシネーション）をついたり、文脈を誤解したりもしました。
+私の役割は、このAIチームメンバーの長所を最大化し、短所を補う「リーダー」の役割でした。明確な指示書（プロンプトエンジニアリング）を通じて目標を設定し、外部世界とコミュニケーションできる手足（LINE API、外部API連携）を作り、予期せぬ行動（エラー）に備える安定した業務環境（エラーハンドリング）を構築しました。
+この過程を通じて、最新技術を単なる「ツール」として使うだけでなく、その特性を深く理解し、目標に合わせて「マネジメント」して実質的な価値を創出することが重要だと感じました。Part 2でもこのAIチームメンバーと共に、完成度の高いLINEボットへと成長させていく計画です。
+
+**💡 追加で試してみたいこと：**
+* **チャット制限：** 画像入力以外は処理しないため、ユーザーからチャット入力があった場合に、応答できない旨のコメントを送信する
+* **ローディングアニメーション：** 画像入力後、応答が届くまでの間、ローディングアニメーションを表示する（[LINE公式ドキュメント](https://developers.line.biz/ja/docs/messaging-api/use-loading-indicator/#example-request)）
+* **プロンプトトークンの測定：** プロンプトを英語、日本語、韓国語に変更してみて、英語のトークン数が有意に節約されるかテストする
