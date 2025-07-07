@@ -7,9 +7,9 @@ import { useScrollTracker } from '@/hook/useScrollTracker'
 import ThemeSwitch from '@/layouts/theme/Switch'
 import { cn } from '@/lib/utils'
 import ScrollProgressBar from '@/components/common/ScrollProgressBar'
+import IconLinkedin from '@/components/icon/LinkedIn'
 import { Button } from '@/components/ui/button'
 import { Language } from './theme/Language'
-import IconLinkedin from '@/components/icon/LinkedIn'
 
 export const Header = () => {
   const { ref, transform, currentScrollTop } = useScrollTracker(60)
