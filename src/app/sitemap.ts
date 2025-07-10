@@ -3,20 +3,27 @@ import { languages } from '@/config/constant'
 import { getSitemapPostList } from '@/lib/post'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const postLists = await Promise.all(
-    languages.map(async (language) => {
-      const postList = await getSitemapPostList(language)
-      return postList
-    }),
-  )
-  const flattenedPostLists = postLists.flat()
+  const baseUrl = 'https://mintora.me/'
 
-  const baseUrl = 'https://ho1112.github.io/'
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
     },
-    ...flattenedPostLists,
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+    },
   ]
+
+  const postList = (
+    await Promise.all(
+      languages.map(async (lang) => {
+        const langPostList = await getSitemapPostList(lang)
+        return langPostList
+      }),
+    )
+  ).flat()
+
+  return [...staticPages, ...postList]
 }
