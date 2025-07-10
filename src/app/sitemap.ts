@@ -3,7 +3,7 @@ import { languages } from '@/config/constant'
 import { getSitemapPostList } from '@/lib/post'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://mintora.me/'
+  const baseUrl = 'https://mintora.me'
 
   const staticPages: MetadataRoute.Sitemap = [
     {
