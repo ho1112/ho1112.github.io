@@ -99,10 +99,9 @@ export const getSortedPostList = async (
 
 export const getSitemapPostList = async (language: string) => {
   const postList = await getPostList(language)
-  const baseUrl = 'https://mintora.me/'
   const sitemapPostList = postList.map(({ url }) => ({
     lastModified: new Date(),
-    url: `${baseUrl}${url}`,
+    url: url,
   }))
   return sitemapPostList
 }
