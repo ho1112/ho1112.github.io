@@ -16,14 +16,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  const postList = (
+  const postRelativePaths = (
     await Promise.all(
       languages.map(async (lang) => {
-        const langPostList = await getSitemapPostList(lang)
-        return langPostList
+        return await getSitemapPostList(lang)
       }),
     )
   ).flat()
+
+  const postList = postRelativePaths.map(({ url, lastModified }) => ({
+    url: `${baseUrl}${url}`,
+    lastModified,
+  }))
 
   return [...staticPages, ...postList]
 }
