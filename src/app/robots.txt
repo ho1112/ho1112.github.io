@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ho1112.github.io/sitemap.xml
+Sitemap: https://mintora.me/sitemap.xml
