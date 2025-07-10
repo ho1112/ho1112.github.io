@@ -1,17 +1,15 @@
 import { MetadataRoute } from 'next'
-import { languages } from '@/config/constant'
+import { baseDomain, languages } from '@/config/constant'
 import { getSitemapPostList } from '@/lib/post'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://mintora.me'
-
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: baseDomain,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseDomain}blog/`,
       lastModified: new Date(),
     },
   ]
@@ -25,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ).flat()
 
   const postList = postRelativePaths.map(({ url, lastModified }) => ({
-    url: `${baseUrl}${url}`,
+    url: `${baseDomain}${url}/`,
     lastModified,
   }))
 
