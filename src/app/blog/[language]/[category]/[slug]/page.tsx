@@ -27,7 +27,7 @@ export async function generateMetadata({
   const post = await getPostDetail(language, category, slug)
 
   const title = `${post.title} | mintora`
-  const imageURL = `${baseDomain}${post.thumbnail}`
+  const imageURL = `${baseDomain}${post.thumbnail.slice(1)}`
 
   return {
     title,
@@ -38,7 +38,7 @@ export async function generateMetadata({
       description: post.desc,
       type: 'article',
       publishedTime: post.date.toISOString(),
-      url: `${baseDomain}${post.url}`,
+      url: `${baseDomain}${post.url.slice(1)}`,
       images: [imageURL],
     },
     twitter: {

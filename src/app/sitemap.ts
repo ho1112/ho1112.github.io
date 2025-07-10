@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ).flat()
 
   const postList = postRelativePaths.map(({ url, lastModified }) => ({
-    url: `${baseDomain}${url}/`,
+    url: `${baseDomain}${url.slice(1)}/`,
     lastModified,
   }))
 
