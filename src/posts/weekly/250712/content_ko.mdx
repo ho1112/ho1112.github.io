@@ -1,0 +1,169 @@
+---
+title: '🚀 2025-07 W2 #15'
+desc: 2025년 7월 2주차 뉴스레터
+date: 2025-07-12
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 이번 주 핵심 테마
+- 최신 CSS 기능인 캐스케이드 레이어(Cascade Layers)와 `if()` 함수를 활용하여 CSS 구조화 및 조건부 스타일링을 개선하는 방법을 알아보고, React와 JavaScript 생태계의 주요 릴리스 및 모션 디자인 시스템 구축 전략 등 프론트엔드 개발의 다양한 최신 동향을 살펴봅니다.
+
+## 1. 🔍 심층 분석
+1. **[CSS Cascade Layers Vs. BEM Vs. Utility Classes: Specificity Control](https://www.smashingmagazine.com/2025/06/css-cascade-layers-bem-utility-classes-specificity-control/?utm_source=CSS-Weekly&utm_campaign=Issue-614&utm_medium=web)** (출처: *CSS Weekly #614*)
+   ![Cascade Layers](https://css-weekly.com/wp-content/uploads/2025/05/css-cascade-layers-bem-utility-classes-specificity-control.jpg)
+    - **배경**: CSS 명시도(Specificity) 관리는 대규모 프로젝트에서 항상 어려운 과제였습니다. BEM, 유틸리티 클래스 같은 방법론이 이를 해결하려 노력해왔지만, 캐스케이드 레이어의 등장은 명시도 제어에 대한 근본적인 해결책을 제시합니다.
+    - **핵심 기능**: 캐스케이드 레이어는 `@layer` 규칙을 사용하여 스타일시트를 여러 계층으로 나눕니다. 이 계층의 순서에 따라 스타일 우선순위가 결정되므로, 선택자의 명시도나 소스 순서에 덜 의존하게 됩니다. 이를 통해 서드파티 라이브러리, 테마, 유틸리티, 컴포넌트 스타일을 체계적으로 관리하고 예측 가능하게 만들 수 있습니다.
+    - **코드 예제**:
+      ```css
+      @layer reset, base, components, utilities;
+
+      @layer base {
+        p { max-width: 65ch; }
+      }
+
+      @layer components {
+        .card { background-color: grey; }
+      }
+      ```
+    - **실무 적용**: 디자인 시스템이나 대규모 애플리케이션에서 스타일 충돌을 방지하고 CSS 아키텍처를 단순화하는 데 매우 유용합니다. BEM과 유틸리티 클래스를 레이어 안에서 함께 사용하여 각 방법론의 장점을 취할 수 있습니다.
+    - **주의사항**: 레이어 순서가 명시도에 큰 영향을 미치므로, 프로젝트 초기에 전체적인 레이어 구조를 신중하게 설계하는 것이 중요합니다.
+
+2. **[CSS Conditionals with the New `if()` Function](https://frontendfoc.us/link/171454/web)** (출처: *Frontend Focus #700*)
+   ![CSS if() Function](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1752063792/yhuyagm43dcjnbae2ti1.png)
+    - **배경**: CSS에 `if()` 함수가 도입되면서 미디어 쿼리, 컨테이너 쿼리, `supports()` 규칙과 함께 인라인 조건문을 사용할 수 있게 되어 CSS 아키텍처에 새로운 가능성이 열렸습니다.
+    - **핵심 기능**: `if()` 함수를 사용하면 특정 조건에 따라 CSS 속성 값을 동적으로 변경할 수 있습니다. 예를 들어, 뷰포트 너비에 따라 다른 색상 값을 적용하는 것을 단 한 줄로 간결하게 처리할 수 있습니다.
+    - **코드 예제**:
+      ```css
+      .element {
+        --is-large: if(container(width > 40em), 1, 0);
+        padding: calc(var(--is-large) * 2rem + 1rem);
+      }
+      ```
+    - **실무 적용**: 반응형 디자인에서 여러 미디어 쿼리 블록을 사용하거나 복잡한 `calc()` 함수를 사용하는 대신 코드를 더 간결하고 직관적으로 만들 수 있습니다.
+    - **주의사항**: Chrome 137 이상에서 지원되므로, 프로그레시브 인핸스먼트 전략과 함께 사용해야 합니다. 모든 브라우저에서 지원되기까지는 시간이 걸릴 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Grainy Gradients](https://frontendmasters.com/blog/grainy-gradients/?utm_source=CSS-Weekly&utm_campaign=Issue-614&utm_medium=web)** (출처: *CSS Weekly #614*)
+  + **요약**: CSS 그래디언트에서 발생하는 색상 띠 현상(banding)을 SVG 변위 필터(displacement map)를 사용하여 미세한 노이즈 텍스처를 추가함으로써 해결하는 방법을 소개합니다. 이를 통해 부드럽고 자연스러운 그래디언트를 만들 수 있습니다.
+- **[CSS Intelligence: Speculating on the Future of a Smarter Language](https://frontendfoc.us/link/171456/web)** (출처: *Frontend Focus #700*)
+  + **요약**: CSS에 `if()`와 같은 논리적인 기능이 추가되면서 언어가 어떻게 더 '지능적으로' 진화하고 있는지 탐구합니다. CSS의 미래, 복잡성 증가에 대한 우려, 그리고 개발자들이 이러한 변화에 어떻게 반응하고 있는지에 대한 통찰을 제공합니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[Milkdown: A Plugin-Driven WYSIWYG Markdown Editor Framework](https://javascriptweekly.com/link/171374/web)** (출처: *JavaScript Weekly #743*)
+  ![Milkdown Editor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/tubxfmx8h4pqzyydckgu.jpg)
+  + **개요**: 플러그인 시스템을 기반으로 하는 WYSIWYG 마크다운 에디터 프레임워크입니다. 높은 수준의 커스터마이징이 가능하며, 공식 문서 자체가 Milkdown으로 렌더링될 정도로 강력합니다.
+  + **사용법**: React, Vue, Svelte 등 다양한 프레임워크와 함께 사용할 수 있으며, 핵심 로직은 프레임워크에 독립적입니다. 플러그인을 추가하여 기능을 쉽게 확장할 수 있습니다.
+    ```javascript
+    import { Editor, rootCtx, defaultValueCtx } from '@milkdown/core';
+    import { commonmark } from '@milkdown/preset-commonmark';
+
+    Editor.make()
+      .config((ctx) => {
+        ctx.set(rootCtx, document.querySelector('#editor'));
+        ctx.set(defaultValueCtx, '# Hello world');
+      })
+      .use(commonmark)
+      .create();
+    ```
+  + **실전 팁**: 실시간 협업, 테이블 편집, 수학 공식 입력 등 다양한 고급 기능을 플러그인을 통해 구현할 수 있어 노트 앱, 문서 도구, 블로그 에디터 등에 적합합니다.
+
+- **[BlockNote 0.33: A 'Notion-Like' Block-Based Text Editor](https://react.statuscode.com/link/171510/web)** (출처: *React Status #435*)
+  ![BlockNote Editor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/qp5pgbk1eisygy6dd3sn.jpg)
+  + **개요**: ProseMirror와 TipTap을 기반으로 한 '노션 스타일'의 블록 기반 텍스트 편집기입니다. 드래그 앤 드롭, 실시간 협업, AI 기능, 커스텀 '슬래시 커맨드' 메뉴 등을 제공하여 강력한 편집 환경을 구축할 수 있습니다.
+  + **사용법**: React와 함께 사용하기 쉽도록 설계되었습니다. `useBlockNote` 훅을 사용하여 에디터 인스턴스를 만들고 `BlockNoteView` 컴포넌트로 렌더링하면 됩니다.
+    ```javascript
+    import { BlockNoteView, useBlockNote } from "@blocknote/react";
+    import "@blocknote/react/style.css";
+
+    export default function App() {
+      const editor = useBlockNote();
+      return <BlockNoteView editor={editor} />;
+    }
+    ```
+  + **실전 팁**: 실시간 협업 문서 도구, 블로그 에디터, 노트 앱 등 다양한 애플리케이션에 쉽게 임베드하여 사용할 수 있으며, 플러그인을 통해 기능 확장이 용이합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Kelp](https://kelpui.com/?utm_source=CSS-Weekly&utm_campaign=Issue-614&utm_medium=web)** (출처: *CSS Weekly #614*)
+  + **요약**: HTML을 사랑하는 개발자를 위한 UI 라이브러리로, 최신 CSS와 웹 컴포넌트를 기반으로 합니다. 순수 HTML만으로도 사용할 수 있어 간단한 프로젝트나 프로토타입에 유용합니다.
+- **[snapDOM 1.8: Captures DOM Nodes as Images](https://javascriptweekly.com/link/171381/web)** (출처: *JavaScript Weekly #743*)
+  + **요약**: DOM 노드를 스타일, 폰트, 배경 이미지 등을 보존한 채 확장 가능한 SVG 이미지로 캡처하는 빠르고 정확한 라이브러리입니다. 홈페이지에서 다양한 예제를 확인할 수 있습니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[The ultimate guide to proper use of animation in UX](https://uxdesign.cc/the-ultimate-guide-to-proper-use-of-animation-in-ux-10bd98614fa9)** (출처: *Smashing Newsletter #515*)
+  ![Animation in UX](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/8bff6c53-e896-a33c-3fb4-e9390c5f08dd.png)
+  + **핵심 인사이트**: 좋은 UI 애니메이션은 사용자의 주의를 산만하게 하지 않으면서 자연스럽게 느껴져야 합니다. 이 가이드는 애니메이션의 지속 시간, 속도, 이징(easing), 안무(choreography) 등 UX에서 애니메이션을 올바르게 사용하기 위한 보편적인 원칙들을 설명합니다. 화면 크기와 플랫폼에 따라 애니메이션을 조정하고, 사용자의 시선을 유도하는 방법을 배울 수 있습니다.
+- **[Building a motion design system for a product company](https://medium.com/design-bootcamp/building-a-motion-design-system-for-a-product-company-307b34d051e4)** (출처: *Smashing Newsletter #515*)
+  ![Motion Design System](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/dba654b1-590a-035a-3f5d-e5ce6d928349.png)
+  + **핵심 인사이트**: 모션 시스템을 구축하는 것은 색상 팔레트나 타이포그래피 스케일을 정의하는 것과 크게 다르지 않습니다. 이 글은 모션 감사를 계획하고 실행하는 것부터 시작하여, 모션 매개변수를 정의하고, 컴포넌트 상호작용을 위한 모션 토큰을 구현하는 전체 과정을 다루는 케이스 스터디입니다. 풍부한 예시를 통해 모션을 시스템화하는 데 필요한 귀중한 자료를 제공합니다.
+- **[What Every React Developer Should Know About Signals](https://react.statuscode.com/link/171499/web)** (출처: *React Status #435*)
+  + **핵심 인사이트**: SolidJS의 창시자인 Ryan Carniato가 최신 자바스크립트 코드에서 시그널(Signals)의 현황을 설명하고, 이를 React의 접근 방식과 비교합니다. 시그널이 어떻게 상태 관리를 더 효율적으로 만들 수 있는지에 대한 깊이 있는 통찰을 얻을 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Writing alt text with AI](https://jaredcunha.com/blog/writing-alt-text-with-ai?utm_source=CSS-Weekly&utm_campaign=Issue-614&utm_medium=web)** (출처: *CSS Weekly #614*)
+  + **요약**: LLM(대규모 언어 모델)과 올바른 프롬프트를 사용하여 이미지에 유용한 대체 텍스트(alt text)를 작성하는 부담을 줄이는 방법을 설명합니다. 접근성 향상에 AI를 활용하는 구체적인 사례입니다.
+- **[Respecting Users’ Motion Preferences](https://www.smashingmagazine.com/2021/10/respecting-users-motion-preferences/)** (출처: *Smashing Newsletter #515*)
+  + **요약**: 사용자의 모션 선호도를 존중하는 것이 왜 중요한지, 그리고 `prefers-reduced-motion` 미디어 쿼리와 명시적인 모션 토글을 사용하여 어떻게 구현할 수 있는지 설명합니다.
+- **['Tailwind is the Worst Form of CSS, Except for all the Others'](https://frontendfoc.us/link/171471/web)** (출처: *Frontend Focus #700*)
+  + **요약**: Tailwind CSS에 대한 비판적인 시각과 함께, 그럼에도 불구하고 왜 많은 개발자들이 다른 대안들보다 Tailwind를 선택하는지에 대한 현실적인 고찰을 담고 있습니다.
+
+---
+
+## 4. ✨ 아이디어
+- **[How to Create Kinetic Image Animations with React Three Fiber](https://react.statuscode.com/link/171495/web)** (출처: *React Status #435*)
+   ![Kinetic Image Animations](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/sup4gjiel0xyxpb3rz9z.jpg)
+  + **특징**: React Three Fiber를 사용하여 환상적인 키네틱(kinetic) 이미지 애니메이션 효과를 만드는 방법을 기술적으로 상세하게 설명합니다. 웹에서 극적인 시각적 경험을 구현하고자 하는 개발자들에게 큰 영감을 줄 것입니다. [라이브 데모](https://react.statuscode.com/link/171496/web)에서 직접 확인해볼 수 있습니다.
+- **[Road Trip to Surf Beach - Pure CSS](https://codepen.io/josetxu/pen/XWgbVKz?utm_source=CSS-Weekly&utm_campaign=Issue-614&utm_medium=web)** (출처: *CSS Weekly #614*)
+   ![Pure CSS Animation](https://css-weekly.com/wp-content/uploads/2025/05/road-trip-to-surf-beach-pure-css.jpg)
+  + **특징**: 오직 CSS만으로 구현된 아름다운 애니메이션 데모입니다. 자바스크립트 없이도 복잡하고 인상적인 시각 효과를 만들어낼 수 있다는 점을 보여주는 훌륭한 예시입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[State of CSS 2025 survey is now open.](https://survey.devographics.com/en-US/survey/state-of-css/2025?utm_source=CSS-Weekly&utm_campaign=Issue-614&utm_medium=web)** (출처: *CSS Weekly #614*)
+  + **요약**: 매년 진행되는 State of CSS 2025 설문조사가 시작되었습니다. 참여하여 CSS의 미래를 함께 만들어가세요.
+- **[Let's Encrypt has issued its first certificate for an IP address.](https://frontendfoc.us/link/171459/web)** (출처: *Frontend Focus #700*)
+  + **요약**: Let's Encrypt가 역사상 처음으로 IP 주소에 대한 인증서를 발급했습니다. 이 옵션은 올해 남은 기간 동안 점진적으로 확대될 예정입니다.
+- **[TypeScript 5.9 Beta has been released.](https://react.statuscode.com/link/171501/web)** (출처: *React Status #435*)
+  + **요약**: TypeScript 5.9 베타 버전이 출시되었습니다. 새로운 기능들을 미리 확인해볼 수 있습니다.
+- **[Vercel has acquired NuxtLabs, the company maintaining Nuxt.](https://react.statuscode.com/link/171503/web)** (출처: *React Status #435*)
+  + **요약**: Vercel이 Vue.js 생태계의 핵심인 Nuxt를 유지 관리하는 NuxtLabs를 인수했습니다. 이로써 Next.js, Svelte에 이어 Nuxt도 Vercel과 긴밀한 관계를 맺게 되었습니다.
+- **[The Microsoft Edge team has reached a major milestone of achieving a global First Contentful Paint (FCP) below 300ms.](https://frontendfoc.us/link/171458/web)** (출처: *Frontend Focus #700*)
+  + **요약**: Microsoft Edge 팀이 전 세계적으로 300ms 미만의 FCP(First Contentful Paint)를 달성하는 주요 마일스톤에 도달했습니다.
+
+## 6. 🎉 릴리스
+- **[Deno 2.4](https://javascriptweekly.com/link/171351/web)** (출처: *JavaScript Weekly #743*)
+  + **업데이트**: 서버 및 클라이언트 사이드를 위한 단일 파일 번들을 생성하는 `deno bundle` 명령어가 다시 도입되었습니다. npm 및 JSR 종속성을 지원하며 자동 트리 쉐이킹 기능도 포함됩니다.
+- **[Rspack 1.4](https://javascriptweekly.com/link/171405/web)** (출처: *JavaScript Weekly #743*)
+  + **업데이트**: Rust 기반의 빠른 웹 번들러. WebAssembly 덕분에 이제 브라우저에서도 실행 가능합니다.
+- **[Unistyles 3.0](https://react.statuscode.com/link/171514/web)** (출처: *React Status #435*)
+  + **업데이트**: React Native 앱을 위한 강력한 스타일링 라이브러리. 네이티브 코드와 C++를 사용하여 성능을 극대화했으며, React Native의 새로운 아키텍처(Fabric)에 완전히 통합되었습니다.
+- **[Electron 37.0](https://javascriptweekly.com/link/171358/web)** (출처: *JavaScript Weekly #743*)
+  + **업데이트**: 크로스플랫폼 데스크톱 앱 툴킷의 새로운 버전.
+- **[React DayPicker 9.8](https://react.statuscode.com/link/171519/web)** (출처: *React Status #435*)
+  + **업데이트**: 커스터마이징 가능한 날짜 선택기. 키보드 네비게이션 기능이 개선되었습니다.
+- **[React Chessboard 5.1](https://react.statuscode.com/link/171527/web)** (출처: *React Status #435*)
+  + **업데이트**: 체스 보드를 렌더링하는 React 컴포넌트.
+- **[ESLint 9.30.0](https://javascriptweekly.com/link/171359/web)** (출처: *JavaScript Weekly #743*)
+  + **업데이트**: 자바스크립트 린터 툴의 최신 버전.
+- **[Material UI 7.2](https://react.statuscode.com/link/171524/web)** (출처: *React Status #435*)
+  + **업데이트**: 머티리얼 디자인을 사용하는 독립적인 React 컴포넌트 라이브러리.
+- **[snapDOM 1.8](https://frontendfoc.us/link/171582/web)** (출처: *Frontend Focus #700*)
+  + **업데이트**: DOM 노드를 이미지로 캡처하는 라이브러리. HTML 요소를 스타일을 유지한 채 SVG 이미지로 캡처합니다.
+- **[Babel 7.28.0](https://javascriptweekly.com/link/171361/web)** (출처: *JavaScript Weekly #743*)
+  + **업데이트**: 자바스크립트 컴파일러의 최신 버전.
+
+## ✍️ 마치며
+이번 주는 CSS의 구조적인 발전을 엿볼 수 있는 캐스케이드 레이어와 조건부 로직을 단순화하는 `if()` 함수가 특히 인상 깊었습니다. 이러한 기능들은 복잡한 스타일시트를 더 체계적이고 예측 가능하게 만들어, 장기적인 유지보수 비용을 크게 줄여줄 것입니다. 또한, 사용자 경험을 풍부하게 만드는 모션 디자인을 시스템적으로 접근하는 방법론은 단순한 시각 효과를 넘어, 일관되고 완성도 높은 제품을 만드는 데 필수적인 요소임을 다시 한번 상기시켜 줍니다. 기본으로 돌아가되, 새로운 도구를 적극적으로 활용하여 더 나은 웹을 만들어나가는 한 주가 되기를 바랍니다.
+
+#### 출처
+- [JavaScript Weekly #743](https://javascriptweekly.com/issues/743)
+- [Smashing Newsletter #515](https://mailchi.mp/smashingmagazine/515-animation-guidelines?e=02d8dcf17a)
+- [React Status #435](https://react.statuscode.com/issues/435)
+- [Frontend Focus #700](https://frontendfoc.us/issues/700)
+- [CSS Weekly #614](https://css-weekly.com/issues/614)
+
