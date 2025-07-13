@@ -110,7 +110,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         <div className="mt-6 flex justify-center">
           <Link
             href={`/blog/${language}/all`}
-            className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+            className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
           >
             {`❐ ${t.all}(${allPostCount})`}
           </Link>
@@ -135,7 +135,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/workLog`}
-              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+              className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
             >
               workLog {t.more}
             </Link>
@@ -161,7 +161,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/inspiration`}
-              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+              className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
             >
               deepDive {t.more}
             </Link>
@@ -187,7 +187,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/inspiration`}
-              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+              className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
             >
               inspiration {t.more}
             </Link>
@@ -213,7 +213,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/codeLab`}
-              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+              className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
             >
               codeLab {t.more}
             </Link>
@@ -229,7 +229,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
             <Link
               key={cat.publicName}
               href={`/blog/${language}/${cat.dirName}`}
-              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+              className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
             >
               {cat.publicName}
             </Link>
