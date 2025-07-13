@@ -40,9 +40,10 @@ export const PostHeader = ({ language, post }: Props) => {
             {t.min}
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        {/* hits 조회수 색깔 커스텀이 다크모드와 위화감이 있어 일단 생략 */}
+        {/* <div className="flex items-center gap-1">
           <HitsOfPost url={post.url} />
-        </div>
+        </div> */}
       </div>
     </header>
   )
