@@ -62,7 +62,7 @@ const CategoryList = ({
       subCategories: [
         { value: 'deepDive', displayName: 'deepDive', language },
         // { value: 'web', displayName: 'web', language },
-        { value: 'AI', displayName: 'AI', language },
+        // { value: 'AI', displayName: 'AI', language },
         { value: 'inspiration', displayName: 'inspiration', language },
         { value: 'releaseNote', displayName: 'releaseNote', language },
       ],

@@ -71,12 +71,15 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   )
   const inspirationPosts = allInspirationPosts.slice(0, 3)
 
-  const allAIPosts = allPosts.filter((post) => post.categoryPublicName === 'AI')
-  const aiPosts = allAIPosts.slice(0, 3)
+  const allDeepDivePosts = allPosts.filter(
+    (post) => post.categoryPublicName === 'deepDive',
+  )
+  const deepDivePosts = allDeepDivePosts.slice(0, 3)
 
   const otherCategories = categoryList.filter(
     (cat) =>
       cat.publicName !== 'workLog' &&
+      cat.publicName !== 'deepDive' &&
       cat.publicName !== 'codeLab' &&
       cat.publicName !== 'inspiration',
   )
@@ -107,9 +110,9 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         <div className="mt-6 flex justify-center">
           <Link
             href={`/blog/${language}/all`}
-            className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+            className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
           >
-            {`${t.all}(${allPostCount})`}
+            {`❐ ${t.all}(${allPostCount})`}
           </Link>
         </div>
       </section>
@@ -132,9 +135,35 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/workLog`}
-              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
             >
               workLog {t.more}
+            </Link>
+          </div>
+        )}
+      </section>
+
+      {/* deepDive Posts */}
+      <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
+        <h2 className="text-2xl font-bold mb-4">deepDive</h2>
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {deepDivePosts.map((post, index) => (
+            <PostCard
+              key={post.url + post.date}
+              language={language}
+              post={post}
+              index={index}
+              variant="grid"
+            />
+          ))}
+        </ul>
+        {allDeepDivePosts.length > 3 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={`/blog/${language}/inspiration`}
+              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
+            >
+              deepDive {t.more}
             </Link>
           </div>
         )}
@@ -158,35 +187,9 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/inspiration`}
-              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
             >
               inspiration {t.more}
-            </Link>
-          </div>
-        )}
-      </section>
-
-      {/* AI Posts */}
-      <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
-        <h2 className="text-2xl font-bold mb-4">AI</h2>
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {aiPosts.map((post, index) => (
-            <PostCard
-              key={post.url + post.date}
-              language={language}
-              post={post}
-              index={index}
-              variant="grid"
-            />
-          ))}
-        </ul>
-        {allAIPosts.length > 3 && (
-          <div className="mt-6 flex justify-center">
-            <Link
-              href={`/blog/${language}/inspiration`}
-              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
-            >
-              AI {t.more}
             </Link>
           </div>
         )}
@@ -210,7 +213,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
           <div className="mt-6 flex justify-center">
             <Link
               href={`/blog/${language}/codeLab`}
-              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
             >
               codeLab {t.more}
             </Link>
@@ -226,7 +229,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
             <Link
               key={cat.publicName}
               href={`/blog/${language}/${cat.dirName}`}
-              className="px-4 py-2 bg-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-300"
+              className="px-4 py-2 border border-chomin text-chomin rounded-full text-sm font-semibold hover:bg-chomin hover:text-white"
             >
               {cat.publicName}
             </Link>
