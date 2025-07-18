@@ -1,0 +1,133 @@
+---
+title: '🚀 2025-07 W3 #16'
+desc: 2025年7月第3週のニュースレター
+date: 2025-07-19
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 今週の主要テーマ
+- 今週は、CSSの現代的な機能（:has()、スクロールアニメーション）とその創造的な活用法、そしてWebAssembly（WASM）の拡張性と未来についての議論が主でした。また、Reactの歴史と発展過程を振り返り、Appleのブラウザポリシーに対する批判的な視点も際立ちました。
+
+## 1. 🔍 深掘り
+1.  **[The History of React Through Code](https://react.statuscode.com/link/171774/web)** (出典: *React Status #436*)
+    ![Reactの歴史を示す画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kqqezxo6gwzqfx2wyjy2.jpg)
+    * **背景**: ReactがFacebookの初期から今日の姿にどのように進化してきたか、その道のりをコードと共に探ります。この記事は、Reactの核心的な哲学と主要なAPIおよび機能決定の動機を明らかにします。
+    * **核心内容**: Reactの誕生から現在までの発展過程を年代順に追いながら、各時期に開発者が直面した実際の問題をReactがどのように解決したかを示します。初期のユーザーには馴染みが薄いかもしれないReactに対する考えを完成させるのに役立つでしょう。
+    * **実務への応用**: Reactの発展史を理解することで、現在のAPIの設計哲学をより深く理解し、特定の機能がなぜそのように実装されたのかを知ることができ、より良い技術的意思決定を下すことができます。
+
+2.  **[WebAssembly: Yes, But for What?](https://frontendfoc.us/link/171877/web)** (出典: *Frontend Focus #701*)
+    * **背景**: WebAssembly（WASM）は、ブラウザとサーバーサイドを問わず、さまざまな場所で活用されています。複数のJavaScriptおよびWASM実装に貢献した開発者が、WASMの現在の使用事例と未来の可能性をまとめました。
+    * **核心機能**: ブラウザ内での高性能コンピューティングから、サーバーレス環境、プラグインアーキテクチャ、さらには3D CADアプリに至るまで、WASMがどのように多様な領域に浸透しているかを示します。OpenCascadeをWASMにコンパイルし、Three.jsと統合したChili3Dのような事例を通じて、その潜在能力を確認できます。
+    * **実務への応用**: 高性能が要求されるウェブアプリケーション（例：ゲーム、ビデオ編集、3Dレンダリング）を開発する際に、JavaScriptの限界を超えてネイティブに近いパフォーマンスを達成するための強力な代替案としてWASMを検討できます。
+    * **注意事項**: WASMはまだDOMに直接アクセスできないため、DOM操作が多い作業には依然としてJavaScriptとの相互作用が不可欠です。これによるオーバーヘッドを考慮する必要があります。
+
+---
+#### 見逃せないコンテンツ
+* **[CSS Intelligence: Speculating On The Future Of A Smarter Language](https://www.smashingmagazine.com/2025/07/css-intelligence-speculating-future-smarter-language/?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (出典: *CSS Weekly #615*)
+    + **要約**: CSSが過去数年間でどれほど賢くなったか、今後の方向性はどこか、そして開発者がこれらの変化にどう反応しているかを探ります。言語が複雑になりすぎるのではないかという懸念も含まれています。
+* **[Apple’s Browser Engine Ban Persists, Even Under the DMA](https://frontendfoc.us/link/171813/web)** (出典: *Frontend Focus #701*)
+    + **要約**: Open Web Advocacyは、AppleがEUのデジタル市場法（DMA）にもかかわらず、iOSでのブラウザエンジン選択の自由を実質的に保証していないと主張しています。Appleが意図的に障壁を取り除いていないという批判的な視点を提示します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+1.  **[react-easy-crop: A Component for Interactive Image Cropping](https://react.statuscode.com/link/171788/web)** (出典: *React Status #436*)
+    ![画像切り抜きコンポーネントのデモ](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lyls7dpzj0sgngjvwdh3.jpg)
+    * **概要**: 画像やビデオをユーザーが直接ドラッグ、ズーム、回転して切り抜くことができるインタラクティブなコンポーネントです。すべての画像形式をサポートし、使い方が簡単です。
+    * **使用法**: コンポーネントをインポートし、画像ソースとcrop、zoom、aspectなどの状態（state）を渡して使用します。ユーザーの操作に応じて`onCropChange`、`onZoomChange`コールバック関数を通じて状態を更新できます。
+    * **実践のヒント**: プロフィール写真のアップロード、サムネイル生成など、ユーザーが画像の特定の部分を選択する必要がある機能に非常に役立ちます。モバイル環境もよくサポートしており、タッチインターフェースでもスムーズに動作します。
+
+2.  **[Driver.js: Tours, Highlights, Contextual Help, and More](https://javascriptweekly.com/link/171699/web)** (出典: *JavaScript Weekly #744*)
+    ![Driver.jsを活用したウェブサイト機能紹介ツアー](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xxzkh2swioe2x73n1k1m.jpg)
+    * **概要**: ウェブページの特定の機能を順に強調して見せる「オンページツアー」や、状況に応じたヘルプシステムを作成できる純粋なJavaScriptライブラリです。非常に滑らかなアニメーション効果が特徴です。
+    * **使用法**: `driver`インスタンスを作成し、`defineSteps`メソッドを通じて案内する要素と説明が含まれたステップを定義します。その後、`start`メソッドを呼び出してツアーを開始できます。
+    * **実践のヒント**: 新規ユーザーのオンボーディングプロセスや、複雑なUIの新機能を紹介する際に使用して、ユーザーの学習曲線を大幅に下げることができます。
+
+---
+#### 見逃せないコンテンツ
+* **[jsonrepair: Repair Invalid JSON Documents](https://javascriptweekly.com/link/171700/web)** (出典: *JavaScript Weekly #744*)
+    + **要約**: LLMや古いソフトウェアから生成された非標準JSONのように、壊れたJSONドキュメントを修復してくれる便利なライブラリです。Node、CLI環境で使用したり、オンラインで簡単にテストしたりできます。
+* **[SveltePlot: A Visualization Framework for Svelte](https://frontendfoc.us/link/171829/web)** (出典: *Frontend Focus #701*)
+    + **要約**: ObservableのPlotライブラリからインスピレーションを受けたSvelte用の可視化フレームワークです。D3をベースに構築されており、フロープロット、散布図、地図など、さまざまな例をドキュメントで確認できます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+1.  **[:has() Is More Than a Parent Selector](https://www.youtube.com/watch?v=cxSowU9sDdU?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (出典: *CSS Weekly #615*)
+    ![Kevin Powellが:has()セレクタを説明する動画のサムネイル](https://css-weekly.com/wp-content/uploads/2025/07/has-is-more-than-a-parent-selector.png)
+    * **核心的なインサイト**: CSSの`:has()`疑似クラスは、単に親要素を選択する機能を超え、兄弟要素や前の要素を選択するなど、はるかに創造的で多様な方法で活用できます。これにより、以前はJavaScriptが必要だった複雑なUIの状態変化をCSSだけで実装できます。
+    * **コード例**: 特定の子要素を含む親要素のスタイルを変更したり、特定の条件の兄弟要素が続くときに前の要素のスタイルを変更したりするなど、さまざまな活用法を示します。
+    * **なぜ有益か**: この動画を通じて`:has()`セレクタの潜在能力を最大限に活用する方法を学び、より宣言的で簡潔なCSSコードを作成して、ウェブページのインタラクティビティを高めることができます。
+
+2.  **[What’s the Difference Between Ordinary Functions and Arrow Functions?](https://javascriptweekly.com/link/171686/web)** (出典: *JavaScript Weekly #744*)
+    ![通常関数とアロー関数を比較する画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kylknxsbkuzxkoi6uvsz.jpg)
+    * **核心的なインサイト**: 通常関数とアロー関数の最大の違いは`this`のバインディング方法です。アロー関数は独自の`this`を持たず、自身を囲むレキシカルスコープの`this`をそのまま使用します。これは特にイベントハンドラやオブジェクトのメソッド内のコールバック関数で動作方式の違いを生み出します。
+    * **コード例**:
+        ```js
+        // 通常関数: thisは呼び出し方によって決定される
+        function RegularFunc() { this.value = 1; setTimeout(function() { this.value++; /* thisはwindowまたはundefined */ }, 1000); }
+        // アロー関数: thisは上位スコープに固定される
+        function ArrowFunc() { this.value = 1; setTimeout(() => { this.value++; /* thisはArrowFuncインスタンス */ }, 1000); }
+        ```
+    * **なぜ有益か**: 2つの関数形式の違いを明確に理解すれば、`this`に関連するよくあるバグを避け、状況に応じた正しい関数宣言構文を選択して、より堅牢で予測可能なコードを作成できます。
+
+---
+#### 見逃せないコンテンツ
+* **[The Gap Strikes Back: Now Stylable](https://css-tricks.com/the-gap-strikes-back-now-stylable/?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (出典: *CSS Weekly #615*)
+    + **要約**: FlexboxやGridレイアウトで使用する`gap`プロパティによって生じた空間に区切り線や他のスタイルを適用できるようにする新しいCSS機能について説明します。
+* **[Scroll-Driven Sticky Heading](https://frontendfoc.us/link/171822/web)** (出典: *Frontend Focus #701*)
+    + **要約**: CSSのスクロール駆動アニメーションが単なるトリックを超え、ウェブデザインの新たな可能性をどのように開くかを示す例です。スクロールに応じて動的に変化するヘッダーを実装する方法を紹介します。
+* **[Codepoint–Safe Truncation: Fixing Emoji Slicing](https://javascriptweekly.com/link/171692/web)** (出典: *JavaScript Weekly #744*)
+    + **要約**: 絵文字が含まれる文字列を`slice`で切り取ると絵文字が壊れる問題を経験したことを共有します。コードポイントを認識するスプレッド演算子（`...`）を使用してこの問題を解決する方法を示します。
+---
+
+## 4. ✨ アイデア
+1.  **[Reminiscing With Retro TVs](https://www.myretrotvs.com/)** (出典: *Smashing Newsletter #516*)
+    ![古いテレビが複数置かれているウェブサイトのスクリーンショット](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/21719756-0a1c-c66e-5a29-7ae1593e3abc.png)
+    * **特徴**: 1950年代から2000年代まで、各時代を代表するテレビのデザインを通じて過去のTVコンテンツを探索するユニークな体験を提供します。ユーザーは実際のテレビのようにチャンネルを回し、ノスタルジーを刺激する広告、ニュース、ショーなどを視聴できます。単なる情報提供を超え、感性的な体験をデザインした素晴らしい事例です。
+
+2.  **[AI Keys ✨](https://codepen.io/jh3y/pen/OPyPRLK?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (出典: *CSS Weekly #615*)
+    ![AIをテーマにした未来的なデザインのキーボードアニメーション](https://css-weekly.com/wp-content/uploads/2025/07/ai-keys.jpg)
+    * **特徴**: Jhey Tompkinsが作成したもう一つの驚くほどリアルなCSSデモです。AIをテーマにしたキーボードが華やかな光の効果と共にタイピングされる様子を、純粋なCSSと少しのJavaScriptで実装しました。ウェブ技術でどこまで創造的な表現が可能かを示す、インスピレーションを与える作品です。
+
+## 5. ⚡️ ミニノート
+* **[Vercel Acquires NuxtLabs](https://javascriptweekly.com/link/171667/web)** (出典: *JavaScript Weekly #744*)
+    + **要約**: Next.jsで有名なVercelが、Vue.jsエコシステムの核心フレームワークであるNuxtを管理するNuxtLabsを買収しました。これにより、VercelはNext.js、Svelte、Turborepoに続き、Nuxtまでサポートすることになりました。
+* **[Announcing Node-API Support for React Native](https://react.statuscode.com/link/171775/web)** (出典: *React Status #436*)
+    + **要約**: React NativeでNode-APIがサポートされるようになり、既存の数多くのNode.jsネイティブモジュールをReact Nativeで再利用できるようになりました。これはプラットフォーム間のコード共有とビルド時間短縮に大いに役立つでしょう。
+* **[Hoodmaps](https://hoodmaps.com/)** (出典: *Smashing Newsletter #516*)
+    + **要約**: 特定の都市の地域別の雰囲気（ヒップスター、観光客、富裕層など）をクラウドソーシング方式で可視化した地図サービスです。ユーザーが直接タグを付け、投票して作り上げる集合知の面白い活用事例です。
+* **[Mozilla will finally be adding WebGPU support to Firefox 141](https://frontendfoc.us/link/171814/web)** (出典: *Frontend Focus #701*)
+    + **要約**: 数年間の開発の末、MozillaがFirefox 141バージョンにWebGPUサポートを追加する予定です。初期はWindowsでサポートされ、macOSとLinuxがそれに続くでしょう。
+* **[TypeScript 5.9 Beta has been released](https://javascriptweekly.com/link/171673/web)** (出典: *JavaScript Weekly #744*)
+    + **要約**: TypeScript 5.9ベータ版がリリースされました。`import defer`を使用してモジュールの評価を遅延させる機能をサポートします。
+
+## 6. 🎉 リリース
+* **[Node.js v24.4.0 (Current)](https://javascriptweekly.com/link/171680/web)** (出典: *JavaScript Weekly #744*)
+    + **アップデート**: 新しいバージョンのNode.jsがリリースされました。来週にはセキュリティ脆弱性のため、すべてのメンテナンスリリースラインに対する新しいバージョンが公開される予定です。
+* **[Next.js 15.4](https://react.statuscode.com/link/171781/web)** (出典: *React Status #436*)
+    + **アップデート**: パフォーマンス、安定性、およびTurbopack互換性が改善されたマイナーリリースです。また、Next.js 16に追加される機能についての要約も含まれています。
+* **[Angular 20.1](https://javascriptweekly.com/link/171685/web)** (出典: *JavaScript Weekly #744*)
+    + **アップデート**: Angularフレームワークの新しいバージョンがリリースされました。
+* **[Oxlint 1.6](https://javascriptweekly.com/link/171682/web)** (出典: *JavaScript Weekly #744*)
+    + **アップデート**: Rustで書かれたJSおよびTS用の高性能リンターの新しいバージョンです。
+* **[ReactPlayer 3.2](https://react.statuscode.com/link/171790/web)** (出典: *React Status #436*)
+    + **アップデート**: 様々なURL（YouTube、Vimeo、HLSストリームなど）のメディアを再生できるReactコンポーネントです。
+* **[Wasp 0.17](https://react.statuscode.com/link/171798/web)** (出典: *React Status #436*)
+    + **アップデート**: Node、React、Prismaを使用するRailsに似たフレームワークであるWaspの新しいバージョンです。
+* **[MUI X 8.8](https://react.statuscode.com/link/171803/web)** (出典: *React Status #436*)
+    + **アップデート**: 人気のあるReactコンポーネントスイートの新しいバージョンです。
+* **[cRonstrue 3.0](https://javascriptweekly.com/link/171706/web)** (出典: *JavaScript Weekly #744*)
+    + **アップデート**: Cron表現式を自然言語（30以上の言語をサポート）に変換してくれるライブラリです。
+* **[VS Code v1.102](https://javascriptweekly.com/link/171683/web)** (出典: *JavaScript Weekly #744*)
+    + **アップデート**: Microsoftの人気コードエディタVisual Studio Codeの新しいバージョンです。
+* **[CKEditor5 46.0](https://javascriptweekly.com/link/171712/web)** (出典: *JavaScript Weekly #744*)
+    + **アップデート**: 商用リッチテキストエディタフレームワークの新しいバージョンです。
+
+## ✍️ おわりに
+最新のフレームワークとライブラリの継続的なアップデートは、開発エコシステムがいかに活発に動いているかを示しています。特にVercelによるNuxtLabsの買収は、フロントエンドフレームワークの地形に大きな変化を予告し、React NativeのNode-APIサポートはモバイル開発の可能性を一層広げました。最新の技術動向を常に注視し、自身の技術スタックを点検し、発展させる機会を見つける一週間になることを願っています。
+
+#### 出典
+- [JavaScript Weekly #744](https://javascriptweekly.com/issues/744)
+- [Smashing Newsletter #516](https://mailchi.mp/smashingmagazine/516-lovely-gems-and-web-adventures?e=02d8dcf17a)
+- [React Status #436](https://react.statuscode.com/issues/436)
+- [Frontend Focus #701](https://frontendfoc.us/issues/701)
+- [CSS Weekly #615](https://css-weekly.com/issues/615)
