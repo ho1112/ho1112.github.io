@@ -1,6 +1,6 @@
 # mintora
 
-https://ho1112.github.io/blog
+https://mintora.me
 
 ## GitHub Pages Site
 
