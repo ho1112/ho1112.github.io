@@ -1,0 +1,133 @@
+---
+title: '🚀 2025-07 W3 #16'
+desc: 2025년 7월 3주차 뉴스레터
+date: 2025-07-19
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 이번 주 핵심 테마
+- 이번 주는 CSS의 현대적 기능들(:has(), 스크롤 애니메이션)과 그 창의적 활용법, 그리고 웹어셈블리(WASM)의 확장성과 미래에 대한 논의가 주를 이루었습니다. 또한 React의 역사와 발전 과정을 돌아보고 Apple의 브라우저 정책에 대한 비판적인 시각도 돋보였습니다.
+
+## 1. 🔍 심층 분석
+1.  **[The History of React Through Code](https://react.statuscode.com/link/171774/web)** (출처: *React Status #436*)
+    ![React의 역사를 보여주는 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kqqezxo6gwzqfx2wyjy2.jpg)
+    * **배경**: React가 Facebook의 초기 시절부터 오늘날의 모습으로 어떻게 진화해왔는지 그 여정을 코드와 함께 탐색합니다. 이 글은 React의 핵심 철학과 주요 API 및 기능 결정의 동기를 조명합니다.
+    * **핵심 내용**: React의 탄생부터 현재까지의 발전 과정을 연대기적으로 추적하며 각 시기별로 개발자들이 직면했던 실제 문제들을 React가 어떻게 해결했는지 보여줍니다. 초기 사용자들에게는 익숙하지 않을 수 있는 React에 대한 생각을 완성하는 데 도움이 될 것입니다.
+    * **실무 적용**: React의 발전사를 이해함으로써 현재 API의 디자인 철학을 더 깊이 이해하고 특정 기능이 왜 그런 방식으로 구현되었는지 알 수 있어 더 나은 기술적 의사결정을 내릴 수 있습니다.
+
+2.  **[WebAssembly: Yes, But for What?](https://frontendfoc.us/link/171877/web)** (출처: *Frontend Focus #701*)
+    * **배경**: 웹어셈블리(WASM)는 브라우저와 서버 사이드를 가리지 않고 다양한 곳에서 활용되고 있습니다. 여러 자바스크립트 및 WASM 구현에 기여한 개발자가 WASM의 현재 사용 사례와 미래 가능성을 정리했습니다.
+    * **핵심 기능**: 브라우저 내 고성능 컴퓨팅부터 서버리스 환경, 플러그인 아키텍처, 심지어 3D CAD 앱에 이르기까지 WASM이 어떻게 다양한 영역으로 스며들고 있는지 보여줍니다. OpenCascade를 WASM으로 컴파일하고 Three.js와 통합한 Chili3D와 같은 사례를 통해 그 잠재력을 확인할 수 있습니다.
+    * **실무 적용**: 고성능이 요구되는 웹 애플리케이션(예: 게임, 비디오 편집, 3D 렌더링)을 개발할 때, 자바스크립트의 한계를 넘어 네이티브에 가까운 성능을 달성하기 위한 강력한 대안으로 WASM을 고려할 수 있습니다.
+    * **주의사항**: WASM은 아직 DOM에 직접 접근할 수 없으므로 DOM 조작이 많은 작업에는 여전히 자바스크립트와의 상호작용이 필수적입니다. 이로 인한 오버헤드를 고려해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+* **[CSS Intelligence: Speculating On The Future Of A Smarter Language](https://www.smashingmagazine.com/2025/07/css-intelligence-speculating-future-smarter-language/?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (출처: *CSS Weekly #615*)
+    + **요약**: CSS가 지난 몇 년간 얼마나 똑똑해졌는지 앞으로의 방향은 어디인지 그리고 개발자들이 이러한 변화에 어떻게 반응하고 있는지를 탐구합니다. 언어가 너무 복잡해지는 것은 아닌지에 대한 고민도 담겨 있습니다.
+* **[Apple’s Browser Engine Ban Persists, Even Under the DMA](https://frontendfoc.us/link/171813/web)** (출처: *Frontend Focus #701*)
+    + **요약**: Open Web Advocacy는 Apple이 EU의 디지털 시장법(DMA)에도 불구하고 iOS에서 브라우저 엔진 선택의 자유를 실질적으로 보장하지 않고 있다고 주장합니다. Apple이 의도적으로 장벽을 제거하지 않고 있다는 비판적인 시각을 제시합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+1.  **[react-easy-crop: A Component for Interactive Image Cropping](https://react.statuscode.com/link/171788/web)** (출처: *React Status #436*)
+    ![이미지 크롭 컴포넌트 데모](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lyls7dpzj0sgngjvwdh3.jpg)
+    * **개요**: 이미지나 비디오를 사용자가 직접 드래그, 줌, 회전하여 자를 수 있는 상호작용형 컴포넌트입니다. 모든 이미지 형식을 지원하며 사용법이 간편합니다.
+    * **사용법**: 컴포넌트를 가져와 이미지 소스와 crop, zoom, aspect 등의 상태(state)를 전달하여 사용합니다. 사용자의 조작에 따라 `onCropChange`, `onZoomChange` 콜백 함수를 통해 상태를 업데이트할 수 있습니다.
+    * **실전 팁**: 프로필 사진 업로드, 썸네일 생성 등 사용자가 이미지의 특정 부분을 선택해야 하는 기능에 매우 유용합니다. 모바일 환경도 잘 지원하여 터치 인터페이스에서도 원활하게 작동합니다.
+
+2.  **[Driver.js: Tours, Highlights, Contextual Help, and More](https://javascriptweekly.com/link/171699/web)** (출처: *JavaScript Weekly #744*)
+    ![Driver.js를 활용한 웹사이트 기능 소개 투어](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xxzkh2swioe2x73n1k1m.jpg)
+    * **개요**: 웹페이지의 특정 기능들을 순서대로 강조하며 보여주는 '온페이지 투어'나 상황에 맞는 도움말 시스템을 만들 수 있는 순수 자바스크립트 라이브러리입니다. 매우 부드러운 애니메이션 효과가 특징입니다.
+    * **사용법**: `driver` 인스턴스를 생성하고 `defineSteps` 메소드를 통해 안내할 요소와 설명이 포함된 단계들을 정의합니다. 그 후 `start` 메소드를 호출하여 투어를 시작할 수 있습니다.
+    * **실전 팁**: 새로운 사용자 온보딩 과정이나 복잡한 UI의 새로운 기능을 소개할 때 사용하여 사용자의 학습 곡선을 크게 낮출 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+* **[jsonrepair: Repair Invalid JSON Documents](https://javascriptweekly.com/link/171700/web)** (출처: *JavaScript Weekly #744*)
+    + **요약**: LLM이나 오래된 소프트웨어에서 생성된 비표준 JSON처럼 깨진 JSON 문서를 복구해주는 유용한 라이브러리입니다. Node, CLI 환경에서 사용하거나 온라인에서 간단히 테스트해 볼 수 있습니다.
+* **[SveltePlot: A Visualization Framework for Svelte](https://frontendfoc.us/link/171829/web)** (출처: *Frontend Focus #701*)
+    + **요약**: Observable의 Plot 라이브러리에서 영감을 받은 Svelte용 시각화 프레임워크입니다. D3를 기반으로 구축되었으며, 플로우 플롯, 산점도, 지도 등 다양한 예제를 문서에서 확인할 수 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+1.  **[:has() Is More Than a Parent Selector](https://www.youtube.com/watch?v=cxSowU9sDdU?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (출처: *CSS Weekly #615*)
+    ![Kevin Powell이 :has() 선택자를 설명하는 영상 썸네일](https://css-weekly.com/wp-content/uploads/2025/07/has-is-more-than-a-parent-selector.png)
+    * **핵심 인사이트**: CSS `:has()` 가상 클래스는 단순히 부모 요소를 선택하는 기능을 넘어 형제 요소나 이전 요소를 선택하는 등 훨씬 창의적이고 다양한 방식으로 활용될 수 있습니다. 이를 통해 이전에는 자바스크립트가 필요했던 복잡한 UI 상태 변화를 CSS만으로 구현할 수 있습니다.
+    * **코드 예시**: 특정 자식 요소를 포함하는 부모 요소의 스타일을 변경하거나 특정 조건의 형제 요소가 뒤따를 때 앞선 요소의 스타일을 변경하는 등 다양한 활용법을 보여줍니다.
+    * **왜 유익한가**: 이 영상을 통해 `:has()` 선택자의 잠재력을 최대한 활용하는 방법을 배우고 더 선언적이고 간결한 CSS 코드를 작성하여 웹 페이지의 상호작용성을 높일 수 있습니다.
+
+2.  **[What’s the Difference Between Ordinary Functions and Arrow Functions?](https://javascriptweekly.com/link/171686/web)** (출처: *JavaScript Weekly #744*)
+    ![일반 함수와 화살표 함수를 비교하는 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kylknxsbkuzxkoi6uvsz.jpg)
+    * **핵심 인사이트**: 일반 함수와 화살표 함수의 가장 큰 차이점은 `this` 바인딩 방식입니다. 화살표 함수는 자신만의 `this`를 갖지 않고 자신을 둘러싼 렉시컬 스코프의 `this`를 그대로 사용합니다. 이는 특히 이벤트 핸들러나 객체의 메소드 내 콜백 함수에서 동작 방식의 차이를 만듭니다.
+    * **코드 예시**:
+        ```js
+        // 일반 함수: this가 호출 방식에 따라 결정됨
+        function RegularFunc() { this.value = 1; setTimeout(function() { this.value++; /* this는 window 또는 undefined */ }, 1000); }
+        // 화살표 함수: this가 상위 스코프에 고정됨
+        function ArrowFunc() { this.value = 1; setTimeout(() => { this.value++; /* this는 ArrowFunc 인스턴스 */ }, 1000); }
+        ```
+    * **왜 유익한가**: 두 함수 형식의 차이점을 명확히 이해하면 `this`와 관련된 흔한 버그를 피하고 상황에 맞는 올바른 함수 선언 구문을 선택하여 더 견고하고 예측 가능한 코드를 작성할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+* **[The Gap Strikes Back: Now Stylable](https://css-tricks.com/the-gap-strikes-back-now-stylable/?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (출처: *CSS Weekly #615*)
+    + **요약**: Flexbox나 Grid 레이아웃에서 사용하는 `gap` 속성으로 생긴 공간에 구분선이나 다른 스타일을 적용할 수 있게 하는 새로운 CSS 기능에 대해 설명합니다.
+* **[Scroll-Driven Sticky Heading](https://frontendfoc.us/link/171822/web)** (출처: *Frontend Focus #701*)
+    + **요약**: CSS 스크롤 기반 애니메이션이 단순한 트릭을 넘어 웹 디자인의 새로운 가능성을 어떻게 열어주는지 보여주는 예제입니다. 스크롤에 따라 동적으로 변하는 헤더를 구현하는 방법을 소개합니다.
+* **[Codepoint–Safe Truncation: Fixing Emoji Slicing](https://javascriptweekly.com/link/171692/web)** (출처: *JavaScript Weekly #744*)
+    + **요약**: 이모지가 포함된 문자열을 `slice`로 자를 때 이모지가 깨지는 문제를 겪었던 경험을 공유합니다. 코드 포인트를 인식하는 스프레드 연산자(`...`)를 사용하여 이 문제를 해결하는 방법을 보여줍니다.
+---
+
+## 4. ✨ 아이디어
+1.  **[Reminiscing With Retro TVs](https://www.myretrotvs.com/)** (출처: *Smashing Newsletter #516*)
+    ![오래된 텔레비전들이 여러 개 놓여있는 웹사이트 스크린샷](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/21719756-0a1c-c66e-5a29-7ae1593e3abc.png)
+    * **특징**: 1950년대부터 2000년대까지 각 시대를 대표하는 텔레비전 디자인을 통해 과거의 TV 콘텐츠를 탐색하는 독특한 경험을 제공합니다. 사용자는 실제 TV처럼 채널을 돌리며 향수를 자극하는 광고, 뉴스, 쇼 등을 시청할 수 있습니다. 단순한 정보 제공을 넘어 감성적인 경험을 디자인한 훌륭한 사례입니다.
+
+2.  **[AI Keys ✨](https://codepen.io/jh3y/pen/OPyPRLK?utm_source=CSS-Weekly&utm_campaign=Issue-615&utm_medium=web)** (출처: *CSS Weekly #615*)
+    ![AI를 테마로 한 미래적인 디자인의 키보드 애니메이션](https://css-weekly.com/wp-content/uploads/2025/07/ai-keys.jpg)
+    * **특징**: Jhey Tompkins가 만든 또 하나의 놀랍고 사실적인 CSS 데모입니다. AI를 테마로 한 키보드가 화려한 빛 효과와 함께 타이핑되는 모습을 순수 CSS와 약간의 자바스크립트로 구현했습니다. 웹 기술로 어디까지 창의적인 표현이 가능한지 보여주는 영감을 주는 작품입니다.
+
+## 5. ⚡️ 짧은 소식
+* **[Vercel Acquires NuxtLabs](https://javascriptweekly.com/link/171667/web)** (출처: *JavaScript Weekly #744*)
+    + **요약**: Next.js로 유명한 Vercel이 Vue.js 생태계의 핵심 프레임워크인 Nuxt를 관리하는 NuxtLabs를 인수했습니다. 이로써 Vercel은 Next.js, Svelte, Turborepo에 이어 Nuxt까지 지원하게 되었습니다.
+* **[Announcing Node-API Support for React Native](https://react.statuscode.com/link/171775/web)** (출처: *React Status #436*)
+    + **요약**: React Native에서 Node-API를 지원하게 되어 기존의 수많은 Node.js 네이티브 모듈을 React Native에서 재사용할 수 있게 되었습니다. 이는 플랫폼 간 코드 공유와 빌드 시간 단축에 큰 도움이 될 것입니다.
+* **[Hoodmaps](https://hoodmaps.com/)** (출처: *Smashing Newsletter #516*)
+    + **요약**: 특정 도시의 지역별 분위기(힙스터, 관광객, 부유층 등)를 크라우드소싱 방식으로 시각화한 지도 서비스입니다. 사용자들이 직접 태그를 달고 투표하여 만들어가는 집단 지성의 재미있는 활용 사례입니다.
+* **[Mozilla will finally be adding WebGPU support to Firefox 141](https://frontendfoc.us/link/171814/web)** (출처: *Frontend Focus #701*)
+    + **요약**: 수년간의 개발 끝에 Mozilla가 파이어폭스 141 버전에 WebGPU 지원을 추가할 예정입니다. 초기에는 윈도우에서 지원되며 macOS와 리눅스가 뒤를 이을 것입니다.
+* **[TypeScript 5.9 Beta has been released](https://javascriptweekly.com/link/171673/web)** (출처: *JavaScript Weekly #744*)
+    + **요약**: TypeScript 5.9 베타 버전이 출시되었습니다. `import defer`를 사용하여 모듈 평가를 지연시키는 기능을 지원합니다.
+
+## 6. 🎉 릴리스
+* **[Node.js v24.4.0 (Current)](https://javascriptweekly.com/link/171680/web)** (출처: *JavaScript Weekly #744*)
+    + **업데이트**: 새로운 버전의 Node.js가 릴리스되었습니다. 다음 주에는 보안 취약점으로 인해 모든 유지보수 릴리스 라인에 대한 새 버전이 나올 예정입니다.
+* **[Next.js 15.4](https://react.statuscode.com/link/171781/web)** (출처: *React Status #436*)
+    + **업데이트**: 성능, 안정성 및 Turbopack 호환성이 개선된 마이너 릴리스입니다. 또한 Next.js 16에 추가될 기능들에 대한 요약도 포함되어 있습니다.
+* **[Angular 20.1](https://javascriptweekly.com/link/171685/web)** (출처: *JavaScript Weekly #744*)
+    + **업데이트**: Angular 프레임워크의 새로운 버전이 출시되었습니다.
+* **[Oxlint 1.6](https://javascriptweekly.com/link/171682/web)** (출처: *JavaScript Weekly #744*)
+    + **업데이트**: Rust로 작성된 JS 및 TS용 고성능 린터의 새 버전입니다.
+* **[ReactPlayer 3.2](https://react.statuscode.com/link/171790/web)** (출처: *React Status #436*)
+    + **업데이트**: 다양한 URL(유튜브, 비메오, HLS 스트림 등)의 미디어를 재생할 수 있는 React 컴포넌트입니다.
+* **[Wasp 0.17](https://react.statuscode.com/link/171798/web)** (출처: *React Status #436*)
+    + **업데이트**: Node, React, Prisma를 사용하는 Rails와 유사한 프레임워크인 Wasp의 새 버전입니다.
+* **[MUI X 8.8](https://react.statuscode.com/link/171803/web)** (출처: *React Status #436*)
+    + **업데이트**: 인기 있는 React 컴포넌트 스위트의 새 버전입니다.
+* **[cRonstrue 3.0](https://javascriptweekly.com/link/171706/web)** (출처: *JavaScript Weekly #744*)
+    + **업데이트**: Cron 표현식을 자연어(30개 이상의 언어 지원)로 변환해주는 라이브러리입니다.
+* **[VS Code v1.102](https://javascriptweekly.com/link/171683/web)** (출처: *JavaScript Weekly #744*)
+    + **업데이트**: Microsoft의 인기 코드 에디터 Visual Studio Code의 새 버전입니다.
+* **[CKEditor5 46.0](https://javascriptweekly.com/link/171712/web)** (출처: *JavaScript Weekly #744*)
+    + **업데이트**: 상용 리치 텍스트 에디터 프레임워크의 새 버전입니다.
+
+## ✍️ 마치며
+최신 프레임워크와 라이브러리의 꾸준한 업데이트는 개발 생태계가 얼마나 활발하게 움직이는지를 보여줍니다. 특히 Vercel의 NuxtLabs 인수는 프론트엔드 프레임워크 지형에 큰 변화를 예고하며, React Native의 Node-API 지원은 모바일 개발의 가능성을 한층 더 넓혔습니다. 최신 기술 동향을 꾸준히 살펴보며 자신의 기술 스택을 점검하고 발전시킬 기회를 찾아보는 한 주가 되시길 바랍니다.
+
+#### 출처
+- [JavaScript Weekly #744](https://javascriptweekly.com/issues/744)
+- [Smashing Newsletter #516](https://mailchi.mp/smashingmagazine/516-lovely-gems-and-web-adventures?e=02d8dcf17a)
+- [React Status #436](https://react.statuscode.com/issues/436)
+- [Frontend Focus #701](https://frontendfoc.us/issues/701)
+- [CSS Weekly #615](https://css-weekly.com/issues/615)
