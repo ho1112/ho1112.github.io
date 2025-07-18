@@ -2,7 +2,8 @@
 export const baseDomain = 'https://mintora.me/'
 
 export const blogName = 'mintora blog'
-export const blogDesc = '東京の韓国フロントエンド'
+export const blogDesc =
+  '東京在住の韓国人フロントエンドエンジニアの技術ブログ。Next.js、React、AItなど最新ウェブ技術の深掘りや、日々の業務で得た知見、週次の振り返りを記録・共有しています。'
 
 export const blogThumbnailURL = `${baseDomain}icon/m_favicon.png`
 
