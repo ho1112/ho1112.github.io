@@ -58,6 +58,7 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // mint 민트
         chomin: {
           DEFAULT: '#31ced2',
           light: '#72cfd2',
