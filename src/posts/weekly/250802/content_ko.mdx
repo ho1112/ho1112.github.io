@@ -1,0 +1,143 @@
+---
+title: '🚀 2025-08 W1 #18'
+desc: 2025년 8월 1주차 뉴스레터
+date: 2025-08-02
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 React 생태계의 새로운 강자인 TanStack DB의 등장과 네이티브 애니메이션의 미래를 제시하는 Reanimated 4, 그리고 Figma 워크플로우를 혁신할 다양한 팁과 도구들이 주목받았습니다. 개발자 경험을 향상시키고 생산성을 극대화하는 최신 기술들을 만나보세요.
+
+## 1. 🔍 심층 분석
+- **[TanStack DB: The Embedded Client Database for TanStack Query](https://react.statuscode.com/link/172410/web)** (출처: *React Status #438*)
+    ![TanStack DB](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/pkv0j9k2t2z72lqg83r1.jpg)
+    - **배경**: React Query의 창시자가 오랫동안 구상해온 비전이 실현된 클라이언트 측 임베디드 데이터베이스입니다. 실시간 관계형 쿼리, 밀리초 단위의 증분 업데이트, 원활한 낙관적 쓰기(optimistic writes)를 지원하여 복잡한 상태 관리의 새로운 패러다임을 제시합니다.
+    - **핵심 기능**: 'Differential dataflow'를 사용하여 데이터 변경에 따른 증분 업데이트를 초고속으로 처리합니다. 이를 통해 항상 최신 상태를 유지하는 라이브 쿼리를 구현할 수 있습니다.
+    - **실무 적용**: 실시간 데이터 동기화가 필요하거나, 복잡한 클라이언트 상태 로직을 간결하게 관리하고 싶은 애플리케이션에 매우 유용합니다. 특히 오프라인 우선(offline-first) 앱이나 협업 도구에서 강력한 성능을 발휘할 수 있습니다.
+    - **주의사항**: 현재 첫 베타(v0.1) 버전이므로 프로덕션 환경에 바로 적용하기보다는 실험적으로 사용해보는 것이 좋습니다.
+
+- **[When is WebAssembly Going to Get DOM Support?](https://javascriptweekly.com/link/172282/web)** (출처: *JavaScript Weekly #746*)
+    - **배경**: 자바스크립트와 달리 WebAssembly(WASM)에서 DOM을 직접 조작하려면 '글루 코드(glue code)'가 필요합니다. 이로 인해 발생하는 성능 및 개발 경험의 한계를 극복하기 위한 논의가 계속되고 있습니다.
+    - **핵심 기능**: TC39 위원회 소속인 Daniel Ehrenberg는 최신 빌드 툴체인과 WASM의 발전(예: WASI, 컴포넌트 모델)이 점차 이 문제를 해결하고 있다고 설명합니다. 직접적인 DOM API 접근보다는, 가상 DOM이나 렌더링 명령을 WASM이 처리하고 자바스크립트가 이를 DOM에 반영하는 방식이 현실적인 대안으로 떠오르고 있습니다.
+    - **실무 적용**: 고성능 그래픽 처리, 게임, 복잡한 계산이 필요한 웹 애플리케이션에서 WASM을 활용할 때, UI 렌더링 전략을 어떻게 가져갈지 고민하는 개발자에게 중요한 인사이트를 제공합니다.
+    - **주의사항**: 아직 표준화된 직접적인 DOM 접근 방법은 없으므로, 각 프레임워크나 라이브러리가 제공하는 방식을 따라야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Useless `useCallback`](https://react.statuscode.com/link/172412/web)** (출처: *React Status #438*)
+    + **요약**: `useCallback`과 `useMemo`가 왜 종종 불필요한 작업처럼 느껴지는지, 단 하나의 메모이제이션되지 않은 prop이 어떻게 전체 캐싱 전략을 무너뜨리는지 분석합니다. `useEffectEvent`와 React Compiler가 이 문제를 어떻게 해결할 수 있는지에 대한 기대를 다룹니다.
+- **[How Parcel Bundles React Server Components](https://react.statuscode.com/link/172416/web)** (출처: *React Status #438*)
+    + **요약**: Parcel 번들러가 React Server Components(RSC)를 어떻게 처리하는지 기술적으로 깊이 있게 설명합니다. `"use client"` 같은 지시자가 실제로 어떻게 동작하고, 서버와 클라이언트 컴포넌트가 어떻게 분리되고 결합되는지 과정을 보여줍니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[es-toolkit: A Modern JavaScript Utility Library](https://javascriptweekly.com/link/172278/web)** (출처: *JavaScript Weekly #746*)
+    ![es-toolkit](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/izyu0u05uha4s7mq58hb.jpg)
+    - **개요**: Lodash를 완벽하게 대체할 수 있으면서도 97% 더 작고 빠르다고 주장하는 모던 자바스크립트 유틸리티 라이브러리입니다. 현재 100% Lodash 호환성을 자랑하며, Storybook, CKEditor 등에서 이미 채택하여 사용하고 있습니다.
+    - **사용법**:
+      ```bash
+      npm install es-toolkit
+      ```
+      ```javascript
+      import { debounce } from 'es-toolkit';
+
+      const debouncedSave = debounce(saveData, 500);
+      ```
+    - **실전 팁**: 기존 Lodash 의존성을 마이그레이션할 때 번들 크기를 획기적으로 줄일 수 있습니다. 특히 성능에 민감한 프로젝트나 라이브러리 개발 시 유용합니다.
+
+- **[Reanimated 4: The Future of React Native Animations](https://react.statuscode.com/link/172424/web)** (출처: *React Status #438*)
+    ![Reanimated 4](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jlt90oy9omwtleqjvhkc.jpg)
+    - **개요**: CSS 애니메이션과 트랜지션의 장점을 React Native 환경으로 가져와, 어떤 것이든 부드럽게 애니메이션을 적용할 수 있게 해주는 라이브러리의 최신 메이저 버전입니다. 선언적인 API와 뛰어난 성능으로 복잡한 인터랙션을 쉽게 구현할 수 있습니다.
+    - **사용법**:
+      ```javascript
+      import Animated, { Keyframe } from 'react-native-reanimated';
+
+      const keyframe = new Keyframe({
+        0: { transform: [{ translateX: 0 }] },
+        50: { transform: [{ translateX: 150 }] },
+        100: { transform: [{ translateX: 0 }] },
+      });
+
+      <Animated.View entering={keyframe.duration(1000)} />
+      ```
+    - **실전 팁**: 복잡한 제스처 기반 애니메이션이나, UI 상태 변화에 따른 자연스러운 전환 효과를 구현할 때 매우 강력합니다. 네이티브 스레드에서 실행되어 UI 버벅임 없이 60fps를 유지하는 데 도움을 줍니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How To Keep Figma Files Clean](https://www.anna-og.com/blog/blog/how-to-keep-figma-clean)** (출처: *Smashing Newsletter #518*)
+    + **요약**: 레이어, 프레임, 페이지 네이밍 규칙부터 문서화, 유용한 플러그인까지 Figma 파일을 깨끗하고 체계적으로 유지하기 위한 16가지 간단한 팁을 담은 체크리스트입니다.
+- **[Figma Handoff And Spec Helper](https://www.figma.com/community/file/1197839297221165862/File-management-goodies)** (출처: *Smashing Newsletter #518*)
+    + **요약**: Deliveroo 디자인 팀이 만든 UI 라이브러리로, 배너, 스티커 노트 등을 활용해 디자인 의도와 변경 사항을 Figma 내에서 직접 효과적으로 전달하고 문서화할 수 있도록 돕습니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Carousel Gallery: Showcasing the CSS Carousel Specs](https://frontendfoc.us/link/172371/web)** (출처: *Frontend Focus #703*)
+    ![CSS Carousel](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753867344/dgqpfha4qjybetrrqs8k.jpg)
+    - **핵심 인사이트**: `scroll-snap-type`, `overscroll-behavior`, `anchor-name` 등 최신 CSS 속성만을 사용하여 자바스크립트 없이도 완전한 기능의 캐러셀을 구현할 수 있음을 보여줍니다. 이는 성능을 향상시키고 코드 복잡성을 줄이는 데 큰 도움이 됩니다.
+    - **왜 이 글이 유익한가**: 순수 CSS만으로 인터랙티브한 컴포넌트를 만들 수 있는 최신 기술 동향을 파악하고, 실제 코드 예제를 통해 바로 적용해볼 수 있습니다. 함께 제공되는 설정 도구를 통해 각 속성이 어떻게 동작하는지 시각적으로 이해하기 쉽습니다.
+
+- **[Responsive Video is (Almost) Easy Now](https://frontendfoc.us/link/172385/web)** (출처: *Frontend Focus #703*)
+    ![Responsive Video](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753874356/nftaylsqcvhhgr5pux2p.png)
+    - **핵심 인사이트**: 네이티브 HTML 비디오를 반응형으로 처리할 때 고려해야 할 모든 사항을 다룹니다. 특히 미디어 쿼리와 `<picture>` 요소처럼, 컨텍스트에 따라 수직 또는 수평 버전의 비디오를 제공하는 현대적인 접근법을 상세히 설명합니다.
+    - **왜 이 글이 유익한가**: 비디오 콘텐츠가 점점 중요해지는 웹 환경에서, 다양한 디바이스와 화면 비율에 최적화된 사용자 경험을 제공하는 실용적인 기술을 배울 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Making a Masonry Layout That Works Today](https://frontendfoc.us/link/172376/web)** (출처: *Frontend Focus #703*)
+    + **요약**: 아직 표준화되지 않은 CSS Masonry 레이아웃을 기다리는 대신, 약간의 자바스크립트를 활용하여 현재 시점에서 안정적으로 동작하는 Masonry 레이아웃을 구현하는 실용적인 방법을 제시합니다.
+- **[Celebrating 20 Years of MDN](https://frontendfoc.us/link/172373/web)** (출처: *Frontend Focus #703*)
+    + **요약**: 웹 개발자들의 필수 참고 자료인 MDN(Mozilla Developer Network)이 20주년을 맞았습니다. 14,000개 이상의 문서와 18,000개 이상의 기능 설명을 통해 웹 생태계에 기여해온 MDN의 가치를 되새깁니다.
+
+---
+
+## 4. ✨ 아이디어
+- **[World Clock Slider](https://frontendfoc.us/link/172397/web)** (출처: *Frontend Focus #703*)
+    ![World Clock Slider](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753864441/sfbrxv5x9ldbomq61jxp.png)
+    - **특징**: 슬라이더를 움직여 전 세계 주요 도시의 시간을 직관적으로 확인할 수 있는 매우 똑똑하고 부드러운 시계 컴포넌트입니다. 다크 모드도 지원하며, 뛰어난 UI/UX 디자인으로 영감을 줍니다.
+
+- **[A JS 'Numbers Station' in 1 Kilobyte](https://javascriptweekly.com/link/172295/web)** (출처: *JavaScript Weekly #746*)
+    ![JS Numbers Station](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ybmt1ew0xl4hflkdowz2.jpg)
+    - **특징**: 코드 골프 대회 'js1024'의 출품작으로, 단 1KB의 자바스크립트 코드로 실제 '난수 방송(numbers station)'의 독특한 분위기를 재현합니다. Web Audio API를 창의적으로 활용하여 미니멀리즘과 기술적 예술성을 동시에 보여주는 흥미로운 프로젝트입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[npm `stylus` package takedown](https://javascriptweekly.com/link/172285/web)** (출처: *JavaScript Weekly #746*)
+    + **요약**: 보안 문제로 인해 npm에서 `stylus` 패키지가 일시적으로 내려가면서 많은 프로젝트에 영향을 미쳤습니다. 이는 패키지 관리 시스템의 안정성과 보안의 중요성을 다시 한번 일깨워주는 사건입니다.
+- **[Stack Overflow 2025 Survey results](https://react.statuscode.com/link/172414/web)** (출처: *React Status #438*)
+    + **요약**: 2025년 스택 오버플로우 설문조사 결과가 발표되었습니다. React는 여전히 '가장 원하는' 웹 기술 1위를 차지했으며, Svelte는 '가장 존경받는' 기술로 나타나는 등 개발자들의 기술 선호도 트렌드를 엿볼 수 있습니다.
+- **[Safari Technology Preview 224 release notes](https://frontendfoc.us/link/172377/web)** (출처: *Frontend Focus #703*)
+    + **요약**: Safari의 최신 기술 프리뷰 버전이 릴리스되어 여러 새로운 애니메이션 관련 CSS 속성을 지원하기 시작했습니다.
+- **[MDN is celebrating its 20th birthday.](https://javascriptweekly.com/link/172328/web)** (출처: *JavaScript Weekly #746*)
+    + **요약**: 웹 개발자들의 백과사전, MDN이 20주년을 맞이했습니다.
+
+## 6. 🎉 릴리스
+- **[Bun v1.2.19](https://javascriptweekly.com/link/172289/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: pnpm 스타일의 격리된 `node_modules` 설치를 지원하고, 대화형 의존성 업데이트 기능이 추가되었습니다. 곧 1.3 버전도 출시될 예정입니다.
+- **[React Native Reanimated 4.0](https://javascriptweekly.com/link/172292/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: React Native의 기본 애니메이션 시스템을 재구현한 라이브러리의 최신 버전으로, 선언적이고 강력한 애니메이션 기능을 제공합니다. (상세 내용은 '툴 & 라이브러리' 섹션 참고)
+- **[PythonMonkey 1.2](https://javascriptweekly.com/link/172291/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: SpiderMonkey 자바스크립트 엔진을 파이썬 VM에 내장할 수 있게 해주는 라이브러리입니다.
+- **[Transformers.js 3.7](https://javascriptweekly.com/link/172311/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: 브라우저에서 강력한 사전 학습 모델을 실행할 수 있게 해주는 라이브러리입니다. Voxtral(음성 인식), LFM2, ModernBERT 모델 지원이 추가되었습니다.
+- **[ApexCharts 5.3](https://javascriptweekly.com/link/172317/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: 인기 있는 자바스크립트 차트 라이브러리로, 원시 데이터 객체를 차트에 직접 매핑하는 데이터 파싱 기능이 추가되었습니다.
+- **[Oxlint 1.8](https://javascriptweekly.com/link/172293/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: Rust로 작성된 고성능 자바스크립트 린터의 새 버전입니다.
+- **[Jasmine 5.9](https://javascriptweekly.com/link/172294/web)** (출처: *JavaScript Weekly #746*)
+    + **업데이트**: BDD 스타일의 자바스크립트 테스트 프레임워크입니다.
+- **[Tinybase 6.5](https://react.statuscode.com/link/172433/web)** (출처: *React Status #438*)
+    + **업데이트**: 로컬 우선(local-first) 앱을 위한 강력한 반응형 데이터 스토어입니다.
+- **[Preact 10.27](https://react.statuscode.com/link/172436/web)** (출처: *React Status #438*)
+    + **업데이트**: 3KB 크기의 가벼운 React 대안 라이브러리입니다.
+- **[Ink 6.1](https://react.statuscode.com/link/172439/web)** (출처: *React Status #438*)
+    + **업데이트**: React를 사용하여 CLI 앱을 만들 수 있게 해주는 도구입니다.
+
+## ✍️ 마치며
+이번 주 소식은 클라이언트 측 데이터 관리의 혁신을 이끄는 TanStack DB부터, 순수 CSS와 React Native의 표현력을 한 단계 끌어올리는 애니메이션 기술, 그리고 Figma를 통한 협업 효율을 극대화하는 실용적인 팁까지 다채로운 주제로 가득했습니다. 끊임없이 발전하는 웹 기술의 최전선에서 새로운 도구와 아이디어를 탐색하며 더 나은 제품을 만들어나가는 데 이 소식들이 작은 영감이 되기를 바랍니다.
+
+#### 출처
+- [JavaScript Weekly #746](https://javascriptweekly.com/issues/746)
+- [Smashing Newsletter #518](https://mailchi.mp/smashingmagazine/518-useful-figma-plugins-and-tools?e=02d8dcf17a)
+- [React Status #438](https://react.statuscode.com/issues/438)
+- [Frontend Focus #703](https://frontendfoc.us/issues/703)
