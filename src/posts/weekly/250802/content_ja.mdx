@@ -1,0 +1,143 @@
+---
+title: '🚀 2025-08 W1 #18'
+desc: 2025年8月1週目のニュースレター
+date: 2025-08-02
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、Reactエコシステムの新たな強者であるTanStack DBの登場、ネイティブアニメーションの未来を提示するReanimated 4、そしてFigmaのワークフローを革新する様々なヒントやツールが注目を集めました。開発者体験を向上させ、生産性を最大化する最新技術をご覧ください。
+
+## 1. 🔍 深掘り
+- **[TanStack DB: The Embedded Client Database for TanStack Query](https://react.statuscode.com/link/172410/web)** (出典: *React Status #438*)
+	- ![TanStack DB](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/pkv0j9k2t2z72lqg83r1.jpg)
+	- **背景**: React Queryの創設者が長年構想してきたビジョンが実現した、クライアントサイドの組み込みデータベースです。リアルタイムなリレーショナルクエリ、ミリ秒単位のインクリメンタルアップデート、シームレスなオプティミスティックライト(optimistic writes)をサポートし、複雑な状態管理の新たなパラダイムを提示します。
+	- **主要機能**: 「Differential dataflow」を使用して、データ変更に伴うインクリメンタルアップデートを超高速で処理します。これにより、常に最新の状態を維持するライブクエリを実装できます。
+	- **実務への適用**: リアルタイムなデータ同期が必要な場合や、複雑なクライアントの状態ロジックを簡潔に管理したいアプリケーションに非常に役立ちます。特にオフラインファースト(offline-first)アプリや共同作業ツールで強力な性能を発揮できます。
+	- **注意事項**: 現在、初のベータ(v0.1)バージョンであるため、本番環境にすぐ適用するよりは、実験的に使用してみることをお勧めします。
+
+- **[When is WebAssembly Going to Get DOM Support?](https://javascriptweekly.com/link/172282/web)** (出典: *JavaScript Weekly #746*)
+	- **背景**: JavaScriptとは異なり、WebAssembly(WASM)でDOMを直接操作するには「グルーコード(glue code)」が必要です。これにより発生するパフォーマンスや開発体験の限界を克服するための議論が続けられています。
+	- **主要機能**: TC39委員会のメンバーであるDaniel Ehrenbergは、最新のビルドツールチェーンとWASMの発展(例: WASI、コンポーネントモデル)が徐々にこの問題を解決していると説明しています。直接的なDOM APIアクセスよりは、仮想DOMやレンダリング命令をWASMが処理し、JavaScriptがそれをDOMに反映する方式が現実的な代替案として浮上しています。
+	- **実務への適用**: 高性能なグラフィック処理、ゲーム、複雑な計算が必要なWebアプリケーションでWASMを活用する際、UIレンダリング戦略をどうするか悩んでいる開発者に重要なインサイトを提供します。
+	- **注意事項**: まだ標準化された直接的なDOMアクセス方法はないため、各フレームワークやライブラリが提供する方式に従う必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[The Useless `useCallback`](https://react.statuscode.com/link/172412/web)** (出典: *React Status #438*)
+	- **要約**: `useCallback`と`useMemo`がなぜしばしば不要な作業のように感じられるのか、たった一つのメモ化されていないpropがどのように全体のキャッシング戦略を崩壊させるのかを分析します。`useEffectEvent`とReact Compilerがこの問題をどのように解決できるかについての期待を扱っています。
+- **[How Parcel Bundles React Server Components](https://react.statuscode.com/link/172416/web)** (出典: *React Status #438*)
+	- **要約**: ParcelバンドラがReact Server Components(RSC)をどのように処理するのかを技術的に深く説明します。「"use client"」のようなディレクティブが実際にどのように動作し、サーバーとクライアントのコンポーネントがどのように分離され結合されるのかの過程を示します。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[es-toolkit: A Modern JavaScript Utility Library](https://javascriptweekly.com/link/172278/web)** (出典: *JavaScript Weekly #746*)
+	- ![es-toolkit](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/izyu0u05uha4s7mq58hb.jpg)
+	- **概要**: Lodashを完全に代替でき、かつ97%小さく高速であると主張するモダンなJavaScriptユーティリティライブラリです。現在100%のLodash互換性を誇り、Storybook、CKEditorなどで既に採用されています。
+	- **使い方**:
+		```bash
+		npm install es-toolkit
+		```
+		```javascript
+		import { debounce } from 'es-toolkit';
+
+		const debouncedSave = debounce(saveData, 500);
+		```
+	- **実践のヒント**: 既存のLodash依存関係を移行する際に、バンドルサイズを画期的に削減できます。特にパフォーマンスに敏感なプロジェクトやライブラリ開発時に有用です。
+
+- **[Reanimated 4: The Future of React Native Animations](https://react.statuscode.com/link/172424/web)** (出典: *React Status #438*)
+	- ![Reanimated 4](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jlt90oy9omwtleqjvhkc.jpg)
+	- **概要**: CSSアニメーションとトランジションの利点をReact Native環境に持ち込み、どんなものでもスムーズにアニメーションを適用できるようにするライブラリの最新メジャーバージョンです。宣言的なAPIと優れたパフォーマンスで、複雑なインタラクションを簡単に実装できます。
+	- **使い方**:
+		```javascript
+		import Animated, { Keyframe } from 'react-native-reanimated';
+
+		const keyframe = new Keyframe({
+		  0: { transform: [{ translateX: 0 }] },
+		  50: { transform: [{ translateX: 150 }] },
+		  100: { transform: [{ translateX: 0 }] },
+		});
+
+		<Animated.View entering={keyframe.duration(1000)} />
+		```
+	- **実践のヒント**: 複雑なジェスチャーベースのアニメーションや、UIの状態変化に応じた自然なトランジション効果を実装する際に非常に強力です。ネイティブスレッドで実行されるため、UIのカクつきなく60fpsを維持するのに役立ちます。
+
+---
+#### 見逃せないコンテンツ
+- **[How To Keep Figma Files Clean](https://www.anna-og.com/blog/blog/how-to-keep-figma-clean)** (出典: *Smashing Newsletter #518*)
+	- **要約**: レイヤー、フレーム、ページの命名規則から、ドキュメンテーション、便利なプラグインまで、Figmaファイルをクリーンで体系的に維持するための16の簡単なヒントをまとめたチェックリストです。
+- **[Figma Handoff And Spec Helper](https://www.figma.com/community/file/1197839297221165862/File-management-goodies)** (出典: *Smashing Newsletter #518*)
+	- **要約**: Deliverooのデザインチームが作成したUIライブラリで、バナーや付箋などを活用してデザインの意図や変更点をFigma内で直接効果的に伝え、文書化するのに役立ちます。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Carousel Gallery: Showcasing the CSS Carousel Specs](https://frontendfoc.us/link/172371/web)** (出典: *Frontend Focus #703*)
+	- ![CSS Carousel](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753867344/dgqpfha4qjybetrrqs8k.jpg)
+	- **主要なインサイト**: `scroll-snap-type`、`overscroll-behavior`、`anchor-name`など最新のCSSプロパティのみを使用して、JavaScriptなしでも完全に機能するカルーセルを実装できることを示しています。これはパフォーマンスを向上させ、コードの複雑さを減らすのに大いに役立ちます。
+	- **この記事が有益な理由**: 純粋なCSSだけでインタラクティブなコンポーネントを作成できる最新の技術動向を把握し、実際のコード例を通じてすぐに適用してみることができます。付属の設定ツールを通じて、各プロパティがどのように動作するかを視覚的に理解しやすくなっています。
+
+- **[Responsive Video is (Almost) Easy Now](https://frontendfoc.us/link/172385/web)** (出典: *Frontend Focus #703*)
+	- ![Responsive Video](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753874356/nftaylsqcvhhgr5pux2p.png)
+	- **主要なインサイト**: ネイティブHTMLビデオをレスポンシブに処理する際に考慮すべきすべての事項を扱います。特にメディアクエリや`<picture>`要素のように、コンテキストに応じて垂直または水平バージョンのビデオを提供する現代的なアプローチを詳細に説明します。
+	- **この記事が有益な理由**: ビデオコンテンツがますます重要になるウェブ環境で、様々なデバイスや画面比率に最適化されたユーザー体験を提供する実用的な技術を学ぶことができます。
+
+---
+#### 見逃せないコンテンツ
+- **[Making a Masonry Layout That Works Today](https://frontendfoc.us/link/172376/web)** (出典: *Frontend Focus #703*)
+	- **要約**: まだ標準化されていないCSS Masonryレイアウトを待つ代わりに、少量のJavaScriptを活用して、現時点で安定して動作するMasonryレイアウトを実装する実用的な方法を提示します。
+- **[Celebrating 20 Years of MDN](https://frontendfoc.us/link/172373/web)** (出典: *Frontend Focus #703*)
+	- **要約**: Web開発者の必須参考資料であるMDN(Mozilla Developer Network)が20周年を迎えました。14,000以上のドキュメントと18,000以上の機能説明を通じてWebエコシステムに貢献してきたMDNの価値を再認識させます。
+
+---
+
+## 4. ✨ アイデア
+- **[World Clock Slider](https://frontendfoc.us/link/172397/web)** (出典: *Frontend Focus #703*)
+	- ![World Clock Slider](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753864441/sfbrxv5x9ldbomq61jxp.png)
+	- **特徴**: スライダーを動かして世界中の主要都市の時間を直感的に確認できる、非常にスマートでスムーズな時計コンポーネントです。ダークモードもサポートし、優れたUI/UXデザインでインスピレーションを与えます。
+
+- **[A JS 'Numbers Station' in 1 Kilobyte](https://javascriptweekly.com/link/172295/web)** (出典: *JavaScript Weekly #746*)
+	- ![JS Numbers Station](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ybmt1ew0xl4hflkdowz2.jpg)
+	- **特徴**: コードゴルフ大会「js1024」の出品作で、わずか1KBのJavaScriptコードで実際の「乱数放送(numbers station)」の独特な雰囲気を再現します。Web Audio APIを創造的に活用し、ミニマリズムと技術的な芸術性を同時に示す興味深いプロジェクトです。
+
+## 5. ⚡️ ミニノート
+- **[npm `stylus` package takedown](https://javascriptweekly.com/link/172285/web)** (出典: *JavaScript Weekly #746*)
+	- **要約**: セキュリティ問題によりnpmから`stylus`パッケージが一時的に削除され、多くのプロジェクトに影響を与えました。これは、パッケージ管理システムの安定性とセキュリティの重要性を改めて認識させる出来事です。
+- **[Stack Overflow 2025 Survey results](https://react.statuscode.com/link/172414/web)** (出典: *React Status #438*)
+	- **要約**: 2025年のStack Overflowサーベイの結果が発表されました。Reactは依然として「最も望まれている」Web技術で1位を占め、Svelteは「最も尊敬されている」技術として現れるなど、開発者の技術選好トレンドを垣間見ることができます。
+- **[Safari Technology Preview 224 release notes](https://frontendfoc.us/link/172377/web)** (出典: *Frontend Focus #703*)
+	- **要約**: Safariの最新技術プレビュー版がリリースされ、いくつかの新しいアニメーション関連のCSSプロパティをサポートし始めました。
+- **[MDN is celebrating its 20th birthday.](https://javascriptweekly.com/link/172328/web)** (出典: *JavaScript Weekly #746*)
+	- **要約**: Web開発者の百科事典、MDNが20周年を迎えました。
+
+## 6. 🎉 リリース
+- **[Bun v1.2.19](https://javascriptweekly.com/link/172289/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: pnpmスタイルの隔離された`node_modules`インストールをサポートし、対話型の依存関係更新機能が追加されました。まもなく1.3バージョンもリリースされる予定です。
+- **[React Native Reanimated 4.0](https://javascriptweekly.com/link/172292/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: React Nativeの基本アニメーションシステムを再実装したライブラリの最新バージョンで、宣言的で強力なアニメーション機能を提供します。（詳細は「ツール & ライブラリ」セクションを参照）
+- **[PythonMonkey 1.2](https://javascriptweekly.com/link/172291/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: SpiderMonkey JavaScriptエンジンをPython VMに組み込むことができるようにするライブラリです。
+- **[Transformers.js 3.7](https://javascriptweekly.com/link/172311/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: ブラウザで強力な事前学習済みモデルを実行できるようにするライブラリです。Voxtral(音声認識)、LFM2、ModernBERTモデルのサポートが追加されました。
+- **[ApexCharts 5.3](https://javascriptweekly.com/link/172317/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: 人気のJavaScriptチャートライブラリで、生のデータオブジェクトをチャートに直接マッピングするデータ解析機能が追加されました。
+- **[Oxlint 1.8](https://javascriptweekly.com/link/172293/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: Rustで書かれた高性能なJavaScriptリンターの新バージョンです。
+- **[Jasmine 5.9](https://javascriptweekly.com/link/172294/web)** (出典: *JavaScript Weekly #746*)
+	- **アップデート**: BDDスタイルのJavaScriptテストフレームワークです。
+- **[Tinybase 6.5](https://react.statuscode.com/link/172433/web)** (出典: *React Status #438*)
+	- **アップデート**: ローカルファースト(local-first)アプリのための強力なリアクティブデータストアです。
+- **[Preact 10.27](https://react.statuscode.com/link/172436/web)** (出典: *React Status #438*)
+	- **アップデート**: 3KBサイズの軽量なReact代替ライブラリです。
+- **[Ink 6.1](https://react.statuscode.com/link/172439/web)** (出典: *React Status #438*)
+	- **アップデート**: Reactを使用してCLIアプリを作成できるようにするツールです。
+
+## ✍️ おわりに
+今週のニュースは、クライアントサイドのデータ管理に革新をもたらすTanStack DBから、純粋なCSSとReact Nativeの表現力を一段階引き上げるアニメーション技術、そしてFigmaを通じた共同作業の効率を最大化する実用的なヒントまで、多彩なテーマで満ちていました。絶えず進化するWeb技術の最前線で、新しいツールやアイデアを探求し、より良い製品を作り上げていく上で、これらのニュースが小さなインスピレーションとなることを願っています。
+
+#### 出典
+- [JavaScript Weekly #746](https://javascriptweekly.com/issues/746)
+- [Smashing Newsletter #518](https://mailchi.mp/smashingmagazine/518-useful-figma-plugins-and-tools?e=02d8dcf17a)
+- [React Status #438](https://react.statuscode.com/issues/438)
+- [Frontend Focus #703](https://frontendfoc.us/issues/703)
