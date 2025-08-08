@@ -1,0 +1,145 @@
+---
+title: '🚀 2025-08 W2 #19'
+desc: 2025年8月2週目のニュースレター
+date: 2025-08-09
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+AIが開発ワークフローを変える時代、ウェブの根本であるセマンティックHTMLと安定したJavaScriptランタイムの重要性が改めて強調されています。
+
+## 1. 🔍 深掘り
+**[JavaScript broke the web (and called it progress)](https://www.jonoalderson.com/conjecture/javascript-broke-the-web-and-called-it-progress/)** (出典: *Naver FE News (2025-08)*)
+![](https://www.jonoalderson.com/acd-cgi/img/v1/wp-content/uploads/image.webp?dpr=1&f=auto&fit=cover&height=700&q=85&width=1520)
+- **背景**: この記事は、現代のウェブ開発におけるJavaScriptの過度な使用が、いかにウェブの根本的な価値であるアクセシビリティ、パフォーマンス、ユーザー体験を損なっているかを鋭く批判しています。「JavaScriptがすべてを解決できる」という信念が、いかにウェブをより遅く、複雑で、排他的な空間にしてしまったかという問題を提起します。
+- **中心的な主張**: クライアントサイドレンダリング(CSR)への過度な依存は、初期読み込み時間を遅延させ、SEOを困難にします。また、ネットワークが不安定であったり、JavaScriptを無効にしているユーザーは、ウェブサイトの核心機能さえ利用できない「壊れた体験」をすることになります。筆者は、これを技術の進歩ではなく、ウェブの本質を壊す行為だと主張しています。
+- **実務への適用**: 開発者はプログレッシブエンハンスメント(Progressive Enhancement)の原則に立ち返るべきです。つまり、JavaScriptがなくても核心機能が動作する堅牢なHTMLとCSSの基盤をまず構築し、その上にJavaScriptで動的な体験を加えていく方式を採用すべきです。これは、より速く、安定的で、すべての人に開かれたウェブを作る道です。
+- **開発者への提言**: 新しいフレームワークや技術を導入する前に、それが本当にユーザー体験を向上させるのか、それとも単に開発の便宜のためだけではないのかを批判的に省察すべきです。ウェブの本質は技術的な華やかさではなく、情報への普遍的なアクセシビリティにあることを忘れてはなりません。
+
+**[The Many, Many, Many JavaScript Runtimes of the Last Decade](https://buttondown.com/whatever_jamie/archive/the-many-many-many-javascript-runtimes-of-the-last-decade/)** (出典: *JavaScript Weekly #747*)
+- **背景**: この10年間、Node.jsの登場以来、Deno、Bun、Hermesなど数多くのJavaScriptランタイムが誕生しました。この記事は、各ランタイムがどのような問題を解決するために登場し、どのような技術的哲学を持って発展してきたかを詳細に分析します。
+- **核心内容**: 各ランタイムの誕生背景(Node.jsのnpmとCommonJS、DenoのセキュリティとTSサポート、Bunの速度)と主な特徴を比較しながら説明します。単なるランタイムのリストにとどまらず、クラウド環境(Cloudflare Workers, Vercel Edge Functions)に特化したランタイムまで扱い、JavaScriptエコシステムの拡張性を示しています。
+- **実務への適用**: プロジェクトの要件に合った最適なJavaScriptランタイムを選択する上で重要な基準を提供します。例えば、速い開発速度とオールインワン(All-in-one)環境が必要ならBunを、安定性とセキュリティが重要ならDenoを、巨大なエコシステムの活用が必要ならNode.jsを検討できます。
+- **注意事項**: ランタイムのエコシステムは非常に速く変化しているため、記事で紹介された内容を基に、各プロジェクトの公式ドキュメントを通じて最新情報を確認することが重要です。
+
+---
+#### 見逃せないコンテンツ
+- **[Why Semantic HTML Still Matters](https://frontendfoc.us/link/172696/web)** (出典: *Frontend Focus #704* )
+  + **要約**: 複雑なDOMツリーと不要なCSSは、パフォーマンス低下の主な原因です。この記事は、セマンティックで構造的なHTMLが、なぜ郷愁を超えてウェブの根本的なインフラであり、堅牢でパフォーマンスの良いウェブサイトの基礎となるのかを改めて思い起こさせてくれます。
+- **[Web Components: Working With Shadow DOM](https://www.smashingmagazine.com/2025/07/web-components-working-with-shadow-dom/)** (出典: *CSS Weekly #617* )
+  + **要約**: Shadow DOMがウェブコンポーネントの全体像の中でどのように機能するかを説明します。スタイルのカプセル化とDOMの分離がなぜ重要なのか、そしていつ、どのように効果的に使用すべきかについての具体的なガイドを提供し、再利用可能なコンポーネント開発への理解を深めます。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+**[n8n - Flexible AI workflow automation for technical teams](https://n8n.io/)** (出典: *Naver FE News (2025-08)*)
+![n8n workflow automation](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png)
+- **概要**: n8nは、技術チーム向けの柔軟なオープンソース・ワークフロー自動化プラットフォームです。500以上のサービスと統合可能で、コード(JavaScript, Python)とUIベースのワークフロー作成の両方をサポートし、開発者に高い自由度を提供します。
+- **使用法(CLI/コード例)**:
+  ```bash
+  # Dockerを使ったn8nの実行
+  docker run -it --rm \
+    --name n8n \
+    -p 5678:5678 \
+    -v n8n_data:/home/node/.n8n \
+    docker.n8n.io/n8nio/n8n
+  ```
+  n8nワークフロー内でJavaScriptコードを使用してデータを変換したり、カスタムロジックを簡単に追加したりできます。
+- **実践的なヒント**: フロントエンド開発時にAPIをモックしたり、データを変換したり、自動化されたテスト環境を構築するのに非常に役立ちます。特にcURLをそのまま貼り付けてAPIノードを生成する機能は、APIテストと統合プロセスを劇的に短縮します。セルフホスティングが可能で、データプライバシーを確保できるのも大きな利点です。
+
+**[Observable Notebooks 2.0 Technology Preview](https://javascriptweekly.com/link/172645/web)** (出典: *JavaScript Weekly #747*)
+![Observable Notebooks 2.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/vxattzy1t1iltl6oscnt.jpg)
+- **概要**: データ可視化の巨匠、Mike Bostockが作成したObservableが2.0技術プレビューを公開しました。既存のリアクティブJavaScriptノートブック環境を超え、純粋なHTMLベースのファイル形式とバニラJavaScriptを完全にサポートするようになりました。
+- **使用法**: 新しいNotebook Kitを使用すると、ローカル環境で`import`文を介してライブラリをインポートするなど、従来のウェブ開発方法と同様にデータ可視化プロジェクトを構成できます。
+  ```html
+  <script type="module">
+    import {-Runtime, -Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
+    import define from "./index.js";
+
+    const runtime = new Runtime();
+    const main = runtime.module(define, name => {
+      if (name === "chart") return new Inspector(document.querySelector("#chart"));
+    });
+  </script>
+  ```
+- **実践的なヒント**: データ駆動のダッシュボードやインタラクティブなドキュメントを作成する際に非常に強力なツールです。2.0からはバニラJSと標準的なウェブ技術をサポートするため、既存のウェブ開発知識を活用して、より複雑で柔軟なデータアプリケーションを構築できます。
+
+---
+#### 見逃せないコンテンツ
+- **[Bruno - API Client](https://www.usebruno.com/)** (出典: *Naver FE News (2025-08)* )
+  + **要約**: Postmanの代替として注目されているオープンソースのAPIクライアントです。APIコレクションをファイルシステムに直接保存し、Gitでチームメンバーと簡単に共同作業したりバージョン管理したりできるのが最大の特徴です。
+- **[ForesightJS 3.3: Predictive User Intent Library for the Web](https://frontendfoc.us/link/172713/web)** (出典: *Frontend Focus #704* )
+  + **要約**: ユーザーの行動を予測してページやデータを事前に読み込む(prefetch)ことで、体感的な読み込み速度を劇的に短縮するライブラリです。v3.3ではタッチデバイスのサポートが追加されました。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+**[The Useless useCallback](https://tkdodo.eu/blog/the-useless-use-callback?ck_subscriber_id=2915906285)** (出典: *Naver FE News (2025-08)*)
+- **主要なインサイト**: React開発において`useCallback`は、参照の同一性を維持することで不要な再レンダリングを防ぐために使用されますが、多くの場合、パフォーマンス改善効果がなくコードの複雑性を高めるだけの「時期尚早な最適化(premature optimization)」になりがちです。この記事は、`useCallback`が実際に必要な例外的な状況(例: 非常に重いコンポーネント、カスタムフックのAPI設計)を明確に提示し、ほとんどの場合は使用しない方が良いと主張します。
+- **この記事が有益な理由**: React開発者が陥りがちな過度な最適化の習慣に警鐘を鳴らします。`useCallback`のコストと利点を正確に理解し、いつ使用すべきかについての明確なガイドラインを提供することで、よりクリーンで保守しやすいコードを作成するのに役立ちます。間もなく導入されるReact Compilerが、これらの最適化を自動的に処理してくれるという見通しも示しています。
+
+**[Common AI Product Issues](https://lukew.com/ff/entry.asp?2107)** (出典: *Smashing Newsletter #519*)
+![Common AI Product Issues](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/2542aab9-9bea-0e63-9b61-aae207c1866f.png)
+- **主要なインサイト**: AI機能を製品に追加する際に頻繁に発生する3つの主要な問題点を指摘します。第一に、ユーザーはAIが何をできるのかを知らない(機能認知の不足)。第二に、ユーザーはAIの回答をどれだけ信頼すべきか確信が持てない(コンテキスト認知の不足)。第三に、AIが生成する長いテキストは、情報を抽出して記憶するのを困難にする(情報過多)。
+- **この記事が有益な理由**: 単純なチャットボットUIを超えて、ユーザーがAI機能を効果的に使用し信頼できるようにするための具体的なUX/UI解決策を提示します。提案ボタン、明確なデータソースの表示、情報の可視化などの方法を通じて、AI製品の使いやすさを大幅に向上させることができる実践的なヒントを提供します。
+
+---
+#### 見逃せないコンテンツ
+- **[Infinite Marquee Animation using Modern CSS](https://frontendmasters.com/blog/infinite-marquee-animation-using-modern-css/)** (出典: *CSS Weekly #617* )
+  + **要約**: HTML要素を複製したりJavaScriptを使用したりせずに、最新のCSSのみで完全に滑らかな無限ループアニメーション(いわゆる「マーキー効果」)を作成する方法を段階的に説明します。
+- **[JavaScript scope hoisting is broken](https://devongovett.me/blog/scope-hoisting.html?ck_subscriber_id=2915906285)** (出典: *Naver FE News (2025-08)* )
+  + **要約**: バンドルサイズを削減するScope Hoisting最適化が、大規模アプリケーションのコード分割環境で、どのように実行順序のエラーや副作用といった問題を引き起こす可能性があるかを具体的な事例を通じて分析します。
+- **[Zod vs. Valibot: A JS/TS Validator Battle](https://javascriptweekly.com/link/172602/web)** (出典: *JavaScript Weekly #747* )
+  + **要約**: ZodとValibot、2つの人気TypeScriptバリデーションライブラリの長所と短所を深く比較分析する動画です。Zodの創設者も絶賛するほど、明確かつ簡潔に核心を突いています。
+
+---
+
+## 4. ✨ アイデア
+**[AI Design Guide](https://aidesign.guide/)** (出典: *Naver FE News (2025-08)*)
+![AI Design Guide Logo](https://mintlify.s3.us-west-1.amazonaws.com/dsg/logo/logo-light.svg)
+- **特徴**: デザイナーと開発者がAIを活用してワークフローを革新するための様々なリソースと方法論を集めたガイドです。効果的なプロンプト作成法からデザイン自動化戦略まで、AIをデザインプロセスに統合するための実践的なヒントとツールを紹介します。
+
+**[Colored, Glowing Edge Card](https://codepen.io/simeydotme/pen/RNWoPRj?utm_source=CSS-Weekly&utm_campaign=Issue-617&utm_medium=web)** (出典: *CSS Weekly #617*)
+![Colored, Glowing Edge Card](https://css-weekly.com/wp-content/uploads/2025/07/css-colored-glowing-edge-card.jpg)
+- **特徴**: CSSだけで実装された美しいカードUIのデモです。マウスホバー時にカードの縁に沿って滑らかに光る効果が印象的で、ウェブサイトの主要コンポーネントに視覚的な強調効果を与えるインスピレーションを与えます。
+
+## 5. ⚡️ ミニノート
+- **[NuxtLabs joins Vercel](https://vercel.com/blog/nuxtlabs-joins-vercel)** (出典: *Naver FE News (2025-08)*)
+  + **要約**: VercelがVue.jsベースのフレームワークNuxtの開発会社であるNuxtLabsを買収しました。Vercelのインフラと結びつき、NuxtとVueエコシステムの発展がさらに加速する見込みです。
+- **[Publishers Oppose W3C Plan to Kill Third-Party Cookies](https://frontendfoc.us/link/172697/web)** (出典: *Frontend Focus #704*)
+  + **要約**: あるeコマース擁護団体が、W3Cのサードパーティクッキー廃止計画はGoogleにのみ有利で、ウェブパブリッシャーにとっては反競争的であるとして、英国の競争市場に不満を申し立てました。
+- **[The Stack Overflow 2025 survey results](https://javascriptweekly.com/link/172590/web)** (出典: *JavaScript Weekly #747*)
+  + **要約**: Stack Overflow 2025年の調査結果によると、JavaScriptが最も多く使われる言語で1位、Reactがフロントエンドライブラリで1位を占め、jQueryが依然として2位の座を守りました。
+- **[Translator API](https://developer.mozilla.org/en-US/docs/Web/API/Translator)** (出典: *Naver FE News (2025-08)*)
+  + **要約**: サーバーなしでブラウザ内蔵の翻訳機能を活用できる新しいウェブ標準APIです。クライアント側でテキスト翻訳、言語検出などを手軽に実装できるようになります。
+
+## 6. 🎉 リリース
+- **[Node.js v22.18 (LTS)](https://javascriptweekly.com/link/172586/web)** (出典: *JavaScript Weekly #747*)
+  + **アップデート**: これからは別途の設定なしに `node app.ts` コマンドでTypeScriptファイルを直接実行できるタイプストリッピング(type stripping)機能がデフォルトで有効になりました。
+- **[pnpm 10.14](https://javascriptweekly.com/link/172633/web)** (出典: *JavaScript Weekly #747*)
+  + **アップデート**: `package.json`に特定のNode.js、Deno、またはBunのバージョンを宣言すると、自動的に該当バージョンをインストールして固定する機能が追加されました。
+- **[TypeScript 5.9](https://react.statuscode.com/link/172783/web)** (出典: *React Status #439*)
+  + **アップデート**: `import defer`提案をサポートし、VS Codeなどのエディタで型情報をより簡単に展開して見ることができる「expandable hovers」機能が追加された、比較的小規模なアップデートです。
+- **[FlashList v2](https://react.statuscode.com/link/172800/web)** (出典: *React Status #439*)
+  + **アップデート**: Shopifyが開発したReact Native用の高性能リストライブラリです。v2はReact Nativeの「New Architecture」を基に完全に再作成され、ビューの再利用を通じてスクロール性能を最大化しました。
+- **[Storybook 9.1](https://javascriptweekly.com/link/172596/web)** (出典: *JavaScript Weekly #747*)
+  + **アップデート**: フロントエンドUIコンポーネントの開発とテストのためのワークショップツールの最新版がリリースされました。
+- **[Dependency Cruiser 17](https://javascriptweekly.com/link/172608/web)** (出典: *JavaScript Weekly #747*)
+  + **アップデート**: プロジェクトの依存構造を可視化し、ルールを設定して管理できるツールの新バージョンがリリースされました。
+- **[Axios 1.11](https://javascriptweekly.com/link/172620/web)** (出典: *JavaScript Weekly #747*)
+  + **アップデート**: 長年愛されてきたPromiseベースのHTTPクライアントライブラリ、Axiosの最新版です。
+- **[Relay 20.1](https://react.statuscode.com/link/172806/web)** (出典: *React Status #439*)
+  + **アップデート**: Facebook(Meta)が開発したGraphQLベースのReactフレームワークの新バージョンです。
+- **[React-Date-Picker 12.0](https://react.statuscode.com/link/172805/web)** (出典: *React Status #439*)
+  + **アップデート**: シンプルで直感的な日付選択コンポーネントで、このバージョンからESM専用として提供されます。
+
+## ✍️ おわりに
+今週のニュースを通じて、AI技術が開発者の生産性を高める強力なツールとして定着しつつあることを改めて確認できました。同時に、セマンティックHTML、ウェブコンポーネント、そして安定したランタイム環境といった、ウェブの基本原則を守ることがいかに重要であるかも気づかされます。新しい技術を積極的に探求しつつも、ウェブの根本的な価値を忘れない、バランスの取れた視点が必要な時です。
+
+#### 出典
+- [JavaScript Weekly #747](https://javascriptweekly.com/issues/747)
+- [Smashing Newsletter #519](https://mailchi.mp/smashingmagazine/519-ai-guidelines-and-patterns?e=02d8dcf17a)
+- [React Status #439](https://react.statuscode.com/issues/439)
+- [Frontend Focus #704](https://frontendfoc.us/issues/704)
+- [CSS Weekly #617](https://css-weekly.com/issues/617)
+- [NAVER FE News 2025-08](https://github.com/naver/fe-news/blob/master/issues/2025-08.md?utm_source=substack&utm_medium=email)
