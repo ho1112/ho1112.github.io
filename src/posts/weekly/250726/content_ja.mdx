@@ -1,0 +1,147 @@
+---
+title: '🚀 2025-07 W4 #17'
+desc: 2025年7月第4週のニュースレター
+date: 2025-07-26
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、SVGやレスポンシブビデオといったフロントエンドの基礎を固めるための詳細なガイドと共に、複雑な製品やAIインターフェースを設計するための最新デザインパターンが注目を集めました。また、Tiptap v3、Next.js 15.4、Nuxt v4.0など、主要なフレームワークやライブラリの重要なアップデートが多数発表され、開発者の生産性向上に貢献することが期待されます。
+
+## 1. 🔍 深掘り
+1. **[A Friendly Introduction to SVG](https://frontendfoc.us/link/172110/web)** (出典: *Frontend Focus #702*)
+	![SVG紹介画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1753267193/jmt6a6sziyeprgqcijmp.png)
+	- **背景**: SVG (Scalable Vector Graphics) は、解像度に依存しない高品質なグラフィックをウェブで表現するための必須技術です。多くの開発者がSVGのポテンシャルを十分に活用できていないため、基礎からしっかりと学べる資料が求められています。
+	- **主な機能**: この記事では、SVGの基本構造、主要な要素 (`path`, `circle`, `rect` など)、`viewBox`と`preserveAspectRatio`属性の重要性、そしてCSSを用いたスタイリングやインタラクションの追加方法について解説します。インタラクティブなコード例とデモを通じて、概念を容易に理解できるようサポートします。
+	- **実務での適用**: ロゴ、アイコン、データ可視化チャートなど、様々なUI要素にSVGを適用できます。特に、CSS変数と組み合わせて動的なテーマ変更やインタラクティブなグラフィックを実装する際に非常に役立ちます。
+	- **注意事項**: 複雑なSVGはDOMノード数を増加させ、パフォーマンスに影響を与える可能性があるため、最適化ツールを使用してファイルサイズを削減することが重要です。また、アクセシビリティのために`<title>`と`<desc>`タグを提供することを忘れないようにしましょう。
+
+2. **[Design Patterns For AI Interfaces](https://www.smashingmagazine.com/2025/07/design-patterns-ai-interfaces/)** (出典: *Smashing Newsletter #517*)
+	![AIインターフェースデザインパターン](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/9c2eaa50-c5d8-156f-acf9-291b45ba1074.png)
+	- **背景**: AI機能が様々な製品に統合されるにつれて、ユーザーに一貫性のある直感的な体験を提供するための標準化されたUIパターンの必要性が高まっています。この記事は、AIインターフェースを設計する際に考慮すべき主要なガイドラインとパターンを提示します。
+	- **主な機能**: この記事では、AIチャットボット、サイドパネル、セマンティックグリッド、無限キャンバスなど、現在台頭している多様なAI UIパターンを実際の事例と共に分析します。ユーザーの入力、AIの出力、そして結果を改善していくプロセス(refinement journey)を中心に、各パターンの長所と短所を説明します。
+	- **実務での適用**: 製品にAIベースの機能を追加する際、この記事で提案されているパターンを参考に、ユーザーのコンテキストに最も適したインターフェースを選択できます。例えば、簡単な質疑応答はチャットボット形式で、複雑なデータの生成や編集は無限キャンバス形式で実装するといった具合です。
+	- **注意事項**: AIの不確実性と潜在的なエラーの可能性をユーザーに明確に伝え、ユーザーがAIの提案を簡単に修正したり拒否したりできるコントロール権を提供することが重要です。常にユーザーが最終的な決定権者であることを忘れてはなりません。
+
+---
+#### 見逃せないコンテンツ
+- **[The History of React Through Code](https://javascriptweekly.com/link/171976/web)** (出典: *JavaScript Weekly #745*)
+	+ **要約**: Reactの誕生から現在までの進化の過程を、コードを中心に深く探求する年代記的な記事です。Reactの中核となる哲学と主要な変更の背景を理解し、技術の発展過程を深く見渡すことができます。
+- **[So many ranges, so little time: A cheatsheet of animation-ranges for your next scroll-driven animation](https://webkit.org/blog/17184/so-many-ranges-so-little-time-a-cheatsheet-of-animation-ranges-for-your-next-scroll-driven-animation/)** (出典: *CSS Weekly #616*)
+	+ **要約**: スクロール駆動アニメーションの主要なプロパティである`animation-range`について知っておくべき全てを説明するチートシートです。様々な範囲オプションをマスターし、より洗練されたインタラクティブなスクロール効果を実装する方法を学べます。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Untitled UI React: A Fresh UI Component Library](https://react.statuscode.com/link/172149/web)** (出典: *React Status #437*)
+	![Untitled UI React](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lbpqo32saqtar2dh4crc.jpg)
+	+ **概要**: Tailwind CSSとReact Ariaを基盤に構築された、大規模なオープンソースのコンポーネントライブラリです。「コピー、ペースト、ビルド」というコンセプトで、迅速に高品質なUIを制作できるよう支援し、アクセシビリティに優れたコンポーネントを提供します。
+	+ **使用方法**: 
+		```bash
+		# Untitled UIコンポーネントの使用例（概念）
+		# 実際の使用方法は公式ドキュメントを参照してください。
+		import { Button } from '@untitled-ui/react';
+
+		function App() {
+		  return <Button variant="primary">Click me</Button>;
+		}
+		```
+	+ **実践的なヒント**: Figmaとの統合をサポートする「PRO」バージョンを活用すると、デザイナーと開発者間のワークフローを大幅に改善できます。デザインシステムを初めて構築する場合や、迅速にプロトタイプを作成する必要がある場合に非常に便利です。
+
+- **[Tiptap v3: The Headless Rich Text Editor Framework](https://javascriptweekly.com/link/172013/web)** (出典: *JavaScript Weekly #745*)
+	![Tiptap v3](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/uqc5sxd35xmwzoj3q872.jpg)
+	+ **概要**: 強力なリッチテキスト編集体験を構築するためのヘッドレスフレームワークです。v3では、動的UIに最適なエディタのマウント/アンマウント機能、カスタムコンポーネントでテキストセグメントをレンダリングする「Markviews」、SSRモードなど、開発者体験（DX）が大幅に向上しました。
+	+ **使用方法**:
+		```javascript
+		// Tiptap v3の使用例（概念）
+		import { useEditor, EditorContent } from '@tiptap/react';
+		import StarterKit from '@tiptap/starter-kit';
+
+		const Tiptap = () => {
+		  const editor = useEditor({
+		    extensions: [StarterKit],
+		    content: '<p>Hello World! 🌎️</p>',
+		  });
+		  return <EditorContent editor={editor} />;
+		};
+		```
+	+ **実践的なヒント**: ヘッドレスアーキテクチャのおかげで、どのUIフレームワークとも簡単に統合でき、デザインシステムに完全に準拠したカスタムエディタを作成できます。必要な機能だけを選択的に追加して、エディタを軽量に保ちましょう。
+
+---
+#### 見逃せないコンテンツ
+- **[Reagraph: WebGL-Powered Network Graph Visualization for React](https://react.statuscode.com/link/172162/web)** (出典: *React Status #437*)
+	+ **要約**: WebGLを活用して大規模なネットワークグラフを高性能で可視化できるReactライブラリです。詳細なドキュメントとStorybookの例を提供し、複雑なデータ関係を簡単に視覚化できるよう支援します。
+- **[Glass3D Generator: A Tool to Generate a 3D Glass Effect with CSS](https://frontendfoc.us/link/172133/web)** (出典: *Frontend Focus #702*)
+	+ **要約**: `backdrop-filter`、色、テクスチャなどをリアルタイムで調整し、3Dガラス効果（グラスモーフィズム）のCSSコードを生成するツールです。最近注目されているAppleの「Liquid Glass」スタイルをウェブで手軽に試すことができます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Responsive Video Is (Almost) Easy Now](https://www.kooslooijesteijn.net/blog/responsive-video-easy?utm_source=CSS-Weekly&utm_campaign=Issue-616&utm_medium=web)** (出典: *CSS Weekly #616*)
+	![レスポンシブビデオ](https://css-weekly.com/wp-content/uploads/2025/07/responsive-video-easy.png)
+	+ **主要なインサイト**: `<video>`タグとメディアクエリを活用し、水平および垂直のビデオバージョンを両方提供する方法を説明します。これにより、YouTubeのような外部プラットフォームへの依存から脱却し、様々な画面サイズや向きに最適化された高品質なビデオ体験を直接制御し、提供できます。
+	+ **この記事が有益な理由**: モバイル利用が主流の現代のウェブにおいて、縦型ビデオの重要性はますます高まっています。この記事は、`aspect-ratio`のような最新のCSSプロパティを使用せずにレスポンシブビデオを効果的に扱う実用的なテクニックを提示し、どんな環境でも最適なユーザー体験を保証できるよう支援します。
+
+- **[Your vs. My](https://web.archive.org/web/20201108104321/http://www.sitepoint.com/better-user-interfaces-copy/)** (出典: *Smashing Newsletter #517*)
+	![Your vs. My 画像](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/e83b9e8c-7533-7f82-4b60-5f8e9bc89715.png)
+	+ **主要なインサイト**: インターフェースで「Your」や「My」といった人称代名詞を使用することは、ユーザー体験に微妙ながらも重要な影響を与えます。この記事は、いつ「Your」を使い、いつ「My」を使うべきかについての明確なガイドラインを提示します。「My」はユーザーが生成したコンテンツや実行するタスク（例: My drafts）に、「Your」はシステムがユーザーに提供する情報（例: Your presets）に使うのが望ましいです。
+	+ **この記事が有益な理由**: 優れたマイクロコピーは、ユーザーと製品との関係を築き、信頼を構築する上で決定的な役割を果たします。この記事は、簡単な単語の選択がどのようにユーザーの所有感と製品の役割を定義するかを示し、より思慮深くユーザー中心のインターフェースを設計するのに役立つ実用的な指針を提供します。
+
+- **[How to Create an NPM Package in 2025](https://javascriptweekly.com/link/171975/web)** (出典: *JavaScript Weekly #745*)
+	+ **主要なインサイト**: 2025年の最新トレンドに合わせてNPMパッケージを作成し、公開する全プロセスを網羅した総合ガイドです。プロジェクトの初期設定からTypeScript、テスト、自動化されたバージョン管理、デプロイパイプラインの構築まで、ベストプラクティスに基づき詳細に説明します。
+	+ **この記事が有益な理由**: 単にコードを共有するだけでなく、他の開発者が信頼して使用できる高品質なパッケージを作成する方法を学べます。よくできたパッケージは、コミュニティに貢献し、自身の技術力を証明する良い方法となり得ます。
+
+---
+#### 見逃せないコンテンツ
+- **[Tiny Screens, Big Impact: The Forgotten Art of Developing Web Apps For Feature Phones](https://www.smashingmagazine.com/2025/07/tiny-screens-big-impact-developing-web-apps-feature-phones/)** (出典: *Smashing Newsletter #517*)
+	+ **要約**: 2025年においても依然として重要なフィーチャーフォン市場に焦点を当て、小さな画面と限られた性能のデバイス向けのウェブアプリを開発し、リリースする方法を探ります。デジタルデバイドを解消し、より広いユーザー層にリーチするための実用的なアプローチを提示します。
+- **[CSS Hyphens, Words, Syllables, and Languages](https://blog.frankmtaylor.com/2025/07/17/css-hyphens-words-syllables-and-languages/?utm_source=CSS-Weekly&utm_campaign=Issue-616&utm_medium=web)** (出典: *CSS Weekly #616*)
+	+ **要約**: CSSの`hyphens`プロパティを正しく使用するために、HTMLに`lang`属性を正確に指定することの重要性を強調します。言語設定が自動ハイフネーションにどのように影響するかを説明し、より良いタイポグラフィと可読性のためのヒントを提供します。
+---
+
+## 4. ✨ アイデア
+- **[Trendy UI with Clip-Path and Grid](https://codepen.io/dandenney/pen/vEEbLJe?utm_source=CSS-Weekly&utm_campaign=Issue-616&utm_medium=web)** (出典: *CSS Weekly #616*)
+	![clip-pathとgridを活用したUIデモ](https://css-weekly.com/wp-content/uploads/2025/07/trendy-ui-with-clip-path-and-grid.jpg)
+	+ **特徴**: このCodePenデモは、CSSの`clip-path`プロパティとCSS Gridを組み合わせて、非対称で動的な最新のUIレイアウトを実装する方法を示しています。単純な四角形の構造から脱却し、ユニークで視覚的に魅力的なデザインを作成するためのインスピレーションを得ることができます。
+
+## 5. ⚡️ ミニノート
+- **[The State of HTML 2025 Survey Is Now Open](https://frontendfoc.us/link/172111/web)** (出典: *Frontend Focus #702*)
+	+ **要約**: 第3回年次State of HTML調査が開始されました。開発者がウェブプラットフォームの新機能をどのように使用しているかを把握するためのこの調査の結果は、来年度のブラウザ相互運用性プロジェクト（Interop）の優先順位を決定する上で直接的な影響を与えます。
+- **[React Router and React Server Components: The Path Forward](https://react.statuscode.com/link/172156/web)** (出典: *React Status #437*)
+	+ **要約**: React RouterのユーザーがReact Server Components (RSC) と連携する際に、今後どのような変更があるかを説明します。RSCの導入がルーティングライブラリに与える影響は予想以上に大きい可能性があり、それに対するチームの計画を共有しています。
+- **[Astro 5.12 Released](https://frontendfoc.us/link/172137/web)** (出典: *Frontend Focus #702*)
+	+ **要約**: Astro 5.12がリリースされました。Netlifyの開発体験向上、コンテンツローダーのTOMLサポートなど、様々な機能が追加されました。
+- **[The New React Compiler Docs](https://react.statuscode.com/link/172151/web)** (出典: *React Status #437*)
+	+ **要約**: ReactチームがReact Compilerの公式ドキュメントを大幅に改善しました。まだリリース候補段階にあるこのコンパイラについて、より深く学びたいのであれば、今が最適な時期です。
+- **[WebAssembly: Yes, But for What?](https://javascriptweekly.com/link/171963/web)** (出典: *JavaScript Weekly #745*)
+	+ **要約**: WebAssembly (WASM) の実装に貢献した開発者が、WASMがブラウザとサーバーサイドの両方でどのように使用されているか、そして徐々にすべての領域に拡大している現状をまとめました。
+
+## 6. 🎉 リリース
+- **[Nuxt v4.0](https://javascriptweekly.com/link/172011/web)** (出典: *JavaScript Weekly #745*)
+	+ **アップデート**: 人気のあるフルスタックVue.jsフレームワークのメジャーリリースで、開発者体験（DX）に焦点を当てたアップデートが行われました。
+- **[Next.js 15.4](https://javascriptweekly.com/link/171985/web)** (出典: *JavaScript Weekly #745*)
+	+ **アップデート**: パフォーマンス、安定性、そしてTurbopackとの互換性が改善されました。また、間もなくリリースされるNext.js 16の新機能に関する予告も含まれています。
+- **[React Unity WebGL 10.0](https://react.statuscode.com/link/172166/web)** (出典: *React Status #437*)
+	+ **アップデート**: Unity WebGLアプリをReactアプリに統合し、相互作用を可能にするライブラリのバージョン10.0です。
+- **[React Admin 5.10](https://react.statuscode.com/link/172177/web)** (出典: *React Status #437*)
+	+ **アップデート**: B2Bフロントエンドインターフェース構築のためのフレームワークの新バージョンです。
+- **[Firefox 141](https://frontendfoc.us/link/172115/web)** (出典: *Frontend Focus #702*)
+	+ **アップデート**: 縦型タブ機能と、AIベースの新しいタブ整理機能が追加されました。
+- **[Bun v1.2.19](https://react.statuscode.com/link/172181/web)** (出典: *React Status #437*)
+	+ **アップデート**: pnpmスタイルの隔離された`node_modules`インストールオプション、対話型のパッケージアップデーター、VS Code Test Explorerの統合などが追加されました。
+- **[ESLint v9.31.0](https://javascriptweekly.com/link/171969/web)** (出典: *JavaScript Weekly #745*)
+	+ **アップデート**: 明示的なリソース管理（explicit resource management）をサポートするため、4つの中核ルールが更新されました。
+- **[Yet Another React Lightbox 3.25](https://react.statuscode.com/link/172175/web)** (出典: *React Status #437*)
+	+ **アップデート**: モダンなReactライトボックスコンポーネントの新バージョンです。
+- **[MUI X 8.8](https://javascriptweekly.com/link/172008/web)** (出典: *JavaScript Weekly #745*)
+	+ **アップデート**: 人気のあるReactコンポーネントスイートの新バージョンです。
+- **[Wasp 0.17](https://javascriptweekly.com/link/172002/web)** (出典: *JavaScript Weekly #745*)
+	+ **アップデート**: Node, React, Prismaを使用するRailsスタイルのフレームワークの新バージョンです。
+
+## ✍️ おわりに
+今週のニュースを通じて、フロントエンド開発の基礎と最新トレンドの両方を垣間見ることができました。SVGやレスポンシブビデオのような基礎技術を再点検することも重要ですが、AIインターフェースデザインパターンのような新たに台頭する分野の学習も怠ってはならないでしょう。特に、主要フレームワークの継続的な発展は、私たちがより良い製品をより効率的に作るための頼もしい基盤となります。来週も有益なニュースをお届けします。
+
+#### 出典
+- [JavaScript Weekly #745](https://javascriptweekly.com/issues/745)
+- [Smashing Newsletter #517](https://mailchi.mp/smashingmagazine/517-design-patterns-for-complex-products?e=02d8dcf17a)
+- [React Status #437](https://react.statuscode.com/issues/437)
+- [Frontend Focus #702](https://frontendfoc.us/issues/702)
+- [CSS Weekly #616](https://css-weekly.com/issues/616)

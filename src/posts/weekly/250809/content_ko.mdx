@@ -1,0 +1,145 @@
+---
+title: '🚀 2025-08 W2 #19'
+desc: 2025년 8월 2주차 뉴스레터
+date: 2025-08-09
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 이번 주 핵심 테마
+AI가 개발 워크플로를 바꾸는 시대, 웹의 근본인 시맨틱 HTML과 안정적인 JavaScript 런타임의 중요성이 다시 한번 강조되고 있습니다.
+
+## 1. 🔍 심층 분석
+**[JavaScript broke the web (and called it progress)](https://www.jonoalderson.com/conjecture/javascript-broke-the-web-and-called-it-progress/)** (출처: *Naver FE News (2025-08)*)
+![](https://www.jonoalderson.com/acd-cgi/img/v1/wp-content/uploads/image.webp?dpr=1&f=auto&fit=cover&height=700&q=85&width=1520)
+- **배경**: 이 글은 현대 웹 개발에서 JavaScript의 과도한 사용이 어떻게 웹의 근본적인 가치인 접근성, 성능, 사용자 경험을 훼손하고 있는지 날카롭게 비판합니다. 'JavaScript가 모든 것을 해결할 수 있다'는 믿음이 어떻게 웹을 더 느리고, 복잡하고, 배타적인 공간으로 만들었는지 문제를 제기합니다.
+- **핵심 주장**: 클라이언트 사이드 렌더링(CSR)에 대한 과도한 의존은 초기 로딩 시간을 지연시키고 SEO를 어렵게 만듭니다. 또한, 네트워크가 불안정하거나 JavaScript를 비활성화한 사용자는 웹사이트의 핵심 기능조차 사용하지 못하는 '깨진 경험'을 하게 됩니다. 저자는 이것이 기술의 진보가 아닌, 웹의 본질을 망가뜨리는 행위라고 주장합니다.
+- **실무 적용**: 개발자는 점진적 향상(Progressive Enhancement) 원칙으로 돌아가야 합니다. 즉, JavaScript 없이도 핵심 기능이 동작하는 견고한 HTML과 CSS 기반을 먼저 구축하고, 그 위에 JavaScript로 동적인 경험을 더하는 방식을 채택해야 합니다. 이는 더 빠르고, 안정적이며, 모두에게 열려있는 웹을 만드는 길입니다.
+- **개발자를 위한 제언**: 새로운 프레임워크나 기술을 도입하기 전에, 그것이 정말로 사용자 경험을 향상시키는지, 아니면 단지 개발의 편의만을 위한 것은 아닌지 비판적으로 성찰해야 합니다. 웹의 본질은 기술적 화려함이 아닌, 정보에 대한 보편적 접근성에 있다는 것을 기억해야 합니다.
+
+**[The Many, Many, Many JavaScript Runtimes of the Last Decade](https://buttondown.com/whatever_jamie/archive/the-many-many-many-javascript-runtimes-of-the-last-decade/)** (출처: *JavaScript Weekly #747*)
+- **배경**: 지난 10년간 Node.js의 등장 이후 Deno, Bun, Hermes 등 수많은 JavaScript 런타임이 탄생했습니다. 이 글은 각 런타임이 어떤 문제를 해결하기 위해 등장했고, 어떤 기술적 철학을 가지고 발전해왔는지 상세하게 분석합니다.
+- **핵심 내용**: 각 런타임의 탄생 배경(Node.js의 npm과 CommonJS, Deno의 보안과 TS 지원, Bun의 속도)과 주요 특징을 비교하며 설명합니다. 단순한 런타임 목록을 넘어, 클라우드 환경(Cloudflare Workers, Vercel Edge Functions)에 특화된 런타임까지 다루며 JavaScript 생태계의 확장성을 보여줍니다.
+- **실무 적용**: 프로젝트의 요구사항에 맞는 최적의 JavaScript 런타임을 선택하는 데 중요한 기준을 제공합니다. 예를 들어, 빠른 개발 속도와 올인원(All-in-one) 환경이 필요하다면 Bun을, 안정성과 보안이 중요하다면 Deno를, 거대한 생태계 활용이 필요하다면 Node.js를 고려할 수 있습니다.
+- **주의사항**: 런타임 생태계는 매우 빠르게 변화하고 있으므로, 글에서 소개된 내용을 바탕으로 각 프로젝트의 공식 문서를 통해 최신 정보를 확인하는 것이 중요합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Why Semantic HTML Still Matters](https://frontendfoc.us/link/172696/web)** (출처: *Frontend Focus #704* )
+  + **요약**: 복잡한 DOM 트리와 불필요한 CSS는 성능 저하의 주된 원인입니다. 이 글은 시맨틱하고 구조적인 HTML이 왜 향수를 넘어 웹의 근본적인 인프라이며, 견고하고 성능 좋은 웹사이트의 기초가 되는지를 다시 한번 상기시켜 줍니다.
+- **[Web Components: Working With Shadow DOM](https://www.smashingmagazine.com/2025/07/web-components-working-with-shadow-dom/)** (출처: *CSS Weekly #617* )
+  + **요약**: Shadow DOM이 웹 컴포넌트의 큰 그림에서 어떻게 작동하는지 설명합니다. 스타일 캡슐화와 DOM 격리가 왜 중요하며, 언제, 어떻게 효과적으로 사용해야 하는지에 대한 실용적인 가이드를 제공하여 재사용 가능한 컴포넌트 개발에 대한 이해를 돕습니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+**[n8n - Flexible AI workflow automation for technical teams](https://n8n.io/)** (출처: *Naver FE News (2025-08)*)
+![n8n workflow automation](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png)
+- **개요**: n8n은 기술팀을 위한 유연한 오픈소스 워크플로우 자동화 플랫폼입니다. 500개 이상의 서비스와 통합이 가능하며, 코드(JavaScript, Python)와 UI 기반의 워크플로우 생성을 모두 지원하여 개발자에게 높은 자유도를 제공합니다.
+- **사용법(CLI/코드 예시)**:
+  ```bash
+  # Docker를 사용한 n8n 실행
+  docker run -it --rm \
+    --name n8n \
+    -p 5678:5678 \
+    -v n8n_data:/home/node/.n8n \
+    docker.n8n.io/n8nio/n8n
+  ```
+  n8n 워크플로우 내에서 JavaScript 코드를 사용하여 데이터를 변환하거나 커스텀 로직을 쉽게 추가할 수 있습니다.
+- **실전 팁**: 프런트엔드 개발 시 API를 모킹하거나, 데이터를 변환하고, 자동화된 테스트 환경을 구축하는 데 매우 유용합니다. 특히 cURL을 그대로 붙여넣어 API 노드를 생성하는 기능은 API 테스트와 통합 과정을 극적으로 단축시킵니다. 셀프 호스팅이 가능하여 데이터 프라이버시를 확보할 수 있는 것도 큰 장점입니다.
+
+**[Observable Notebooks 2.0 Technology Preview](https://javascriptweekly.com/link/172645/web)** (출처: *JavaScript Weekly #747*)
+![Observable Notebooks 2.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/vxattzy1t1iltl6oscnt.jpg)
+- **개요**: 데이터 시각화의 대가 Mike Bostock이 만든 Observable이 2.0 기술 프리뷰를 공개했습니다. 기존의 리액티브 JavaScript 노트북 환경을 넘어, 이제 순수 HTML 기반의 파일 포맷과 바닐라 JavaScript를 완벽하게 지원합니다.
+- **사용법**: 새로운 Notebook Kit을 사용하면 로컬 환경에서 `import` 구문을 통해 라이브러리를 가져오는 등 기존 웹 개발 방식과 유사하게 데이터 시각화 프로젝트를 구성할 수 있습니다.
+  ```html
+  <script type="module">
+    import {-Runtime, -Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
+    import define from "./index.js";
+
+    const runtime = new Runtime();
+    const main = runtime.module(define, name => {
+      if (name === "chart") return new Inspector(document.querySelector("#chart"));
+    });
+  </script>
+  ```
+- **실전 팁**: 데이터 기반의 대시보드나 인터랙티브 문서를 제작할 때 매우 강력한 도구입니다. 2.0부터는 바닐라 JS와 표준 웹 기술을 지원하므로, 기존 웹 개발 지식을 활용하여 더 복잡하고 유연한 데이터 애플리케이션을 구축할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Bruno - API Client](https://www.usebruno.com/)** (출처: *Naver FE News (2025-08)* )
+  + **요약**: Postman의 대안으로 떠오르는 오픈소스 API 클라이언트입니다. API 컬렉션을 파일시스템에 직접 저장하여 Git으로 팀원들과 쉽게 협업하고 버전을 관리할 수 있는 것이 가장 큰 특징입니다.
+- **[ForesightJS 3.3: Predictive User Intent Library for the Web](https://frontendfoc.us/link/172713/web)** (출처: *Frontend Focus #704* )
+  + **요약**: 사용자의 행동을 예측하여 페이지나 데이터를 미리 가져오는(prefetch) 방식으로 체감 로딩 속도를 획기적으로 줄여주는 라이브러리입니다. v3.3에서는 터치 디바이스 지원이 추가되었습니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+**[The Useless useCallback](https://tkdodo.eu/blog/the-useless-use-callback?ck_subscriber_id=2915906285)** (출처: *Naver FE News (2025-08)*)
+- **핵심 인사이트**: React 개발에서 `useCallback`은 참조 동일성을 유지하여 불필요한 리렌더링을 방지하기 위해 사용되지만, 많은 경우 성능 개선 효과 없이 코드 복잡성만 높이는 '성급한 최적화(premature optimization)'가 될 수 있습니다. 이 글은 `useCallback`이 실제로 필요한 예외적인 상황(예: 매우 무거운 컴포넌트, 커스텀 훅의 API 설계)을 명확히 제시하고, 대부분의 경우에는 사용하지 않는 것이 더 낫다고 주장합니다.
+- **왜 이 글이 유익한가**: React 개발자들이 흔히 저지르는 과도한 최적화 습관에 대해 경종을 울립니다. `useCallback`의 비용과 이점을 정확히 이해하고, 언제 사용해야 하는지에 대한 명확한 가이드라인을 제공함으로써 더 깨끗하고 유지보수하기 쉬운 코드를 작성하도록 돕습니다. 곧 도입될 React Compiler가 이러한 최적화를 자동으로 처리해줄 것이라는 전망도 제시합니다.
+
+**[Common AI Product Issues](https://lukew.com/ff/entry.asp?2107)** (출처: *Smashing Newsletter #519*)
+![Common AI Product Issues](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/2542aab9-9bea-0e63-9b61-aae207c1866f.png)
+- **핵심 인사이트**: AI 기능을 제품에 추가할 때 흔히 발생하는 세 가지 주요 문제점을 지적합니다. 첫째, 사용자는 AI가 무엇을 할 수 있는지 모릅니다(기능 인지 부족). 둘째, 사용자는 AI의 답변을 얼마나 신뢰해야 할지 확신하지 못합니다(컨텍스트 인지 부족). 셋째, AI가 생성하는 긴 텍스트는 정보를 추출하고 기억하기 어렵게 만듭니다(정보 과부하).
+- **왜 이 글이 유익한가**: 단순한 챗봇 UI를 넘어, 사용자가 AI 기능을 효과적으로 사용하고 신뢰할 수 있도록 만드는 구체적인 UX/UI 해결책을 제시합니다. 제안 버튼, 명확한 데이터 소스 표시, 정보 시각화 등의 방법을 통해 AI 제품의 사용성을 크게 향상시킬 수 있는 실질적인 팁을 제공합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Infinite Marquee Animation using Modern CSS](https://frontendmasters.com/blog/infinite-marquee-animation-using-modern-css/)** (출처: *CSS Weekly #617* )
+  + **요약**: HTML 요소를 복제하거나 JavaScript를 사용하지 않고, 오직 최신 CSS만으로 완벽하게 부드러운 무한 반복 애니메이션(일명 '마퀴 효과')을 만드는 방법을 단계별로 설명합니다.
+- **[JavaScript scope hoisting is broken](https://devongovett.me/blog/scope-hoisting.html?ck_subscriber_id=2915906285)** (출처: *Naver FE News (2025-08)* )
+  + **요약**: 번들 크기를 줄여주는 Scope Hoisting 최적화가 대규모 애플리케이션의 코드 스플리팅 환경에서 어떻게 실행 순서 오류나 부수 효과 같은 문제를 일으킬 수 있는지 구체적인 사례를 통해 분석합니다.
+- **[Zod vs. Valibot: A JS/TS Validator Battle](https://javascriptweekly.com/link/172602/web)** (출처: *JavaScript Weekly #747* )
+  + **요약**: Zod와 Valibot, 두 인기 타입스크립트 유효성 검사 라이브러리의 장단점을 심도 있게 비교 분석하는 영상입니다. Zod 창시자도 극찬할 만큼 명확하고 간결하게 핵심을 짚어줍니다.
+
+---
+
+## 4. ✨ 아이디어
+**[AI Design Guide](https://aidesign.guide/)** (출처: *Naver FE News (2025-08)*)
+![AI Design Guide Logo](https://mintlify.s3.us-west-1.amazonaws.com/dsg/logo/logo-light.svg)
+- **특징**: 디자이너와 개발자가 AI를 활용하여 워크플로우를 혁신할 수 있는 다양한 리소스와 방법론을 모아놓은 가이드입니다. 효과적인 프롬프트 작성법부터 디자인 자동화 전략까지, AI를 디자인 프로세스에 통합하는 실용적인 팁과 도구를 소개합니다.
+
+**[Colored, Glowing Edge Card](https://codepen.io/simeydotme/pen/RNWoPRj?utm_source=CSS-Weekly&utm_campaign=Issue-617&utm_medium=web)** (출처: *CSS Weekly #617*)
+![Colored, Glowing Edge Card](https://css-weekly.com/wp-content/uploads/2025/07/css-colored-glowing-edge-card.jpg)
+- **특징**: CSS만으로 구현된 아름다운 카드 UI 데모입니다. 마우스 호버 시 카드 테두리를 따라 부드럽게 빛나는 효과가 인상적이며, 웹사이트의 주요 컴포넌트에 시각적인 강조 효과를 주는 데 영감을 줍니다.
+
+## 5. ⚡️ 짧은 소식
+- **[NuxtLabs joins Vercel](https://vercel.com/blog/nuxtlabs-joins-vercel)** (출처: *Naver FE News (2025-08)*)
+  + **요약**: Vercel이 Vue.js 기반 프레임워크 Nuxt의 개발사 NuxtLabs를 인수했습니다. Vercel의 인프라와 결합하여 Nuxt와 Vue 생태계의 발전이 더욱 가속화될 전망입니다.
+- **[Publishers Oppose W3C Plan to Kill Third-Party Cookies](https://frontendfoc.us/link/172697/web)** (출처: *Frontend Focus #704*)
+  + **요약**: 한 이커머스 옹호 단체가 W3C의 서드파티 쿠키 제거 계획이 구글에게만 유리하며 웹 퍼블리셔에게는 반경쟁적이라며 영국 경쟁시장에 불만을 제기했습니다.
+- **[The Stack Overflow 2025 survey results](https://javascriptweekly.com/link/172590/web)** (출처: *JavaScript Weekly #747*)
+  + **요약**: Stack Overflow 2025년 설문조사 결과, JavaScript가 가장 많이 사용되는 언어 1위를, React가 프런트엔드 라이브러리 1위를 차지했으며, jQuery가 여전히 2위 자리를 지켰습니다.
+- **[Translator API](https://developer.mozilla.org/en-US/docs/Web/API/Translator)** (출처: *Naver FE News (2025-08)*)
+  + **요약**: 서버 없이 브라우저 내장 번역 기능을 활용할 수 있는 새로운 웹 표준 API입니다. 클라이언트 측에서 텍스트 번역, 언어 감지 등을 손쉽게 구현할 수 있게 됩니다.
+
+## 6. 🎉 릴리스
+- **[Node.js v22.18 (LTS)](https://javascriptweekly.com/link/172586/web)** (출처: *JavaScript Weekly #747*)
+  + **업데이트**: 이제 별도 설정 없이도 `node app.ts` 명령어로 TypeScript 파일을 직접 실행할 수 있는 타입 스트리핑(type stripping) 기능이 기본 활성화되었습니다.
+- **[pnpm 10.14](https://javascriptweekly.com/link/172633/web)** (출처: *JavaScript Weekly #747*)
+  + **업데이트**: 이제 `package.json`에 특정 Node.js, Deno, 또는 Bun 버전을 선언하면 자동으로 해당 버전을 설치하고 고정하는 기능이 추가되었습니다.
+- **[TypeScript 5.9](https://react.statuscode.com/link/172783/web)** (출처: *React Status #439*)
+  + **업데이트**: `import defer` 제안을 지원하고, VS Code와 같은 편집기에서 타입 정보를 더 쉽게 확장해서 볼 수 있는 'expandable hovers' 기능이 추가된 비교적 소규모 업데이트입니다.
+- **[FlashList v2](https://react.statuscode.com/link/172800/web)** (출처: *React Status #439*)
+  + **업데이트**: Shopify에서 개발한 React Native용 고성능 리스트 라이브러리입니다. v2는 React Native의 'New Architecture'를 기반으로 완전히 재작성되어 뷰 재활용을 통해 스크롤 성능을 극대화했습니다.
+- **[Storybook 9.1](https://javascriptweekly.com/link/172596/web)** (출처: *JavaScript Weekly #747*)
+  + **업데이트**: 프런트엔드 UI 컴포넌트 개발 및 테스트를 위한 워크숍 도구의 최신 버전이 릴리스되었습니다.
+- **[Dependency Cruiser 17](https://javascriptweekly.com/link/172608/web)** (출처: *JavaScript Weekly #747*)
+  + **업데이트**: 프로젝트의 의존성 구조를 시각화하고 규칙을 설정하여 관리할 수 있는 도구의 새 버전이 출시되었습니다.
+- **[Axios 1.11](https://javascriptweekly.com/link/172620/web)** (출처: *JavaScript Weekly #747*)
+  + **업데이트**: 오랫동안 사랑받아온 Promise 기반의 HTTP 클라이언트 라이브러리 Axios의 최신 버전입니다.
+- **[Relay 20.1](https://react.statuscode.com/link/172806/web)** (출처: *React Status #439*)
+  + **업데이트**: Facebook(Meta)에서 개발한 GraphQL 기반 React 프레임워크의 새 버전입니다.
+- **[React-Date-Picker 12.0](https://react.statuscode.com/link/172805/web)** (출처: *React Status #439*)
+  + **업데이트**: 간단하고 직관적인 날짜 선택 컴포넌트로, 이번 버전부터 ESM 전용으로 제공됩니다.
+
+## ✍️ 마치며
+이번 주 소식들을 통해 AI 기술이 개발자의 생산성을 높이는 강력한 도구로 자리 잡고 있음을 다시 한번 확인할 수 있었습니다. 동시에 시맨틱 HTML, 웹 컴포넌트, 그리고 안정적인 런타임 환경처럼 웹의 기본 원칙을 지키는 것이 얼마나 중요한지도 깨닫게 됩니다. 새로운 기술을 적극적으로 탐구하되, 웹의 근본적인 가치를 잊지 않는 균형 잡힌 시각이 필요한 때입니다.
+
+#### 출처
+- [JavaScript Weekly #747](https://javascriptweekly.com/issues/747)
+- [Smashing Newsletter #519](https://mailchi.mp/smashingmagazine/519-ai-guidelines-and-patterns?e=02d8dcf17a)
+- [React Status #439](https://react.statuscode.com/issues/439)
+- [Frontend Focus #704](https://frontendfoc.us/issues/704)
+- [CSS Weekly #617](https://css-weekly.com/issues/617)
+- [NAVER FE News 2025-08](https://github.com/naver/fe-news/blob/master/issues/2025-08.md?utm_source=substack&utm_medium=email)
