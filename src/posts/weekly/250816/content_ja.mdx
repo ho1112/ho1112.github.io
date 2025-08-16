@@ -1,0 +1,115 @@
+---
+title: '🚀 2025-08 W3 #20'
+desc: 2025年8月第3週のニュースレター
+date: 2025-08-16
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、CSSの新機能と進化、そして強力なデータ可視化ライブラリの登場が際立った一週間でした。CSS Anchor Positioningや`scroll-state()`のような新しい仕様は、JavaScriptなしで複雑なインタラクションを実装できる可能性を開き、Apache ECharts 6.0のリリースは、よりリッチでダイナミックなデータ可視化の未来を予告しています。
+
+## 1. 🔍 深掘り
+- **[A Gentle Introduction to Anchor Positioning](https://webkit.org/blog/17240/a-gentle-introduction-to-anchor-positioning/)** (出典: *CSS Weekly #618*)
+	![アンカーポジショニング紹介画像](https://webkit.org/wp-content/uploads/Image-30.png)
+	- **背景**: 従来のCSSだけでは、ツールチップやポップオーバーのように特定の要素に相対的な位置を取るUIを実装するのは困難でした。これを解決するためにJavaScriptに依存する必要がありましたが、Anchor Positioning APIはこの問題をCSSのネイティブ機能で解決します。
+	- **主要機能**: `anchor-name`と`anchor()`関数を使用して特定の要素（アンカー）を指定し、他の要素がそのアンカーを基準に位置を取れるようにします。`position-anchor`プロパティで基準アンカーを明示し、`inset-area`などで位置を微調整できるため、ビューポートの境界に応じて位置が動的に変わるUIを容易に作成できます。
+	- **実務での適用**: 動的なツールチップ、ドロップダウンメニュー、コンテキストメニュー、ポップオーバーなど、他のUI要素に柔軟に反応する必要があるコンポーネントを作成する際に非常に役立ちます。JavaScriptでの計算なしに、CSSだけで堅牢でレスポンシブなUIを実装できます。
+	- **注意事項**: まだすべてのブラウザでサポートされている機能ではないため、本番環境に適用する際には必ずブラウザのサポート範囲を確認し、フォールバック（fallback）スタイルを準備する必要があります。
+
+- **[CSS scroll-state()](https://developer.chrome.com/blog/css-scroll-state-queries)** (出典: *Smashing Newsletter #520*)
+	![CSSスクロール状態クエリ画像](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/1b3012bd-9deb-7add-55d6-ebc76fd88225.png)
+	- **背景**: ユーザーがページをスクロールする際に、特定の要素がビューポートに固定（sticky）されたり、スクロール位置に応じてスタイルを変更したりするには、JavaScriptの`IntersectionObserver`などを使用する必要がありました。`scroll-state()`は、このようなスクロールに関連する状態をCSSが直接検出できるようにします。
+	- **主要機能**: コンテナクエリ（@container）内で`scroll-state()`関数を使用し、スクロールコンテナの状態（例：sticky要素が上部に固定されたかどうか）を条件としてスタイルを適用できます。例えば、ナビゲーションバーがスクロールされて上部に固定されたときにのみ、影の効果を追加することが可能です。
+	- **実務での適用**: スクロール位置に応じて動的に変化するヘッダー、スクロールスナップ（scroll-snap）されたアイテムへのハイライト効果、特定のセクションが画面に表示されたときにアニメーションを適用するなど、スクロールベースの多彩なインタラクションをJavaScriptなしで実装できます。
+	- **注意事項**: Chrome 133+でサポートされる実験的な機能であり、まだ標準仕様ではありません。実際のプロジェクトへの適用には慎重な検討が必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[How V8's `JSON.stringify` Got Over 2x Faster](https://javascriptweekly.com/link/172920/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: V8エンジンチームが`JSON.stringify`のパフォーマンスを2倍以上向上させたプロセスを詳細に説明しています。C++からTorqueへの移行と低レベル最適化を通じて、どのように自動的なパフォーマンス向上を導き出したかを示す興味深い記事です。
+- **[The Power Of The `Intl` API: A Definitive Guide To Browser-Native Internationalization](https://www.smashingmagazine.com/2025/08/power-intl-api-guide-browser-native-internationalization/)** (出典: *Smashing Newsletter #520*)
+	+ **要約**: ブラウザに組み込まれた`Intl` APIを活用して、多言語対応（i18n）を効果的に実装する方法を扱います。日付、時刻、数値、通貨のフォーマットを各言語圏に合わせて手軽に処理する方法を紹介します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[How To Use The Safari Developer Tools](https://www.debugbear.com/blog/safari-developer-tools)** (出典: *CSS Weekly #618*)
+	+ **概要**: 多くのウェブ開発者はChromeのデベロッパーツールに慣れていますが、SafariのWebインスペクタ（Web Inspector）も強力で独自の機能を提供しています。この記事はSafariデベロッパーツールの基本的な使い方から、あまり知られていない高度な機能まで詳細に案内します。
+	+ **主な機能**: Elementsタブのレイヤービュー、`backdrop-filter`のデバッグ、可変フォント（Variable Fonts）インスペクタ、クリップパス（clip-path）エディタなど、Safariでのみ提供されるか、特に強力な機能を中心的に紹介します。また、パフォーマンスプロファイリングとエネルギー使用量の測定機能も扱います。
+	- **実践的なヒント**: iOSデバイスをMacに接続してモバイルSafariを直接デバッグする方法は、モバイルウェブ開発において必須の技術です。この記事を通じて、Safariでのデバッグ効率を大幅に向上させることができます。
+
+- **[snapDOM](https://github.com/zumerlab/snapdom)** (出典: *CSS Weekly #618*)
+	+ **概要**: `snapDOM`はDOM要素を画像として迅速かつ正確にキャプチャするツールです。特に複雑なCSS変形（transform）、フィルタ、クリッピングなどが適用された要素も、レンダリングされた見た目のままキャプチャできるのが利点です。
+	+ **使用法**: ズームベースのビュートランジションライブラリであるZumlyのために開発されましたが、単独でも使用できます。DOMノードを引数として渡すと、その要素の視覚的なコピー（画像）を生成し、スムーズなUIトランジション効果やサムネイル生成などに活用できます。
+	+ **実践的なヒント**: ページ遷移アニメーションで、既存ページのスクリーンショットを生成し、新しいページへ自然に移行する効果を実装する際に役立ちます。`html2canvas`のようなライブラリの代替として検討できます。
+
+---
+#### 見逃せないコンテンツ
+- **[CSS-Questions](https://css-questions.com/)** (出典: *CSS Weekly #618*)
+	+ **要約**: 100以上の質問で自分のCSS知識をテストできるオンラインクイズです。基本的なセレクタからカスケードレイヤー、コンテナクエリといった最新の高度なトピックまで幅広くカバーしており、実力チェックに役立ちます。
+- **[React Native Audio API](https://javascriptweekly.com/link/172938/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: Web Audio APIの強力で柔軟な機能をReact Nativeアプリ（iOS, Android, Web）で利用できるようにするライブラリです。複雑なオーディオ処理や可視化を実装する際に便利です。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Better CSS layouts: Time.com Hero Section](https://ishadeed.com/article/time-layout/)** (出典: *CSS Weekly #618*)
+	![Time.comヒーローセクションのレイアウト分析画像](https://css-weekly.com/wp-content/uploads/2025/08/a-better-css-layouts-timecom-hero-section.png)
+	+ **核心的なインサイト**: 有名なウェブサイトであるTime.comのヒーローセクションのレイアウトを分析し、これを最新のCSS技術（Grid, `clamp()`, `aspect-ratio`など）を使って、より柔軟でレスポンシブに再構築するプロセスを示します。単に結果物を見せるだけでなく、なぜ特定のCSSプロパティを選択したのか、その「意思決定プロセス」を詳細に説明しており、実務的なCSS設計能力を養うのに大いに役立ちます。
+
+- **[Scroll-Spy Effect](https://una.im/scroll-target-group/)** (出典: *Smashing Newsletter #520*)
+	![スクロールスパイ効果の画像](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/ef6bb7db-9a03-c338-ddf4-dbca5924d4e1.png)
+	+ **核心的なインサイト**: たった2行のCSSで「スクロールスパイ（Scroll-Spy）」効果を実装する方法を紹介します。Chrome 140で追加された`scroll-target-group`と`:target-current`擬似クラスを組み合わせることで、ユーザーがスクロールした際に現在表示されているセクションに対応する目次項目を自動的にハイライトする機能を、JavaScriptなしで実装できます。プログレッシブエンハンスメントの良い例です。
+
+- **[What We Learned From Creating PostCSS](https://evilmartians.com/chronicles/what-we-learned-from-creating-postcss)** (出典: *CSS Weekly #618*)
+	+ **核心的なインサイト**: 過去12年間にわたりPostCSSという巨大なオープンソースプロジェクトを作成し、維持してきた経験から得た教訓を共有しています。技術的な内容だけでなく、コミュニティ管理、エコシステムの拡大、燃え尽き症候群の防止など、プロジェクトを長期的に成功させるための貴重な経験と知恵を垣間見ることができます。
+
+---
+#### 見逃せないコンテンツ
+- **[Style Your Underlines](https://adactio.com/journal/22084)** (出典: *CSS Weekly #618*)
+	+ **要約**: `text-decoration`関連のプロパティ（`thickness`, `offset`, `skip-ink`）を活用して、リンクの下線をデザイン的に改善する様々な方法を紹介します。小さいながらもユーザーエクスペリエンスに大きな影響を与えるディテールを챙길 수 있습니다。
+- **["JavaScript Isn’t the Problem, Replacing the Browser Was"](https://javascriptweekly.com/link/172922/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: SPA（Single Page Application）アプローチが過去のブラウザの限界を克服するための妥協点であり、今ではサーバーファースト（server-first）アーキテクチャがより合理的な選択肢になり得ると主張する記事です。ウェブ開発のパラダイムの変化について考えさせられます。
+---
+
+## 4. ✨ アイデア
+- **[Shapes & Shadows - CSS](https://codepen.io/josetxu/pen/OPyOEMr)** (出典: *CSS Weekly #618*)
+	![CSSで作られた図形と影のアートワーク](https://css-weekly.com/wp-content/uploads/2025/08/shapes-and-shadows-css.jpg)
+	+ **特徴**: 純粋なCSSだけで驚くほど立体的で美しい図形と影の効果を実現したCodePenデモです。CSSの`box-shadow`、`border-radius`、グラデーションなどを創造的に活用し、芸術の域に達した作品で、CSSの視覚表現能力に対する新たなインスピレーションを与えてくれます。
+
+## 5. ⚡️ ミニノート
+- **[Oracle's Latest Move in the JavaScript™ Trademark Case](https://javascriptweekly.com/link/172910/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: Deno側が提起した「JavaScript」商標権の取り消し訴訟に対し、商標権者であるOracleが「『JavaScript』という用語が一般名詞であるという業界の広範な合意があるとの主張を否定する」という公式回答を提出しました。
+- **[SvelteKit adds experimental remote functions](https://javascriptweekly.com/link/172914/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: SvelteKitに実験的機能として「リモート関数（remote functions）」が追加されました。アプリのどこからでも呼び出せるサーバーサイド関数で、APIエンドポイントを明示的に作成しなくてもサーバーロジックを実行できるようになります。
+- **[Vercel now natively supports the deployment of Hono apps](https://javascriptweekly.com/link/172915/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: Vercelプラットフォームが、軽量WebフレームワークであるHonoアプリのデプロイを公式にサポートし始めました。
+- **[What's New in Viteland](https://javascriptweekly.com/link/172913/web)** (出典: *JavaScript Weekly #748*)
+	+ **要約**: Vite 7, Rolldown, Oxlint, Vitestなど、Viteエコシステムの様々なプロジェクトの最新アップデート情報を総合的に扱います。
+
+## 6. 🎉 リリース
+- **[Apache ECharts 6.0](https://javascriptweekly.com/link/172901/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: 12年の歴史を誇るデータ可視化ライブラリEChartsがバージョン6.0をリリースしました。新しいデザイン言語、ダークモード、動的テーマ切り替え機能を含み、チャートの種類がさらに多様化しました。
+- **[TypeScript 5.9](https://javascriptweekly.com/link/172904/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: `import defer`のサポート、`node20`モジュール解決オプション、そしてIDEで型情報をより簡単に展開して確認できる「expandable hovers」機能が追加されました。Goで書かれたネイティブバージョンである7.0への転換点として、バージョン6.0を予告しました。
+- **[MathJax v4.0](https://javascriptweekly.com/link/172930/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: ウェブで数式をレンダリングする最高のライブラリであるMathJaxが4.0にアップデートされました。ESMサポート、自動改行、より良いデフォルトフォントなど、大規模な改善が行われました。
+- **[Panda CSS 1.0](https://javascriptweekly.com/link/172933/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: Chakra UIの開発者が作成したビルドタイムCSS-in-JSライブラリです。型安全性を保証し、Remix、Vite、Next.jsなど最新のフレームワークと完全に互換性があります。
+- **[Ghost 6.0](https://javascriptweekly.com/link/172941/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: Node.jsベースの独立したパブリッシングおよびブログプラットフォームであるGhostのメジャーバージョン6.0がリリースされました。
+- **[zx v8.8](https://javascriptweekly.com/link/172936/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: Node.js環境でのシェルスクリプト作成をより便利にするGoogleのツールです。バージョン8.8ではパイピング（`|`）機能が改善されました。
+- **[Joi 18.0](https://javascriptweekly.com/link/172942/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: 強力なスキーマ記述及びデータ検証ライブラリJoiのバージョン18.0がリリースされました。
+- **[eslint-plugin-angular 5.0](https://javascriptweekly.com/link/172940/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: AngularJSアプリケーション向けのESLintプラグインがESLint v9をサポートし、5.0にアップデートされました。
+- **[Fuite 5.0.8](https://javascriptweekly.com/link/172943/web)** (出典: *JavaScript Weekly #748*)
+	+ **アップデート**: ウェブアプリケーションのメモリリークを発見するのに役立つツールです。
+
+## ✍️ おわりに
+今週の技術ニュースをまとめていて最も印象深かったのは、なんといってもCSSの進化です。Anchor Positioningや`scroll-state()`のような機能は、かつては当然JavaScriptの領域だと考えられていた複雑なUIロジックを、CSSネイティブで解決できる可能性を示しています。
+これは単にコードが減るだけでなく、パフォーマンスとメンテナンス性の面で開発のパラダイムを変えうる重要な変化だと考えます。今後のプロジェクトに、これらの新しいCSS機能をどのように段階的に導入していくか、考えてみる必要がありそうです。
+
+#### 出典
+- [JavaScript Weekly #748](https://javascriptweekly.com/issues/748)
+- [Smashing Newsletter #520](https://mailchi.mp/smashingmagazine/520-css-and-svg?e=02d8dcf17a)
+- [CSS Weekly #618](https://css-weekly.com/issue-618/)
