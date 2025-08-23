@@ -1,0 +1,170 @@
+---
+title: '🚀 2025-08 W4 #21'
+desc: 2025年8月4週目のニュースレター
+date: 2025-08-23
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、SVGパス（Path）の基礎から最新のCSS `@function` ルールの活用まで、フロントエンド技術の奥深さを探る記事が注目を集めました。また、jQuery 4.0 RC1やPanda CSS 1.0など、主要ツールの重要なアップデート情報とともに、Reactコミュニティの現状を診断する省察的な記事も大きく取り上げられました。
+
+## 1. 🔍 深掘り
+- **[An Interactive Guide to SVG Paths](https://frontendfoc.us/link/173004/web)** (出典: *Frontend Focus #705*)
+	![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1755685682/k4ppsh0yikbqfrbrge3v.png)
+	- **背景**: SVGの様々な要素の中でも`<path>`は最も強力であると同時に、最も理解しにくい要素の一つとされています。このガイドは、複雑なパスの文法を対話型の例を通して分かりやすく解説し、開発者がSVGパスを自由自在に扱えるよう支援するために作成されました。
+	- **主な機能**: `M` (moveto), `L` (lineto), `C` (curveto), `Z` (closepath) など、主要なパスコマンドの動作原理を視覚的かつ直感的な例で説明します。ユーザーが直接値を操作しながらリアルタイムで変化するSVGパスを確認できるため、学習効果を最大化します。
+	- **コード例**:
+		```svg
+		<svg viewBox="0 0 100 100">
+			<path
+				d="M 10,30
+					A 20,20 0,0,1 50,30
+					A 20,20 0,0,1 90,30
+					Q 90,60 50,90
+					Q 10,60 10,30 z"
+			/>
+		</svg>
+		```
+	- **実務での適用**: ロゴデザイン、データ可視化、アイコン制作など、精巧で複雑なベクターグラフィックが必要なあらゆる領域で活用できます。特に、インタラクティブなグラフィックや動的なアニメーションを実装する際には、`<path>`に対する深い理解が不可欠です。
+	- **注意事項**: パスデータが長くなると可読性が急激に低下するため、複雑なパスはグラフィック編集ツール（例: Figma, Illustrator）を使用して生成した後、コードを最適化する方が効率的な場合があります。
+
+- **[Eliminating JavaScript Cold Starts on AWS Lambda](https://javascriptweekly.com/link/173264/web)** (出典: *JavaScript Weekly #749*)
+	![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/fj40vw7vja4a3nys6acf.jpg)
+	- **背景**: サーバーレス環境、特にAWS LambdaにおけるJavaScript関数の「コールドスタート」は、応答遅延の主な原因です。Porfforは、Ahead-of-Time (AOT) コンパイルを通じてこの問題を解決しようとする実験的なJavaScriptコンパイラです。
+	- **主な機能**: PorfforはJavaScriptコードを事前にコンパイルし、ミリ秒未満の極めて高速な実行時間を目標としています。これにより、Lambda関数がアイドル状態から再びアクティブになる際に発生する遅延時間を画期的に短縮できます。
+	- **実務での適用**: APIゲートウェイのバックエンド、リアルタイムデータ処理、高速な応答が不可欠なWebhook処理など、コールドスタート遅延に敏感なサーバーレスアーキテクチャで大幅なパフォーマンス向上が期待できます。
+	- **注意事項**: まだ実験的なプロジェクトであるため、実際のプロダクション環境に直接適用するよりも、性能テストやサイドプロジェクトを通じて可能性を探ることが望ましいです。すべてのJavaScript構文やNode.js APIをサポートしているとは限らないため、互換性の確認が必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[The Power of the Intl API: A Definitive Guide to Browser-Native Internationalization](https://frontendfoc.us/link/173015/web)** (出典: *Frontend Focus #705*)
+	+ **要約**: 重いサードパーティライブラリなしで、ブラウザに組み込まれた`Intl` APIを使用して、日付、数値、通貨のフォーマットなど、国際化（i18n）を処理する強力で効率的な方法を紹介します。
+- **[React Cache: It’s About Consistency](https://react.statuscode.com/link/173045/web)** (出典: *React Status #440*)
+	+ **要約**: Reactの`cache`関数を、単なるメモ化やネットワークデータフェッチングの最適化手法としてだけでなく、React Server Components (RSC) のレンダリングプロセス全体でデータの一貫性を保証する核心的なAPIとして捉えるべき理由を説明します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Panda CSS 1.0: Modern, Build-Time, Type-Safe CSS-in-JS](https://frontendfoc.us/link/173027/web)** (出典: *Frontend Focus #705*)
+	+ **概要**: Chakra UIの開発者が作成した新しいCSS-in-JSライブラリで、ビルド時にスタイルを生成するため、ランタイムのオーバーヘッドがありません。TypeScriptベースで強力な自動補完と型安全性を提供し、最新のCSS機能（cascade layers, `light-dark()`）を積極的に活用しています。
+	+ **使用法**:
+		```javascript
+		import { css } from '../styled-system/css';
+
+		function App() {
+			return (
+				<div className={css({
+					fontSize: '2xl',
+					fontWeight: 'bold',
+					color: 'red.500',
+					_hover: { color: 'red.700' }
+				})}>
+					Hello World
+				</div>
+			);
+		}
+		```
+	+ **実践的なヒント**: `panda setup`コマンドでプロジェクトに簡単に統合でき、Remix、Vite、Next.jsなど多様なフレームワークとサーバーコンポーネントをサポートしており、現代的なウェブ開発環境に最適化されています。
+
+- **[Uppy 5.0: A Powerful, Modular JavaScript File Uploader](https://javascriptweekly.com/link/173238/web)** (出典: *JavaScript Weekly #749*)
+	![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/s4g4wpbp7x9akaqiuzm3.jpg)
+	+ **概要**: ローカルファイルやウェブカメラだけでなく、Google DriveやDropboxのようなリモートサービスからもファイルをアップロードできる、強力でモジュール化されたファイルアップローダーです。React、Vue、Svelte、Angularなど主要なフレームワークとの統合をサポートし、中断されたアップロードを再開する機能も備えています。
+	+ **使用法**:
+		```javascript
+		import Uppy from '@uppy/core';
+		import Dashboard from '@uppy/dashboard';
+		import Tus from '@uppy/tus';
+
+		const uppy = new Uppy()
+			.use(Dashboard, { inline: true, target: '#drag-drop-area' })
+			.use(Tus, { endpoint: '[https://tusd.tusdemo.net/files/](https://tusd.tusdemo.net/files/)' });
+		```
+	+ **実践的なヒント**: Uppyはプラグインベースのアーキテクチャを持っており、必要な機能（例: 画像編集、フォーム統合）だけを選択的に追加して軽量に使用できます。UIライブラリを使用せずに、コアロジック（`@uppy/core`）だけでカスタムUIを実装することも可能です。
+
+---
+#### 見逃せないコンテンツ
+- **[Sidequest.js: A New Scalable Job Execution Option for Node.js](https://javascriptweekly.com/link/173242/web)** (出典: *JavaScript Weekly #749*)
+	+ **要約**: Node.jsアプリケーションのためのスケーラブルなバックグラウンドジョブプロセッサで、WebベースのダッシュボードとTypeScriptファーストのエルゴノミックな設計が特徴です。複数のバックエンドをサポートし、高い柔軟性を誇ります。
+- **[React ChatBotify: React Library for Building Chatbot Systems](https://react.statuscode.com/link/173048/web)** (出典: *React Status #440*)
+	+ **要約**: Web向けの最新チャットボットツールを構築するためのプラットフォーム兼ライブラリです。React 16から19までをサポートし、開発者コミュニティも活発に運営されています。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Reflections on the React Community](https://react.statuscode.com/link/173038/web)** (出典: *React Status #440*)
+	![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ncl91ampgzyopslqxasc.jpg)
+	+ **主要なインサイト**: Next.jsとReactエコシステムに大きな影響を与えたVercel出身のLee Robinsonが、Reactコミュニティに対する率直な省察を共有します。React Server Componentsの台頭、商業的優先順位と非商業的優先順位との間の緊張感、バーンアウトの問題などを取り上げ、技術以前に「人々」のコミュニティであることを再認識させます。この記事は、技術的な論争を超えて、コミュニティの健全性と方向性について考える機会を提供します。
+
+- **[Using the Custom Highlight API](https://javascriptweekly.com/link/173227/web)** (出典: *JavaScript Weekly #749*)
+	![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/mbdt1rqn7p4rxfvc4kh2.jpg)
+	+ **主要なインサイト**: すべての主要ブラウザでサポートされるようになったCSS Custom Highlight APIを使用して、テキストの範囲をスタイリングする方法を紹介します。JavaScriptで範囲を動的に生成し、CSSでスタイルを適用することで、ページ内の検索結果のハイライトや動的な構文ハイライト機能などを効率的に実装できます。
+	+ **コード例**:
+		```javascript
+		// JavaScript
+		const range = new Range();
+		range.setStart(p.firstChild, 10);
+		range.setEnd(p.firstChild, 20);
+
+		const highlight = new Highlight(range);
+		CSS.highlights.set("my-custom-highlight", highlight);
+
+		// CSS
+		::highlight(my-custom-highlight) {
+			background-color: yellow;
+			color: black;
+		}
+		```
+
+- **[Five Useful CSS Functions using the New `@function` Rule](https://frontendfoc.us/link/173007/web)** (出典: *Frontend Focus #705*)
+	+ **主要なインサイト**: Chrome 139に新たに追加されたCSSの`@function`ルールを活用した実用的な例を5つ紹介します。Sassのようなプリプロセッサでしか不可能だった関数定義を、今や純粋なCSSで実装し、色の変換、グリッド計算、タイポグラフィスケーリングなどを動的に処理できる可能性を示します。
+	+ **この記事が有益な理由**:まだブラウザのサポートは限定的ですが、この記事を通じてCSSの未来を垣間見ることができ、今後のスタイリング方法がどのように変化するかをあらかじめ考えることができます。
+
+---
+#### 見逃せないコンテンツ
+- **[CSS-Only Scrollspy Effect using `scroll-marker-group` and `:target-current`](https://frontendfoc.us/link/173013/web)** (出典: *Frontend Focus #705*)
+	+ **要約**: ユーザーのスクロール位置に応じて、現在のビューポートに表示されているセクションに対応するナビゲーションリンクをアクティブにする「Scrollspy」効果を、わずか数行のCSSだけで実装する方法を説明します。
+- **[A Comparison of Six React Calendar Components for 2025](https://react.statuscode.com/link/173047/web)** (出典: *React Status #440*)
+	+ **要約**: すぐに使えるシンプルなカレンダーから、ブランディングのカスタマイズが自由なカレンダー、Google Calendarのようなフル機能を備えたカレンダーまで、6つのReactカレンダーコンポーネントを比較・分析します。
+---
+
+## 4. ✨ アイデア
+- **[Alternative Design, Code, And Content](https://www.hoverstat.es/)** (出典: *Smashing Newsletter #521*)
+	![](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/faa5f4d1-a3b2-f428-c3a1-a4458635d62d.png)
+	+ **特徴**: ウェブのオルタナティブなデザイン、コード、コンテンツの本拠地を標榜するサイトです。型にはまったデザインから脱却し、インタラクションとコンテンツを新しく興味深い方法で実験しているウェブサイトを幅広く収集して紹介しています。分割されたインターフェース、レトロな画面遷移効果、非定型なタイポグラフィなど、平凡を拒否するユニークなウェブ体験に満ちており、新鮮なインスピレーションを与えてくれます。
+
+- **[Delightful Designs](https://www.designspells.com/)** (出典: *Smashing Newsletter #521*)
+	![](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d753a3b2-b0d7-ce8d-1686-6e6c740e0fba.png)
+	+ **特徴**: 丁寧に作られた「pull-to-refresh」アニメーションや滑らかに動くサイドバーのように、デザインに楽しさを加える小さなディテールを集めた宝箱のようなサイトです。ウェブ全体のマイクロインタラクション、イースターエッグなど、小さいながらも印象的なデザイン要素を収集し、ウェブに生命力と個性、楽しさを吹き込む方法についてのインスピレーションを提供します。
+
+## 5. ⚡️ ミニノート
+- **[The Results: State of CSS 2025](https://frontendfoc.us/link/173006/web)** (出典: *Frontend Focus #705*)
+	+ **要約**: 今年のState of CSSアンケートの結果が発表されました。回答者の約80%が`:has()`疑似クラスを使用した経験があると答えるなど、最新のCSS機能の実際の使用状況とトレンドを確認できます。
+- **[MDN is getting a facelift](https://frontendfoc.us/link/173035/web)** (出典: *Frontend Focus #705*)
+	+ **要約**: ウェブ開発者の必須参考資料であるMDN Web Docsが、よりクリーンなインターフェースと改善されたユーザー体験を提供するためにデザイン改修を進めています。
+- **[js13kGames competition is underway](https://javascriptweekly.com/link/173278/web)** (出典: *JavaScript Weekly #749*)
+	+ **要約**: 13kb以下の容量でJavaScriptゲームを作成する年次開発コンテスト、js13kGamesが始まりました。締め切りは9月13日です。
+- **[React Mock Interview: Three Devs Take on a Challenge](https://react.statuscode.com/link/173040/web)** (出典: *React Status #440*)
+	+ **要約**: Kent C. Doddsを含む3人の専門開発者が、同じReact開発課題（バリデーションを含むフォーム作成）を解決する50分間の模擬面接ビデオです。教育的でありながら面白いコンテンツです。
+
+## 6. 🎉 リリース
+- **[jQuery 4.0.0 Release Candidate 1](https://javascriptweekly.com/link/173273/web)** (出典: *JavaScript Weekly #749*)
+	+ **アップデート**: ついにjQuery 4.0バージョンがRC (Release Candidate) 段階に到達しました。IEのサポート終了、信頼できないスクリプトの実行防止、FormDataのサポート追加など、現代的なウェブ環境に合わせた変更が含まれています。
+- **[Next.js 15.5](https://react.statuscode.com/link/173039/web)** (出典: *React Status #440*)
+	+ **アップデート**: Turbopackビルドがベータ版として含まれ、Node.jsミドルウェアが安定化しました。TypeScriptの改善とNext.js 16に向けたいくつかのdeprecated警告が追加されました。
+- **[React Native 0.81](https://react.statuscode.com/link/173041/web)** (出典: *React Status #440*)
+	+ **アップデート**: Android 16をサポートし、デフォルトのターゲットとして設定しました。また、事前コンパイルされたiOSビルドを導入し、ビルド速度を最大10倍まで向上させました。
+- **[Bun v1.2.20](https://javascriptweekly.com/link/173221/web)** (出典: *JavaScript Weekly #749*)
+	+ **アップデート**: アイドル状態でのCPU使用量を削減する改善が行われました。まもなくv1.3がリリースされる予定です。
+- **[Apache ECharts 6.0](https://frontendfoc.us/link/173071/web)** (出典: *Frontend Focus #705*)
+	+ **アップデート**: 新しいデフォルトテーマとデザイン言語を採用し、動的なテーマ切り替え、ダークモードのサポート、新しいチャートタイプの追加など、大規模なアップデートが行われました。
+- **[Waku 0.25](https://javascriptweekly.com/link/173247/web)** (出典: *JavaScript Weekly #749*)
+	+ **アップデート**: ミニマルなReactフレームワークであるWakuが、「スライスコンポーネント」という概念を導入し、より細分化されたコンポーネントレンダリングに対する新しいアプローチを提示します。
+- **[pnpm 10.15](https://javascriptweekly.com/link/173225/web)** (出典: *JavaScript Weekly #749*)
+	+ **アップデート**: 高速で効率的なパッケージマネージャーであるpnpmの最新バージョンがリリースされました。
+
+## ✍️ おわりに
+今週のニュースを通じて、ウェブ技術が絶えず進化していることを改めて確認させられます。CSSは`@function`ルールのようにプログラミング言語の特性を吸収し、単なるスタイリングツールを超えて複雑なロジックを処理する方向へと進んでいます。また、Reactコミュニティに関する省察的な記事は、私たちが技術の発展だけに没頭するのではなく、その技術を作り出す人々とコミュニティの健全性についても深く考えるべきであることを気づかせてくれます。新しいツールの登場は興味深いですが、その裏にある哲学や方向性を理解することがより重要に思えます。技術の変化の中で中心を失うことなく、着実に学び、成長していかなければなりません。
+
+#### 出典
+- [JavaScript Weekly #749](https://javascriptweekly.com/issues/749)
+- [Smashing Newsletter #521](https://mailchi.mp/smashingmagazine/521-ux-and-design-patterns)
+- [React Status #439](https://react.statuscode.com/issues/440)
+- [Frontend Focus #704](https://frontendfoc.us/issues/705)

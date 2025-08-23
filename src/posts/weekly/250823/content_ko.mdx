@@ -1,0 +1,170 @@
+---
+title: '🚀 2025-08 W4 #21'
+desc: 2025년 8월 4주차 뉴스레터
+date: 2025-08-23
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 SVG 경로(Path)의 기초부터 최신 CSS `@function` 규칙의 활용까지, 프런트엔드 기술의 깊이를 탐색하는 아티클들이 주목받았습니다. 또한 jQuery 4.0 RC1, Panda CSS 1.0 등 주요 도구들의 중요한 업데이트 소식과 함께 React 커뮤니티의 현주소를 진단하는 성찰적인 글도 비중 있게 다루어졌습니다.
+
+## 1. 🔍 심층 분석
+- **[An Interactive Guide to SVG Paths](https://frontendfoc.us/link/173004/web)** (출처: *Frontend Focus #705*)
+    ![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1755685682/k4ppsh0yikbqfrbrge3v.png)
+    - **배경**: SVG의 여러 요소 중 `<path>`는 가장 강력하지만 동시에 가장 이해하기 어려운 요소로 꼽힙니다. 이 가이드는 복잡한 경로 문법을 대화형 예제를 통해 쉽게 풀어내어 개발자들이 SVG 경로를 자유자재로 다룰 수 있도록 돕기 위해 작성되었습니다.
+    - **핵심 기능**: `M` (moveto), `L` (lineto), `C` (curveto), `Z` (closepath) 등 핵심 경로 명령어들의 동작 원리를 시각적이고 직관적인 예제로 설명합니다. 사용자가 직접 값을 조작하며 실시간으로 변화하는 SVG 경로를 확인할 수 있어 학습 효과를 극대화합니다.
+    - **코드 예제**:
+        ```svg
+        <svg viewBox="0 0 100 100">
+          <path
+            d="M 10,30
+               A 20,20 0,0,1 50,30
+               A 20,20 0,0,1 90,30
+               Q 90,60 50,90
+               Q 10,60 10,30 z"
+          />
+        </svg>
+        ```
+    - **실무 적용**: 로고 디자인, 데이터 시각화, 아이콘 제작 등 정교하고 복잡한 벡터 그래픽이 필요한 모든 영역에서 활용될 수 있습니다. 특히 인터랙티브한 그래픽이나 동적인 애니메이션 구현 시 `<path>`에 대한 깊은 이해는 필수적입니다.
+    - **주의사항**: 경로 데이터가 길어지면 가독성이 급격히 떨어지므로 복잡한 경로는 그래픽 편집 도구(예: Figma, Illustrator)를 사용해 생성한 후 코드를 최적화하는 것이 효율적일 수 있습니다.
+
+- **[Eliminating JavaScript Cold Starts on AWS Lambda](https://javascriptweekly.com/link/173264/web)** (출처: *JavaScript Weekly #749*)
+    ![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/fj40vw7vja4a3nys6acf.jpg)
+    - **배경**: 서버리스 환경, 특히 AWS Lambda에서 JavaScript 함수의 '콜드 스타트'는 응답 지연의 주요 원인입니다. Porffor는 Ahead-of-Time(AOT) 컴파일을 통해 이 문제를 해결하고자 등장한 실험적인 JavaScript 컴파일러입니다.
+    - **핵심 기능**: Porffor는 JavaScript 코드를 사전에 컴파일하여 밀리초 미만의 극도로 빠른 실행 시간을 목표로 합니다. 이를 통해 Lambda 함수가 유휴 상태에서 다시 활성화될 때 발생하는 지연 시간을 획기적으로 줄일 수 있습니다.
+    - **실무 적용**: API 게이트웨이의 백엔드, 실시간 데이터 처리, 빠른 응답이 필수적인 웹훅 처리 등 콜드 스타트 지연에 민감한 서버리스 아키텍처에서 큰 성능 향상을 기대할 수 있습니다.
+    - **주의사항**: 아직은 실험적인 프로젝트이므로 실제 프로덕션 환경에 바로 적용하기보다는 성능 테스트나 사이드 프로젝트를 통해 가능성을 탐색해보는 것이 바람직합니다. 모든 JavaScript 구문과 Node.js API를 지원하지 않을 수 있으므로 호환성 확인이 필요합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Power of the Intl API: A Definitive Guide to Browser-Native Internationalization](https://frontendfoc.us/link/173015/web)** (출처: *Frontend Focus #705*)
+    + **요약**: 무거운 서드파티 라이브러리 없이, 브라우저에 내장된 `Intl` API를 사용하여 날짜, 숫자, 통화 서식 지정 등 국제화(i18n)를 처리하는 강력하고 효율적인 방법을 소개합니다.
+- **[React Cache: It’s About Consistency](https://react.statuscode.com/link/173045/web)** (출처: *React Status #440*)
+    + **요약**: React의 `cache` 함수를 단순한 메모이제이션이나 네트워크 데이터 페칭 최적화 기법을 넘어 전체 React Server Components(RSC) 렌더링 과정에서 데이터 일관성을 보장하는 핵심 API로 바라봐야 하는 이유를 설명합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[Panda CSS 1.0: Modern, Build-Time, Type-Safe CSS-in-JS](https://frontendfoc.us/link/173027/web)** (출처: *Frontend Focus #705*)
+    + **개요**: Chakra UI 개발자가 만든 새로운 CSS-in-JS 라이브러리로, 빌드 타임에 스타일을 생성하여 런타임 오버헤드가 없습니다. 타입스크립트 기반으로 강력한 자동 완성 및 타입 안정성을 제공하며 최신 CSS 기능(cascade layers, `light-dark()`)을 적극 활용합니다.
+    + **사용법**:
+        ```javascript
+        import { css } from '../styled-system/css';
+
+        function App() {
+          return (
+            <div className={css({
+              fontSize: '2xl',
+              fontWeight: 'bold',
+              color: 'red.500',
+              _hover: { color: 'red.700' }
+            })}>
+              Hello World
+            </div>
+          );
+        }
+        ```
+    + **실전 팁**: `panda setup` 명령어로 프로젝트에 쉽게 통합할 수 있으며, Remix, Vite, Next.js 등 다양한 프레임워크와 서버 컴포넌트를 지원하여 현대적인 웹 개발 환경에 최적화되어 있습니다.
+
+- **[Uppy 5.0: A Powerful, Modular JavaScript File Uploader](https://javascriptweekly.com/link/173238/web)** (출처: *JavaScript Weekly #749*)
+    ![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/s4g4wpbp7x9akaqiuzm3.jpg)
+    + **개요**: 로컬 파일, 웹캠뿐만 아니라 Google Drive, Dropbox 같은 원격 서비스로부터 파일을 업로드할 수 있는 강력하고 모듈화된 파일 업로더입니다. React, Vue, Svelte, Angular 등 주요 프레임워크와의 통합을 지원하며, 중단된 업로드를 재개하는 기능도 갖추고 있습니다.
+    + **사용법**:
+        ```javascript
+        import Uppy from '@uppy/core';
+        import Dashboard from '@uppy/dashboard';
+        import Tus from '@uppy/tus';
+
+        const uppy = new Uppy()
+          .use(Dashboard, { inline: true, target: '#drag-drop-area' })
+          .use(Tus, { endpoint: '[https://tusd.tusdemo.net/files/](https://tusd.tusdemo.net/files/)' });
+        ```
+    + **실전 팁**: Uppy는 플러그인 기반 아키텍처를 가지고 있어 필요한 기능(예: 이미지 편집, 폼 통합)만 선택적으로 추가하여 가볍게 사용할 수 있습니다. UI 라이브러리를 사용하지 않고 핵심 로직(`@uppy/core`)만으로도 커스텀 UI를 구현할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Sidequest.js: A New Scalable Job Execution Option for Node.js](https://javascriptweekly.com/link/173242/web)** (출처: *JavaScript Weekly #749*)
+    + **요약**: Node.js 애플리케이션을 위한 확장 가능한 백그라운드 작업 처리기로 웹 기반 대시보드와 TypeScript 우선의 인체공학적 설계를 특징으로 합니다. 여러 백엔드를 지원하여 유연성이 높습니다.
+- **[React ChatBotify: React Library for Building Chatbot Systems](https://react.statuscode.com/link/173048/web)** (출처: *React Status #440*)
+    + **요약**: 웹을 위한 최신 챗봇 도구를 구축하기 위한 플랫폼 및 라이브러리입니다. React 16부터 19까지 지원하며 개발자 커뮤니티도 활발하게 운영되고 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Reflections on the React Community](https://react.statuscode.com/link/173038/web)** (출처: *React Status #440*)
+    ![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ncl91ampgzyopslqxasc.jpg)
+    + **핵심 인사이트**: Next.js와 React 생태계에 큰 영향을 미친 Vercel 출신의 Lee Robinson이 React 커뮤니티에 대한 솔직한 성찰을 공유합니다. React Server Components의 부상, 상업적 우선순위와 비상업적 우선순위 사이의 긴장감, 번아웃의 문제 등을 다루며 기술 이전에 '사람'들의 커뮤니티임을 상기시킵니다. 이 글은 기술적 논쟁을 넘어 커뮤니티의 건강성과 방향성에 대해 고민해 볼 기회를 제공합니다.
+
+- **[Using the Custom Highlight API](https://javascriptweekly.com/link/173227/web)** (출처: *JavaScript Weekly #749*)
+    ![](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/mbdt1rqn7p4rxfvc4kh2.jpg)
+    + **핵심 인사이트**: 모든 주요 브라우저에서 지원하게 된 CSS Custom Highlight API를 사용하여 텍스트 범위를 스타일링하는 방법을 소개합니다. JavaScript로 범위를 동적으로 생성하고 CSS로 스타일을 적용하여 페이지 내 검색 결과 강조나 동적 구문 강조 기능 등을 효율적으로 구현할 수 있습니다.
+    + **코드 예시**:
+        ```javascript
+        // JavaScript
+        const range = new Range();
+        range.setStart(p.firstChild, 10);
+        range.setEnd(p.firstChild, 20);
+
+        const highlight = new Highlight(range);
+        CSS.highlights.set("my-custom-highlight", highlight);
+
+        // CSS
+        ::highlight(my-custom-highlight) {
+          background-color: yellow;
+          color: black;
+        }
+        ```
+
+- **[Five Useful CSS Functions using the New `@function` Rule](https://frontendfoc.us/link/173007/web)** (출처: *Frontend Focus #705*)
+    + **핵심 인사이트**: Chrome 139에 새로 추가된 CSS `@function` 규칙을 활용한 실용적인 예제 5가지를 소개합니다. Sass와 같은 전처리기에서만 가능했던 함수 정의를 이제 순수 CSS로 구현하여 색상 변환, 그리드 계산, 타이포그래피 스케일링 등을 동적으로 처리할 수 있는 가능성을 보여줍니다.
+    + **왜 이 글이 유익한가**: 아직 브라우저 지원이 제한적이지만 이 글을 통해 CSS의 미래를 엿보고 앞으로의 스타일링 방식이 어떻게 변화할지 미리 고민해볼 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[CSS-Only Scrollspy Effect using `scroll-marker-group` and `:target-current`](https://frontendfoc.us/link/173013/web)** (출처: *Frontend Focus #705*)
+    + **요약**: 사용자의 스크롤 위치에 따라 현재 뷰포트에 보이는 섹션과 연결된 내비게이션 링크를 활성화하는 'Scrollspy' 효과를 단 몇 줄의 CSS만으로 구현하는 방법을 설명합니다.
+- **[A Comparison of Six React Calendar Components for 2025](https://react.statuscode.com/link/173047/web)** (출처: *React Status #440*)
+    + **요약**: 간단하게 바로 사용할 수 있는 캘린더부터 브랜딩 커스터마이징이 자유로운 캘린더, Google Calendar와 같은 완전한 기능을 갖춘 캘린더까지 6가지 React 캘린더 컴포넌트를 비교하고 분석합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Alternative Design, Code, And Content](https://www.hoverstat.es/)** (출처: *Smashing Newsletter #521*)
+    ![](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/faa5f4d1-a3b2-f428-c3a1-a4458635d62d.png)
+    + **특징**: 웹의 대안적인 디자인, 코드, 콘텐츠의 본거지를 표방하는 사이트입니다. 틀에 박힌 디자인에서 벗어나 인터랙션과 콘텐츠를 새롭고 흥미로운 방식으로 실험하는 웹사이트들을 광범위하게 수집하여 보여줍니다. 분할된 인터페이스, 복고풍 화면 전환 효과, 비정형 타이포그래피 등 평범함을 거부하는 독특한 웹 경험들로 가득 차 있어 신선한 영감을 줍니다.
+
+- **[Delightful Designs](https://www.designspells.com/)** (출처: *Smashing Newsletter #521*)
+    ![](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d753a3b2-b0d7-ce8d-1686-6e6c740e0fba.png)
+    + **특징**: 세심하게 제작된 'pull-to-refresh' 애니메이션이나 부드럽게 움직이는 사이드바처럼, 디자인에 즐거움을 더하는 작은 디테일들을 모아놓은 보물창고 같은 사이트입니다. 웹 전반의 마이크로 인터랙션, 이스터 에그 등 작지만 인상적인 디자인 요소들을 수집하여, 웹에 생명력과 개성, 재미를 불어넣는 방법에 대한 영감을 제공합니다.
+
+## 5. ⚡️ 짧은 소식
+- **[The Results: State of CSS 2025](https://frontendfoc.us/link/173006/web)** (출처: *Frontend Focus #705*)
+    + **요약**: 올해 State of CSS 설문조사 결과가 발표되었습니다. 응답자의 약 80%가 `:has()` 의사 클래스를 사용해 본 경험이 있다고 답하는 등 최신 CSS 기능의 실제 사용 현황과 트렌드를 확인할 수 있습니다.
+- **[MDN is getting a facelift](https://frontendfoc.us/link/173035/web)** (출처: *Frontend Focus #705*)
+    + **요약**: 웹 개발자들의 필수 참고 자료인 MDN Web Docs가 더 깔끔한 인터페이스와 개선된 사용자 경험을 제공하기 위해 디자인 개편을 진행하고 있습니다.
+- **[js13kGames competition is underway](https://javascriptweekly.com/link/173278/web)** (출처: *JavaScript Weekly #749*)
+    + **요약**: 13kb 이하 용량의 JavaScript 게임을 만드는 연례 개발 대회인 js13kGames가 시작되었습니다. 마감은 9월 13일입니다.
+- **[React Mock Interview: Three Devs Take on a Challenge](https://react.statuscode.com/link/173040/web)** (출처: *React Status #440*)
+    + **요약**: Kent C. Dodds를 포함한 세 명의 전문 개발자가 동일한 React 개발 과제(유효성 검사를 포함한 폼 만들기)를 해결하는 50분 분량의 모의 면접 영상입니다. 교육적이면서도 재미있는 콘텐츠입니다.
+
+## 6. 🎉 릴리스
+- **[jQuery 4.0.0 Release Candidate 1](https://javascriptweekly.com/link/173273/web)** (출처: *JavaScript Weekly #749*)
+    + **업데이트**: 드디어 jQuery 4.0 버전이 RC(Release Candidate) 단계에 도달했습니다. IE 지원 중단, 신뢰할 수 없는 스크립트 실행 방지, FormData 지원 추가 등 현대적인 웹 환경에 맞춘 변화가 포함되었습니다.
+- **[Next.js 15.5](https://react.statuscode.com/link/173039/web)** (출처: *React Status #440*)
+    + **업데이트**: Turbopack 빌드가 베타 버전으로 포함되었고 Node.js 미들웨어가 안정화되었습니다. TypeScript 개선 및 Next.js 16을 위한 몇 가지 deprecated 경고가 추가되었습니다.
+- **[React Native 0.81](https://react.statuscode.com/link/173041/web)** (출처: *React Status #440*)
+    + **업데이트**: Android 16을 지원하고 기본 타겟으로 설정했습니다. 또한 사전 컴파일된 iOS 빌드를 도입하여 빌드 속도를 최대 10배까지 향상시켰습니다.
+- **[Bun v1.2.20](https://javascriptweekly.com/link/173221/web)** (출처: *JavaScript Weekly #749*)
+    + **업데이트**: 유휴 상태에서의 CPU 사용량을 줄이는 개선이 이루어졌습니다. 곧 v1.3이 출시될 예정입니다.
+- **[Apache ECharts 6.0](https://frontendfoc.us/link/173071/web)** (출처: *Frontend Focus #705*)
+    + **업데이트**: 새로운 기본 테마와 디자인 언어를 채택하고 동적 테마 전환, 다크 모드 지원, 새로운 차트 유형 추가 등 대규모 업데이트가 이루어졌습니다.
+- **[Waku 0.25](https://javascriptweekly.com/link/173247/web)** (출처: *JavaScript Weekly #749*)
+    + **업데이트**: 미니멀 React 프레임워크인 Waku가 '슬라이스 컴포넌트'라는 개념을 도입하여 더 세분화된 컴포넌트 렌더링에 대한 새로운 접근 방식을 제시합니다.
+- **[pnpm 10.15](https://javascriptweekly.com/link/173225/web)** (출처: *JavaScript Weekly #749*)
+    + **업데이트**: 빠르고 효율적인 패키지 매니저 pnpm의 최신 버전이 릴리스되었습니다.
+
+## ✍️ 마치며
+이번 주 소식들을 통해 웹 기술이 끊임없이 진화하고 있음을 다시 한번 확인하게 됩니다. CSS는 `@function` 규칙과 같이 프로그래밍 언어의 특성을 흡수하며 단순한 스타일링 도구를 넘어 복잡한 로직을 처리하는 방향으로 나아가고 있습니다. 또한 React 커뮤니티에 대한 성찰적인 글은 우리가 기술의 발전에만 몰두할 것이 아니라 그 기술을 만들어가는 사람들과 커뮤니티의 건강성에 대해서도 깊이 고민해야 함을 일깨워 줍니다. 새로운 도구의 등장은 흥미롭지만, 그 이면에 있는 철학과 방향성을 이해하는 것이 더 중요해 보입니다. 기술의 변화 속에서 중심을 잃지 않고 꾸준히 학습하며 성장해야겠습니다.
+
+#### 출처
+- [JavaScript Weekly #749](https://javascriptweekly.com/issues/749)
+- [Smashing Newsletter #521](https://mailchi.mp/smashingmagazine/521-ux-and-design-patterns)
+- [React Status #439](https://react.statuscode.com/issues/440)
+- [Frontend Focus #704](https://frontendfoc.us/issues/705)
