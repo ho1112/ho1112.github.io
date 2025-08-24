@@ -14,7 +14,7 @@ import { Language } from './theme/Language'
 export const Header = () => {
   const { ref, transform, currentScrollTop } = useScrollTracker(60)
   const pathname = usePathname()
-  const currentLanguage = pathname.startsWith('/blog/ko') ? 'ko' : 'ja'
+  const currentLanguage = pathname.includes('/ko') ? 'ko' : 'ja'
 
   return (
     <>
@@ -35,7 +35,7 @@ export const Header = () => {
               mintora
             </Link>
             <Link
-              href={`/profile/${currentLanguage}`}
+              href={`/profile/${currentLanguage}/`}
               className="animate-tada-delayed"
             >
               profile
