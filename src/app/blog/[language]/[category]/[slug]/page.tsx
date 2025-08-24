@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import Script from 'next/script'
 import { baseDomain, languages } from '@/config/constant'
 import {
   getPostDetail,
@@ -82,19 +81,6 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
       </div>
       {/* content */}
       <div className="prose dark:prose-invert relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
-        <div id="its-me-chatbot-container"></div>
-        <Script
-          src="https://unpkg.com/react@18/umd/react.development.js"
-          strategy="beforeInteractive"
-        />
-        <Script
-          src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
-          strategy="beforeInteractive"
-        />
-        <Script
-          src="https://its-me-vert.vercel.app/widget.js?lang=ko&theme=light"
-          strategy="lazyOnload" // 페이지의 다른 콘텐츠 로딩을 방해하지 않도록, 나중에 불러옵니다.
-        />
         <TocTop toc={toc} />
         <article className="relative">
           <TocSidebar toc={toc} />

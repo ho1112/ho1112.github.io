@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 export const Language = () => {
   const router = useRouter()
   const pathname = usePathname()
-  const currentLanguage = pathname.startsWith('/blog/ko') ? 'ko' : 'ja'
+  const currentLanguage = pathname.includes('/ko') ? 'ko' : 'ja'
   const newLanguage = currentLanguage === 'ko' ? 'ja' : 'ko'
 
   const switchLang = () => {
