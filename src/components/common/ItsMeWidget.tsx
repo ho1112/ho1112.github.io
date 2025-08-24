@@ -7,7 +7,7 @@ interface Props {
   theme: 'light' | 'dark'
 }
 
-export default function ItsMeWigetLoader({ language, theme }: Props) {
+export default function ItsMeWidgetLoader({ language, theme }: Props) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

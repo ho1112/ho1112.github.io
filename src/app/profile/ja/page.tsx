@@ -1,7 +1,7 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import ItsMeWigetLoader from '@/components/common/ItsMeWidget'
+import ItsMeWidgetLoader from '@/components/common/ItsMeWidget'
 
 const ProfilePage = () => {
   const { resolvedTheme } = useTheme()
@@ -13,7 +13,7 @@ const ProfilePage = () => {
       <p className="mt-4 text-lg">
         プロフィールページへようこそ。こちらで私の履歴書、ポートフォリオなどの情報をご確認いただけます。
       </p>
-      <ItsMeWigetLoader language={'ja'} theme={theme} />
+      <ItsMeWidgetLoader language={'ja'} theme={theme} />
     </div>
   )
 }
