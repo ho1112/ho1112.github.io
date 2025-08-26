@@ -85,7 +85,7 @@ export const CommentItem = ({
 
   return (
     <div className="comment-item">
-      <div className="flex items-start space-x-3 py-4">
+      <div className="flex items-start space-x-3 py-2">
         {comment.parent_id && (
           <span className="text-gray-400 dark:text-gray-500 text-lg select-none flex-shrink-0 w-8 text-center">
             ↪︎

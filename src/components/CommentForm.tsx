@@ -44,23 +44,22 @@ export const CommentForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {!isReply && (
-        <div>
-          <input
-            type="text"
-            id="author-name"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder={
-              language === 'ko'
-                ? '닉네임을 입력하세요'
-                : 'ニックネームを入力してください'
-            }
-            required
-          />
-        </div>
-      )}
+      {/* 닉네임 입력 필드 - 대댓글에도 표시 */}
+      <div>
+        <input
+          type="text"
+          id="author-name"
+          value={authorName}
+          onChange={(e) => setAuthorName(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder={
+            language === 'ko'
+              ? '닉네임을 입력하세요'
+              : 'ニックネームを入力してください'
+          }
+          required
+        />
+      </div>
 
       <div>
         <textarea
@@ -95,9 +94,7 @@ export const CommentForm = ({
         )}
         <button
           type="submit"
-          disabled={
-            isSubmitting || !content.trim() || (!isReply && !authorName.trim())
-          }
+          disabled={isSubmitting || !content.trim() || !authorName.trim()}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting

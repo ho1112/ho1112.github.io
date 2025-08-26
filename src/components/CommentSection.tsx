@@ -1,19 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { CommentItem } from './CommentItem'
-import { CommentForm } from './CommentForm'
-import { mockComments } from '@/lib/mock-data/comments'
-
-interface Comment {
-  id: string
-  content: string
-  author_name: string
-  author_avatar: string
-  is_bot: boolean
-  parent_id: string | null
-  created_at: string
-}
+import { useState } from 'react'
+import {
+  useComments,
+  useCreateComment,
+  useCreateReply,
+} from '@/hook/useComments'
+import { CommentForm } from '@/components/CommentForm'
+import { CommentItem } from '@/components/CommentItem'
+import { useToast } from '@/components/ui/use-toast'
 
 interface CommentSectionProps {
   postId: string
@@ -21,32 +16,13 @@ interface CommentSectionProps {
 }
 
 export const CommentSection = ({ postId, language }: CommentSectionProps) => {
-  const [comments, setComments] = useState<Comment[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast } = useToast()
 
-  // 댓글 데이터 로드 (현재는 mock 데이터 사용)
-  useEffect(() => {
-    const loadComments = async () => {
-      try {
-        setIsLoading(true)
-        // TODO: 실제 API 호출로 교체
-        // const response = await fetch(`/api/comments?postId=${postId}`)
-        // const data = await response.json()
-
-        // 현재는 mock 데이터 사용
-        await new Promise((resolve) => setTimeout(resolve, 500)) // 로딩 시뮬레이션
-        setComments(mockComments)
-      } catch (error) {
-        console.error('댓글을 불러오는데 실패했습니다:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadComments()
-  }, [postId])
+  // TanStack Query 훅 사용
+  const { data: comments = [], isLoading, error } = useComments(postId)
+  const createCommentMutation = useCreateComment()
+  const createReplyMutation = useCreateReply()
 
   // 댓글 제출 처리
   const handleSubmitComment = async (data: {
@@ -55,38 +31,56 @@ export const CommentSection = ({ postId, language }: CommentSectionProps) => {
     parent_id?: string
   }) => {
     try {
-      setIsSubmitting(true)
-
-      // TODO: 실제 API 호출로 교체
-      // const response = await fetch('/api/comments', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ ...data, postId })
-      // })
-      // const newComment = await response.json()
-
-      // 현재는 mock 데이터로 시뮬레이션
-      const newComment: Comment = {
-        id: `uuid-${Date.now()}`,
-        content: data.content,
-        author_name: data.author_name,
-        author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.author_name}`,
-        is_bot: false,
-        parent_id: data.parent_id || null,
-        created_at: new Date().toISOString(),
-      }
-
-      setComments((prev) => [...prev, newComment])
-
-      // 답글 모드였다면 답글 모드 해제
       if (data.parent_id) {
-        setReplyingTo(null)
+        // 답글 작성
+        await createReplyMutation.mutateAsync({
+          ...data,
+          post_id: postId,
+          author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.author_name}`,
+          is_bot: false,
+          parent_id: data.parent_id, // 명시적으로 설정
+        })
+        setReplyingTo(null) // 답글 모드 해제
+
+        // 성공 토스트
+        toast({
+          title: language === 'ko' ? '답글 작성 완료' : '返信投稿完了',
+          description:
+            language === 'ko'
+              ? '답글이 성공적으로 작성되었습니다.'
+              : '返信が正常に投稿されました。',
+        })
+      } else {
+        // 새 댓글 작성
+        await createCommentMutation.mutateAsync({
+          ...data,
+          post_id: postId,
+          author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.author_name}`,
+          is_bot: false,
+          parent_id: null, // 명시적으로 null 설정
+        })
+
+        // 성공 토스트
+        toast({
+          title: language === 'ko' ? '댓글 작성 완료' : 'コメント投稿完了',
+          description:
+            language === 'ko'
+              ? '댓글이 성공적으로 작성되었습니다.'
+              : 'コメントが正常に投稿されました。',
+        })
       }
     } catch (error) {
       console.error('댓글 작성에 실패했습니다:', error)
-      // TODO: 에러 처리 UI 추가
-    } finally {
-      setIsSubmitting(false)
+
+      // 에러 토스트
+      toast({
+        title: language === 'ko' ? '오류 발생' : 'エラーが発生しました',
+        description:
+          language === 'ko'
+            ? '댓글 작성에 실패했습니다. 다시 시도해주세요.'
+            : 'コメントの投稿に失敗しました。もう一度お試しください。',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -118,13 +112,35 @@ export const CommentSection = ({ postId, language }: CommentSectionProps) => {
                 parent_id={comment.id}
                 onCancel={() => setReplyingTo(null)}
                 language={language}
-                isSubmitting={isSubmitting}
+                isSubmitting={createReplyMutation.isPending}
               />
             </div>
           )}
         </div>
       )
     })
+  }
+
+  // 에러 상태 처리
+  if (error) {
+    return (
+      <div className="py-8 text-center">
+        <div className="text-red-600 dark:text-red-400 mb-2">
+          {language === 'ko' ? '⚠️' : '⚠️'}
+        </div>
+        <p className="text-gray-600 dark:text-gray-400">
+          {language === 'ko'
+            ? '댓글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'
+            : 'コメントの読み込みに失敗しました。しばらくしてから再試行してください。'}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          {language === 'ko' ? '새로고침' : '再読み込み'}
+        </button>
+      </div>
+    )
   }
 
   if (isLoading) {
@@ -162,7 +178,7 @@ export const CommentSection = ({ postId, language }: CommentSectionProps) => {
         <CommentForm
           onSubmit={handleSubmitComment}
           language={language}
-          isSubmitting={isSubmitting}
+          isSubmitting={createCommentMutation.isPending}
         />
       </div>
     </div>
