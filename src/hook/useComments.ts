@@ -2,21 +2,49 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Comment } from '@/config/types'
 import { mockComments } from '@/lib/mock-data/comments'
 
-// API 엔드포인트 (나중에 실제 주소로 교체)
-const API_BASE_URL = 'https://api.example.com' // placeholder
+// API 엔드포인트 (환경별 설정)
+const API_BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_COMMENT_PROD_API_BASE_URL ||
+      (() => {
+        throw new Error(
+          '프로덕션 환경에서 COMMENT_PROD_API_BASE_URL이 설정되지 않았습니다.',
+        )
+      })()
+    : process.env.NEXT_PUBLIC_COMMENT_LOCAL_API_BASE_URL ||
+      (() => {
+        throw new Error(
+          '로컬 환경에서 COMMENT_LOCAL_API_BASE_URL이 설정되지 않았습니다.',
+        )
+      })()
 
 // 댓글 목록 조회
-export const useComments = (postId: string) => {
-  return useQuery({
-    queryKey: ['comments', postId],
-    queryFn: async (): Promise<Comment[]> => {
-      // 현재는 Mock 데이터 사용
-      // 나중에 실제 API 호출로 교체:
-      // const response = await fetch(`${API_BASE_URL}/comments?post_id=${postId}`)
-      // if (!response.ok) throw new Error('댓글을 불러오는데 실패했습니다')
-      // return response.json()
+export const useComments = (
+  postId: string,
+  language: string,
+  category: string,
+) => {
+  const compositePostId = `${language}-${category}-${postId}`
 
-      return mockComments
+  return useQuery({
+    queryKey: ['comments', compositePostId],
+    queryFn: async (): Promise<Comment[]> => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/comments?postId=${compositePostId}`,
+        )
+        if (!response.ok) throw new Error('댓글을 불러오는데 실패했습니다')
+        const json = await response.json()
+        // 응답이 배열이거나, { data: [] } 또는 { comments: [] } 형태를 모두 지원
+        if (Array.isArray(json)) return json
+        if (Array.isArray(json?.data)) return json.data
+        if (Array.isArray(json?.comments)) return json.comments
+        return []
+      } catch (error) {
+        console.error('API 호출 실패, Mock 데이터 사용:', error)
+        // API 실패 시 Mock 데이터로 폴백
+        return mockComments
+      }
     },
     staleTime: 1000 * 60 * 2, // 2분
   })
@@ -27,35 +55,40 @@ export const useCreateComment = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (newComment: Omit<Comment, 'id' | 'created_at'>) => {
-      // 현재는 Mock 데이터에 추가
-      // 나중에 실제 API 호출로 교체:
-      // const response = await fetch(`${API_BASE_URL}/comments`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(newComment)
-      // })
-      // if (!response.ok) throw new Error('댓글 작성에 실패했습니다')
-      // return response.json()
+    mutationFn: async (
+      newComment: Omit<Comment, 'id' | 'created_at'> & {
+        language: string
+        category: string
+      },
+    ) => {
+      const compositePostId = `${newComment.language}-${newComment.category}-${newComment.post_id}`
 
-      // Mock 데이터에 새 댓글 추가 (실제로는 API 응답 사용)
-      const now = new Date()
-      const japanTime = new Date(now.getTime() + 9 * 60 * 60 * 1000) // UTC+9 (일본 시간)
-      const mockNewComment: Comment = {
-        ...newComment,
-        id: Date.now().toString(),
-        created_at: japanTime.toISOString().slice(0, -1), // 일본 시간 기준
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            postId: compositePostId,
+            content: newComment.content,
+            author_name: newComment.author_name,
+            parent_id: newComment.parent_id,
+          }),
+        })
+        if (!response.ok) throw new Error('댓글 작성에 실패했습니다')
+        return response.json()
+      } catch (error) {
+        console.error('API 호출 실패:', error)
+        throw error
       }
-
-      // Mock 데이터 업데이트 (실제로는 서버에서 처리)
-      mockComments.push(mockNewComment)
-
-      return mockNewComment
     },
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       // 댓글 작성 성공 시 댓글 목록 새로고침
-      queryClient.invalidateQueries({
-        queryKey: ['comments', variables.post_id],
+      const compositePostId = `${variables.language}-${variables.category}-${variables.post_id}`
+      await queryClient.invalidateQueries({
+        queryKey: ['comments', compositePostId],
+      })
+      await queryClient.refetchQueries({
+        queryKey: ['comments', compositePostId],
       })
     },
   })
@@ -67,40 +100,45 @@ export const useCreateReply = () => {
 
   return useMutation({
     mutationFn: async (
-      newReply: Omit<Comment, 'id' | 'created_at'> & { post_id?: string },
+      newReply: Omit<Comment, 'id' | 'created_at'> & {
+        post_id?: string
+        language: string
+        category: string
+      },
     ) => {
-      // 현재는 Mock 데이터에 추가
-      // 나중에 실제 API 호출로 교체:
-      // const response = await fetch(`${API_BASE_URL}/comments`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(newReply)
-      // })
-      // if (!response.ok) throw new Error('답글 작성에 실패했습니다')
-      // return response.json()
+      const compositePostId = `${newReply.language}-${newReply.category}-${newReply.post_id}`
 
-      // Mock 데이터에 새 답글 추가
-      const now = new Date()
-      const japanTime = new Date(now.getTime() + 9 * 60 * 60 * 1000) // UTC+9 (일본 시간)
-      const mockNewReply: Comment = {
-        ...newReply,
-        id: Date.now().toString(),
-        created_at: japanTime.toISOString().slice(0, -1), // 일본 시간 기준
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            postId: compositePostId,
+            content: newReply.content,
+            author_name: newReply.author_name,
+            parent_id: newReply.parent_id,
+          }),
+        })
+        if (!response.ok) throw new Error('답글 작성에 실패했습니다')
+        return response.json()
+      } catch (error) {
+        console.error('API 호출 실패:', error)
+        throw error
       }
-
-      mockComments.push(mockNewReply)
-
-      return mockNewReply
     },
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       // 답글 작성 성공 시 댓글 목록 새로고침
       if (variables.post_id) {
-        queryClient.invalidateQueries({
-          queryKey: ['comments', variables.post_id],
+        const compositePostId = `${variables.language}-${variables.category}-${variables.post_id}`
+        await queryClient.invalidateQueries({
+          queryKey: ['comments', compositePostId],
+        })
+        await queryClient.refetchQueries({
+          queryKey: ['comments', compositePostId],
         })
       } else {
         // post_id가 없으면 모든 댓글 쿼리 무효화
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: ['comments'],
         })
       }

@@ -16,6 +16,15 @@ interface CommentItemProps {
     is_bot: boolean
     parent_id: string | null
     created_at: string
+    replies?: Array<{
+      id: string
+      content: string
+      author_name: string
+      author_avatar: string
+      is_bot: boolean
+      parent_id: string | null
+      created_at: string
+    }>
   }
   language: string
   onReply?: (commentId: string) => void

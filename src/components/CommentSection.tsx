@@ -13,14 +13,23 @@ import { useToast } from '@/components/ui/use-toast'
 interface CommentSectionProps {
   postId: string
   language: string
+  category: string
 }
 
-export const CommentSection = ({ postId, language }: CommentSectionProps) => {
+export const CommentSection = ({
+  postId: slug,
+  language,
+  category,
+}: CommentSectionProps) => {
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const { toast } = useToast()
 
   // TanStack Query 훅 사용
-  const { data: comments = [], isLoading, error } = useComments(postId)
+  const {
+    data: comments = [],
+    isLoading,
+    error,
+  } = useComments(slug, language, category)
   const createCommentMutation = useCreateComment()
   const createReplyMutation = useCreateReply()
 
@@ -35,10 +44,12 @@ export const CommentSection = ({ postId, language }: CommentSectionProps) => {
         // 답글 작성
         await createReplyMutation.mutateAsync({
           ...data,
-          post_id: postId,
+          post_id: slug,
           author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.author_name}`,
           is_bot: false,
           parent_id: data.parent_id, // 명시적으로 설정
+          language: language,
+          category: category,
         })
         setReplyingTo(null) // 답글 모드 해제
 
@@ -54,10 +65,12 @@ export const CommentSection = ({ postId, language }: CommentSectionProps) => {
         // 새 댓글 작성
         await createCommentMutation.mutateAsync({
           ...data,
-          post_id: postId,
+          post_id: slug,
           author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.author_name}`,
           is_bot: false,
           parent_id: null, // 명시적으로 null 설정
+          language: language,
+          category: category,
         })
 
         // 성공 토스트
@@ -89,7 +102,10 @@ export const CommentSection = ({ postId, language }: CommentSectionProps) => {
     const topLevelComments = comments.filter((comment) => !comment.parent_id)
 
     return topLevelComments.map((comment) => {
-      const replies = comments.filter((reply) => reply.parent_id === comment.id)
+      // 백엔드에서 replies 배열을 제공하는 경우 그것을 사용, 없으면 기존 로직 사용
+      const replies =
+        comment.replies ||
+        comments.filter((reply) => reply.parent_id === comment.id)
 
       return (
         <div key={comment.id} className="comment-thread">

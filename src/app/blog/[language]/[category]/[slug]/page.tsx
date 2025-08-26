@@ -89,7 +89,7 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
         </article>
         <hr />
         {/* <Giscus language={language} /> */}
-        <CommentSection postId={slug} language={language} />
+        <CommentSection postId={slug} language={language} category={category} />
         <FloatingButton />
       </div>
     </>

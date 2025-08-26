@@ -26,6 +26,7 @@ export interface Comment {
   parent_id: string | null
   created_at: string
   post_id?: string
+  replies?: Comment[]
 }
 
 export interface CategoryDetail {
