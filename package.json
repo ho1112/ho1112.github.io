@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "comment-bot": "./scripts/local-trigger-comment-bot.sh"
   },
   "dependencies": {
     "@fec/remark-a11y-emoji": "^4.0.2",
