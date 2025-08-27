@@ -13,23 +13,17 @@ import { useToast } from '@/components/ui/use-toast'
 interface CommentSectionProps {
   postId: string
   language: string
-  category: string
 }
 
 export const CommentSection = ({
   postId: slug,
   language,
-  category,
 }: CommentSectionProps) => {
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const { toast } = useToast()
 
   // TanStack Query 훅 사용
-  const {
-    data: comments = [],
-    isLoading,
-    error,
-  } = useComments(slug, language, category)
+  const { data: comments = [], isLoading, error } = useComments(slug)
   const createCommentMutation = useCreateComment()
   const createReplyMutation = useCreateReply()
 
@@ -49,7 +43,6 @@ export const CommentSection = ({
           is_bot: false,
           parent_id: data.parent_id, // 명시적으로 설정
           language: language,
-          category: category,
         })
         setReplyingTo(null) // 답글 모드 해제
 
@@ -70,7 +63,6 @@ export const CommentSection = ({
           is_bot: false,
           parent_id: null, // 명시적으로 null 설정
           language: language,
-          category: category,
         })
 
         // 성공 토스트

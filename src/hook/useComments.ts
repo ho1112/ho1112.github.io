@@ -19,12 +19,8 @@ const API_BASE_URL =
       })()
 
 // 댓글 목록 조회
-export const useComments = (
-  postId: string,
-  language: string,
-  category: string,
-) => {
-  const compositePostId = `${language}-${category}-${postId}`
+export const useComments = (postId: string) => {
+  const compositePostId = postId
 
   return useQuery({
     queryKey: ['comments', compositePostId],
@@ -58,17 +54,14 @@ export const useCreateComment = () => {
     mutationFn: async (
       newComment: Omit<Comment, 'id' | 'created_at'> & {
         language: string
-        category: string
       },
     ) => {
-      const compositePostId = `${newComment.language}-${newComment.category}-${newComment.post_id}`
-
       try {
         const response = await fetch(`${API_BASE_URL}/api/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            postId: compositePostId,
+            postId: newComment.post_id,
             content: newComment.content,
             author_name: newComment.author_name,
             parent_id: newComment.parent_id,
@@ -83,12 +76,11 @@ export const useCreateComment = () => {
     },
     onSuccess: async (data, variables) => {
       // 댓글 작성 성공 시 댓글 목록 새로고침
-      const compositePostId = `${variables.language}-${variables.category}-${variables.post_id}`
       await queryClient.invalidateQueries({
-        queryKey: ['comments', compositePostId],
+        queryKey: ['comments', variables.post_id],
       })
       await queryClient.refetchQueries({
-        queryKey: ['comments', compositePostId],
+        queryKey: ['comments', variables.post_id],
       })
     },
   })
@@ -103,17 +95,14 @@ export const useCreateReply = () => {
       newReply: Omit<Comment, 'id' | 'created_at'> & {
         post_id?: string
         language: string
-        category: string
       },
     ) => {
-      const compositePostId = `${newReply.language}-${newReply.category}-${newReply.post_id}`
-
       try {
         const response = await fetch(`${API_BASE_URL}/api/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            postId: compositePostId,
+            postId: newReply.post_id,
             content: newReply.content,
             author_name: newReply.author_name,
             parent_id: newReply.parent_id,
@@ -129,12 +118,11 @@ export const useCreateReply = () => {
     onSuccess: async (data, variables) => {
       // 답글 작성 성공 시 댓글 목록 새로고침
       if (variables.post_id) {
-        const compositePostId = `${variables.language}-${variables.category}-${variables.post_id}`
         await queryClient.invalidateQueries({
-          queryKey: ['comments', compositePostId],
+          queryKey: ['comments', variables.post_id],
         })
         await queryClient.refetchQueries({
-          queryKey: ['comments', compositePostId],
+          queryKey: ['comments', variables.post_id],
         })
       } else {
         // post_id가 없으면 모든 댓글 쿼리 무효화
