@@ -6,7 +6,7 @@ import {
   parsePostAbstract,
   parseToc,
 } from '@/lib/post'
-import { CommentSection } from '@/components/CommentSection'
+import { CommentSection } from '@/components/comments/CommentSection'
 import FloatingButton from '@/components/common/FloatingButton'
 // import { Giscus } from '@/components/post_detail/Giscus'
 import { PostBody } from '@/components/post_detail/PostBody'

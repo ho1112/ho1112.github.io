@@ -6,8 +6,8 @@ import {
   useCreateComment,
   useCreateReply,
 } from '@/hook/useComments'
-import { CommentForm } from '@/components/CommentForm'
-import { CommentItem } from '@/components/CommentItem'
+import { CommentForm } from '@/components/comments/CommentForm'
+import { CommentItem } from '@/components/comments/CommentItem'
 import { useToast } from '@/components/ui/use-toast'
 
 interface CommentSectionProps {

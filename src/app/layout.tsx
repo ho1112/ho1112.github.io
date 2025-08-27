@@ -11,9 +11,9 @@ import '@/config/globals.css'
 // import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Footer } from '@/layouts/Footer'
 import { Header } from '@/layouts/Header'
-import { ThemeProvider } from '@/layouts/theme/Provider'
+import { QueryProvider } from '@/layouts/query/QueryProvider'
+import { ThemeProvider } from '@/layouts/theme/ThemeProvider'
 import { Toaster } from '@/components/ui/toaster'
-import { Providers } from '@/components/Providers'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseDomain),
@@ -49,14 +49,14 @@ export default function RootLayout({
     >
       <link rel="icon" type="image/x-icon" href="/icon/m_favicon.png" />
       <body className="font-pretendard flex min-h-screen flex-col">
-        <Providers>
+        <QueryProvider>
           <ThemeProvider>
             <Header />
             <main className="mt-[64px] flex flex-1 flex-col">{children}</main>
             <Footer />
           </ThemeProvider>
           <Toaster />
-        </Providers>
+        </QueryProvider>
         {/* <Analytics /> */}
         {/* <SpeedInsights /> */}
         {/* <GoogleAnalytics gaId="G-TRBVGE9TYP" />
