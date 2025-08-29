@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Comment } from '@/config/types'
-import { mockComments } from '@/lib/mock-data/comments'
 
 // API 엔드포인트 (환경별 설정)
 const API_BASE_URL =
@@ -37,9 +36,9 @@ export const useComments = (postId: string) => {
         if (Array.isArray(json?.comments)) return json.comments
         return []
       } catch (error) {
-        console.error('API 호출 실패, Mock 데이터 사용:', error)
-        // API 실패 시 Mock 데이터로 폴백
-        return mockComments
+        console.error('API 호출 실패:', error)
+        // API 실패 시 빈 배열 반환
+        return []
       }
     },
     staleTime: 1000 * 60 * 2, // 2분
