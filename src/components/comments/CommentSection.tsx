@@ -53,6 +53,7 @@ export const CommentSection = ({
             language === 'ko'
               ? '답글이 성공적으로 작성되었습니다.'
               : '返信が正常に投稿されました。',
+          className: language === 'ko' ? '' : 'whitespace-nowrap',
         })
       } else {
         // 새 댓글 작성
@@ -72,18 +73,16 @@ export const CommentSection = ({
             language === 'ko'
               ? '댓글이 성공적으로 작성되었습니다.'
               : 'コメントが正常に投稿されました。',
+          className: language === 'ko' ? '' : 'whitespace-nowrap',
         })
       }
     } catch (error) {
-      console.error('댓글 작성에 실패했습니다:', error)
-
-      // 에러 토스트
       toast({
-        title: language === 'ko' ? '오류 발생' : 'エラーが発生しました',
+        title: language === 'ko' ? '오류' : 'エラー',
         description:
           language === 'ko'
-            ? '댓글 작성에 실패했습니다. 다시 시도해주세요.'
-            : 'コメントの投稿に失敗しました。もう一度お試しください。',
+            ? '댓글 작성에 실패했습니다.'
+            : 'コメントの投稿に失敗しました。',
         variant: 'destructive',
       })
     }
