@@ -6,8 +6,9 @@ import {
   parsePostAbstract,
   parseToc,
 } from '@/lib/post'
+import { CommentSection } from '@/components/comments/CommentSection'
 import FloatingButton from '@/components/common/FloatingButton'
-import { Giscus } from '@/components/post_detail/Giscus'
+// import { Giscus } from '@/components/post_detail/Giscus'
 import { PostBody } from '@/components/post_detail/PostBody'
 import { PostHeader } from '@/components/post_detail/PostHeader'
 import TocSidebar from '@/components/post_detail/TableOfContentSidebar'
@@ -87,7 +88,11 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
           <PostBody post={post} />
         </article>
         <hr />
-        <Giscus language={language} />
+        {/* <Giscus language={language} /> */}
+        <CommentSection
+          postId={`${language}/${category}/${slug}`}
+          language={language}
+        />
         <FloatingButton />
       </div>
     </>
