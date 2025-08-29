@@ -100,7 +100,7 @@ export const CommentItem = ({
             ↪︎
           </span>
         )}
-        <div className="flex items-start space-x-3 flex-1 border-b border-gray-200 dark:border-gray-700 pb-4">
+        <div className="flex items-start space-x-3 flex-1 border-b border-chomin/20 dark:border-chomin/30 pb-4">
           <img
             src={comment.author_avatar}
             alt={`${comment.author_name}의 아바타`}
@@ -125,10 +125,10 @@ export const CommentItem = ({
             </p>
             {onReply && (
               <button
-                onClick={() => onReply(comment.id)}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                onClick={() => onReply?.(comment.id)}
+                className="text-sm text-chomin hover:text-chomin-dark font-medium"
               >
-                답글 달기
+                {language === 'ko' ? '답글' : '返信'}
               </button>
             )}
           </div>

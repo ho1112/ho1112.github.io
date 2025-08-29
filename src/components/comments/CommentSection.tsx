@@ -143,7 +143,7 @@ export const CommentSection = ({
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="mt-4 px-4 py-2 bg-chomin text-white rounded-md hover:bg-chomin-dark"
         >
           {language === 'ko' ? '새로고침' : '再読み込み'}
         </button>
@@ -154,7 +154,7 @@ export const CommentSection = ({
   if (isLoading) {
     return (
       <div className="py-8 text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chomin mx-auto"></div>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           {language === 'ko'
             ? '댓글을 불러오는 중...'
