@@ -8,13 +8,13 @@ const API_BASE_URL =
     ? process.env.NEXT_PUBLIC_COMMENT_PROD_API_BASE_URL ||
       (() => {
         throw new Error(
-          '프로덕션 환경에서 COMMENT_PROD_API_BASE_URL이 설정되지 않았습니다.',
+          '프로덕션 환경에서 NEXT_PUBLIC_COMMENT_PROD_API_BASE_URL이 설정되지 않았습니다.',
         )
       })()
     : process.env.NEXT_PUBLIC_COMMENT_LOCAL_API_BASE_URL ||
       (() => {
         throw new Error(
-          '로컬 환경에서 COMMENT_LOCAL_API_BASE_URL이 설정되지 않았습니다.',
+          '로컬 환경에서 NEXT_PUBLIC_COMMENT_LOCAL_API_BASE_URL이 설정되지 않았습니다.',
         )
       })()
 
