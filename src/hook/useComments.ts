@@ -36,7 +36,6 @@ export const useComments = (postId: string) => {
         if (Array.isArray(json?.comments)) return json.comments
         return []
       } catch (error) {
-        console.error('API 호출 실패:', error)
         // API 실패 시 빈 배열 반환
         return []
       }
@@ -55,23 +54,18 @@ export const useCreateComment = () => {
         language: string
       },
     ) => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/comments`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            postId: newComment.post_id,
-            content: newComment.content,
-            author_name: newComment.author_name,
-            parent_id: newComment.parent_id,
-          }),
-        })
-        if (!response.ok) throw new Error('댓글 작성에 실패했습니다')
-        return response.json()
-      } catch (error) {
-        console.error('API 호출 실패:', error)
-        throw error
-      }
+      const response = await fetch(`${API_BASE_URL}/api/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: newComment.post_id,
+          content: newComment.content,
+          author_name: newComment.author_name,
+          parent_id: newComment.parent_id,
+        }),
+      })
+      if (!response.ok) throw new Error('댓글 작성에 실패했습니다')
+      return response.json()
     },
     onSuccess: async (data, variables) => {
       // 댓글 작성 성공 시 댓글 목록 새로고침
@@ -96,23 +90,18 @@ export const useCreateReply = () => {
         language: string
       },
     ) => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/comments`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            postId: newReply.post_id,
-            content: newReply.content,
-            author_name: newReply.author_name,
-            parent_id: newReply.parent_id,
-          }),
-        })
-        if (!response.ok) throw new Error('답글 작성에 실패했습니다')
-        return response.json()
-      } catch (error) {
-        console.error('API 호출 실패:', error)
-        throw error
-      }
+      const response = await fetch(`${API_BASE_URL}/api/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: newReply.post_id,
+          content: newReply.content,
+          author_name: newReply.author_name,
+          parent_id: newReply.parent_id,
+        }),
+      })
+      if (!response.ok) throw new Error('답글 작성에 실패했습니다')
+      return response.json()
     },
     onSuccess: async (data, variables) => {
       // 답글 작성 성공 시 댓글 목록 새로고침

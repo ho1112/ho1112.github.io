@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface CommentFormProps {
   onSubmit: (data: {
@@ -14,6 +14,9 @@ interface CommentFormProps {
   isSubmitting?: boolean
 }
 
+// 로컬스토리지 키
+const NICKNAME_STORAGE_KEY = 'comment_nickname'
+
 export const CommentForm = ({
   onSubmit,
   parent_id,
@@ -24,9 +27,20 @@ export const CommentForm = ({
   const [content, setContent] = useState('')
   const [authorName, setAuthorName] = useState('')
 
+  // 컴포넌트 마운트 시 저장된 닉네임 불러오기
+  useEffect(() => {
+    const savedNickname = localStorage.getItem(NICKNAME_STORAGE_KEY)
+    if (savedNickname) {
+      setAuthorName(savedNickname)
+    }
+  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!content.trim() || !authorName.trim()) return
+
+    // 댓글 작성 시 닉네임을 로컬스토리지에 저장
+    localStorage.setItem(NICKNAME_STORAGE_KEY, authorName.trim())
 
     onSubmit({
       content: content.trim(),
@@ -35,9 +49,6 @@ export const CommentForm = ({
     })
 
     setContent('')
-    if (!parent_id) {
-      setAuthorName('')
-    }
   }
 
   const isReply = !!parent_id
