@@ -23,14 +23,34 @@ jobs:
       - name: Get list of new mdx files
         id: get_new_posts
         run: |
+          echo "=== 새 포스트 파일 감지 시작 ==="
+          echo "현재 브랜치: $(git branch --show-current)"
+          echo "최근 커밋: $(git log --oneline -5)"
+          echo ""
+
           # git diff 명령어로 '추가(A)'된 'src/posts/**/*.mdx' 파일 목록을 찾습니다.
           # || true 는 파일이 없을 때 에러가 발생하는 것을 방지합니다.
-          FILES=$(git diff --name-only --diff-filter=A HEAD^ HEAD | grep "src/posts/.*\.mdx$" || true)
+          echo "git diff 실행 중..."
+          DIFF_OUTPUT=$(git diff --name-only --diff-filter=A HEAD^ HEAD)
+          echo "git diff 결과:"
+          echo "$DIFF_OUTPUT"
+          echo ""
+
+          echo "grep 필터링 실행 중..."
+          FILES=$(echo "$DIFF_OUTPUT" | grep "src/posts/.*\.mdx$" || true)
+          echo "grep 필터링 결과:"
+          echo "$FILES"
+          echo ""
+
+          echo "파일 개수: $(echo "$FILES" | wc -l)"
 
           # 찾은 파일 목록을 다음 단계에서 사용할 수 있도록 OUTPUT으로 설정합니다.
           echo "files<<EOF" >> $GITHUB_OUTPUT
           echo "$FILES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "EOF"
+
+          echo "=== 새 포스트 파일 감지 완료 ==="
+          echo "설정된 files 출력: ${{ steps.get_new_posts.outputs.files }}"
 
       # 새로 추가된 파일이 있을 때만 웹훅을 호출합니다.
       - name: Trigger webhook for each new post
