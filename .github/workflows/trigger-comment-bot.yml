@@ -1,3 +1,5 @@
+# .github/workflows/trigger-comment-bot.yml
+
 name: 🚀 Trigger Comment Bot on New Post
 
 on:
@@ -5,124 +7,55 @@ on:
     branches:
       - main
     paths:
-      - 'src/posts/**.mdx' # src/posts 폴더 하위의 .mdx 파일 변경 시에만 실행
+      - 'src/posts/**.mdx'
 
 jobs:
   trigger-on-new-post:
     name: Check for New Posts and Trigger
     runs-on: ubuntu-latest
     steps:
-      # Git 히스토리를 가져와 파일 변경 내역을 비교하기 위해 필요합니다.
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # HEAD^와 비교하기 위해 이전 커밋 기록까지 가져옵니다.
           fetch-depth: 2
 
-      # 이번 push에서 '추가(Added)'된 .mdx 파일 목록을 찾습니다.
       - name: Get list of new mdx files
         id: get_new_posts
         run: |
-          echo "=== 새 포스트 파일 감지 시작 ==="
-          echo "현재 브랜치: $(git branch --show-current)"
-          echo "최근 커밋: $(git log --oneline -5)"
-          echo ""
-
-          # git diff 명령어로 '추가(A)'된 'src/posts/**/*.mdx' 파일 목록을 찾습니다.
-          # || true 는 파일이 없을 때 에러가 발생하는 것을 방지합니다.
-          echo "git diff 실행 중..."
-          DIFF_OUTPUT=$(git diff --name-only --diff-filter=A HEAD^ HEAD)
-          echo "git diff 결과:"
-          echo "$DIFF_OUTPUT"
-          echo ""
-
-          echo "grep 필터링 실행 중..."
-          FILES=$(echo "$DIFF_OUTPUT" | grep "src/posts/.*\.mdx$" || true)
-          echo "grep 필터링 결과:"
-          echo "$FILES"
-          echo ""
-
-          echo "파일 개수: $(echo "$FILES" | wc -l)"
-
-          # 찾은 파일 목록을 다음 단계에서 사용할 수 있도록 OUTPUT으로 설정합니다.
+          FILES=$(git diff --name-only --diff-filter=A HEAD^ HEAD | grep "src/posts/.*\.mdx$" || true)
+          # 출력을 위해 EOF delimiter를 사용하고, 다음 단계에서 사용할 수 있도록 변수 전달
           echo "files<<EOF" >> $GITHUB_OUTPUT
           echo "$FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-          echo "=== 새 포스트 파일 감지 완료 ==="
-          echo "설정된 files 출력: ${{ steps.get_new_posts.outputs.files }}"
-
-      # 새로 추가된 파일이 있을 때만 웹훅을 호출합니다.
       - name: Trigger webhook for each new post
         if: steps.get_new_posts.outputs.files != ''
         run: |
-          # 여러 파일이 한 번에 추가될 수 있으므로, for 루프를 사용해 각각 처리합니다.
-          # 파일 목록을 배열로 변환하여 처리
-          IFS=$'\n' read -d '' -r -a FILES_ARRAY <<< "${{ steps.get_new_posts.outputs.files }}"
+          # while 루프를 사용하여 각 파일 경로를 안정적으로 처리
+          echo "${{ steps.get_new_posts.outputs.files }}" | while IFS= read -r file; do
+            if [ -z "$file" ]; then continue; fi
 
-          for file in "${FILES_ARRAY[@]}"; do
-            # 파일 경로에서 정보 추출
-            # 예: src/posts/weekly/250406/content_ja.mdx
+            echo "Processing file: $file"
             
-            # 카테고리와 날짜 추출 (올바른 인덱스 사용)
-            CATEGORY=$(echo "$file" | awk -F'/' '{print $3}')
-            DATE=$(echo "$file" | awk -F'/' '{print $4}')
+            # 파일 경로에서 디렉토리 부분만 추출 (예: src/posts/weekly/250406)
+            DIR_PATH=$(dirname "$file")
             
-            # 언어 코드 추출 (content_ja.mdx → ja)
-            LANG=$(echo "$file" | awk -F'/' '{print $5}' | sed 's/content_//' | sed 's/\.mdx$//')
+            # 'src/posts/' 부분을 제거하여 post_id 생성 (예: weekly/250406)
+            POST_ID_DIR=$(echo "$DIR_PATH" | sed 's|^src/posts/||')
 
-            # 우리 API 형식에 맞게 post_id 생성 (언어를 앞으로)
-            POST_ID="${LANG}/${CATEGORY}/${DATE}"
-            URL="https://mintora.me/blog/${LANG}/${CATEGORY}/${DATE}"
-            
+            # 파일 이름에서 언어 코드 추출 (예: content_ja.mdx -> ja)
+            FILENAME=$(basename "$file")
+            LANG=$(echo "$FILENAME" | sed -n 's/content_\(ko\|ja\)\.mdx/\1/p')
+
+            # 최종 post_id 와 URL 생성
+            POST_ID="${LANG}/${POST_ID_DIR}"
+            URL="https://mintora.me/blog/${LANG}/posts/${POST_ID_DIR}"
+
             echo "Triggering for Post ID: ${POST_ID}"
-            echo "Category: ${CATEGORY}"
-            echo "Date: ${DATE}"
-            echo "Language: ${LANG}"
             echo "URL: ${URL}"
             
-            # JSON 본문과 함께 웹훅 POST 요청을 보냅니다.
-            echo "웹훅 URL: ***"
-            echo "요청 데이터: {\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}"
-            
-            # curl 응답과 에러를 자세히 확인 (간단한 디버깅)
-            echo "curl 명령어 실행 중..."
-            
-            # 먼저 웹훅 URL이 비어있는지 확인
-            if [ -z "${{ secrets.WEBHOOK_URL }}" ]; then
-              echo "❌ 웹훅 URL이 설정되지 않았습니다!"
-              exit 1
-            fi
-            
-            echo "웹훅 URL 길이: ${#WEBHOOK_URL} 문자"
-            
-            # curl 실행 (간단한 옵션으로)
-            RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST \
-              -H "Content-Type: application/json" \
+            # JSON 본문과 함께 웹훅 POST 요청 보내기
+            curl -X POST -H "Content-Type: application/json" \
               -d "{\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}" \
-              "${{ secrets.WEBHOOK_URL }}" 2>&1)
-            
-            echo "curl 명령어 완료"
-            echo "응답 길이: ${#RESPONSE} 문자"
-            echo "응답 내용:"
-            echo "$RESPONSE"
-            
-            # HTTP 상태 코드 확인
-            HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
-            echo "HTTP 상태 코드: $HTTP_STATUS"
-            
-            # 에러 발생 시에도 로그 출력
-            if [ -z "$HTTP_STATUS" ]; then
-              echo "❌ HTTP 상태 코드를 찾을 수 없습니다"
-              echo "전체 응답을 다시 확인:"
-              echo "$RESPONSE"
-              exit 1
-            elif [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ]; then
-              echo "✅ 웹훅 호출 성공!"
-            else
-              echo "❌ 웹훅 호출 실패 (HTTP 상태: $HTTP_STATUS)"
-              echo "실패 응답 내용:"
-              echo "$RESPONSE"
-              exit 1
-            fi
+              "${{ secrets.WEBHOOK_URL }}"
           done
