@@ -65,9 +65,19 @@ jobs:
             echo "웹훅 URL: ***"
             echo "요청 데이터: {\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}"
             
-            # curl 응답과 에러를 자세히 확인 (더 많은 디버깅 정보)
+            # curl 응답과 에러를 자세히 확인 (간단한 디버깅)
             echo "curl 명령어 실행 중..."
-            RESPONSE=$(curl -v -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST \
+            
+            # 먼저 웹훅 URL이 비어있는지 확인
+            if [ -z "${{ secrets.WEBHOOK_URL }}" ]; then
+              echo "❌ 웹훅 URL이 설정되지 않았습니다!"
+              exit 1
+            fi
+            
+            echo "웹훅 URL 길이: ${#WEBHOOK_URL} 문자"
+            
+            # curl 실행 (간단한 옵션으로)
+            RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST \
               -H "Content-Type: application/json" \
               -d "{\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}" \
               "${{ secrets.WEBHOOK_URL }}" 2>&1)
