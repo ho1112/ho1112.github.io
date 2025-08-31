@@ -128,6 +128,19 @@ export const CommentSection = ({
     })
   }
 
+  // 총 댓글 수 계산 (최상위 댓글 + 대댓글)
+  const getTotalCommentCount = () => {
+    return comments.reduce((total, comment) => {
+      // 최상위 댓글 카운트
+      if (!comment.parent_id) {
+        // 대댓글도 함께 카운트
+        const replyCount = comment.replies ? comment.replies.length : 0
+        return total + 1 + replyCount
+      }
+      return total
+    }, 0)
+  }
+
   // 에러 상태 처리
   if (error) {
     return (
@@ -166,7 +179,7 @@ export const CommentSection = ({
   return (
     <div className="comment-section py-8 not-prose">
       <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
-        {language === 'ko' ? '댓글' : 'コメント'} ({comments.length})
+        {language === 'ko' ? '댓글' : 'コメント'} ({getTotalCommentCount()})
       </h3>
 
       {/* 댓글 목록 */}
