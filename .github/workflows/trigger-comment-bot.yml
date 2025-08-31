@@ -37,21 +37,24 @@ jobs:
         if: steps.get_new_posts.outputs.files != ''
         run: |
           # 여러 파일이 한 번에 추가될 수 있으므로, for 루프를 사용해 각각 처리합니다.
-          for file in ${{ steps.get_new_posts.outputs.files }}; do
+          # 파일 목록을 배열로 변환하여 처리
+          IFS=$'\n' read -d '' -r -a FILES_ARRAY <<< "${{ steps.get_new_posts.outputs.files }}"
+
+          for file in "${FILES_ARRAY[@]}"; do
             # 파일 경로에서 정보 추출
             # 예: src/posts/weekly/250406/content_ja.mdx
-
+            
             # 카테고리와 날짜 추출 (올바른 인덱스 사용)
             CATEGORY=$(echo "$file" | awk -F'/' '{print $3}')
             DATE=$(echo "$file" | awk -F'/' '{print $4}')
-
+            
             # 언어 코드 추출 (content_ja.mdx → ja)
             LANG=$(echo "$file" | awk -F'/' '{print $5}' | sed 's/content_//' | sed 's/\.mdx$//')
 
             # 우리 API 형식에 맞게 post_id 생성 (언어를 앞으로)
             POST_ID="${LANG}/${CATEGORY}/${DATE}"
             URL="https://mintora.me/blog/${LANG}/${CATEGORY}/${DATE}"
-
+            
             echo "Triggering for Post ID: ${POST_ID}"
             echo "Category: ${CATEGORY}"
             echo "Date: ${DATE}"
