@@ -62,25 +62,37 @@ jobs:
             echo "URL: ${URL}"
             
             # JSON 본문과 함께 웹훅 POST 요청을 보냅니다.
-            echo "웹훅 URL: ${{ secrets.WEBHOOK_URL }}"
+            echo "웹훅 URL: ***"
             echo "요청 데이터: {\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}"
             
-            # curl 응답과 에러를 자세히 확인
-            RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST \
+            # curl 응답과 에러를 자세히 확인 (더 많은 디버깅 정보)
+            echo "curl 명령어 실행 중..."
+            RESPONSE=$(curl -v -s -w "\nHTTP_STATUS:%{http_code}\n" -X POST \
               -H "Content-Type: application/json" \
               -d "{\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}" \
               "${{ secrets.WEBHOOK_URL }}" 2>&1)
             
-            echo "응답: $RESPONSE"
+            echo "curl 명령어 완료"
+            echo "응답 길이: ${#RESPONSE} 문자"
+            echo "응답 내용:"
+            echo "$RESPONSE"
             
             # HTTP 상태 코드 확인
             HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
             echo "HTTP 상태 코드: $HTTP_STATUS"
             
-            if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ]; then
+            # 에러 발생 시에도 로그 출력
+            if [ -z "$HTTP_STATUS" ]; then
+              echo "❌ HTTP 상태 코드를 찾을 수 없습니다"
+              echo "전체 응답을 다시 확인:"
+              echo "$RESPONSE"
+              exit 1
+            elif [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ]; then
               echo "✅ 웹훅 호출 성공!"
             else
               echo "❌ 웹훅 호출 실패 (HTTP 상태: $HTTP_STATUS)"
+              echo "실패 응답 내용:"
+              echo "$RESPONSE"
               exit 1
             fi
           done
