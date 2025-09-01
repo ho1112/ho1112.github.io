@@ -1,0 +1,61 @@
+# .github/workflows/trigger-comment-bot.yml
+
+name: 🚀 Trigger Comment Bot on New Post
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/posts/**.mdx'
+
+jobs:
+  trigger-on-new-post:
+    name: Check for New Posts and Trigger
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get list of new mdx files
+        id: get_new_posts
+        run: |
+          FILES=$(git diff --name-only --diff-filter=A HEAD^ HEAD | grep "src/posts/.*\.mdx$" || true)
+          # 출력을 위해 EOF delimiter를 사용하고, 다음 단계에서 사용할 수 있도록 변수 전달
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Trigger webhook for each new post
+        if: steps.get_new_posts.outputs.files != ''
+        run: |
+          # while 루프를 사용하여 각 파일 경로를 안정적으로 처리
+          echo "${{ steps.get_new_posts.outputs.files }}" | while IFS= read -r file; do
+            if [ -z "$file" ]; then continue; fi
+
+            echo "Processing file: $file"
+            
+            # 파일 경로에서 디렉토리 부분만 추출 (예: src/posts/weekly/250406)
+            DIR_PATH=$(dirname "$file")
+            
+            # 'src/posts/' 부분을 제거하여 post_id 생성 (예: weekly/250406)
+            POST_ID_DIR=$(echo "$DIR_PATH" | sed 's|^src/posts/||')
+
+            # 파일 이름에서 언어 코드 추출 (예: content_ja.mdx -> ja)
+            FILENAME=$(basename "$file")
+            LANG=$(echo "$FILENAME" | sed -n 's/content_\(ko\|ja\)\.mdx/\1/p')
+
+            # 최종 post_id 와 URL 생성
+            POST_ID="${LANG}/${POST_ID_DIR}"
+            URL="https://mintora.me/blog/${LANG}/posts/${POST_ID_DIR}"
+
+            echo "Triggering for Post ID: ${POST_ID}"
+            echo "URL: ${URL}"
+            
+            # JSON 본문과 함께 웹훅 POST 요청 보내기
+            curl -X POST -H "Content-Type: application/json" \
+              -d "{\"post_id\": \"${POST_ID}\", \"url\": \"${URL}\"}" \
+              "${{ secrets.WEBHOOK_URL }}"
+          done
