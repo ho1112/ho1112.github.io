@@ -6,6 +6,7 @@ import {
 } from '@/lib/post'
 import { getLanguageText } from '@/utils/language'
 import CategoryList from './CategoryList'
+import LatestSection from './LatestSection'
 import PostCard from './PostCard'
 
 interface PostListProps {
@@ -37,13 +38,11 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         </section>
         <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {postList.map((post, index) => (
+            {postList.map((post) => (
               <PostCard
                 key={post.url + post.date}
                 language={language}
                 post={post}
-                index={index}
-                variant="grid"
               />
             ))}
           </ul>
@@ -95,39 +94,21 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         />
       </section>
       {/* 최신 포스트 */}
-      <section className="mt-4 mx-auto px-4 w-full max-w-[1068px]">
-        <h2 className="text-2xl font-bold mb-4">{t.latest}</h2>
-        <ul className="grid grid-cols-1 gap-1 md:grid-cols-4 md:grid-rows-2 md:h-[30vw]">
-          {latestPostList.map((post, index) => (
-            <PostCard
-              key={post.url + post.date}
-              language={language}
-              post={post}
-              index={index}
-            />
-          ))}
-        </ul>
-        <div className="mt-6 flex justify-center">
-          <Link
-            href={`/blog/${language}/all`}
-            className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
-          >
-            {`❐ ${t.all}(${allPostCount})`}
-          </Link>
-        </div>
-      </section>
+      <LatestSection
+        language={language}
+        latestPosts={latestPostList}
+        allPostCount={allPostCount}
+      />
 
       {/* workLog Posts */}
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
         <h2 className="text-2xl font-bold mb-4">workLog</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {workLogPosts.map((post, index) => (
+          {workLogPosts.map((post) => (
             <PostCard
               key={post.url + post.date}
               language={language}
               post={post}
-              index={index}
-              variant="grid"
             />
           ))}
         </ul>
@@ -147,13 +128,11 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
         <h2 className="text-2xl font-bold mb-4">deepDive</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {deepDivePosts.map((post, index) => (
+          {deepDivePosts.map((post) => (
             <PostCard
               key={post.url + post.date}
               language={language}
               post={post}
-              index={index}
-              variant="grid"
             />
           ))}
         </ul>
@@ -173,13 +152,11 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
         <h2 className="text-2xl font-bold mb-4">inspiration</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {inspirationPosts.map((post, index) => (
+          {inspirationPosts.map((post) => (
             <PostCard
               key={post.url + post.date}
               language={language}
               post={post}
-              index={index}
-              variant="grid"
             />
           ))}
         </ul>
@@ -199,13 +176,11 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
         <h2 className="text-2xl font-bold mb-4">codeLab</h2>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {codeLabPosts.map((post, index) => (
+          {codeLabPosts.map((post) => (
             <PostCard
               key={post.url + post.date}
               language={language}
               post={post}
-              index={index}
-              variant="grid"
             />
           ))}
         </ul>
