@@ -1,0 +1,119 @@
+---
+title: '🚀 2025-09 W1 #23'
+desc: CSS Anchor Positioning 심층 분석, 개발자 인지 부하 관리 팁, Uppy 라이브러리 소개 | 2025년 9월 1주차 주간 기술 뉴스레터
+date: 2025-09-06
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 CSS의 차세대 레이아웃 기능인 Anchor Positioning과 AI를 활용한 코딩 접근법(Augmented Coding)이 주목받았습니다. 개발자의 인지 부하를 줄이는 코드 작성법과 웹폰트 최적화 전략 등 실무적인 아티클도 함께 다룹니다.
+
+## 1. 🔍 심층 분석
+
+- **[The Basics of Anchor Positioning](https://frontendfoc.us/link/173656/web)** (출처: *Frontend Focus #707*)
+    ![Anchor Positioning 예시 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1756900648/j1bgfik9clzsr0uphjmg.png)
+    - **배경**: 기존에는 툴팁이나 팝오버 메뉴처럼 한 요소를 다른 요소에 연결하여 배치할 때 JavaScript에 의존해야 했습니다. CSS Anchor Positioning은 이를 CSS만으로 해결하기 위해 등장했습니다.
+    - **핵심 기능**: `anchor-name` 속성을 사용해 기준점(anchor)을 정의하고, `position-anchor` 속성으로 팝오버 요소를 해당 기준점에 연결합니다. `anchor()` 함수를 사용해 `top`, `bottom`, `left`, `right` 값을 동적으로 계산하여 뷰포트 경계에 따라 위치를 조정할 수 있습니다.
+    - **실무 적용**: 동적으로 위치가 변해야 하는 드롭다운 메뉴, 컨텍스트 메뉴, 툴팁 등을 만들 때 복잡한 JavaScript 계산 없이도 유연하고 반응형으로 구현할 수 있습니다.
+    - **주의사항**: 아직 모든 브라우저에서 보편적으로 지원되지는 않으므로, 프로덕션 환경에서 사용 시 <a href="https://frontendfoc.us/link/173657/web" target="_blank">Can I use</a>를 통한 지원 현황 확인과 폴백(fallback) 처리가 필요합니다.
+
+- **[Augmented Coding: Beyond the Vibes](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)** (출처: *Naver FE News (2025-09)*)
+    - **배경**: AI를 이용한 코딩 방식이 Vibe Coding(결과물 동작에만 집중)과 Augmented Coding(코드 품질과 설계를 중시하며 AI 보조 활용)으로 나뉘고 있습니다. 소프트웨어 공학의 거장 Kent Beck이 B+Tree 라이브러리 구축 사례를 통해 두 접근법의 차이를 설명합니다.
+    - **핵심 개념**: Augmented Coding은 TDD(테스트 주도 개발)와 Tidy First 원칙을 AI와 결합합니다. 개발자가 AI의 보조를 받으면서도 코드 복잡성 관리, 테스트 커버리지 확보 등 프로그래밍의 본질적인 결정에 집중하는 방식입니다.
+    - **실무 적용**: AI를 단순 코드 생성기가 아닌 페어 프로그래밍 파트너로 활용하여 생산성을 높이면서도 유지보수 가능한 고품질 코드를 작성하는 데 적용할 수 있습니다.
+    - **인사이트**: AI가 개발 과정을 보조하더라도 프로그래밍의 본질은 변하지 않으며, 오히려 개발자는 더 의미 있는 설계 결정에 집중할 수 있게 됩니다.
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[ForesightJS](https://github.com/spaansba/ForesightJS)** (출처: *Naver FE News (2025-09)*)
+    ![ForesightJS 로고 또는 예시](https://github.com/user-attachments/assets/f5650c63-4489-4878-bd72-d8954c6a739b)
+    - **개요**: 사용자의 의도를 예측하여 콘텐츠를 미리 로드하는 경량 라이브러리입니다. 마우스 궤적, 키보드 탐색, 스크롤 패턴을 분석하여 사용자가 클릭하기 전에 필요한 리소스를 미리 가져옵니다.
+    - **특징**: 기존 hover 기반 프리페칭의 지연 시간을 개선하고, 뷰포트 기반 프리페칭의 불필요한 리소스 낭비를 줄입니다. 3G 이하 연결이나 데이터 절약 모드에서는 자동으로 비활성화됩니다.
+    - **실전 팁**: 설정 없이 바로 적용 가능하며, 페이지 전환 속도를 향상시켜 사용자 경험(UX)을 개선하고자 할 때 유용합니다.
+
+- **[Uppy](https://uppy.io/?utm_source=CSS-Weekly&utm_campaign=Issue-619&utm_medium=web)** (출처: *CSS Weekly #619*)
+    - **개요**: 세련되고 모듈화된 JavaScript 파일 업로더입니다. 로컬 디스크뿐만 아니라 Google Drive, Dropbox, Instagram 등 다양한 소스에서의 파일 가져오기를 지원합니다.
+    - **사용법**: Uppy는 가벼운 코어와 다양한 플러그인으로 구성되어 있어 필요한 기능만 선택하여 통합할 수 있습니다. 파일 복구 기능을 제공하며, UI 컴포넌트를 직접 커스터마이징할 수 있습니다.
+    - **실전 팁**: 사용자에게 다양한 업로드 옵션을 제공하고, 업로드 과정을 시각적으로 보여주며 안정적인 파일 전송을 구현해야 하는 웹 애플리케이션에 적합합니다.
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[Cognitive Load is what matters](https://github.com/zakirullin/cognitive-load/blob/main/README.ko.md)** (출처: *Naver FE News (2025-09)*)
+    ![인지 부하 다이어그램](https://github.com/zakirullin/cognitive-load/raw/main/img/cognitiveloadv6.png)
+    - **핵심 인사이트**: 개발자가 작업을 완료하기 위해 생각해야 하는 양인 '인지 부하'가 소프트웨어 복잡성의 핵심입니다. 인간의 작업 기억 용량(평균 4개 덩어리)을 초과하면 코드 이해도가 급격히 떨어집니다.
+    - **인지 부하 증가 요인**: 복잡한 조건문, 깊은 상속 구조, 과도하게 잘게 쪼개진 모듈, DRY 원칙의 남용 등이 외재적 인지 부하를 높입니다.
+    - **개선 방안**: 의미 있는 변수명 사용, 조기 반환(early return), 간단한 인터페이스를 가진 깊은 모듈 설계, 자체 설명적 코드를 통해 인지 부하를 줄일 수 있습니다.
+
+- **[You’re Loading Fonts Wrong](https://www.jonoalderson.com/performance/youre-loading-fonts-wrong/)** (출처: *Naver FE News (2025-09)*)
+    - **핵심 인사이트**: 많은 웹사이트가 과도한 폰트 포맷 사용, 늦은 요청 시점, 서드파티 스니펫 의존 등으로 인해 LCP(최대 콘텐츠풀 페인트) 및 CLS(누적 레이아웃 이동) 성능을 저하시키고 있습니다.
+    - **최적화 전략**:
+        1.  **시스템 폰트 우선 적용**: 가장 빠른 방법입니다.
+        2.  **WOFF2 단일 포맷 사용**: 모던 브라우저에서는 WOFF2로 충분합니다.
+        3.  **지능적 서브셋팅**: 필요한 Glyph만 포함시켜 용량을 줄입니다.
+        4.  **프리로드 및 인라인 선언**: `@font-face` 선언을 최적화하고 `preload`를 사용해 로딩 시점을 앞당깁니다.
+        5.  **폴백 폰트 메트릭 정렬**: 폴백 폰트와 웹폰트 간의 크기 차이로 인한 CLS를 방지합니다.
+
+- **[Why Do Browsers Throttle JavaScript Timers?](https://javascriptweekly.com/link/173836/web)** (출처: *JavaScript Weekly #751*)
+    - **핵심 인사이트**: `setTimeout(0)`이 실제로는 0밀리초를 의미하지 않습니다. 브라우저는 배터리 절약, 백그라운드 탭의 성능 저하 방지 등을 위해 타이머의 최소 지연 시간을 강제합니다 (보통 몇 밀리초 이상).
+    - **실무 적용**: 정밀한 타이밍이 필요한 애니메이션이나 고성능 작업에서는 `requestAnimationFrame`을 사용하는 것이 좋습니다. `setTimeout`에 의존하는 코드는 브라우저의 스로틀링 정책에 따라 예상과 다르게 동작할 수 있음을 인지해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Vibe Shift? Senior Developers Ship nearly 2.5x more AI Code than Junior Counterparts](https://www.fastly.com/blog/senior-developers-ship-more-ai-code)** (출처: *Naver FE News (2025-09)*)
+    + 요약: Fastly 설문조사에 따르면, 시니어 개발자가 주니어보다 AI 생성 코드를 프로덕션에 2.5배 더 많이 배포합니다. 시니어는 AI 코드를 수정하는 데 시간을 더 투자하지만, 전반적으로 개발 속도가 향상되었다고 보고했습니다. 이는 경험 많은 개발자가 AI 도구를 더 효과적으로 활용하고 있음을 시사합니다.
+- **[Business Thinking for Designers](https://www.secondwavedive.com/books/)** (출처: *Smashing Newsletter #523*)
+    + 요약: 디자이너가 비즈니스 파트너와 신뢰를 구축하고 효과적으로 소통하는 방법을 다룬 무료 가이드북입니다. 디자인의 가치를 비즈니스 용어로 전달하고 영향력을 극대화하는 실용적인 전략을 제공합니다.
+- **[Getting Accurate Text Lengths with `Intl.Segmenter`](https://javascriptweekly.com/link/173862/web)** (출처: *JavaScript Weekly #751*)
+    + 요약: 문자열의 `.length` 속성은 이모지나 복합 문자의 길이를 정확하게 계산하지 못할 수 있습니다. `Intl.Segmenter` API를 사용하면 사용자에게 표시되는 실제 문자(grapheme) 수를 정확하게 계산할 수 있습니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[CSS Elevator: A Pure CSS State Machine with Floor Navigation](https://frontendfoc.us/link/173669/web)** (출처: *Frontend Focus #707*)
+    ![CSS Elevator 데모 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1756901844/ryk6rpxuzm1wmkmpaabr.png)
+    - **특징**: JavaScript 없이 순수 CSS만으로 엘리베이터의 상태(층 이동, 문 열림/닫힘)를 관리하는 인터랙티브 데모입니다. `:has()`, CSS 카운터, 사용자 정의 속성 등 최신 CSS 기능들을 창의적으로 활용하여 상태 머신을 구현했습니다.
+
+- **[Whimsical SVG hover animation with GSAP](https://codepen.io/jdillon/pen/ByorPXy?utm_source=CSS-Weekly&utm_campaign=Issue-619&utm_medium=web)** (출처: *CSS Weekly #619*)
+    - **특징**: GSAP(GreenSock Animation Platform)를 사용하여 구현된 독창적이고 기발한 SVG 호버 애니메이션입니다. 마우스 오버 시 부드럽고 복잡한 상호작용을 보여주어 시각적 영감을 줍니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **Remix v3, React 대신 Preact 포크 사용 예정**: Remix 프레임워크가 다음 메이저 버전에서 React 의존성을 제거하고, 자체적으로 최적화한 Preact 포크를 사용할 계획이라고 밝혔습니다. (출처: *React Status #442*)
+- **GitHub, WebP 이미지 지원**: GitHub 리포지토리에서 WebP 이미지 형식을 공식적으로 지원하기 시작하여, 이제 README나 이슈에서 이미지 미리보기가 깨지지 않고 표시됩니다. (출처: *Frontend Focus #707*)
+- **Angular 여름 업데이트**: Angular 팀이 zoneless 변경 감지, 새로운 애니메이션 기능, AI 통합 및 향상된 디버깅 도구를 포함한 대규모 여름 업데이트 내용을 공유했습니다. (출처: *JavaScript Weekly #751*)
+- **TypeScript 6.0, strict 모드 기본 활성화 제안**: TypeScript 팀에서 버전 6.0부터 `--strict` 옵션을 기본으로 활성화하는 것을 제안했습니다. 이는 더 강력한 타입 안정성을 기본으로 제공하려는 움직임입니다. (출처: *React Status #442*)
+- **JSX 사양 발표 11주년**: React 생태계의 핵심 구문인 JSX 사양이 발표된 지 11주년이 되었습니다. (출처: *React Status #442*)
+
+## 6. 🎉 릴리스
+
+- **[Electron 38.0](https://javascriptweekly.com/link/173851/web)** (*JavaScript Weekly #751*)
+    + 업데이트: 크로스플랫폼 데스크톱 앱 프레임워크. Chromium 140, Node 22.18, V8 14.0으로 업데이트되었습니다.
+- **[Fresh 2.0 Beta](https://javascriptweekly.com/link/173850/web)** (*JavaScript Weekly #751*)
+    + 업데이트: Deno 기반 웹 프레임워크. 이제 선택적으로 Vite 플러그인으로 실행되어 다양한 새로운 가능성을 열었습니다.
+- **[Redux Toolkit 2.9](https://react.statuscode.com/link/173719/web)** (*React Status #442*)
+    + 업데이트: RTK Query의 구독 및 폴링 시스템 재작성으로 성능 향상, 캐시 항목 제거 시 진행 중인 요청 자동 중단 기능 추가.
+- **[React DayPicker 9.9](https://react.statuscode.com/link/173717/web)** (*React Status #442*)
+    + 업데이트: 접근성을 준수하는 성숙한 날짜 선택기 컴포넌트입니다.
+- **[react-window 2.0](https://react.statuscode.com/link/173699/web)** (*React Status #442*)
+    + 업데이트: 대규모 데이터 목록을 빠르게 렌더링하기 위한 라이브러리. React 18이 필수 요구사항이 되었습니다.
+- **[Cornerstone3D 4.0](https://frontendfoc.us/link/173687/web)** (*Frontend Focus #707*)
+    + 업데이트: 웹 기반 의료 영상 애플리케이션(예: 3D CT 스캔 뷰어)을 구축하기 위한 JavaScript 라이브러리 세트입니다.
+- **[React Native Reanimated 4.1](https://react.statuscode.com/link/173728/web)** (*React Status #442*)
+    + 업데이트: React Native의 애니메이션 라이브러리 Reanimated의 새 버전입니다.
+- **[Ember 6.6](https://javascriptweekly.com/link/173852/web)** (*JavaScript Weekly #751*)
+    + 업데이트: 야심찬 웹 애플리케이션을 위한 프레임워크의 마이너 업데이트입니다.
+- **[Rspack 1.5](https://react.statuscode.com/link/173739/web)** (*React Status #442*)
+    + 업데이트: 빠른 웹 번들러. Barrel 파일 최적화 개선, 파일 시스템 감시 속도 향상, 브라우저 지원 확대 등이 포함되었습니다.
+- **[Node.js v20.19.5 (LTS)](https://javascriptweekly.com/link/173855/web)** (*JavaScript Weekly #751*)
+    + 업데이트: Node.js 20.x 롱텀 서포트(LTS) 버전의 최신 패치 릴리스입니다.
+
+## ✍️ 마치며
+CSS Anchor Positioning과 같은 새로운 표준의 등장은 JavaScript에 의존했던 상호작용을 CSS 네이티브 기능으로 대체하려는 흐름을 보여줍니다. 동시에 AI 코딩 도구의 발전은 개발자가 코드 생성 자체보다는 설계와 품질 관리에 더 집중하도록 요구하고 있습니다. 기술의 발전이 개발자의 역할을 어떻게 변화시키고 있는지 지속적으로 관찰할 필요가 있겠습니다.
+
+#### 출처
+- [JavaScript Weekly #751](https://javascriptweekly.com/issues/751)
+- [Smashing Newsletter #523](https://mailchi.mp/smashingmagazine/523-business-thinking-for-designers)
+- [React Status #442](https://react.statuscode.com/issues/442)
+- [Frontend Focus #707](https://frontendfoc.us/issues/707)
+- [CSS Weekly #619](https://css-weekly.com/issues/619)
+- [NAVER FE News 2025-09](https://github.com/naver/fe-news/blob/master/issues/2025-09.md)
