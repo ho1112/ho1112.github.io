@@ -1,0 +1,119 @@
+---
+title: '🚀 2025-09 W1 #23'
+desc: CSS Anchor Positioning 詳細分析、開発者の認知的負荷管理チップ、Uppyライブラリ紹介 | 2025年9月第1週目 週間技術ニュースレター
+date: 2025-09-06
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、CSSの次世代レイアウト機能であるAnchor Positioningと、AIを活用したコーディングアプローチ（Augmented Coding）が注目を集めました。開発者の認知的負荷を軽減するコード作成術やWebフォント最適化戦略など、実務的な記事も併せて取り上げます。
+
+## 1. 🔍 深掘り
+
+- **[The Basics of Anchor Positioning](https://frontendfoc.us/link/173656/web)** (出典: *Frontend Focus #707*)
+    ![Anchor Positioningの例示画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1756900648/j1bgfik9clzsr0uphjmg.png)
+    - **背景**: 従来、ツールチップやポップオーバーメニューのように、ある要素を別の要素に紐付けて配置する際にはJavaScriptに依存する必要がありました。CSS Anchor Positioningは、これをCSSだけで解決するために登場しました。
+    - **核心機能**: `anchor-name`属性を使用して基準点（anchor）を定義し、`position-anchor`属性でポップオーバー要素をその基準点に接続します。`anchor()`関数を使い、`top`、`bottom`、`left`、`right`の値を動的に計算し、ビューポートの境界に応じて位置を調整できます。
+    - **実務適用**: 動的に位置が変わる必要があるドロップダウンメニュー、コンテキストメニュー、ツールチップなどを作成する際、複雑なJavaScriptの計算なしに、柔軟かつレスポンシブに実装できます。
+    - **注意事項**: まだすべてのブラウザで一般的にサポートされているわけではないため、プロダクション環境で使用する際には<a href="https://frontendfoc.us/link/173657/web" target="_blank">Can I use</a>でのサポート状況の確認とフォールバック処理が必要です。
+
+- **[Augmented Coding: Beyond the Vibes](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)** (出典: *Naver FE News (2025-09)*)
+    - **背景**: AIを利用したコーディング手法が、Vibe Coding（成果物の動作のみに集中）とAugmented Coding（コード品質と設計を重視しAIの補助を活用）に分かれつつあります。ソフトウェア工学の巨匠であるKent Beck氏が、B+Treeライブラリ構築事例を通して両アプローチの違いを説明します。
+    - **核心概念**: Augmented Codingは、TDD（テスト駆動開発）とTidy First原則をAIと組み合わせます。開発者がAIの補助を受けつつも、コードの複雑性管理、テストカバレッジの確保など、プログラミングの本質的な決定に集中する方式です。
+    - **実務適用**: AIを単なるコード生成機としてではなく、ペアプログラミングのパートナーとして活用し、生産性を高めながらも保守可能で高品質なコードを作成するために応用できます。
+    - **インサイト**: AIが開発プロセスを補助するとしても、プログラミングの本質は変わりません。むしろ開発者は、より意味のある設計上の決定に集中できるようになります。
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[ForesightJS](https://github.com/spaansba/ForesightJS)** (出典: *Naver FE News (2025-09)*)
+    ![ForesightJSのロゴまたは例示](https://github.com/user-attachments/assets/f5650c63-4489-4878-bd72-d8954c6a739b)
+    - **概要**: ユーザーの意図を予測してコンテンツをプリロードする軽量ライブラリです。マウス軌跡、キーボードナビゲーション、スクロールパターンを分析し、ユーザーがクリックする前に必要なリソースを事前に取得します。
+    - **特徴**: 従来のhoverベースのプリフェッチングの遅延を改善し、ビューポートベースのプリフェッチングによる不要なリソース浪費を削減します。3G以下の接続やデータ節約モードでは自動的に無効化されます。
+    - **実践チップ**: 設定なしですぐに適用可能で、ページ遷移速度を向上させてユーザーエクスペリエンス（UX）を改善したい場合に役立ちます。
+
+- **[Uppy](https://uppy.io/?utm_source=CSS-Weekly&utm_campaign=Issue-619&utm_medium=web)** (出典: *CSS Weekly #619*)
+    - **概要**: 洗練されたモジュール式のJavaScriptファイルアップローダーです。ローカルディスクだけでなく、Google Drive、Dropbox、Instagramなど多様なソースからのファイルインポートをサポートします。
+    - **使用法**: Uppyは軽量なコアと多彩なプラグインで構成されており、必要な機能だけを選択して統合できます。ファイル復元機能を提供し、UIコンポーネントを直接カスタマイズすることも可能です。
+    - **実践チップ**: ユーザーに多様なアップロードオプションを提供し、アップロードプロセスを視覚的に表示しながら安定したファイル転送を実装する必要があるWebアプリケーションに適しています。
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[Cognitive Load is what matters](https://github.com/zakirullin/cognitive-load/blob/main/README.ko.md)** (出典: *Naver FE News (2025-09)*)
+    ![認知的負荷のダイアグラム](https://github.com/zakirullin/cognitive-load/raw/main/img/cognitiveloadv6.png)
+    - **核心インサイト**: 開発者がタスクを完了するために考えるべき量である「認知的負荷」が、ソフトウェアの複雑性の中核です。人間のワーキングメモリ容量（平均4チャンク）を超えると、コードの理解度が急激に低下します。
+    - **認知的負荷の増加要因**: 複雑な条件分岐、深い継承構造、過度に細分化されたモジュール、DRY原則の濫用などが、外在的認知的負荷を高めます。
+    - **改善策**: 意味のある変数名の使用、早期リターン（early return）、シンプルなインターフェースを持つ深いモジュールの設計、自己記述的なコードによって認知的負荷を削減できます。
+
+- **[You’re Loading Fonts Wrong](https://www.jonoalderson.com/performance/youre-loading-fonts-wrong/)** (出典: *Naver FE News (2025-09)*)
+    - **核心インサイト**: 多くのWebサイトが、過度なフォントフォーマットの使用、遅いリクエストタイミング、サードパーティスニペットへの依存などにより、LCP（Largest Contentful Paint）およびCLS（Cumulative Layout Shift）のパフォーマンスを低下させています。
+    - **最適化戦略**:
+        1.  **システムフォントの優先適用**: 最も高速な方法です。
+        2.  **WOFF2単一フォーマットの使用**: モダンブラウザではWOFF2で十分です。
+        3.  **インテリジェントなサブセット化**: 必要なグリフのみを含めることで容量を削減します。
+        4.  **プリロードとインライン宣言**: `@font-face`宣言を最適化し、`preload`を使用して読み込みタイミングを早めます。
+        5.  **フォールバックフォントメトリクスの調整**: フォールバックフォントとWebフォント間のサイズ差によるCLSを防ぎます。
+
+- **[Why Do Browsers Throttle JavaScript Timers?](https://javascriptweekly.com/link/173836/web)** (出典: *JavaScript Weekly #751*)
+    - **核心インサイト**: `setTimeout(0)`は実際には0ミリ秒を意味しません。ブラウザはバッテリー節約やバックグラウンドタブのパフォーマンス低下防止などのために、タイマーの最小遅延時間を強制します（通常、数ミリ秒以上）。
+    - **実務適用**: 精密なタイミングが必要なアニメーションや高性能タスクでは`requestAnimationFrame`を使用することが推奨されます。`setTimeout`に依存するコードは、ブラウザのスロットリングポリシーによって想定通りに動作しない可能性があることを認識すべきです。
+
+---
+#### 見逃せないコンテンツ
+- **[Vibe Shift? Senior Developers Ship nearly 2.5x more AI Code than Junior Counterparts](https://www.fastly.com/blog/senior-developers-ship-more-ai-code)** (出典: *Naver FE News (2025-09)*)
+    + 要約: Fastlyの調査によると、シニア開発者はジュニアよりもAI生成コードをプロダクション環境に2.5倍多くデプロイしています。シニアはAIコードの修正により多くの時間を費やしますが、全体的な開発速度は向上したと報告しています。これは経験豊富な開発者ほどAIツールを効果的に活用していることを示唆しています。
+- **[Business Thinking for Designers](https://www.secondwavedive.com/books/)** (出典: *Smashing Newsletter #523*)
+    + 要約: デザイナーがビジネスパートナーと信頼関係を築き、効果的にコミュニケーションする方法を扱った無料ガイドブックです。デザインの価値をビジネス用語で伝え、影響力を最大化するための実用的な戦略を提供します。
+- **[Getting Accurate Text Lengths with `Intl.Segmenter`](https://javascriptweekly.com/link/173862/web)** (出典: *JavaScript Weekly #751*)
+    + 要約: 文字列の`.length`プロパティは、絵文字や複合文字の長さを正確に計算できない場合があります。`Intl.Segmenter` APIを使用すると、ユーザーに表示される実際の文字（書記素クラスター）数を正確に計算できます。
+---
+
+## 4. ✨ アイデア
+
+- **[CSS Elevator: A Pure CSS State Machine with Floor Navigation](https://frontendfoc.us/link/173669/web)** (出典: *Frontend Focus #707*)
+    ![CSS Elevatorデモ画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1756901844/ryk6rpxuzm1wmkmpaabr.png)
+    - **特徴**: JavaScriptなしで純粋なCSSだけでエレベーターの状態（階移動、ドアの開閉）を管理するインタラクティブデモです。`:has()`、CSSカウンター、カスタムプロパティなど、最新のCSS機能を創造的に活用してステートマシンを実装しています。
+
+- **[Whimsical SVG hover animation with GSAP](https://codepen.io/jdillon/pen/ByorPXy?utm_source=CSS-Weekly&utm_campaign=Issue-619&utm_medium=web)** (出典: *CSS Weekly #619*)
+    - **特徴**: GSAP (GreenSock Animation Platform) を使用して実装された、独創的で奇抜なSVGホバーアニメーションです。マウスオーバー時に滑らかで複雑なインタラクションを見せ、視覚的なインスピレーションを与えます。
+
+## 5. ⚡️ ミニノート
+
+- **Remix v3、Reactの代わりにPreactフォークを使用予定**: Remixフレームワークが次のメジャーバージョンでReactへの依存をなくし、独自に最適化したPreactフォークを使用する計画を発表しました。(出典: *React Status #442*)
+- **GitHub、WebP画像をサポート**: GitHubリポジトリでWebP画像フォーマットのサポートが正式に開始され、READMEやIssueで画像プレビューが壊れずに表示されるようになりました。(出典: *Frontend Focus #707*)
+- **Angularサマーアップデート**: Angularチームが、zoneless変更検知、新しいアニメーション機能、AI統合、強化されたデバッグツールを含む大規模なサマーアップデートの内容を共有しました。(出典: *JavaScript Weekly #751*)
+- **TypeScript 6.0、strictモードのデフォルト有効化を提案**: TypeScriptチームがバージョン6.0から`--strict`オプションをデフォルトで有効にすることを提案しました。これは、より強力な型安全性を標準で提供しようとする動きです。(出典: *React Status #442*)
+- **JSX仕様発表11周年**: Reactエコシステムの核心構文であるJSX仕様が発表されてから11周年を迎えました。(出典: *React Status #442*)
+
+## 6. 🎉 リリース
+
+- **[Electron 38.0](https://javascriptweekly.com/link/173851/web)** (*JavaScript Weekly #751*)
+    + アップデート: クロスプラットフォームデスクトップアプリフレームワーク。Chromium 140、Node 22.18、V8 14.0にアップデートされました。
+- **[Fresh 2.0 Beta](https://javascriptweekly.com/link/173850/web)** (*JavaScript Weekly #751*)
+    + アップデート: DenoベースのWebフレームワーク。オプションでViteプラグインとして実行できるようになり、多様な新しい可能性が開かれました。
+- **[Redux Toolkit 2.9](https://react.statuscode.com/link/173719/web)** (*React Status #442*)
+    + アップデート: RTK Queryのサブスクリプションおよびポーリングシステムの再作成によるパフォーマンス向上、キャッシュ項目削除時に進行中のリクエストを自動中断する機能追加。
+- **[React DayPicker 9.9](https://react.statuscode.com/link/173717/web)** (*React Status #442*)
+    + アップデート: アクセシビリティに準拠した成熟した日付選択コンポーネントです。
+- **[react-window 2.0](https://react.statuscode.com/link/173699/web)** (*React Status #442*)
+    + アップデート: 大規模なデータリストを高速にレンダリングするためのライブラリ。React 18が必須要件となりました。
+- **[Cornerstone3D 4.0](https://frontendfoc.us/link/173687/web)** (*Frontend Focus #707*)
+    + アップデート: Webベースの医療画像アプリケーション（例: 3D CTスキャンビューア）を構築するためのJavaScriptライブラリセットです。
+- **[React Native Reanimated 4.1](https://react.statuscode.com/link/173728/web)** (*React Status #442*)
+    + アップデート: React NativeのアニメーションライブラリReanimatedの新しいバージョンです。
+- **[Ember 6.6](https://javascriptweekly.com/link/173852/web)** (*JavaScript Weekly #751*)
+    + アップデート: 野心的なWebアプリケーションのためのフレームワークのマイナーアップデートです。
+- **[Rspack 1.5](https://react.statuscode.com/link/173739/web)** (*React Status #442*)
+    + アップデート: 高速Webバンドラ。Barrelファイルの最適化改善、ファイルシステム監視速度の向上、ブラウザサポート拡大などが含まれています。
+- **[Node.js v20.19.5 (LTS)](https://javascriptweekly.com/link/173855/web)** (*JavaScript Weekly #751*)
+    + アップデート: Node.js 20.x ロングタームサポート（LTS）バージョンの最新パッチリリースです。
+
+## ✍️ おわりに
+CSS Anchor Positioningのような新しい標準の登場は、JavaScriptに依存していたインタラクションをCSSネイティブ機能で置き換えようとする流れを示しています。同時に、AIコーディングツールの発展は、開発者がコード生成そのものよりも設計と品質管理により集中することを求めています。技術の進歩が開発者の役割をどのように変化させているのか、継続的に観察していく必要があるでしょう。
+
+#### 出典
+- [JavaScript Weekly #751](https://javascriptweekly.com/issues/751)
+- [Smashing Newsletter #523](https://mailchi.mp/smashingmagazine/523-business-thinking-for-designers)
+- [React Status #442](https://react.statuscode.com/issues/442)
+- [Frontend Focus #707](https://frontendfoc.us/issues/707)
+- [CSS Weekly #619](https://css-weekly.com/issues/619)
+- [NAVER FE News 2025-09](https://github.com/naver/fe-news/blob/master/issues/2025-09.md)
