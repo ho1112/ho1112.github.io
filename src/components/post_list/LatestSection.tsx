@@ -50,11 +50,12 @@ const LatestSection = ({
       >
         {latestPosts.map((post, index) => {
           const isCollapsed = hoveredIndex !== null && hoveredIndex !== index // 10% 상태인지 확인
+          const isExpanded = hoveredIndex === index // 70% 상태인지 확인
 
           return (
             <div
               key={post.url + post.date}
-              className="group"
+              className={`group ${isExpanded ? 'border-2 border-chomin rounded-md' : ''}`}
               onMouseEnter={() => setHoveredIndex(index)}
             >
               <Link href={post.url}>
