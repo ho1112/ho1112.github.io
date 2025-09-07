@@ -164,14 +164,12 @@ export default function ProfilePage({
                         '웹소설 응모 페이지 마이그레이션(vue -> react)',
                         'Next.js, Tailwind CSS 도입으로 성능 개선',
                         '신규 캠페인 페이지 작성',
-                        '반응형 디자인',
                         '응모폼, 서버 전송 API 연결',
                       ]
                     : [
                         'ノベルズ応募ページのマイグレーション(vue -> react)',
                         'Next.js, Tailwind CSSを導入してパフォーマンス改善',
                         '新規キャンペーンページ、scroll, observer eventデザイン適用',
-                        'レスポンシブデザイン',
                         '応募フォーム、サーバー送信API繋ぎ込み',
                       ]
                   ).map((item, index) => (
@@ -187,24 +185,16 @@ export default function ProfilePage({
                 <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        '호텔·투어·항공권 예약 시스템 개발',
-                        '캠페인·플랜 LP 페이지 개발',
-                        '글로벌 네비게이션 컴포넌트 개발',
-                        '검색, 결제 기능 확장',
-                        '해외 호텔 페이지 개발',
-                        '고객 리뷰 페이지 개발',
-                        'GCP<->front data 연동, 데이터 수집 자동화',
-                        '외부SEO전문가와 협업하여 사이트 전체 SEO전략 수립 및 실행',
+                        '호텔·투어·항공권 예약 시스템 및 캠페인 페이지 개발',
+                        '다중 기술 스택 환경에서 Web Components를 활용한 통합 네비게이션 개발',
+                        'SEO 최적화 및 Core Web Vitals 개선 작업',
+                        '외부 API 연동 및 데이터 분석 시스템 구축',
                       ]
                     : [
-                        'ホテル·ツアー・航空券予約システム開発',
-                        'キャンペーン・プランLPページ作成',
-                        'グローバルナビゲーションComponent作成',
-                        '検索, 決済機能拡張',
-                        '海外ホテルページ作成',
-                        'お客様のレビューページ作成',
-                        'GCP<->front data連携、データ取得自動化',
-                        '外部SEO専門家と協業し、サイト全体のSEO戦略を策定・実行',
+                        'ホテル・ツアー・航空券予約システム及びキャンペーンページ開発',
+                        '複数技術スタック環境でWeb Componentsを活用した統合ナビゲーション開発',
+                        'SEO最適化及びCore Web Vitals改善作業',
+                        '外部API連携及びデータ分析システム構築',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
