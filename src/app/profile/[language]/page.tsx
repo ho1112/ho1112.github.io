@@ -176,105 +176,187 @@ export default function ProfilePage({
                 <div className="absolute -left-2 top-0 w-4 h-4 bg-chomin rounded-full"></div>
                 <h3 className="font-semibold text-lg">
                   {language === 'ko'
-                    ? '시니어 프론트엔드 개발자'
-                    : 'シニアフロントエンド開発者'}
+                    ? '프론트엔드 엔지니어 - 프리랜서'
+                    : 'フロントエンドエンジニア - フリーランス'}
                 </h3>
+                {/* leverages */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? '테크스타트업1 • 2022.03 - 현재'
-                    : 'テックスタートアップ • 2022.03 - 現在'}
+                    ? '인재스카우트 업계 • 2024.03 - 현재'
+                    : '人材スカウト業界 • 2024.03 - 現在'}
                 </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.'
-                    : 'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。'}
-                </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        '신졸용 인재 스카우트 시스템의 toB,toC시스템 개발',
+                        '신규 검색, 오퍼, 이벤트 기능 추가',
+                        '컴포넌트 구조 재설계, 리팩토링',
+                        '문의, 트러블 대응',
+                        '기업 리브랜딩 대응',
+                        '생산성 향상(storybook, playwright 도입, Pre-commit Hook으로 ESLint 자동 실행)',
+                        'Sentry 에러 모니터링 및 버그 수정',
+                      ]
+                    : [
+                        '新卒向けの人材スカウトシステムのto B・to Cシステム開発',
+                        '新規検索, オファー, イベント機能追加',
+                        'コンポーネント構造の再設計、リファクタリング',
+                        '問い合わせ、トラブル対応',
+                        '企業リブランディング対応',
+                        '生産性向上(storybook, playwright 導入, Pre-commit HookでESLint自動実行)',
+                        'Sentryエラーモニタリングとバグ修正',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                {/* ピッコマ */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? '테크스타트업2 • 2022.03 - 현재'
-                    : 'テックスタートアップ • 2022.03 - 現在'}
+                    ? '웹툰・소설업계 • 2023.09 - 2024.02'
+                    : 'webマンガ・ノベル業界 • 2023.09 - 2024.02'}
                 </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.'
-                    : 'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。'}
-                </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        '웹소설 응모 페이지 마이그레이션(vue -> react)',
+                        'Next.js, Tailwind CSS 도입으로 성능 개선',
+                        '신규 캠페인 페이지, scroll, observer event디자인 적용',
+                        '반응형 디자인으로 모바일 사용자 경험 개선',
+                        '응모폼, 서버 전송 API 연결',
+                      ]
+                    : [
+                        'ノベルズ応募ページのマイグレーション(vue -> react)',
+                        'Next.js, Tailwind CSSを導入してパフォーマンス改善',
+                        '新規キャンペーンページ、scroll, observer eventデザイン適用',
+                        'レスポンシブデザインでモバイルユーザー体験改善',
+                        '応募フォーム、サーバー送信API繋ぎ込み',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                {/* skyticket */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? '테크스타트업3 • 2022.03 - 현재'
+                    ? '테크스타트업1 • 2022.03 - 현재11'
                     : 'テックスタートアップ • 2022.03 - 現在'}
                 </p>
-                <p className="text-muted-foreground mt-2">
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.',
+                        'TypeScript 도입으로 타입 안정성 확보 및 개발 생산성 향상',
+                        'Stripe 결제 시스템 연동 및 보안 강화',
+                        '반응형 디자인으로 모바일 사용자 경험 개선',
+                      ]
+                    : [
+                        'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。',
+                        'TypeScript導入でタイプ安全性確保と開発生産性向上',
+                        'Stripe決済システム連携とセキュリティ強化',
+                        'レスポンシブデザインでモバイルユーザー体験改善',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                {/* webGame */}
+                <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? 'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.'
-                    : 'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。'}
+                    ? 'Web게임업계 • 2020.12 - 2021.04'
+                    : 'Webゲーム業界 • 2020.20 - 2021.04'}
                 </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? ['레거시 시스템 최신화 및 리팩토링', '리뉴얼 작업']
+                    : [
+                        'レガシー システムの最新化とリファクタリング',
+                        'リニューアル 作業',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              {/* フリーランス - Java */}
+              <div className="border-l-4 border-gray-300 pl-6 relative">
+                <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-300 rounded-full"></div>
+                <h3 className="font-semibold text-lg">
+                  {language === 'ko'
+                    ? 'Java 풀스택 엔지니어 - 프리랜서'
+                    : 'Java フルスタックエンジニア - フリーランス'}
+                </h3>
+                {/* konami */}
+                <p className="text-chomin font-medium">
+                  {language === 'ko'
+                    ? '물류업계• 2019.08 - 2019.12'
+                    : '物流業界• 2019.08 - 2019.12'}
+                </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        '소비세 증세에 대응하여 기반 시스템 수정',
+                        '재고 관리, 집계 시스템 개발',
+                      ]
+                    : [
+                        '消費税増税に対応して基盤システム修正',
+                        '在庫管理, 集計システム開発',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                {/* 東証 */}
+                <p className="text-chomin font-medium">
+                  {language === 'ko'
+                    ? '증권업계• 2020.01 - 2020.11'
+                    : '証券業界• 2020.01 - 2020.11'}
+                </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'toC용 주식 정보 검색 시스템 신규 개발',
+                        '기술 스택 설계 및 환경 구축',
+                        'DB설계',
+                      ]
+                    : [
+                        'toC向けの株情報配信システムを新規開発',
+                        '技術スタック設計',
+                        'DB設計',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
               </div>
               <div className="border-l-4 border-gray-300 pl-6 relative">
                 <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-300 rounded-full"></div>
                 <h3 className="font-semibold text-lg">
                   {language === 'ko'
-                    ? '시니어 프론트엔드 개발자'
-                    : 'シニアフロントエンド開発者'}
+                    ? 'Java 풀스택 엔지니어'
+                    : 'Java フルスタックエンジニア'}
                 </h3>
+                {/* 正社員 */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? '테크스타트업4 • 2022.03 - 현재'
-                    : 'テックスタートアップ • 2022.03 - 現在'}
+                    ? '株式会社GROP SC 시스템솔루션부 • 2018.04 - 2019.06'
+                    : '株式会社GROP SC システムソリューション部 • 2018.04 - 2019.06'}
                 </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.'
-                    : 'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。'}
-                </p>
-                <p className="text-chomin font-medium">
-                  {language === 'ko'
-                    ? '테크스타트업5 • 2022.03 - 현재'
-                    : 'テックスタートアップ • 2022.03 - 現在'}
-                </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.'
-                    : 'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。'}
-                </p>
-                <p className="text-chomin font-medium">
-                  {language === 'ko'
-                    ? '테크스타트업6 • 2022.03 - 현재'
-                    : 'テックスタートアップ • 2022.03 - 現在'}
-                </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.'
-                    : 'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。'}
-                </p>
-              </div>
-              <div className="border-l-4 border-gray-300 pl-6 relative">
-                <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-300 rounded-full"></div>
-                <h3 className="font-semibold text-lg">
-                  {language === 'ko'
-                    ? '프론트엔드 개발자'
-                    : 'フロントエンド開発者'}
-                </h3>
-                <p className="text-chomin font-medium">
-                  {language === 'ko'
-                    ? 'IT 대기업1 • 2020.06 - 2022.02'
-                    : 'IT大企業 • 2020.06 - 2022.02'}
-                </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'Vue.js 기반의 대규모 웹 서비스 개발 및 유지보수를 담당했습니다.'
-                    : 'Vue.jsベースの大規模Webサービス開発とメンテナンスを担当しました。'}
-                </p>
-                <p className="text-chomin font-medium">
-                  {language === 'ko'
-                    ? 'IT 대기업2 • 2020.06 - 2022.02'
-                    : 'IT大企業 • 2020.06 - 2022.02'}
-                </p>
-                <p className="text-muted-foreground mt-2">
-                  {language === 'ko'
-                    ? 'Vue.js 기반의 대규모 웹 서비스 개발 및 유지보수를 담당했습니다.'
-                    : 'Vue.jsベースの大規模Webサービス開発とメンテナンスを担当しました。'}
-                </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'Java 기반의 웹 서비스, 네이티브 프로그램 개발 및 유지보수',
+                        'Spring Boot를 활용한 백엔드 API 개발',
+                        '데이터베이스 설계 및 최적화',
+                      ]
+                    : [
+                        'JavaベースのWebサービス, ネイティブプログラム開発とメンテナンス',
+                        'Spring Bootを活用したバックエンドAPI開発',
+                        'データベース設計と最適化',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </section>
@@ -334,6 +416,48 @@ export default function ProfilePage({
             <div className="space-y-6">
               {professionalProjects.map((project, index) => {
                 const color = colorPalette[index % colorPalette.length]
+                const descriptions =
+                  language === 'ko'
+                    ? [
+                        [
+                          '기존 레거시 시스템을 Next.js로 전면 리뉴얼하여 성능을 3배 향상시켰습니다.',
+                          'TypeScript 도입으로 타입 안정성 확보 및 개발 생산성 향상',
+                          'Stripe 결제 시스템 연동 및 보안 강화',
+                          '반응형 디자인으로 모바일 사용자 경험 개선',
+                        ],
+                        [
+                          'WebSocket을 활용한 실시간 채팅 기능과 파일 공유 시스템을 개발했습니다.',
+                          'Socket.io와 Node.js를 사용한 실시간 통신 구현',
+                          'MongoDB를 활용한 채팅 기록 저장 및 검색 기능',
+                          '사용자 인증 및 권한 관리 시스템 구축',
+                        ],
+                        [
+                          'Vue.js와 Chart.js를 활용한 실시간 데이터 시각화 대시보드를 개발했습니다.',
+                          'Element UI를 사용한 사용자 친화적 인터페이스 구현',
+                          'WebSocket을 통한 실시간 데이터 업데이트',
+                          '다양한 차트 타입 지원 및 커스터마이징 기능',
+                        ],
+                      ]
+                    : [
+                        [
+                          '既存レガシーシステムをNext.jsで全面リニューアルし、性能を3倍向上させました。',
+                          'TypeScript導入でタイプ安全性確保と開発生産性向上',
+                          'Stripe決済システム連携とセキュリティ強化',
+                          'レスポンシブデザインでモバイルユーザー体験改善',
+                        ],
+                        [
+                          'WebSocketを活用したリアルタイムチャット機能とファイル共有システムを開発しました。',
+                          'Socket.ioとNode.jsを使用したリアルタイム通信実装',
+                          'MongoDBを活用したチャット記録保存と検索機能',
+                          'ユーザー認証と権限管理システム構築',
+                        ],
+                        [
+                          'Vue.jsとChart.jsを活用したリアルタイムデータ可視化ダッシュボードを開発しました。',
+                          'Element UIを使用したユーザーフレンドリーなインターフェース実装',
+                          'WebSocketを通じたリアルタイムデータ更新',
+                          '多様なチャートタイプサポートとカスタマイズ機能',
+                        ],
+                      ]
                 return (
                   <div
                     key={index}
@@ -345,9 +469,11 @@ export default function ProfilePage({
                     <p className="text-chomin font-medium mb-3">
                       {project.period}
                     </p>
-                    <p className="text-muted-foreground mb-4">
-                      {project.description}
-                    </p>
+                    <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                      {descriptions[index].map((item, itemIndex) => (
+                        <li key={itemIndex}>{item}</li>
+                      ))}
+                    </ul>
                     <div className="flex flex-wrap gap-2">
                       {project.techs.map((tech) => (
                         <span
@@ -374,6 +500,48 @@ export default function ProfilePage({
               {personalProjects.map((project, index) => {
                 const globalIndex = professionalProjects.length + index
                 const color = colorPalette[globalIndex % colorPalette.length]
+                const descriptions =
+                  language === 'ko'
+                    ? [
+                        [
+                          'Next.js와 MDX를 활용한 정적 블로그 사이트를 구축했습니다.',
+                          '다크모드, 다국어 지원, 검색 기능을 포함합니다.',
+                          'Fuse.js를 사용한 클라이언트 사이드 검색 구현',
+                          'Vercel을 통한 자동 배포 및 성능 최적화',
+                        ],
+                        [
+                          'React와 OpenWeatherMap API를 사용한 반응형 날씨 애플리케이션입니다.',
+                          '위치 기반 날씨 정보와 5일 예보를 제공합니다.',
+                          'PWA 기능으로 모바일 앱처럼 사용 가능',
+                          '오프라인 캐싱 및 푸시 알림 기능 구현',
+                        ],
+                        [
+                          'Vue.js와 Firebase를 활용한 실시간 할 일 관리 애플리케이션입니다.',
+                          '드래그 앤 드롭, 우선순위 설정, 팀 협업 기능을 포함합니다.',
+                          'Vuex를 사용한 상태 관리 및 실시간 동기화',
+                          'Firebase Authentication 및 Firestore 연동',
+                        ],
+                      ]
+                    : [
+                        [
+                          'Next.jsとMDXを活用した静的ブログサイトを構築しました。',
+                          'ダークモード、多言語対応、検索機能を含みます。',
+                          'Fuse.jsを使用したクライアントサイド検索実装',
+                          'Vercelを通じた自動デプロイと性能最適化',
+                        ],
+                        [
+                          'ReactとOpenWeatherMap APIを使用したレスポンシブ天気アプリケーションです。',
+                          '位置ベースの天気情報と5日間の予報を提供します。',
+                          'PWA機能でモバイルアプリのように使用可能',
+                          'オフラインキャッシングとプッシュ通知機能実装',
+                        ],
+                        [
+                          'Vue.jsとFirebaseを活用したリアルタイムタスク管理アプリケーションです。',
+                          'ドラッグ&ドロップ、優先度設定、チーム協力機能を含みます。',
+                          'Vuexを使用した状態管理とリアルタイム同期',
+                          'Firebase AuthenticationとFirestore連携',
+                        ],
+                      ]
                 return (
                   <div
                     key={index}
@@ -385,9 +553,11 @@ export default function ProfilePage({
                     <p className="text-chomin font-medium mb-3">
                       {project.period}
                     </p>
-                    <p className="text-muted-foreground mb-4">
-                      {project.description}
-                    </p>
+                    <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                      {descriptions[index].map((item, itemIndex) => (
+                        <li key={itemIndex}>{item}</li>
+                      ))}
+                    </ul>
                     <div className="flex flex-wrap gap-2">
                       {project.techs.map((tech) => (
                         <span
