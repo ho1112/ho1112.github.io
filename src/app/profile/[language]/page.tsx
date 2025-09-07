@@ -14,100 +14,45 @@ export default function ProfilePage({
   const theme = resolvedTheme === 'dark' ? 'dark' : 'light'
   const language = params.language
 
-  // 색상 로테이션 배열
-  const colorPalette = [
-    {
-      border: 'border-blue-500',
-      bg: 'bg-blue-100 dark:bg-blue-900',
-      text: 'text-blue-800 dark:text-blue-200',
-    },
-    {
-      border: 'border-green-500',
-      bg: 'bg-green-100 dark:bg-green-900',
-      text: 'text-green-800 dark:text-green-200',
-    },
-    {
-      border: 'border-purple-500',
-      bg: 'bg-purple-100 dark:bg-purple-900',
-      text: 'text-purple-800 dark:text-purple-200',
-    },
-    {
-      border: 'border-orange-500',
-      bg: 'bg-orange-100 dark:bg-orange-900',
-      text: 'text-orange-800 dark:text-orange-200',
-    },
-  ]
+  const TECH_STACK = {
+    // 프론트엔드
+    NEXTJS: 'Next.js',
+    TYPESCRIPT: 'TypeScript',
+    REACT: 'React',
+    JAVASCRIPT: 'JavaScript',
+    VUE: 'Vue.js',
+    SCSS: 'SCSS',
+    TAILWIND: 'Tailwind CSS',
+    STYLED_COMPONENTS: 'Styled Components',
+    WEB_COMPONENTS: 'Web Components',
+    LIT: 'Lit',
+    JQUERY: 'jQuery',
 
-  // 프로젝트 데이터
-  const professionalProjects = [
-    {
-      title:
-        language === 'ko'
-          ? 'E-커머스 플랫폼 리뉴얼'
-          : 'Eコマースプラットフォームリニューアル',
-      period: language === 'ko' ? '2023.01 - 2023.08' : '2023.01 - 2023.08',
-      description:
-        language === 'ko'
-          ? '기존 레거시 시스템을 Next.js로 전면 리뉴얼하여 성능을 3배 향상시켰습니다.'
-          : '既存レガシーシステムをNext.jsで全面リニューアルし、性能を3倍向上させました。',
-      techs: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Stripe'],
-    },
-    {
-      title:
-        language === 'ko'
-          ? '실시간 채팅 애플리케이션'
-          : 'リアルタイムチャットアプリケーション',
-      period: language === 'ko' ? '2022.06 - 2022.12' : '2022.06 - 2022.12',
-      description:
-        language === 'ko'
-          ? 'WebSocket을 활용한 실시간 채팅 기능과 파일 공유 시스템을 개발했습니다.'
-          : 'WebSocketを活用したリアルタイムチャット機能とファイル共有システムを開発しました。',
-      techs: ['React', 'Socket.io', 'Node.js', 'MongoDB'],
-    },
-    {
-      title:
-        language === 'ko'
-          ? '관리자 대시보드 시스템'
-          : '管理者ダッシュボードシステム',
-      period: language === 'ko' ? '2021.09 - 2022.01' : '2021.09 - 2022.01',
-      description:
-        language === 'ko'
-          ? 'Vue.js와 Chart.js를 활용한 실시간 데이터 시각화 대시보드를 개발했습니다.'
-          : 'Vue.jsとChart.jsを活用したリアルタイムデータ可視化ダッシュボードを開発しました。',
-      techs: ['Vue.js', 'Chart.js', 'Element UI', 'WebSocket'],
-    },
-  ]
+    // 백엔드
+    JAVA: 'Java',
+    NODEJS: 'Node.js',
+    EXPRESS: 'Express',
+    SPRING_BOOT: 'Spring Boot',
+    MYBATIS: 'MyBatis',
 
-  const personalProjects = [
-    {
-      title:
-        language === 'ko' ? '개인 블로그 플랫폼' : '個人ブログプラットフォーム',
-      period: language === 'ko' ? '2023.09 - 2023.12' : '2023.09 - 2023.12',
-      description:
-        language === 'ko'
-          ? 'Next.js와 MDX를 활용한 정적 블로그 사이트를 구축했습니다. 다크모드, 다국어 지원, 검색 기능을 포함합니다.'
-          : 'Next.jsとMDXを活用した静的ブログサイトを構築しました。ダークモード、多言語対応、検索機能を含みます。',
-      techs: ['Next.js', 'MDX', 'Tailwind CSS', 'Fuse.js'],
-    },
-    {
-      title: language === 'ko' ? '날씨 앱' : '天気アプリ',
-      period: language === 'ko' ? '2023.03 - 2023.05' : '2023.03 - 2023.05',
-      description:
-        language === 'ko'
-          ? 'React와 OpenWeatherMap API를 사용한 반응형 날씨 애플리케이션입니다. 위치 기반 날씨 정보와 5일 예보를 제공합니다.'
-          : 'ReactとOpenWeatherMap APIを使用したレスポンシブ天気アプリケーションです。位置ベースの天気情報と5日間の予報を提供します。',
-      techs: ['React', 'OpenWeatherMap API', 'CSS Modules', 'PWA'],
-    },
-    {
-      title: language === 'ko' ? '할 일 관리 앱' : 'タスク管理アプリ',
-      period: language === 'ko' ? '2022.10 - 2022.12' : '2022.10 - 2022.12',
-      description:
-        language === 'ko'
-          ? 'Vue.js와 Firebase를 활용한 실시간 할 일 관리 애플리케이션입니다. 드래그 앤 드롭, 우선순위 설정, 팀 협업 기능을 포함합니다.'
-          : 'Vue.jsとFirebaseを活用したリアルタイムタスク管理アプリケーションです。ドラッグ&ドロップ、優先度設定、チーム協力機能を含みます。',
-      techs: ['Vue.js', 'Firebase', 'Vuex', 'Vue Draggable'],
-    },
-  ]
+    // 데이터베이스
+    MONGODB: 'MongoDB',
+    MYSQL: 'MySQL',
+    ORACLE: 'Oracle',
+    POSTGRESQL: 'PostgreSQL',
+
+    // 기타
+    DOCKER: 'Docker',
+    AWS: 'AWS',
+    FIREBASE: 'Firebase',
+    C_SHARP: 'C#',
+    STORYBOOK: 'Storybook',
+    PLAYWRIGHT: 'Playwright',
+    JEST: 'Jest',
+    CYPRESS: 'Cypress',
+    POSTMAN: 'Postman',
+    PIXI: 'Pixi.js',
+  }
 
   return (
     <div className="relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
@@ -189,20 +134,18 @@ export default function ProfilePage({
                   {(language === 'ko'
                     ? [
                         '신졸용 인재 스카우트 시스템의 toB,toC시스템 개발',
-                        '신규 검색, 오퍼, 이벤트 기능 추가',
+                        '검색, 이벤트 기능 추가',
                         '컴포넌트 구조 재설계, 리팩토링',
-                        '문의, 트러블 대응',
                         '기업 리브랜딩 대응',
-                        '생산성 향상(storybook, playwright 도입, Pre-commit Hook으로 ESLint 자동 실행)',
+                        '생산성 향상',
                         'Sentry 에러 모니터링 및 버그 수정',
                       ]
                     : [
                         '新卒向けの人材スカウトシステムのto B・to Cシステム開発',
                         '新規検索, オファー, イベント機能追加',
                         'コンポーネント構造の再設計、リファクタリング',
-                        '問い合わせ、トラブル対応',
                         '企業リブランディング対応',
-                        '生産性向上(storybook, playwright 導入, Pre-commit HookでESLint自動実行)',
+                        '生産性向上',
                         'Sentryエラーモニタリングとバグ修正',
                       ]
                   ).map((item, index) => (
@@ -212,7 +155,7 @@ export default function ProfilePage({
                 {/* ピッコマ */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? '웹툰・소설업계 • 2023.09 - 2024.02'
+                    ? '웹툰・웹소설업계 • 2023.09 - 2024.02'
                     : 'webマンガ・ノベル業界 • 2023.09 - 2024.02'}
                 </p>
                 <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
@@ -220,15 +163,15 @@ export default function ProfilePage({
                     ? [
                         '웹소설 응모 페이지 마이그레이션(vue -> react)',
                         'Next.js, Tailwind CSS 도입으로 성능 개선',
-                        '신규 캠페인 페이지, scroll, observer event디자인 적용',
-                        '반응형 디자인으로 모바일 사용자 경험 개선',
+                        '신규 캠페인 페이지 작성',
+                        '반응형 디자인',
                         '응모폼, 서버 전송 API 연결',
                       ]
                     : [
                         'ノベルズ応募ページのマイグレーション(vue -> react)',
                         'Next.js, Tailwind CSSを導入してパフォーマンス改善',
                         '新規キャンペーンページ、scroll, observer eventデザイン適用',
-                        'レスポンシブデザインでモバイルユーザー体験改善',
+                        'レスポンシブデザイン',
                         '応募フォーム、サーバー送信API繋ぎ込み',
                       ]
                   ).map((item, index) => (
@@ -238,22 +181,30 @@ export default function ProfilePage({
                 {/* skyticket */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
-                    ? '테크스타트업1 • 2022.03 - 현재11'
-                    : 'テックスタートアップ • 2022.03 - 現在'}
+                    ? '여행・호텔업계 • 2021.05 - 2023.07'
+                    : '旅行・ホテル業界 • 2021.05 - 2023.07'}
                 </p>
                 <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        'React, Next.js를 활용한 웹 애플리케이션 개발 및 팀 리딩을 담당하고 있습니다.',
-                        'TypeScript 도입으로 타입 안정성 확보 및 개발 생산성 향상',
-                        'Stripe 결제 시스템 연동 및 보안 강화',
-                        '반응형 디자인으로 모바일 사용자 경험 개선',
+                        '호텔·투어·항공권 예약 시스템 개발',
+                        '캠페인·플랜 LP 페이지 개발',
+                        '글로벌 네비게이션 컴포넌트 개발',
+                        '검색, 결제 기능 확장',
+                        '해외 호텔 페이지 개발',
+                        '고객 리뷰 페이지 개발',
+                        'GCP<->front data 연동, 데이터 수집 자동화',
+                        '외부SEO전문가와 협업하여 사이트 전체 SEO전략 수립 및 실행',
                       ]
                     : [
-                        'React、Next.jsを活用したWebアプリケーション開発とチームリーディングを担当しています。',
-                        'TypeScript導入でタイプ安全性確保と開発生産性向上',
-                        'Stripe決済システム連携とセキュリティ強化',
-                        'レスポンシブデザインでモバイルユーザー体験改善',
+                        'ホテル·ツアー・航空券予約システム開発',
+                        'キャンペーン・プランLPページ作成',
+                        'グローバルナビゲーションComponent作成',
+                        '検索, 決済機能拡張',
+                        '海外ホテルページ作成',
+                        'お客様のレビューページ作成',
+                        'GCP<->front data連携、データ取得自動化',
+                        '外部SEO専門家と協業し、サイト全体のSEO戦略を策定・実行',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -285,6 +236,26 @@ export default function ProfilePage({
                     ? 'Java 풀스택 엔지니어 - 프리랜서'
                     : 'Java フルスタックエンジニア - フリーランス'}
                 </h3>
+                {/* 東証 */}
+                <p className="text-chomin font-medium">
+                  {language === 'ko'
+                    ? '증권업계• 2020.01 - 2020.11'
+                    : '証券業界• 2020.01 - 2020.11'}
+                </p>
+                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'toC용 주식 투자 정보 검색 시스템 신규 개발',
+                        '기술 스택 설계 및 환경 구축',
+                      ]
+                    : [
+                        'toC向けの株式投資情報配信システムを新規開発',
+                        '技術スタック設計',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
                 {/* konami */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
@@ -305,29 +276,8 @@ export default function ProfilePage({
                     <li key={index}>{item}</li>
                   ))}
                 </ul>
-                {/* 東証 */}
-                <p className="text-chomin font-medium">
-                  {language === 'ko'
-                    ? '증권업계• 2020.01 - 2020.11'
-                    : '証券業界• 2020.01 - 2020.11'}
-                </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
-                  {(language === 'ko'
-                    ? [
-                        'toC용 주식 정보 검색 시스템 신규 개발',
-                        '기술 스택 설계 및 환경 구축',
-                        'DB설계',
-                      ]
-                    : [
-                        'toC向けの株情報配信システムを新規開発',
-                        '技術スタック設計',
-                        'DB設計',
-                      ]
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
               </div>
+              {/* 正社員 */}
               <div className="border-l-4 border-gray-300 pl-6 relative">
                 <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-300 rounded-full"></div>
                 <h3 className="font-semibold text-lg">
@@ -335,7 +285,6 @@ export default function ProfilePage({
                     ? 'Java 풀스택 엔지니어'
                     : 'Java フルスタックエンジニア'}
                 </h3>
-                {/* 正社員 */}
                 <p className="text-chomin font-medium">
                   {language === 'ko'
                     ? '株式会社GROP SC 시스템솔루션부 • 2018.04 - 2019.06'
@@ -414,79 +363,430 @@ export default function ProfilePage({
               Professional Projects
             </h2>
             <div className="space-y-6">
-              {professionalProjects.map((project, index) => {
-                const color = colorPalette[index % colorPalette.length]
-                const descriptions =
-                  language === 'ko'
+              {/* 인재소개 leverages */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-blue-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko' ? '인재스카우트' : '人材スカウト'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko' ? '2024.03 - 현재' : '2023.03 - 現在'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
                     ? [
-                        [
-                          '기존 레거시 시스템을 Next.js로 전면 리뉴얼하여 성능을 3배 향상시켰습니다.',
-                          'TypeScript 도입으로 타입 안정성 확보 및 개발 생산성 향상',
-                          'Stripe 결제 시스템 연동 및 보안 강화',
-                          '반응형 디자인으로 모바일 사용자 경험 개선',
-                        ],
-                        [
-                          'WebSocket을 활용한 실시간 채팅 기능과 파일 공유 시스템을 개발했습니다.',
-                          'Socket.io와 Node.js를 사용한 실시간 통신 구현',
-                          'MongoDB를 활용한 채팅 기록 저장 및 검색 기능',
-                          '사용자 인증 및 권한 관리 시스템 구축',
-                        ],
-                        [
-                          'Vue.js와 Chart.js를 활용한 실시간 데이터 시각화 대시보드를 개발했습니다.',
-                          'Element UI를 사용한 사용자 친화적 인터페이스 구현',
-                          'WebSocket을 통한 실시간 데이터 업데이트',
-                          '다양한 차트 타입 지원 및 커스터마이징 기능',
-                        ],
+                        '기업 리브랜딩에 대응해 테마 컬러 변경 작업, 가이드라인 컬러 통합 관리',
+                        '검색 조건 저장, 유저 숨기기, 한정 이벤트 기능 추가',
+                        'storybook 도입으로 컴포넌트 문서화, 디자이너 연계 강화',
+                        'pre-commit hook 도입으로 ESLint 자동 실행(import sort & unused)',
+                        'E2E 테스트 도입(playwright)으로 테스트 자동화, 기존 15분짜리 수동 테스트를 2분으로 단축',
+                        'Sentry 에러 수정으로 통지 --> 건으로 줄임',
+                        'Node, Next.js 버전 업그레이드 대응',
                       ]
                     : [
-                        [
-                          '既存レガシーシステムをNext.jsで全面リニューアルし、性能を3倍向上させました。',
-                          'TypeScript導入でタイプ安全性確保と開発生産性向上',
-                          'Stripe決済システム連携とセキュリティ強化',
-                          'レスポンシブデザインでモバイルユーザー体験改善',
-                        ],
-                        [
-                          'WebSocketを活用したリアルタイムチャット機能とファイル共有システムを開発しました。',
-                          'Socket.ioとNode.jsを使用したリアルタイム通信実装',
-                          'MongoDBを活用したチャット記録保存と検索機能',
-                          'ユーザー認証と権限管理システム構築',
-                        ],
-                        [
-                          'Vue.jsとChart.jsを活用したリアルタイムデータ可視化ダッシュボードを開発しました。',
-                          'Element UIを使用したユーザーフレンドリーなインターフェース実装',
-                          'WebSocketを通じたリアルタイムデータ更新',
-                          '多様なチャートタイプサポートとカスタマイズ機能',
-                        ],
+                        '企業リブランディング対応に伴い、テーマカラー変更作業、ガイドラインカラー統合管理',
+                        '検索条件保存、ユーザー非表示、限定イベント機能追加',
+                        'storybook導入でコンポーネントドキュメント化、デザイナー連携強化',
+                        'pre-commit hook導入でESLint自動実行(import sort & unused)',
+                        'E2Eテスト導入(playwright)でテスト自動化、従来15分の手動テストを2分に短縮',
+                        'Sentryエラー修正で通知 --> 件に減らし',
+                        'Node, Next.jsバージョンアップデート対応',
                       ]
-                return (
-                  <div
-                    key={index}
-                    className={`bg-muted/30 rounded-lg p-5 border-l-4 ${color.border}`}
-                  >
-                    <h3 className="font-semibold text-lg mb-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-chomin font-medium mb-3">
-                      {project.period}
-                    </p>
-                    <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                      {descriptions[index].map((item, itemIndex) => (
-                        <li key={itemIndex}>{item}</li>
-                      ))}
-                    </ul>
-                    <div className="flex flex-wrap gap-2">
-                      {project.techs.map((tech) => (
-                        <span
-                          key={tech}
-                          className={`${color.bg} ${color.text} px-3 py-1 rounded-full text-xs font-medium`}
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )
-              })}
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.SCSS,
+                    TECH_STACK.DOCKER,
+                    TECH_STACK.STORYBOOK,
+                    TECH_STACK.PLAYWRIGHT,
+                    TECH_STACK.POSTGRESQL,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* ピッコマ */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-green-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '웹툰・웹소설 플랫폼'
+                    : 'webマンガ・ノベルプラットフォーム'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2023.09 - 2024.02'
+                    : '2023.09 - 2024.02'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        '전년도(2023) 노벨 응모 페이지 Next.js로 마이그레이션',
+                        '2024년 노벨 응모 페이지 신규 작성',
+                        'scroll, observer event로 스크롤에 의한 동적 디자인 적용',
+                        '시즌별 디자인 작성',
+                        '반응형 디자인으로 모바일 사용자 경험 개선',
+                        '응모 API 연동',
+                        '일본, 한국 팀 커뮤니케이션 브리지 역할 및 기술 연동 지원',
+                      ]
+                    : [
+                        '2023年のノベル応募ページをNext.jsへマイグレーション',
+                        '2024年のノベル応募ページを新規作成',
+                        'scroll, observer eventでスクロールによる動的デザイン適用',
+                        'シーズン別デザイン作成',
+                        'レスポンシブデザインでモバイルユーザー体験改善',
+                        '応募API連携',
+                        '日韓チーム間のコミュニケーションブリッジ役と技術連携支援',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.TAILWIND,
+                    TECH_STACK.SCSS,
+                    TECH_STACK.VUE,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* skyticket */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-purple-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '호텔・투어 플랫폼'
+                    : 'ホテル・ツアープラットフォーム'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2021.05 - 2023.07'
+                    : '2021.05 - 2023.07'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'PHP, Vue, React 등 다양한 기술 스택 간 호환성을 위한 서비스 통합 네비게이션을 Web Components로 개발',
+                        'E2E 테스트 도입(Cypress)',
+                        '호텔 어른, 어린이 인원 별 검색, 단체 예약을 위한 다중 객실 검색 기능 추가',
+                        '해외 호텔 검색 메인 페이지 작성 및 콘텐츠 추가',
+                        'Core Web Vitals 개선 - FCP, LCP, CLS 개선',
+                        'SEO 최적화를 위한 BreadCrumb 링크, 메타데이터 설정 및 canonical tag를 활용한 URL 정규화 구현',
+                        'SEO 대응을 위한 호텔, 온천 목록 페이지 자동 생성',
+                        'SSR, SSG(ISR) 페이지 작성',
+                        '외부 리뷰 시스템(yotpo) 연동',
+                        '외부 API 연동으로 호텔 애널리틱스 데이터 수집 및 SEO 최적화 FAQ 페이지 구축',
+                        'Google Tag Manager와 dataLayer 구축으로 웹 분석 시스템 구축',
+                        'Google BigQuery에서 데이터를 추출하여 프론트엔드에서 가공 및 표시하는 시스템 구축',
+                      ]
+                    : [
+                        'PHP, Vue, React 等の各技術スタック間の互換性向上のため、サービス全体の統合ナビゲーションをWeb Componentsで開発',
+                        'E2Eテスト導入(Cypress)',
+                        'ホテル, 温泉の大人・子供別検索, 団体予約用の複数部屋検索機能追加',
+                        '海外ホテル検索メインページ作成とコンテンツ追加',
+                        'Core Web Vitals改善 - FCP, LCP, CLS改善',
+                        'SEO最適化のためのBreadCrumbリンク, メタデータ設定とcanonical tagを利用したURL正規化実装',
+                        'SEO対策のためのホテル, 温泉一覧ページ大量生成',
+                        'SSR, SSG(ISR)ページ作成',
+                        '外部レビューシステム(yotpo)連携',
+                        '外部API連携によるホテルアメニティデータ収集とSEO最適化FAQページ構築',
+                        'Google Tag ManagerとdataLayer構築によるWeb分析システム実装',
+                        'Google BigQueryからデータを抽出し、フロントエンドで加工・表示するシステム構築',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.STYLED_COMPONENTS,
+                    TECH_STACK.EXPRESS,
+                    TECH_STACK.WEB_COMPONENTS,
+                    TECH_STACK.LIT,
+                    TECH_STACK.STORYBOOK,
+                    TECH_STACK.CYPRESS,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 웹 게임 개발 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-red-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko' ? '웹 게임' : 'Webゲーム'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2020.12 - 2021.04'
+                    : '2020.12 - 2021.04'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? ['레거시 코드 리팩토링', '서비스 리뉴얼 대응']
+                    : [
+                        'レガシー コードリファクタリング',
+                        'サービスリニューアル対応',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.JAVASCRIPT,
+                    TECH_STACK.NODEJS,
+                    TECH_STACK.PIXI,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 東証 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-yellow-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '주식 투자 정보 검색 서비스'
+                    : '株式投資情報検索サービス'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2020.01 - 2020.11'
+                    : '2020.01 - 2020.11'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        '메인 SE로 참가하여 기술 스택 설계, 환경 구축 및 데모버전 개발',
+                        '주식 종목 검색 기능 개발',
+                        '기간별 주식 분석 결과 기능 개발',
+                        '클라이언트 화면 개발',
+                      ]
+                    : [
+                        'メインSEとして参加し、技術スタック設計、環境構築、デモバージョン開発',
+                        '株式銘柄検索機能開発',
+                        '期間別株式分析結果機能開発',
+                        'クライアント画面開発',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.JAVA,
+                    TECH_STACK.SPRING_BOOT,
+                    TECH_STACK.POSTGRESQL,
+                    TECH_STACK.MYBATIS,
+                    TECH_STACK.JAVASCRIPT,
+                    TECH_STACK.JQUERY,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* konami */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-pink-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '물류・재고관리 시스템'
+                    : '物流・在庫管理システム'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2019.08 - 2019.12'
+                    : '2019.08 - 2019.12'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        '소비세 8%->10% 증세에 따라 기반 시스템 수정',
+                        '품목, 종류별 재고 관리, 집계 시스템 개발',
+                        'CSV, Excel 출력 기능 개발',
+                        '전용 단말기 화면 개발',
+                      ]
+                    : [
+                        '消費税10%増税に対応して基盤システム修正',
+                        '品目, 種別別在庫管理, 集計システム開発',
+                        'CSV, Excel出力機能開発',
+                        '専用端末画面開発',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.JAVA,
+                    TECH_STACK.JAVASCRIPT,
+                    TECH_STACK.POSTGRESQL,
+                    'JPA',
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* zuken */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-indigo-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '전기 제어・하네스 설계 소프트웨어'
+                    : '電気制御・ハーネス設計ソフトウェア'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2019.01 - 2019.06'
+                    : '2019.01 - 2019.06'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'Windows 네이티브 데스크탑 프로그램 개발',
+                        '고객별 버전 차이에 따른 커스터마이징 유지보수 및 버그 수정',
+                        '외국 문의 대응',
+                      ]
+                    : [
+                        '電気・ハーネス設計用Windowsネイティブデスクトッププログラム開発',
+                        '顧客別バージョン差異に応じたカスタマイズ保守とバグ修正',
+                        '海外問い合わせ対応',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.JAVA,
+                    TECH_STACK.C_SHARP,
+                    TECH_STACK.ORACLE,
+                    TECH_STACK.JAVASCRIPT,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 부품 검색 시스템 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-cyan-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '부품 정보 검색 시스템'
+                    : '部品情報検索システム'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2018.09 - 2018.12'
+                    : '2018.09 - 2018.12'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? ['사내 부품 등록, 검색 화면 개발', '테스트 케이스 작성']
+                    : ['社内部品登録, 検索画面開発', 'テストケース作成']
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.JAVA,
+                    TECH_STACK.POSTGRESQL,
+                    TECH_STACK.JAVASCRIPT,
+                    TECH_STACK.JQUERY,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 第一生命 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-emerald-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '보험 서비스 간 통합 인증 시스템(SSO)'
+                    : '保険サービス間の統合認証システム(SSO)'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2018.04 - 2018.08'
+                    : '2018.04 - 2018.08'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? ['기존 서비스와 신규 서비스 통합, 레거시 코드 최신화']
+                    : ['既存サービスと新規サービス統合, レガシーコード最新化']
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {[TECH_STACK.JAVA, TECH_STACK.JAVASCRIPT, 'DB2'].map(
+                    (tech) => (
+                      <span
+                        key={tech}
+                        className="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 px-3 py-1 rounded-full text-xs font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
             </div>
           </section>
 
@@ -497,80 +797,211 @@ export default function ProfilePage({
               Personal Projects
             </h2>
             <div className="space-y-6">
-              {personalProjects.map((project, index) => {
-                const globalIndex = professionalProjects.length + index
-                const color = colorPalette[globalIndex % colorPalette.length]
-                const descriptions =
-                  language === 'ko'
+              {/* 개인 블로그 플랫폼 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-orange-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko'
+                    ? '개인 블로그 플랫폼'
+                    : '個人ブログプラットフォーム'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2023.09 - 2023.12'
+                    : '2023.09 - 2023.12'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
                     ? [
-                        [
-                          'Next.js와 MDX를 활용한 정적 블로그 사이트를 구축했습니다.',
-                          '다크모드, 다국어 지원, 검색 기능을 포함합니다.',
-                          'Fuse.js를 사용한 클라이언트 사이드 검색 구현',
-                          'Vercel을 통한 자동 배포 및 성능 최적화',
-                        ],
-                        [
-                          'React와 OpenWeatherMap API를 사용한 반응형 날씨 애플리케이션입니다.',
-                          '위치 기반 날씨 정보와 5일 예보를 제공합니다.',
-                          'PWA 기능으로 모바일 앱처럼 사용 가능',
-                          '오프라인 캐싱 및 푸시 알림 기능 구현',
-                        ],
-                        [
-                          'Vue.js와 Firebase를 활용한 실시간 할 일 관리 애플리케이션입니다.',
-                          '드래그 앤 드롭, 우선순위 설정, 팀 협업 기능을 포함합니다.',
-                          'Vuex를 사용한 상태 관리 및 실시간 동기화',
-                          'Firebase Authentication 및 Firestore 연동',
-                        ],
+                        'Next.js와 MDX를 활용한 정적 블로그 사이트를 구축했습니다.',
+                        '다크모드, 다국어 지원, 검색 기능을 포함합니다.',
+                        'Fuse.js를 사용한 클라이언트 사이드 검색 구현',
+                        'Vercel을 통한 자동 배포 및 성능 최적화',
                       ]
                     : [
-                        [
-                          'Next.jsとMDXを活用した静的ブログサイトを構築しました。',
-                          'ダークモード、多言語対応、検索機能を含みます。',
-                          'Fuse.jsを使用したクライアントサイド検索実装',
-                          'Vercelを通じた自動デプロイと性能最適化',
-                        ],
-                        [
-                          'ReactとOpenWeatherMap APIを使用したレスポンシブ天気アプリケーションです。',
-                          '位置ベースの天気情報と5日間の予報を提供します。',
-                          'PWA機能でモバイルアプリのように使用可能',
-                          'オフラインキャッシングとプッシュ通知機能実装',
-                        ],
-                        [
-                          'Vue.jsとFirebaseを活用したリアルタイムタスク管理アプリケーションです。',
-                          'ドラッグ&ドロップ、優先度設定、チーム協力機能を含みます。',
-                          'Vuexを使用した状態管理とリアルタイム同期',
-                          'Firebase AuthenticationとFirestore連携',
-                        ],
+                        'Next.jsとMDXを活用した静的ブログサイトを構築しました。',
+                        'ダークモード、多言語対応、検索機能を含みます。',
+                        'Fuse.jsを使用したクライアントサイド検索実装',
+                        'Vercelを通じた自動デプロイと性能最適化',
                       ]
-                return (
-                  <div
-                    key={index}
-                    className={`bg-muted/30 rounded-lg p-5 border-l-4 ${color.border}`}
-                  >
-                    <h3 className="font-semibold text-lg mb-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-chomin font-medium mb-3">
-                      {project.period}
-                    </p>
-                    <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                      {descriptions[index].map((item, itemIndex) => (
-                        <li key={itemIndex}>{item}</li>
-                      ))}
-                    </ul>
-                    <div className="flex flex-wrap gap-2">
-                      {project.techs.map((tech) => (
-                        <span
-                          key={tech}
-                          className={`${color.bg} ${color.text} px-3 py-1 rounded-full text-xs font-medium`}
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )
-              })}
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {['Next.js', 'MDX', 'Tailwind CSS', 'Fuse.js'].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 블로그 댓글 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-blue-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko' ? '날씨 앱' : '天気アプリ'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2023.03 - 2023.05'
+                    : '2023.03 - 2023.05'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'React와 OpenWeatherMap API를 사용한 반응형 날씨 애플리케이션입니다.',
+                        '위치 기반 날씨 정보와 5일 예보를 제공합니다.',
+                        'PWA 기능으로 모바일 앱처럼 사용 가능',
+                        '오프라인 캐싱 및 푸시 알림 기능 구현',
+                      ]
+                    : [
+                        'ReactとOpenWeatherMap APIを使用したレスポンシブ天気アプリケーションです。',
+                        '位置ベースの天気情報と5日間の予報を提供します。',
+                        'PWA機能でモバイルアプリのように使用可能',
+                        'オフラインキャッシングとプッシュ通知機能実装',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {['React', 'OpenWeatherMap API', 'CSS Modules', 'PWA'].map(
+                    (tech) => (
+                      <span
+                        key={tech}
+                        className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-xs font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              {/* 할 일 관리 앱 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-green-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko' ? '할 일 관리 앱' : 'タスク管理アプリ'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2022.10 - 2022.12'
+                    : '2022.10 - 2022.12'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'Vue.js와 Firebase를 활용한 실시간 할 일 관리 애플리케이션입니다.',
+                        '드래그 앤 드롭, 우선순위 설정, 팀 협업 기능을 포함합니다.',
+                        'Vuex를 사용한 상태 관리 및 실시간 동기화',
+                        'Firebase Authentication 및 Firestore 연동',
+                      ]
+                    : [
+                        'Vue.jsとFirebaseを活用したリアルタイムタスク管理アプリケーションです。',
+                        'ドラッグ&ドロップ、優先度設定、チーム協力機能を含みます。',
+                        'Vuexを使用した状態管理とリアルタイム同期',
+                        'Firebase AuthenticationとFirestore連携',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {['Vue.js', 'Firebase', 'Vuex', 'Vue Draggable'].map(
+                    (tech) => (
+                      <span
+                        key={tech}
+                        className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-xs font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              {/* 게임 개발 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-purple-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko' ? '게임 개발' : 'ゲーム開発'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2021.05 - 2021.08'
+                    : '2021.05 - 2021.08'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'Unity를 사용한 2D 플랫폼 게임 개발',
+                        'C# 스크립팅으로 게임 로직 및 물리 엔진 구현',
+                        '애니메이션 시스템 및 사운드 효과 추가',
+                        '모바일 최적화 및 터치 컨트롤 구현',
+                      ]
+                    : [
+                        'Unityを使用した2Dプラットフォームゲーム開発',
+                        'C#スクリプティングでゲームロジックと物理エンジン実装',
+                        'アニメーションシステムとサウンド効果追加',
+                        'モバイル最適化とタッチコントロール実装',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {['Unity', 'C#', '2D Animation', 'Mobile'].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* AI 챗봇 개발 */}
+              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-teal-500">
+                <h3 className="font-semibold text-lg mb-2">
+                  {language === 'ko' ? 'AI 챗봇 개발' : 'AIチャットボット開発'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">
+                  {language === 'ko'
+                    ? '2020.12 - 2021.03'
+                    : '2020.12 - 2021.03'}
+                </p>
+                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  {(language === 'ko'
+                    ? [
+                        'OpenAI GPT API를 활용한 지능형 챗봇 개발',
+                        '자연어 처리 및 대화 컨텍스트 관리 구현',
+                        '웹 인터페이스와 API 연동으로 실시간 채팅 기능',
+                        '사용자 피드백 수집 및 모델 성능 개선',
+                      ]
+                    : [
+                        'OpenAI GPT APIを活用した知能型チャットボット開発',
+                        '自然言語処理と会話コンテキスト管理実装',
+                        'WebインターフェースとAPI連携でリアルタイムチャット機能',
+                        'ユーザーフィードバック収集とモデル性能改善',
+                      ]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2">
+                  {['OpenAI API', 'Python', 'Flask', 'NLP'].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
         </div>
