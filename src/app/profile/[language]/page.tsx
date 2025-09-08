@@ -3,8 +3,12 @@
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import ItsMeWidgetLoader from '@/components/common/ItsMeWidget'
+import IconBlog from '@/components/icon/Blog'
+import IconExternalLink from '@/components/icon/ExternalLink'
 import IconGithub from '@/components/icon/Github'
 import IconLinkedin from '@/components/icon/LinkedIn'
+import IconNpm from '@/components/icon/Npm'
+import IconVSCode from '@/components/icon/VSCode'
 
 export default function ProfilePage({
   params,
@@ -126,7 +130,7 @@ export default function ProfilePage({
           <section className="border rounded-lg p-6 shadow-sm">
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <span className="w-2 h-2 bg-chomin rounded-full mr-3"></span>
-              Professional Experience
+              Work Experience
             </h2>
             <div className="space-y-6">
               <div className="border-l-4 border-chomin pl-6 relative">
@@ -837,24 +841,18 @@ export default function ProfilePage({
                     ? '개인 블로그 플랫폼'
                     : '個人ブログプラットフォーム'}
                 </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2023.09 - 2023.12'
-                    : '2023.09 - 2023.12'}
-                </p>
+                <p className="text-chomin font-medium mb-3">{'mintora.me'}</p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        'Next.js와 MDX를 활용한 정적 블로그 사이트를 구축했습니다.',
-                        '다크모드, 다국어 지원, 검색 기능을 포함합니다.',
-                        'Fuse.js를 사용한 클라이언트 사이드 검색 구현',
-                        'Vercel을 통한 자동 배포 및 성능 최적화',
+                        'Next.js와 MDX를 활용한 정적 블로그 사이트 구축',
+                        '다크모드, 다국어 지원(한국어/일본어)을 포함한 블로그 플랫폼',
+                        'GitHub Pages를 통한 정적 사이트 호스팅',
                       ]
                     : [
-                        'Next.jsとMDXを活用した静的ブログサイトを構築しました。',
-                        'ダークモード、多言語対応、検索機能を含みます。',
-                        'Fuse.jsを使用したクライアントサイド検索実装',
-                        'Vercelを通じた自動デプロイと性能最適化',
+                        'Next.jsとMDXを活用した静的ブログサイト構築',
+                        'ダークモード、多言語対応(日本語/韓国語)を含むブログプラットフォーム',
+                        'GitHub Pagesを通じた静的サイトホスティング',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -877,31 +875,51 @@ export default function ProfilePage({
                     </span>
                   ))}
                 </div>
+                <div className="flex gap-3 mt-3">
+                  <a
+                    href="https://github.com/ho1112/choco-mint"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconGithub className="w-6 h-6" />
+                  </a>
+                  <a
+                    href={
+                      language === 'ko'
+                        ? 'https://mintora.me/blog/ko/'
+                        : 'https://mintora.me/blog/ja/'
+                    }
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconBlog className="w-6 h-6" />
+                  </a>
+                </div>
               </div>
 
               {/* 블로그 AI 페르소나 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-blue-500">
                 <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko' ? '날씨 앱' : '天気アプリ'}
+                  {language === 'ko'
+                    ? 'AI 페르소나 봇 댓글 자동화 시스템'
+                    : 'AIペルソナボットコメント自動化システム'}
                 </h3>
                 <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2023.03 - 2023.05'
-                    : '2023.03 - 2023.05'}
+                  {'Dead Internet Theory'}
                 </p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        'React와 OpenWeatherMap API를 사용한 반응형 날씨 애플리케이션입니다.',
-                        '위치 기반 날씨 정보와 5일 예보를 제공합니다.',
-                        'PWA 기능으로 모바일 앱처럼 사용 가능',
-                        '오프라인 캐싱 및 푸시 알림 기능 구현',
+                        '블로그 포스트에 AI 봇이 자동으로 댓글을 생성하는 독립적인 댓글 관리 시스템',
+                        '4개의 개성 있는 AI 페르소나가 자연스러운 대화를 통해 댓글 생성',
+                        'GitHub Actions Cron을 활용한 24시간 자동화된 봇 댓글 스케줄링',
+                        'Gemini AI를 이용한 지능적인 댓글 생성 및 대화 맥락 분석',
+                        '댓글 대시보드 화면에서 블로그 댓글 관리(삭제, AI 봇 수동트리거)',
                       ]
                     : [
-                        'ReactとOpenWeatherMap APIを使用したレスポンシブ天気アプリケーションです。',
-                        '位置ベースの天気情報と5日間の予報を提供します。',
-                        'PWA機能でモバイルアプリのように使用可能',
-                        'オフラインキャッシングとプッシュ通知機能実装',
+                        'ブログポストにAIボットが自動的にコメントを生成する独立したコメント管理システム',
+                        '4つの個性豊かなAIペルソナが自然な会話を通じてコメント生成',
+                        'GitHub Actions Cronを活用した24時間自動化されたボットコメントスケジューリング',
+                        'Gemini AIを利用した知的なコメント生成と会話文脈分析',
+                        'コメントダッシュボード画面でブログコメント管理(削除、AIボット手動トリガー)',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -925,31 +943,44 @@ export default function ProfilePage({
                     </span>
                   ))}
                 </div>
+                <div className="flex gap-3 mt-3">
+                  <a
+                    href="https://github.com/ho1112/dead-internet-theory"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconGithub className="w-6 h-6" />
+                  </a>
+                  {/* <a
+                    href="/blog/ko/personal/dead-internet-theory"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconBlog className="w-6 h-6" />
+                    {language === 'ko' ? '제작기' : '制作記'}
+                  </a> */}
+                </div>
               </div>
 
               {/* RAG Chatbot*/}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-green-500">
                 <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko' ? '할 일 관리 앱' : 'タスク管理アプリ'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
                   {language === 'ko'
-                    ? '2022.10 - 2022.12'
-                    : '2022.10 - 2022.12'}
-                </p>
+                    ? 'AI 기반 인터랙티브 포트폴리오 챗봇'
+                    : 'AI基盤インタラクティブポートフォリオチャットボット'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">{'Its Me'}</p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        'Vue.js와 Firebase를 활용한 실시간 할 일 관리 애플리케이션입니다.',
-                        '드래그 앤 드롭, 우선순위 설정, 팀 협업 기능을 포함합니다.',
-                        'Vuex를 사용한 상태 관리 및 실시간 동기화',
-                        'Firebase Authentication 및 Firestore 연동',
+                        'RAG(Retrieval Augmented Generation) 기반의 대화형 포트폴리오 챗봇',
+                        'LangChain + Google Gemini + Supabase를 활용한 지능형 질문-답변 시스템',
+                        '외부 사이트 임베딩 가능한 독립형 위젯으로 구현',
+                        'Shadow DOM을 통한 CSS 격리 및 다국어/다크모드 지원',
                       ]
                     : [
-                        'Vue.jsとFirebaseを活用したリアルタイムタスク管理アプリケーションです。',
-                        'ドラッグ&ドロップ、優先度設定、チーム協力機能を含みます。',
-                        'Vuexを使用した状態管理とリアルタイム同期',
-                        'Firebase AuthenticationとFirestore連携',
+                        'RAG(Retrieval Augmented Generation)基盤の対話型ポートフォリオチャットボット',
+                        'LangChain + Google Gemini + Supabaseを活用した知的質問-回答システム',
+                        '外部サイト埋め込み可能な独立型ウィジェットとして実装',
+                        'Shadow DOMによるCSS分離と多言語/ダークモード対応',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -975,31 +1006,44 @@ export default function ProfilePage({
                     </span>
                   ))}
                 </div>
+                <div className="flex gap-3 mt-3">
+                  <a
+                    href="https://github.com/ho1112/its-me"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconGithub className="w-6 h-6" />
+                  </a>
+                  {/* <a
+                    href="https://its-me-vert.vercel.app/"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconExternalLink className="w-6 h-6" />
+                  </a> */}
+                </div>
               </div>
 
               {/* SBI証券配当金 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-purple-500">
                 <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko' ? '게임 개발' : 'ゲーム開発'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
                   {language === 'ko'
-                    ? '2021.05 - 2021.08'
-                    : '2021.05 - 2021.08'}
-                </p>
+                    ? 'SBI 증권 배당금 자동 수집 및 LINE 알림 봇'
+                    : 'SBI証券配当金自動取得LINE通知Bot'}
+                </h3>
+                <p className="text-chomin font-medium mb-3">{'cha-LINE'}</p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                  개요
                   {(language === 'ko'
                     ? [
-                        'Unity를 사용한 2D 플랫폼 게임 개발',
-                        'C# 스크립팅으로 게임 로직 및 물리 엔진 구현',
-                        '애니메이션 시스템 및 사운드 효과 추가',
-                        '모바일 최적화 및 터치 컨트롤 구현',
+                        'SBI 증권 웹사이트에서 배당금 정보를 자동으로 수집하여 LINE으로 알림을 전송하는 시스템',
+                        'Google Apps Script를 활용한 Gmail 모니터링 및 웹훅 트리거',
+                        'Playwright를 이용한 동적 웹 스크래핑 및 2단계 인증 처리',
+                        'GCP VM 인스턴스에서 Express.js 서버 운영',
                       ]
                     : [
-                        'Unityを使用した2Dプラットフォームゲーム開発',
-                        'C#スクリプティングでゲームロジックと物理エンジン実装',
-                        'アニメーションシステムとサウンド効果追加',
-                        'モバイル最適化とタッチコントロール実装',
+                        'SBI証券ウェブサイトから配当金情報を自動収集し、LINEで通知を送信するシステム',
+                        'Google Apps Scriptを使用したGmail監視とウェブフックトリガー',
+                        'Playwrightを使用した動的ウェブスクレイピングと2段階認証処理',
+                        'GCP VMインスタンスでExpress.jsサーバー運用',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -1014,6 +1058,7 @@ export default function ProfilePage({
                     TECH_STACK.GAS,
                     TECH_STACK.LINESDK,
                     TECH_STACK.EXPRESS,
+                    'Gmail API',
                     'GCP VM',
                   ].map((tech) => (
                     <span
@@ -1024,31 +1069,42 @@ export default function ProfilePage({
                     </span>
                   ))}
                 </div>
+                <div className="flex gap-3 mt-3">
+                  <a
+                    href="https://github.com/ho1112/cha-line"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconGithub className="w-6 h-6" />
+                  </a>
+                  {/* <a
+                    href="/blog/ko/personal/sbi-dividend-line"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconBlog className="w-6 h-6" />
+                    {language === 'ko' ? '제작기' : '制作記'}
+                  </a> */}
+                </div>
               </div>
 
               {/* css 린터 npm/vscode 확장프로그램 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-teal-500">
                 <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko' ? 'AI 챗봇 개발' : 'AIチャットボット開発'}
+                  {language === 'ko' ? 'CSS linter' : 'CSS linter'}
                 </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2020.12 - 2021.03'
-                    : '2020.12 - 2021.03'}
-                </p>
+                <p className="text-chomin font-medium mb-3">{'style sentry'}</p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        'OpenAI GPT API를 활용한 지능형 챗봇 개발',
-                        '자연어 처리 및 대화 컨텍스트 관리 구현',
-                        '웹 인터페이스와 API 연동으로 실시간 채팅 기능',
-                        '사용자 피드백 수집 및 모델 성능 개선',
+                        'CSS 코딩 스탠다드를 자동으로 검증하는 린터 도구',
+                        '미사용 CSS 클래스 자동 검출 및 디자인 시스템 규칙 강제',
+                        'VSCode 확장 프로그램과 CLI 도구를 통한 실시간 코드 품질 관리',
+                        'JSX/TSX 파일과 CSS/SCSS/Less/CSS Modules 파일 간의 의존성 분석',
                       ]
                     : [
-                        'OpenAI GPT APIを活用した知能型チャットボット開発',
-                        '自然言語処理と会話コンテキスト管理実装',
-                        'WebインターフェースとAPI連携でリアルタイムチャット機能',
-                        'ユーザーフィードバック収集とモデル性能改善',
+                        'CSSコーディングスタンダードを自動検証するリンターツール',
+                        '未使用CSSクラスの自動検出とデザインシステムルールの強制',
+                        'VSCode拡張機能とCLIツールによるリアルタイムコード品質管理',
+                        'JSX/TSXファイルとCSS/SCSS/Less/CSS Modulesファイル間の依存関係分析',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -1071,6 +1127,33 @@ export default function ProfilePage({
                       {tech}
                     </span>
                   ))}
+                </div>
+                <div className="flex gap-3 mt-3">
+                  <a
+                    href="https://github.com/ho1112/style-sentry"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconGithub className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.npmjs.com/package/style-sentry"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconNpm className="w-10 h-10" />
+                  </a>
+                  <a
+                    href="https://marketplace.visualstudio.com/items?itemName=leehoyeon.style-sentry-vscode"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconVSCode className="w-6 h-6" />
+                  </a>
+                  {/* <a
+                    href="/blog/ko/personal/style-sentry"
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconBlog className="w-6 h-6" />
+                    {language === 'ko' ? '제작기' : '制作記'}
+                  </a> */}
                 </div>
               </div>
             </div>
