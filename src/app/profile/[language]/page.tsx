@@ -116,7 +116,7 @@ export default function ProfilePage({
         </div>
 
         {/* 챗봇 섹션 */}
-        <div className="mb-8">
+        <div className="mb-8" id="itsme">
           <ItsMeWidgetLoader
             key={`${language}-${theme}`}
             language={language}
@@ -146,7 +146,7 @@ export default function ProfilePage({
                     ? '인재스카우트 업계 • 2024.03 - 현재'
                     : '人材スカウト業界 • 2024.03 - 現在'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
                         '신졸용 인재 스카우트 시스템의 toB,toC시스템 개발',
@@ -174,7 +174,7 @@ export default function ProfilePage({
                     ? '웹툰・웹소설업계 • 2023.09 - 2024.02'
                     : 'webマンガ・ノベル業界 • 2023.09 - 2024.02'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
                         '웹소설 응모 페이지 마이그레이션(vue -> react)',
@@ -198,7 +198,7 @@ export default function ProfilePage({
                     ? '여행・호텔업계 • 2021.05 - 2023.07'
                     : '旅行・ホテル業界 • 2021.05 - 2023.07'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
                         '호텔·투어·항공권 예약 시스템 및 캠페인 페이지 개발',
@@ -222,7 +222,7 @@ export default function ProfilePage({
                     ? 'Web게임업계 • 2020.12 - 2021.04'
                     : 'Webゲーム業界 • 2020.20 - 2021.04'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? ['레거시 시스템 최신화 및 리팩토링', '리뉴얼 작업']
                     : [
@@ -248,7 +248,7 @@ export default function ProfilePage({
                     ? '증권업계• 2020.01 - 2020.11'
                     : '証券業界• 2020.01 - 2020.11'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
                         'toC용 주식 투자 정보 검색 시스템 신규 개발',
@@ -268,7 +268,7 @@ export default function ProfilePage({
                     ? '물류업계• 2019.08 - 2019.12'
                     : '物流業界• 2019.08 - 2019.12'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
                         '소비세 증세에 대응하여 기반 시스템 수정',
@@ -296,7 +296,7 @@ export default function ProfilePage({
                     ? '株式会社GROP SC 시스템솔루션부 • 2018.04 - 2019.06'
                     : '株式会社GROP SC システムソリューション部 • 2018.04 - 2019.06'}
                 </p>
-                <ul className="text-muted-foreground mt-2 list-disc list-inside space-y-1">
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
                         'Java 기반의 웹 서비스, 네이티브 프로그램 개발 및 유지보수',
@@ -1011,14 +1011,33 @@ export default function ProfilePage({
                     href="https://github.com/ho1112/its-me"
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
-                    <IconGithub className="w-6 h-6" />
+                    <IconGithub className="w-4 h-4" />
+                    GitHub
                   </a>
-                  {/* <a
-                    href="https://its-me-vert.vercel.app/"
+                  <button
+                    onClick={() => {
+                      document.getElementById('itsme')?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                      })
+                    }}
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
-                    <IconExternalLink className="w-6 h-6" />
-                  </a> */}
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                      />
+                    </svg>
+                    {language === 'ko' ? '챗봇 보기' : 'チャットボットを見る'}
+                  </button>
                 </div>
               </div>
 
@@ -1031,7 +1050,6 @@ export default function ProfilePage({
                 </h3>
                 <p className="text-chomin font-medium mb-3">{'cha-LINE'}</p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                  개요
                   {(language === 'ko'
                     ? [
                         'SBI 증권 웹사이트에서 배당금 정보를 자동으로 수집하여 LINE으로 알림을 전송하는 시스템',
