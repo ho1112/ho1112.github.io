@@ -385,7 +385,7 @@ export default function ProfilePage({
                         'storybook 도입으로 컴포넌트 문서화, 디자이너 연계 강화',
                         'pre-commit hook 도입으로 ESLint 자동 실행(import sort & unused)',
                         'E2E 테스트 도입(playwright)으로 테스트 자동화, 기존 15분짜리 수동 테스트를 2분으로 단축',
-                        'Sentry 에러 수정으로 통지 --> 건으로 줄임',
+                        'Sentry 에러 모니터링 및 수정, 주간 에러 건수를 94% 절감(1,065건 -> 60건)',
                         'Node, Next.js 버전 업그레이드 대응',
                       ]
                     : [
@@ -394,7 +394,7 @@ export default function ProfilePage({
                         'storybook導入でコンポーネントドキュメント化、デザイナー連携強化',
                         'pre-commit hook導入でESLint自動実行(import sort & unused)',
                         'E2Eテスト導入(playwright)でテスト自動化、従来15分の手動テストを2分に短縮',
-                        'Sentryエラー修正で通知 --> 件に減らし',
+                        'Sentryエラー監視と修正、週次エラー件数を94%削減(1,065件 -> 60件)',
                         'Node, Next.jsバージョンアップデート対応',
                       ]
                   ).map((item, index) => (
