@@ -1,6 +1,7 @@
 'use client'
 
 import { useTheme } from 'next-themes'
+import { useState } from 'react'
 import ItsMeWidgetLoader from '@/components/common/ItsMeWidget'
 import IconGithub from '@/components/icon/Github'
 import IconLinkedin from '@/components/icon/LinkedIn'
@@ -13,6 +14,7 @@ export default function ProfilePage({
   const { resolvedTheme } = useTheme()
   const theme = resolvedTheme === 'dark' ? 'dark' : 'light'
   const language = params.language
+  const [showJavaProjects, setShowJavaProjects] = useState(false)
 
   const TECH_STACK = {
     // 프론트엔드
@@ -40,6 +42,7 @@ export default function ProfilePage({
     MYSQL: 'MySQL',
     ORACLE: 'Oracle',
     POSTGRESQL: 'PostgreSQL',
+    SUPABASE: 'Supabase',
 
     // 기타
     DOCKER: 'Docker',
@@ -52,6 +55,15 @@ export default function ProfilePage({
     CYPRESS: 'Cypress',
     POSTMAN: 'Postman',
     PIXI: 'Pixi.js',
+    LANGCHAIN: 'LangChain',
+    VITE: 'Vite',
+    GEMINI: 'Google Gemini API',
+    LINESDK: 'LINE Messaging API SDK',
+    CSV_PARSER: 'csv-parse',
+    POSTCSS: 'PostCSS',
+    VSCODE_EXTENSION_API: 'VSCode Extension API',
+    VERCEL: 'Vercel',
+    GAS: 'Google Apps Script',
   }
 
   return (
@@ -566,216 +578,247 @@ export default function ProfilePage({
                 </div>
               </div>
 
-              {/* 東証 */}
-              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-yellow-500">
-                <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko'
-                    ? '주식 투자 정보 검색 서비스'
-                    : '株式投資情報検索サービス'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2020.01 - 2020.11'
-                    : '2020.01 - 2020.11'}
-                </p>
-                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                  {(language === 'ko'
-                    ? [
-                        '메인 SE로 참가하여 기술 스택 설계, 환경 구축 및 데모버전 개발',
-                        '주식 종목 검색 기능 개발',
-                        '기간별 주식 분석 결과 기능 개발',
-                        '클라이언트 화면 개발',
-                      ]
-                    : [
-                        'メインSEとして参加し、技術スタック設計、環境構築、デモバージョン開発',
-                        '株式銘柄検索機能開発',
-                        '期間別株式分析結果機能開発',
-                        'クライアント画面開発',
-                      ]
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    TECH_STACK.JAVA,
-                    TECH_STACK.SPRING_BOOT,
-                    TECH_STACK.POSTGRESQL,
-                    TECH_STACK.MYBATIS,
-                    TECH_STACK.JAVASCRIPT,
-                    TECH_STACK.JQUERY,
-                  ].map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-medium"
-                    >
-                      {tech}
+              {/* Java Full-Stack Projects 아코디언 */}
+              <div className="border rounded-lg">
+                <button
+                  onClick={() => setShowJavaProjects(!showJavaProjects)}
+                  className="w-full text-left p-4 flex justify-between items-center hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center">
+                    <span className="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+                    <span className="font-semibold text-lg">
+                      {language === 'ko'
+                        ? 'Java Full-Stack Projects'
+                        : 'Java Full-Stack Projects'}
                     </span>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                  <span className="text-muted-foreground">
+                    {showJavaProjects ? '▼' : '▶'}
+                  </span>
+                </button>
 
-              {/* konami */}
-              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-pink-500">
-                <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko'
-                    ? '물류・재고관리 시스템'
-                    : '物流・在庫管理システム'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2019.08 - 2019.12'
-                    : '2019.08 - 2019.12'}
-                </p>
-                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                  {(language === 'ko'
-                    ? [
-                        '소비세 8%->10% 증세에 따라 기반 시스템 수정',
-                        '품목, 종류별 재고 관리, 집계 시스템 개발',
-                        'CSV, Excel 출력 기능 개발',
-                        '전용 단말기 화면 개발',
-                      ]
-                    : [
-                        '消費税10%増税に対応して基盤システム修正',
-                        '品目, 種別別在庫管理, 集計システム開発',
-                        'CSV, Excel出力機能開発',
-                        '専用端末画面開発',
-                      ]
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    TECH_STACK.JAVA,
-                    TECH_STACK.JAVASCRIPT,
-                    TECH_STACK.POSTGRESQL,
-                    'JPA',
-                  ].map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-3 py-1 rounded-full text-xs font-medium"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
+                {showJavaProjects && (
+                  <div className="px-4 pb-4 space-y-4">
+                    {/* 東証 */}
+                    <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-yellow-500">
+                      <h3 className="font-semibold text-lg mb-2">
+                        {language === 'ko'
+                          ? '주식 투자 정보 검색 서비스'
+                          : '株式投資情報検索サービス'}
+                      </h3>
+                      <p className="text-chomin font-medium mb-3">
+                        {language === 'ko'
+                          ? '2020.01 - 2020.11'
+                          : '2020.01 - 2020.11'}
+                      </p>
+                      <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                        {(language === 'ko'
+                          ? [
+                              '메인 SE로 참가하여 기술 스택 설계, 환경 구축 및 데모버전 개발',
+                              '주식 종목 검색 기능 개발',
+                              '기간별 주식 분석 결과 기능 개발',
+                              '클라이언트 화면 개발',
+                            ]
+                          : [
+                              'メインSEとして参加し、技術スタック設計、環境構築、デモバージョン開発',
+                              '株式銘柄検索機能開発',
+                              '期間別株式分析結果機能開発',
+                              'クライアント画面開発',
+                            ]
+                        ).map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          TECH_STACK.JAVA,
+                          TECH_STACK.SPRING_BOOT,
+                          TECH_STACK.POSTGRESQL,
+                          TECH_STACK.MYBATIS,
+                          TECH_STACK.JAVASCRIPT,
+                          TECH_STACK.JQUERY,
+                        ].map((tech) => (
+                          <span
+                            key={tech}
+                            className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* zuken */}
-              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-indigo-500">
-                <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko'
-                    ? '전기 제어・하네스 설계 소프트웨어'
-                    : '電気制御・ハーネス設計ソフトウェア'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2019.01 - 2019.06'
-                    : '2019.01 - 2019.06'}
-                </p>
-                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                  {(language === 'ko'
-                    ? [
-                        'Windows 네이티브 데스크탑 프로그램 개발',
-                        '고객별 버전 차이에 따른 커스터마이징 유지보수 및 버그 수정',
-                        '외국 문의 대응',
-                      ]
-                    : [
-                        '電気・ハーネス設計用Windowsネイティブデスクトッププログラム開発',
-                        '顧客別バージョン差異に応じたカスタマイズ保守とバグ修正',
-                        '海外問い合わせ対応',
-                      ]
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    TECH_STACK.JAVA,
-                    TECH_STACK.C_SHARP,
-                    TECH_STACK.ORACLE,
-                    TECH_STACK.JAVASCRIPT,
-                  ].map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-3 py-1 rounded-full text-xs font-medium"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
+                    {/* konami */}
+                    <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-pink-500">
+                      <h3 className="font-semibold text-lg mb-2">
+                        {language === 'ko'
+                          ? '물류・재고관리 시스템'
+                          : '物流・在庫管理システム'}
+                      </h3>
+                      <p className="text-chomin font-medium mb-3">
+                        {language === 'ko'
+                          ? '2019.08 - 2019.12'
+                          : '2019.08 - 2019.12'}
+                      </p>
+                      <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                        {(language === 'ko'
+                          ? [
+                              '소비세 8%->10% 증세에 따라 기반 시스템 수정',
+                              '품목, 종류별 재고 관리, 집계 시스템 개발',
+                              'CSV, Excel 출력 기능 개발',
+                              '전용 단말기 화면 개발',
+                            ]
+                          : [
+                              '消費税10%増税に対応して基盤システム修正',
+                              '品目, 種別別在庫管理, 集計システム開発',
+                              'CSV, Excel出力機能開発',
+                              '専用端末画面開発',
+                            ]
+                        ).map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          TECH_STACK.JAVA,
+                          TECH_STACK.JAVASCRIPT,
+                          TECH_STACK.POSTGRESQL,
+                          'JPA',
+                        ].map((tech) => (
+                          <span
+                            key={tech}
+                            className="bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-3 py-1 rounded-full text-xs font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* 부품 검색 시스템 */}
-              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-cyan-500">
-                <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko'
-                    ? '부품 정보 검색 시스템'
-                    : '部品情報検索システム'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2018.09 - 2018.12'
-                    : '2018.09 - 2018.12'}
-                </p>
-                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                  {(language === 'ko'
-                    ? ['사내 부품 등록, 검색 화면 개발', '테스트 케이스 작성']
-                    : ['社内部品登録, 検索画面開発', 'テストケース作成']
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    TECH_STACK.JAVA,
-                    TECH_STACK.POSTGRESQL,
-                    TECH_STACK.JAVASCRIPT,
-                    TECH_STACK.JQUERY,
-                  ].map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-3 py-1 rounded-full text-xs font-medium"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
+                    {/* zuken */}
+                    <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-indigo-500">
+                      <h3 className="font-semibold text-lg mb-2">
+                        {language === 'ko'
+                          ? '전기 제어・하네스 설계 소프트웨어'
+                          : '電気制御・ハーネス設計ソフトウェア'}
+                      </h3>
+                      <p className="text-chomin font-medium mb-3">
+                        {language === 'ko'
+                          ? '2019.01 - 2019.06'
+                          : '2019.01 - 2019.06'}
+                      </p>
+                      <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                        {(language === 'ko'
+                          ? [
+                              'Windows 네이티브 데스크탑 프로그램 개발',
+                              '고객별 버전 차이에 따른 커스터마이징 유지보수 및 버그 수정',
+                              '외국 문의 대응',
+                            ]
+                          : [
+                              '電気・ハーネス設計用Windowsネイティブデスクトッププログラム開発',
+                              '顧客別バージョン差異に応じたカスタマイズ保守とバグ修正',
+                              '海外問い合わせ対応',
+                            ]
+                        ).map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          TECH_STACK.JAVA,
+                          TECH_STACK.C_SHARP,
+                          TECH_STACK.ORACLE,
+                          TECH_STACK.JAVASCRIPT,
+                        ].map((tech) => (
+                          <span
+                            key={tech}
+                            className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-3 py-1 rounded-full text-xs font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* 第一生命 */}
-              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-emerald-500">
-                <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko'
-                    ? '보험 서비스 간 통합 인증 시스템(SSO)'
-                    : '保険サービス間の統合認証システム(SSO)'}
-                </h3>
-                <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2018.04 - 2018.08'
-                    : '2018.04 - 2018.08'}
-                </p>
-                <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
-                  {(language === 'ko'
-                    ? ['기존 서비스와 신규 서비스 통합, 레거시 코드 최신화']
-                    : ['既存サービスと新規サービス統合, レガシーコード最新化']
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-2">
-                  {[TECH_STACK.JAVA, TECH_STACK.JAVASCRIPT, 'DB2'].map(
-                    (tech) => (
-                      <span
-                        key={tech}
-                        className="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 px-3 py-1 rounded-full text-xs font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ),
-                  )}
-                </div>
+                    {/* 부품 검색 시스템 */}
+                    <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-cyan-500">
+                      <h3 className="font-semibold text-lg mb-2">
+                        {language === 'ko'
+                          ? '부품 정보 검색 시스템'
+                          : '部品情報検索システム'}
+                      </h3>
+                      <p className="text-chomin font-medium mb-3">
+                        {language === 'ko'
+                          ? '2018.09 - 2018.12'
+                          : '2018.09 - 2018.12'}
+                      </p>
+                      <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                        {(language === 'ko'
+                          ? [
+                              '사내 부품 등록, 검색 화면 개발',
+                              '테스트 케이스 작성',
+                            ]
+                          : ['社内部品登録, 検索画面開発', 'テストケース作成']
+                        ).map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          TECH_STACK.JAVA,
+                          TECH_STACK.POSTGRESQL,
+                          TECH_STACK.JAVASCRIPT,
+                          TECH_STACK.JQUERY,
+                        ].map((tech) => (
+                          <span
+                            key={tech}
+                            className="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-3 py-1 rounded-full text-xs font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 第一生命 */}
+                    <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-emerald-500">
+                      <h3 className="font-semibold text-lg mb-2">
+                        {language === 'ko'
+                          ? '보험 서비스 간 통합 인증 시스템(SSO)'
+                          : '保険サービス間の統合認証システム(SSO)'}
+                      </h3>
+                      <p className="text-chomin font-medium mb-3">
+                        {language === 'ko'
+                          ? '2018.04 - 2018.08'
+                          : '2018.04 - 2018.08'}
+                      </p>
+                      <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
+                        {(language === 'ko'
+                          ? [
+                              '기존 서비스와 신규 서비스 통합, 레거시 코드 최신화',
+                            ]
+                          : [
+                              '既存サービスと新規サービス統合, レガシーコード最新化',
+                            ]
+                        ).map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-2">
+                        {[TECH_STACK.JAVA, TECH_STACK.JAVASCRIPT, 'DB2'].map(
+                          (tech) => (
+                            <span
+                              key={tech}
+                              className="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 px-3 py-1 rounded-full text-xs font-medium"
+                            >
+                              {tech}
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>
@@ -818,7 +861,14 @@ export default function ProfilePage({
                   ))}
                 </ul>
                 <div className="flex flex-wrap gap-2">
-                  {['Next.js', 'MDX', 'Tailwind CSS', 'Fuse.js'].map((tech) => (
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.TAILWIND,
+                    'MDX',
+                    'github page',
+                  ].map((tech) => (
                     <span
                       key={tech}
                       className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 px-3 py-1 rounded-full text-xs font-medium"
@@ -829,7 +879,7 @@ export default function ProfilePage({
                 </div>
               </div>
 
-              {/* 블로그 댓글 */}
+              {/* 블로그 AI 페르소나 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-blue-500">
                 <h3 className="font-semibold text-lg mb-2">
                   {language === 'ko' ? '날씨 앱' : '天気アプリ'}
@@ -858,20 +908,26 @@ export default function ProfilePage({
                   ))}
                 </ul>
                 <div className="flex flex-wrap gap-2">
-                  {['React', 'OpenWeatherMap API', 'CSS Modules', 'PWA'].map(
-                    (tech) => (
-                      <span
-                        key={tech}
-                        className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-xs font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ),
-                  )}
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.TAILWIND,
+                    TECH_STACK.GEMINI,
+                    TECH_STACK.SUPABASE,
+                    TECH_STACK.VERCEL,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              {/* 할 일 관리 앱 */}
+              {/* RAG Chatbot*/}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-green-500">
                 <h3 className="font-semibold text-lg mb-2">
                   {language === 'ko' ? '할 일 관리 앱' : 'タスク管理アプリ'}
@@ -900,20 +956,28 @@ export default function ProfilePage({
                   ))}
                 </ul>
                 <div className="flex flex-wrap gap-2">
-                  {['Vue.js', 'Firebase', 'Vuex', 'Vue Draggable'].map(
-                    (tech) => (
-                      <span
-                        key={tech}
-                        className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-xs font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ),
-                  )}
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.TAILWIND,
+                    TECH_STACK.GEMINI,
+                    TECH_STACK.LANGCHAIN,
+                    TECH_STACK.SUPABASE,
+                    TECH_STACK.VITE,
+                    TECH_STACK.VERCEL,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              {/* 게임 개발 */}
+              {/* SBI証券配当金 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-purple-500">
                 <h3 className="font-semibold text-lg mb-2">
                   {language === 'ko' ? '게임 개발' : 'ゲーム開発'}
@@ -942,7 +1006,16 @@ export default function ProfilePage({
                   ))}
                 </ul>
                 <div className="flex flex-wrap gap-2">
-                  {['Unity', 'C#', '2D Animation', 'Mobile'].map((tech) => (
+                  {[
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.REACT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.PLAYWRIGHT,
+                    TECH_STACK.GAS,
+                    TECH_STACK.LINESDK,
+                    TECH_STACK.EXPRESS,
+                    'GCP VM',
+                  ].map((tech) => (
                     <span
                       key={tech}
                       className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-3 py-1 rounded-full text-xs font-medium"
@@ -953,7 +1026,7 @@ export default function ProfilePage({
                 </div>
               </div>
 
-              {/* AI 챗봇 개발 */}
+              {/* css 린터 npm/vscode 확장프로그램 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-teal-500">
                 <h3 className="font-semibold text-lg mb-2">
                   {language === 'ko' ? 'AI 챗봇 개발' : 'AIチャットボット開発'}
@@ -982,7 +1055,15 @@ export default function ProfilePage({
                   ))}
                 </ul>
                 <div className="flex flex-wrap gap-2">
-                  {['OpenAI API', 'Python', 'Flask', 'NLP'].map((tech) => (
+                  {[
+                    TECH_STACK.NODEJS,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.POSTCSS,
+                    TECH_STACK.VSCODE_EXTENSION_API,
+                    'Babel Parser',
+                    'Glob',
+                    'Commander.js',
+                  ].map((tech) => (
                     <span
                       key={tech}
                       className="bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 px-3 py-1 rounded-full text-xs font-medium"
