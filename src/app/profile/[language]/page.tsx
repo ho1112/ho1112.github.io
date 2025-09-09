@@ -10,6 +10,10 @@ import IconLinkedin from '@/components/icon/LinkedIn'
 import IconNpm from '@/components/icon/Npm'
 import IconVSCode from '@/components/icon/VSCode'
 
+export async function generateStaticParams() {
+  return [{ language: 'ko' }, { language: 'ja' }]
+}
+
 export default function ProfilePage({
   params,
 }: {
