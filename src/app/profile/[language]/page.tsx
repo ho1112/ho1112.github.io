@@ -992,6 +992,7 @@ export default function ProfilePage({
                     TECH_STACK.REACT,
                     TECH_STACK.TYPESCRIPT,
                     TECH_STACK.TAILWIND,
+                    'Shadcn/ui',
                     TECH_STACK.GEMINI,
                     TECH_STACK.LANGCHAIN,
                     TECH_STACK.SUPABASE,
