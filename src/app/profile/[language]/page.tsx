@@ -116,13 +116,13 @@ export default function ProfilePage({
         </div>
 
         {/* 챗봇 섹션 */}
-        <div className="mb-8" id="itsme">
+        {/* <div className="mb-8" id="itsme">
           <ItsMeWidgetLoader
             key={`${language}-${theme}`}
             language={language}
             theme={theme}
           />
-        </div>
+        </div> */}
 
         {/* 프로필 콘텐츠 섹션들 - 하이브리드 스타일 */}
         <div className="space-y-8">
