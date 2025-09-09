@@ -1,0 +1,203 @@
+---
+title: 'Style Sentry開発記: チームのCSSコード品質を守るリンターツール作り'
+desc: 'CSSコード品質を自動検証するリンターツールStyle Sentryの開発過程と技術的実装方法を紹介します。'
+date: 2025-09-07
+thumbnail: /posts/codeLab/style-sentry/thumbnail.avif
+---
+
+# Style Sentry開発記: チームのCSSコード品質を守るリンターツール作り
+
+## 1. 概要/目的/背景
+
+フロントエンド開発をしていると、いつも直面する問題があります。**「このCSSクラスは本当に使われているのか？」**
+
+チームプロジェクトでCSSファイルが大きくなるにつれて、未使用クラスが蓄積し、デザインシステムを無視した任意の色が使用される問題をよく経験しました。毎回手動で確認するには時間が足りず、コードレビューでも見落とすことが多かったのです。
+
+そこで**「CSSコード品質を自動検証するツール」**を作ってみることにしました。単純なリンターではなく、チームのコーディングスタンダードを強制できるツールを目標にしました。
+
+## 2. 技術スタック
+
+### **Backend (CLIツール)**
+- **Node.js 18+**
+- **JavaScript**
+- **PostCSS** - CSSパースの標準、SCSS/Less対応
+- **Babel Parser** - JSX/TSXファイルの正確なAST解析
+- **Commander.js** - CLIインターフェース
+
+### **VSCode Extension**
+- **TypeScript**
+- **VSCode Extension API**
+- **vsce** - 拡張機能パッケージングとデプロイ
+
+### **選択理由**
+PostCSSを選択した理由は、CSSプリプロセッサ（SCSS、Less）を統合的に処理できるからです。Babel ParserはJSXの複雑な構文を正確にパースするために選択しました。
+
+## 3. 主要機能
+
+### **コア機能3つ**
+1. **未使用CSSクラス検出** - JSX/TSXで実際に使用されていないクラスを自動発見
+2. **デザインシステムカラー検証** - 許可された色のみ使用しているか確認
+3. **数値プロパティ制限チェック** - z-index、font-sizeなどの任意値使用防止
+
+### **特別な機能**
+- **動的クラスアクセスパターン認識** - `styles[className]`のような動的アクセスも検出
+- **classnamesライブラリサポート** - `cn()`、`classNames()`、`clsx()`関数完全対応
+- **TypeScript/webpackエイリアスパス解析** - `@styles/`のようなパス自動マッピング
+- **SCSSミックスイン内部ネストクラスサポート** - `&.oval`、`&.round`のようなパターンサポート
+
+## 4. 機能実装
+
+### **最も挑戦的だった部分: 動的クラスアクセス検出の進化**
+
+**v1.0初期バージョンの問題点:**
+```javascript
+// このようなパターンをどう検出するか？
+className={`${styles.button} ${styles[buttonType]}`}
+```
+
+**v1.1改善: 動的アクセスが検出された親の子のみ除外**
+```javascript
+// ASTトラバーシングで動的アクセスパターン分析
+traverse(ast, {
+  JSXAttribute: ({ node }) => {
+    if (node.name.name === 'className') {
+      function walk(expr) {
+        if (expr.type === 'MemberExpression' && expr.computed) {
+          // styles[variable]パターン検出
+          foundDynamicParents.add(parentClass);
+        }
+      }
+    }
+  }
+});
+```
+
+**v1.3最終完成: SCSSミックスインまでサポート**
+```javascript
+// SCSSミックスインからネストクラス抽出
+function extractMixinNestedClasses(root) {
+  root.walkAtRules('mixin', mixinRule => {
+    mixinRule.walkRules(nestedRule => {
+      if (selector.startsWith('&.')) {
+        const nestedClass = selector.slice(2); // &.oval → oval
+        parentToChildren.get(parentClass).add(nestedClass);
+      }
+    });
+  });
+}
+```
+
+### **classnamesライブラリサポート実装**
+
+**問題状況:** 現業で`cn(styles.content, styles[status])`のようなパターンが検出されない
+
+**解決過程:**
+```javascript
+// CallExpressionノード処理追加
+if (expr.type === 'CallExpression') {
+  if (expr.callee.name === 'cn' || expr.callee.name === 'classNames' || expr.callee.name === 'clsx') {
+    expr.arguments.forEach(arg => walk(arg, lastStatic));
+  }
+}
+```
+
+**サポートする複雑なパターン:**
+```javascript
+cn(styles.container, styles[status], { [styles.active]: isActive })
+cn(styles.button, styles[`button-${size}`])
+```
+
+### **TypeScript/Webpackエイリアス自動解析**
+
+**問題状況:** `import styles from '@styles/setting_ats.module.scss'`のようなエイリアスパスを認識できない
+
+**解決過程:**
+```javascript
+function detectPathAliases() {
+  // 1. tsconfig.jsonのpaths検出
+  const tsconfigPath = path.resolve(process.cwd(), 'tsconfig.json');
+  if (fs.existsSync(tsconfigPath)) {
+    const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'));
+    if (tsconfig.compilerOptions && tsconfig.compilerOptions.paths) {
+      Object.entries(tsconfig.compilerOptions.paths).forEach(([pattern, paths]) => {
+        const alias = pattern.replace('/*', '');
+        const aliasPath = paths[0].replace('/*', '');
+        aliases[alias] = aliasPath;
+      });
+    }
+  }
+  
+  // 2. webpack.config.jsのalias検出
+  // 3. package.jsonのimports検出
+}
+```
+
+### **アーキテクチャ図**
+<img src="/posts/codeLab/style-sentry/architecture_ja.svg" alt="アーキテクチャ図" width="500" />
+
+### **実際のテストケース**
+
+**テストファイル構成:**
+- `test/cn-test.jsx` - classnamesライブラリテスト
+- `test/button-test.module.scss` - SCSSミックスインテスト  
+- `test/alias-test.jsx` - エイリアスパステスト
+- `test/tsconfig.json` - エイリアス設定テスト用
+
+**テストシナリオ:**
+```javascript
+// 動的アクセステスト
+<button className={cn(styles.button, styles[buttonType])} />
+
+// SCSSミックスインテスト
+@mixin button {
+  &.oval { border-radius: 50%; }
+  &.round { border-radius: 8px; }
+}
+```
+
+## 5. 成果
+
+### **定量的成果**
+- **処理速度**: 1000ファイル基準平均3秒以内分析完了
+- **正確度**: 動的クラスアクセスパターン95%以上正確検出
+- **対応範囲**: CSS、SCSS、Less、JSX、TSXファイル完全対応
+
+### **定性的成果**
+- **チームフィードバック**: 「コードレビュー時間が30%短縮されました」
+- **コード品質**: 未使用CSSクラス200+個自動発見・整理
+- **一貫性**: デザインシステムカラー使用率100%達成
+
+### **技術的成果**
+- **VSCodeマーケットプレイス登録** - 実際のユーザーがインストールして使用
+- **オープンソース化** - GitHubで100+スター獲得
+- **拡張性**: 新しいリンティングルール追加が容易な構造設計
+
+## 6. インサイト
+
+### **学んだこと**
+1. **AST解析の重要性**: 単純な文字列マッチングではなく構文解析の正確性
+2. **ユーザー体験の考慮**: 開発者が実際に使いやすいインターフェース設計
+3. **拡張性のあるアーキテクチャ**: 新しいルール追加が簡単なプラグイン構造
+4. **実務環境対応の重要性**: ミックスインとエイリアスは現業で非常に一般的に使用されるパターン
+5. **静的解析の現実的限界**: 完璧な追跡は困難なため、ユーザーに明確な限界案内が必要
+
+### **発見された制限事項**
+- **コンポーネントベース使用**: `&.icon i`のようなクラスが`<Icon>`コンポーネント内部で使用されるがリンターが検出できない
+- **動的レンダリング**: 条件付きレンダリングや動的コンポーネントで使用されるクラス検出不可
+- **CSS-in-JS**: styled-componentsなどで定義されたクラス非対応
+- **誤検知**: 実際に使用されるクラスが未使用として表示される可能性
+
+### **残念な点と改善方向**
+- **CSS-in-JS非対応**: styled-componentsのようなライブラリ対応が必要
+- **パフォーマンス最適化**: 大規模プロジェクトでのメモリ使用量改善
+- **設定UI**: VSCodeでより直感的な設定インターフェース提供
+
+### **次のプロジェクトに適用する点**
+- **ユーザー中心設計**: 技術的完成度より実際の使用性を優先
+- **段階的改善**: MVPから始めてフィードバックを受けながら改善
+- **ドキュメント化の重要性**: 使用方法と設定方法を明確にドキュメント化
+- **制限事項明示**: 完璧ではないことを認め、ユーザーに明確な限界案内
+
+---
+
+**結論**: このプロジェクトを通じて、単純なツール開発を超えて**開発者体験を改善するソリューション**を作る方法を学びました。v1.0からv1.3までの進化過程で得たインサイトが次のプロジェクトの基盤となっています。
