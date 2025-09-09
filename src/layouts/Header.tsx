@@ -14,7 +14,7 @@ import { Language } from './theme/Language'
 export const Header = () => {
   const { ref, transform, currentScrollTop } = useScrollTracker(60)
   const pathname = usePathname()
-  const currentLanguage = pathname.startsWith('/blog/ko') ? 'ko' : 'ja'
+  const currentLanguage = pathname.includes('/ko') ? 'ko' : 'ja'
 
   return (
     <>
@@ -27,8 +27,19 @@ export const Header = () => {
         )}
       >
         <div className="mt-1 flex h-[60px] w-full max-w-[1200px] items-center justify-between px-4">
-          <div className="flex items-center text-lg font-medium">
-            <Link href={`/blog/${currentLanguage}/`}>mintora</Link>
+          <div className="flex items-center gap-4 text-lg font-medium">
+            <Link
+              href={`/blog/${currentLanguage}/`}
+              className="text-2xl font-bold"
+            >
+              mintora
+            </Link>
+            <Link
+              href={`/profile/${currentLanguage}/`}
+              className="animate-tada-delayed"
+            >
+              profile
+            </Link>
           </div>
           <div className="flex gap-3">
             <ThemeSwitch />

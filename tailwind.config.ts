@@ -178,10 +178,18 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'tada-with-delay': {
+          '0%, 33.3%, 100%': { transform: 'scale3d(1, 1, 1)' },
+          '3.3%, 10%, 16.6%': {
+            transform: 'scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg)',
+          },
+          '6.6%, 13.3%, 20%': {
+            transform: 'scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg)',
+          },
+        },
       },
       animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
+        'tada-delayed': 'tada-with-delay 4s ease-in-out infinite',
       },
     },
   },
