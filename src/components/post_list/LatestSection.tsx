@@ -55,8 +55,13 @@ const LatestSection = ({
           return (
             <div
               key={post.url + post.date}
-              className={`group ${isExpanded ? 'border-2 border-chomin rounded-md' : ''}`}
-              onMouseEnter={() => setHoveredIndex(index)}
+              className={`group ${isExpanded ? 'md:border-2 md:border-chomin md:rounded-md' : ''}`}
+              onMouseEnter={() => {
+                // PC에서만 마우스 오버 기능 활성화
+                if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+                  setHoveredIndex(index)
+                }
+              }}
             >
               <Link href={post.url}>
                 <li
@@ -90,13 +95,13 @@ const LatestSection = ({
                         </span>
                       </div>
                       <h2
-                        className={`my-1 font-bold text-gray-800 dark:text-white md:text-white ${isCollapsed ? 'text-xs lg:text-sm line-clamp-2' : 'text-lg lg:text-xl line-clamp-2 md:line-clamp-2 lg:line-clamp-none'}`}
+                        className={`my-1 font-bold text-gray-800 dark:text-white md:text-white text-base lg:text-lg line-clamp-2 md:${isCollapsed ? 'text-xs lg:text-sm line-clamp-2' : 'text-lg lg:text-xl line-clamp-2 lg:line-clamp-none'}`}
                       >
                         {post.title}
                       </h2>
                       {/* 모바일/태블릿에서는 항상 표시, PC에서만 10% 상태일 때 숨김 */}
                       <div
-                        className={`flex gap-3 font-medium text-[10px] lg:text-xs text-gray-500 dark:text-white md:text-white ${isCollapsed ? 'lg:hidden' : ''}`}
+                        className={`flex gap-3 font-medium text-[10px] lg:text-xs text-gray-500 dark:text-white md:text-white ${isCollapsed ? 'md:hidden' : ''}`}
                       >
                         <div className="flex items-center gap-1">
                           <CalendarDays className="w-3.5" />
