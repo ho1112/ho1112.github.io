@@ -898,13 +898,13 @@ export default function ProfilePage({
                   >
                     <IconVSCode className="w-6 h-6" />
                   </a>
-                  {/* <a
-                    href="/blog/ko/personal/style-sentry"
+                  <a
+                    href={`/blog/${language}/codeLab/style-sentry`}
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
                     <IconBlog className="w-6 h-6" />
-                    {language === 'ko' ? '제작기' : '制作記'}
-                  </a> */}
+                    post
+                  </a>
                 </div>
               </div>
             </div>
