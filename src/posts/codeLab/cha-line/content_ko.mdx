@@ -36,9 +36,9 @@ thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 - **Gmail API**
 
 ### LINE Bot Integration
-- @line/bot-sdk (v10.0.0)
-- LINE Flex Message
-- LINE Webhook
+- **@line/bot-sdk (v10.0.0)**
+- **LINE Flex Message**
+- **LINE Webhook**
 
 ### Deployment
 - **Google Cloud Platform (VM)**
@@ -101,23 +101,23 @@ async function downloadDividendCSV(page: Page) {
   // 배당금 페이지로 이동
   const dividendUrl = `https://site.sbisec.co.jp/account/assets/dividends?dispositionDateFrom=${from}&dispositionDateTo=${to}`;
   await page.goto(dividendUrl, { timeout: 120000 });
-  
+
   // CSV 다운로드 버튼 클릭
   const downloadPromise = page.waitForEvent('download');
   await page.click('button.text-xs.link-light:has-text("CSV")');
   const download = await downloadPromise;
-  
+
   // 파일 저장 및 파싱
   const path = await download.path();
   const fileBuffer = fs.readFileSync(path!);
   const csvContent = iconv.decode(fileBuffer, 'Shift_JIS');
-  
+
   return parseCSV(csvContent);
 }
 ```
 
 ### LINE Flex 메시지로 변환
-```
+```typescript
 function buildItemBlocks(items: DividendItem[]) {
   const blocks: any[] = [];
   for (const it of items) {
@@ -158,7 +158,7 @@ function buildItemBlocks(items: DividendItem[]) {
   - 보조 정보 (수량/수령일/계좌): 작은 글씨, 회색, 줄바꿈
 
 ### 이메일에 라벨을 추가
-```
+```javascript
     if (response.getResponseCode() == 200) {
       console.log('[운영] 웹훅 호출 성공. 이메일에 라벨을 추가합니다.');
       const label = getOrCreateLabel(PROCESSED_LABEL);
