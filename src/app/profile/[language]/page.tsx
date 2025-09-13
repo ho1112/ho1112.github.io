@@ -708,13 +708,13 @@ export default function ProfilePage({
                   >
                     <IconGithub className="w-6 h-6" />
                   </a>
-                  {/* <a
-                    href="/blog/ko/personal/dead-internet-theory"
+                  <a
+                    href={`/blog/${language}/codeLab/dead-internet-theory`}
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
                     <IconBlog className="w-6 h-6" />
-                    {language === 'ko' ? '제작기' : '制作記'}
-                  </a> */}
+                    post
+                  </a>
                 </div>
               </div>
 
@@ -773,6 +773,13 @@ export default function ProfilePage({
                     <IconGithub className="w-4 h-4" />
                     GitHub
                   </a>
+                  <a
+                    href={`/blog/${language}/codeLab/its-me`}
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconBlog className="w-6 h-6" />
+                    post
+                  </a>
                   <ChatbotButton language={language} />
                 </div>
               </div>
@@ -830,13 +837,13 @@ export default function ProfilePage({
                   >
                     <IconGithub className="w-6 h-6" />
                   </a>
-                  {/* <a
-                    href="/blog/ko/personal/sbi-dividend-line"
+                  <a
+                    href={`/blog/${language}/codeLab/cha-line`}
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
                     <IconBlog className="w-6 h-6" />
-                    {language === 'ko' ? '제작기' : '制作記'}
-                  </a> */}
+                    post
+                  </a>
                 </div>
               </div>
 
