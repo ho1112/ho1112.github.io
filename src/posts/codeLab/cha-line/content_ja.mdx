@@ -36,9 +36,9 @@ thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 - **Gmail API**
 
 ### LINE Bot Integration
-- @line/bot-sdk (v10.0.0)
-- LINE Flex Message
-- LINE Webhook
+- **@line/bot-sdk (v10.0.0)**
+- **LINE Flex Message**
+- **LINE Webhook**
 
 ### Deployment
 - **Google Cloud Platform (VM)**
@@ -90,7 +90,7 @@ thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 **配当金ページ移動、CSVダウンロード**
 <img src="/posts/codeLab/cha-line/csvDownload.avif" alt="csvダウンロード"  />
 7. ログイン後配当金ページに移動、元々は日付を指定して検索する必要がありますがクエリストリングで直接検索結果画面にダイレクト移動が可能です。
-最近1週間に設定したクエリストリングで直接検索結果画面に移動後、CSVダウンロードボタンをクリックしてCSVを保存した後playwrightを終了します
+最近1週間に設定したクエリストリングで直接検索結果画面に移動後、CSVダウンロードボタンをクリックしてCSVを保存した後playwrightを終了します。
 
 
 ### CSVダウンロード・パース
@@ -101,23 +101,23 @@ async function downloadDividendCSV(page: Page) {
   // 配当金ページに移動
   const dividendUrl = `https://site.sbisec.co.jp/account/assets/dividends?dispositionDateFrom=${from}&dispositionDateTo=${to}`;
   await page.goto(dividendUrl, { timeout: 120000 });
-  
+
   // CSVダウンロードボタンクリック
   const downloadPromise = page.waitForEvent('download');
   await page.click('button.text-xs.link-light:has-text("CSV")');
   const download = await downloadPromise;
-  
+
   // ファイル保存・パース
   const path = await download.path();
   const fileBuffer = fs.readFileSync(path!);
   const csvContent = iconv.decode(fileBuffer, 'Shift_JIS');
-  
+
   return parseCSV(csvContent);
 }
 ```
 
 ### LINE Flexメッセージに変換
-```
+```typescript
 function buildItemBlocks(items: DividendItem[]) {
   const blocks: any[] = [];
   for (const it of items) {
@@ -158,7 +158,7 @@ function buildItemBlocks(items: DividendItem[]) {
   - 補助情報 (数量/受取日/口座): 小さい文字、グレー、改行
 
 ### メールにラベルを追加
-```
+```javascript
     if (response.getResponseCode() == 200) {
       console.log('[運営] ウェブフック呼び出し成功。メールにラベルを追加します。');
       const label = getOrCreateLabel(PROCESSED_LABEL);

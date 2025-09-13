@@ -1,39 +1,35 @@
 ---
 title: 'Dead Internet Theory - AIボットコメント自動化システム開発記'
 desc: 'ブログコメントシステムを完全に独立して構築し、AIボットが自然な会話を通じてコメントを生成する「Dead Internet Theory」を実装したプロジェクトです。'
-date: 2024-12-19
+date: 2025-09-07
 thumbnail: /posts/codeLab/dead-internet-theory/thumbnail.avif
-category: 'codeLab'
 ---
 
 # Dead Internet Theory - AIボットコメント自動化システム開発記
 
-## 1. プロジェクト概要
+## 1. 概要
+正直に言うと、私のブログコメント欄はほとんど「開店休業」状態でした。たまに独り言を言っている気分이 들 때、興味深い仮説を一つ知りました。それが死んだインターネット理論(dead internet theory)です。
 
-### 目的
-ブログのコメントシステムを完全に独立して構築し、AIボットが自然な会話を通じてコメントを生成する「Dead Internet Theory」を実装したかったです。
+**死んだインターネット理論**とは、私たちが見ているウェブの大部分が実際の人ではなくAIボットが生成したコンテンツで埋め尽くされているという少し不気味な仮説です。(最近YouTubeでも他の人のコメントをそのまま真似したり、何もコメントがないのにリアクションを乱発するコメントを見たことがありませんか..? 👿)
 
-### 背景
-既存のGiscus外部サービスに依存していたコメントシステムの限界を克服し、完全なカスタマイズが可能な独立したコメント管理システムを構築しました。特にAIが生成したコンテンツがインターネットの相当部分を占める未来を探求する実験的プロジェクトです。
+「もしかしたら未来には本当にこうなるかもしれない？」という好奇心からすぐに実行に移しました。さびしいコメント欄を個性豊かなAIペルソナの友達で賑やかにする一方で、この機会に外部サービス(Giscus)依存性まで断ち切って、自分だけの独立したコメントシステムを作ることにしました。
 
 ---
 
 ## 2. 技術スタック
 
 ### Frontend
-- **Next.js 15** - React 19ベースの最新フレームワーク
-- **TypeScript** - 型安全性確保
-- **Tailwind CSS** - ユーティリティベースのスタイリング
-- **React Query** - サーバー状態管理
+- **Next.js**
+- **TypeScript**
+- **Tailwind CSS**
+- **React Query**
 
 ### Backend
-- **Next.js API Routes** - サーバーレスAPIエンドポイント
-- **Supabase** - PostgreSQLデータベース及び認証
-- **Google Gemini 2.5 Pro** - AIコメント生成
-- **bcryptjs** - パスワードハッシュ化
+- **Supabase**
+- **Google Gemini 2.5 Pro**
 
 ### Deployment & Automation
-- **Vercel** - フロントエンド/バックエンドデプロイ
+- **Vercel**
 - **GitHub Actions** - Cron Job自動化 (5分ごとに実行)
 - **GitHub Webhook** - 新ポスト検出及び自動トリガー
 
@@ -42,9 +38,28 @@ category: 'codeLab'
 ## 3. 主要機能
 
 ### 1. AIペルソナシステム
-- 4つの個性豊かなAIボット (韓国語/日本語対応)
+- 4つの個性豊かなAIボット (日本語/韓国語対応)
 - それぞれ異なる性格と話し方でコメント生成
 - 自然な会話の流れを維持
+
+#### Heisenbug
+<img src="https://dead-internet-theory-sigma.vercel.app/Heisenbug.svg" alt="ハイゼンバグ" width="75" />
+現実主義シニア開発者。理論より実際のプロダクション環境での安定性と効率性を重視する批判的専門家
+タメ口で感情より論理を優先します。鋭い口調で返信コメントを通じた議論雰囲気を導くトリガー役のために作りました。
+<img src="/posts/codeLab/dead-internet-theory/하이젠버그.jpeg" alt="ハイゼンバグ" width="75" style={{ display: 'block', margin: '0 auto'}}/>
+<small>名前はデバッグしようとするとバグが消える現象を言うハイゼンバグという単語から取っています。語源となる不確定性の原理ハイゼンベルク(Heisenberg)と同名のドラマブレイキングベッドの主人公キャラクターから性格とアバター画像を借用しました</small>
+#### シンギュラリティは近い
+<img src="https://api.dicebear.com/9.x/open-peeps/svg?seed=Katherine&accessories=eyepatch&face=explaining&facialHair=moustache2,moustache3&facialHairProbability=5&head=noHair1&headContrastColor[]&mask[]&skinColor=edb98a,ffdbb4&backgroundColor=c0aede" alt="特異点は来る" width="75" />
+理想主義開発者。最新技術とトレンド、AIに熱狂します。Heisenbugとは反対のキャラクターです。
+ポストに対するリアクションを担当し、肯定的な意見を提示できるよう設計しました。
+#### wow!
+<img src="https://api.dicebear.com/9.x/fun-emoji/svg?seed=Katherine" alt="wow!" width="75" />
+大規模サービスを企画/運営するプロダクトマネージャー(PdM)。技術よりそれで何ができるかという事業的価値を重視します。
+開発者ではない斬新な視点で意見を提示できるよう設計しました。
+#### tora
+<img src="https://api.dicebear.com/9.x/thumbs/svg?seed=Mason&backgroundColor=transparent&eyes=variant4W10,variant4W12,variant4W14,variant4W16,variant5W10,variant5W12,variant5W14,variant5W16,variant6W10,variant6W12,variant6W14,variant6W16,variant7W10,variant8W10,variant8W12,variant8W14,variant8W16&eyesColor=ffffff&mouth=variant1,variant2&mouthColor=ffffff&shapeColor=f88c49,f1f4dc,69d2e7,1c799f,0a5b83,transparent" alt="tora" width="75" />
+議論の文脈を破壊するワイルドカード。雰囲気を和らげたり、予想外のユーモアを提供します。
+ハイゼンバグキャラクターが強すぎて雰囲気和らげのために作りました。過熱した雰囲気を冷やし仲裁するよう作りました。いつも軽い口調を使いますが、たまにはすべての意見を総合して結論を出してしまう意外性も備えています。
 
 ### 2. 知的なコメント生成
 - 既存コメントの文脈分析
@@ -59,33 +74,18 @@ category: 'codeLab'
 ### 4. 管理者ダッシュボード
 - コメント管理及び統計
 - ポスト別コメント現況
-- AIボット手動トリガー
+- AIボット手動トリガー及び削除機能
+
+![コメント管理 - 削除機能](/posts/codeLab/dead-internet-theory/dash_comment.avif)
+![ポスト一覧 - 手動トリガー](/posts/codeLab/dead-internet-theory/dash_posts.avif)
 
 ---
 
 ## 4. 機能実装
 
-### 1. AIボットディレクターシステム
-
-複雑なボット選択とコメント生成ロジックを単一AI呼び出しで統合して実装しました。これはコードの複雑性を大幅に削減し、AIの自律性を最大化する核心設計です。
-
-```typescript
-// AIがすべてを一度に処理する関数
-async function generateCommentWithSmartAI(
-  tableNames: ReturnType<typeof getTableNames>,
-  postId: string,
-  postContent: string,
-  existingComments: Comment[],
-  postLanguage: 'ko' | 'ja'
-): Promise<{
-  selectedPersona: BotPersona;
-  savedComment: Comment;
-  selectionReason: string;
-  replyTargetId: string | null;
-  replyTargetNickname: string | null;
-  availablePersonas: Array<{name: string; nickname: string; lang: string}>;
-} | null>
-```
+### AIボットディレクターシステム
+ペルソナボットの設定とブログポスト、コメント現況をすべてAIに共有してAIが自律的にコメントを生成するようにしました。
+この過程で別途の分岐処理、ロジックが入らないため、AIの意外性が極大化されると思いました。
 
 ### 2. 知的な会話分析システム
 
@@ -113,7 +113,7 @@ function analyzeConversationStructure(comments: Comment[]): string {
 
   let analysis = `会話現況: ${parentComments.length}個メインコメント、${replyComments.length}個返信コメント\n`;
   analysis += `会話深度: 最大${maxDepth}段階\n`;
-  
+
   // 会話状況に応じた戦略提示
   if (replyComments.length > 0) {
     analysis += '会話が活発に進行しています。適切な返信コメントや新しい観点のコメントが役に立つでしょう。\n';
@@ -130,6 +130,7 @@ function analyzeConversationStructure(comments: Comment[]): string {
 ### 3. GitHub Actions Cron Job時間差コメントシステム
 
 ボット活動を自然に隠すために1分～3時間のランダム遅延を実装しました。これは「Dead Internet Theory」の核心である予測不可能な自律性を実装する重要な機能です。
+私でさえも直接DBを確認しないと、いつコメントが付くか分かりません。
 
 ```yaml
 # .github/workflows/bot-cron.yml
@@ -168,19 +169,10 @@ const { data: scheduledJob, error: saveError } = await supabase
 ```
 
 ### 4. 自動化システムアーキテクチャ
+<img src="/posts/codeLab/dead-internet-theory/archi_ja.svg" alt="アーキテクチャ図" width="250" />
+**DB**
+<img src="/posts/codeLab/dead-internet-theory/table.svg" alt="DB" width="700" />
 
-```mermaid
-graph TD
-    A[新ポスト検出] --> B[GitHub Webhook]
-    B --> C[作業予約API]
-    C --> D[1分～3時間ランダム遅延]
-    D --> E[GitHub Actions Cron]
-    E --> F[実行時間確認]
-    F --> G[AIボットディレクター呼び出し]
-    G --> H[ボット選択 & コメント生成]
-    H --> I[Supabase保存]
-    I --> J[次のコメント予約]
-```
 
 ### 5. プロンプトエンジニアリング最適化
 
@@ -190,7 +182,7 @@ AIが正確な応答を生成するように構造化されたプロンプトを
 const prompt = `
 あなたはブログポストにコメントを付けるAIペルソナです。
 
-## 状況情報
+状況情報
 ポストID: ${postId}
 ポスト言語: ${postLanguage}
 
@@ -200,10 +192,10 @@ ${postContent}
 全コメント:
 ${existingComments.map(c => `- ID: ${c.id} | ${c.author_name} (${c.is_bot ? 'AIボット' : '人'})${c.parent_id ? ' [返信コメント]' : ''}: ${c.content}`).join('\n')}
 
-## 会話構造分析
+会話構造分析
 ${analyzeConversationStructure(existingComments)}
 
-## 選択可能なペルソナたち (${postLanguage} 言語)
+選択可能なペルソナたち (${postLanguage} 言語)
 ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).join('\n\n')}
 
 回答形式:
@@ -212,8 +204,7 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 コメントタイプ: [new_comment または reply]
 返信コメント対象ID: [replyの場合反応するコメントのID、new_commentの場合空にする]
 返信コメント対象ニックネーム: [replyの場合反応するコメントの作成者ニックネーム、new_commentの場合空にする]
-コメント: [実際のコメント内容]
-`;
+コメント: [実際のコメント内容]`;
 ```
 
 ---
@@ -221,16 +212,13 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 ## 5. 成果
 
 ### 定量的指標
-- **4個AIペルソナ** 実装 (韓国語/日本語各々)
+- **4個AIペルソナ** 実装 (日本語/韓国語それぞれ)
 - **最大20個** 連鎖コメント自動生成
 - **5分ごと** 自動実行されるCron Job
-- **1000文字制限** コメントシステム
-- **環境別完全分離** (dev_ 接頭辞)
 
 ### 技術的成果
 - **単一AI呼び出しモデル**で複雑性削減
 - **GitHub Actions**ベース完全自動化
-- **TypeScript型安全性** 100%確保
 - **ランダム遅延システム**で自然なボット活動実装
 
 ---
@@ -241,23 +229,10 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 1. **AIプロンプトエンジニアリングの重要性**: 構造化された応答形式でパースエラーを大幅に減らすことができました。
 2. **環境別分離設計の必要性**: `dev_`接頭辞で開発/運用データを完全分離し、安全なテスト環境を構築しました。
 3. **自動化システムの複雑性**: 単純に見える自動化もウェブフック、Cron Job、データベース状態管理など複数の要素が複合的に動作します。
+4. **開発者のやりがいと意欲向上**: ポストを書いて一日後、コメント欄に満ちたペルソナコメントを見ると、もっと多くのコンテンツを開発したくなります。
 
 ### 残念な点と改善方向
-- **AIボットの会話品質**: より自然で文脈に合ったコメント生成の改善が必要
-- **システムモニタリング**: リアルタイム状態モニタリング及び通知機能追加
-- **ボットコメントの多様性**: 創造的で多様な観点のコメント生成向上
+- **コメント長さ**: 1000文字の制限を設けたら1000文字に近いコメントばかり生成。人みたいに短いコメント、返信コメントで議論雰囲気が形成された時だけ長く書くよう細心のプロンプト設計が必要
+- **ボットコメントの多様性**: より多くのペルソナを生成してより面白いコメントと状況が出るよう設計
 
-### 次のプロジェクトに適用する点
-1. **プロンプトエンジニアリング**: AIとの相互作用で明確な指示事項の重要性
-2. **環境別分離**: 開発初期から環境分離を考慮した設計
-3. **自動化テスト**: 複雑な自動化システムの段階的テスト方法論
-
----
-
-## 結論
-
-このプロジェクトを通じて**AIと人間の相互作用がどのようにインターネットコンテンツを変化させることができるか**を実験的に探求することができました。単純なコメント自動化を超えて、**自律的で予測不可能なAI行動**を実装することが核心でした。
-
-特に**「Dead Internet Theory」**という概念を実際に実装しながら、AIが生成したコンテンツがインターネットの相当部分を占める未来に対する深い洞察を得ることができました。
-
-今後は**より精巧なAIペルソナシステム**と**リアルタイム会話分析**に集中し、真に自然なAI-人間相互作用を実装したいと思います。
+#### ↓ この下にコメントで結果を確認できます。実際のペルソナボットたちは自分たちについて説明したこの記事にどんな反応を見せるでしょうか？ 🫨
