@@ -1,54 +1,48 @@
 ---
 title: 'SBI 증권 배당금 자동 수집 및 LINE 알림 봇 개발기'
 desc: 'SBI 증권 배당금 정보를 자동으로 수집하여 LINE으로 알림을 전송하는 시스템의 개발 과정과 기술적 구현 방법을 소개합니다.'
-date: 2024-12-19
-thumbnail: /posts/codeLab/cha-line/thumbnail.avif
-category: 'codeLab'
+date: 2025-09-07
+thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 ---
 
 # SBI 증권 배당금 자동 수집 및 LINE 알림 봇 개발기
 
 ## 1. 개요/목적/배경
 
-**왜 이 프로젝트를 만들었는가?**
-일본 투자 중인 SBI 증권의 배당금 입금 알림을 실시간으로 받고 싶었습니다. 기존에는 매번 웹사이트에 직접 접속해서 확인해야 했고, 배당금이 입금되었는지 놓치는 경우가 많았습니다.
+**楽天証券의 배당금 입금 안내 이메일**
+![楽天証券](/posts/codeLab/pixelWalkers/rakuten.avif)
+**SBI証券의 배당금 입금 안내 이메일**
+![SBI証券](/posts/codeLab/pixelWalkers/sbi.avif)
+투자를 하다 보면 배당금이 들어오는 소소한 즐거움이 있습니다. 🥳
+하지만 라쿠텐 증권과 달리 SBI 증권은 정작 중요한 '어떤 종목이, 얼마나' 들어왔는지 알려주지 않았죠.
+매번 로그인해서 확인해야 하는 번거로움 때문에 이 즐거움을 놓치는 게 아쉬워서 LINE으로 편하게 배당 내역을 받아볼 수 있는 저만의 봇을 만들었습니다.
 
 **해결하고자 했던 문제점:**
 - **수동 확인의 불편함**: 매번 웹사이트 접속하여 배당금 내역 확인
-- **놓치기 쉬운 알림**: 배당금 입금 시점을 놓쳐서 투자 전략 수립에 어려움
-- **일본어 인터페이스**: 한국어 사용자에게 불편한 일본어 웹사이트
 - **복잡한 인증 과정**: 2단계 인증, 디바이스 등록 등 복잡한 로그인 프로세스
+- **일상의 소소한 행복 부재**: 얼마가 들어왔는지 몰라서 일하면서 기분 좋아질 일이 없어짐 🥹
 
 ---
 
 ## 2. 기술스택
 
 ### Frontend
-- **Next.js 14** (App Router)
-  - 선택 이유: API 라우트와 정적 사이트 생성이 용이
-  - 장점: 서버사이드 렌더링, 자동 코드 분할
+- **Next.js**
 - **TypeScript**
-  - 선택 이유: 대규모 프로젝트에서 타입 안전성 확보
-  - 장점: 컴파일 타임 에러 방지, IDE 지원 향상
 
 ### Backend
 - **Node.js + Express.js**
-  - 선택 이유: GCP VM에서 독립 실행 가능한 서버
-  - 장점: Vercel 서버리스 환경의 한계 우회
 - **Playwright**
-  - 선택 이유: Puppeteer보다 안정적인 브라우저 자동화
-  - 장점: Inspector 모드 지원, 강력한 선택자, 크로스 브라우저 지원
 - **Gmail API**
-  - 선택 이유: SBI 증권 인증 이메일 자동 감지
-  - 장점: OAuth 2.0 인증, 안전한 이메일 접근
+
+### LINE Bot Integration
+- @line/bot-sdk (v10.0.0)
+- LINE Flex Message
+- LINE Webhook
 
 ### Deployment
 - **Google Cloud Platform (VM)**
-  - 선택 이유: 실제 GUI 환경에서 브라우저 실행 가능
-  - 장점: xvfb-run으로 가상 디스플레이 시뮬레이션
 - **PM2**
-  - 선택 이유: Node.js 프로세스 관리 및 자동 재시작
-  - 장점: 백그라운드 실행, 로그 관리
 
 ---
 
@@ -59,154 +53,47 @@ category: 'codeLab'
 - 2단계 인증 (2FA) 자동 처리
 - 디바이스 등록 자동화
 
-### 2. Gmail 모니터링
+### 2. Gmail 모니터링(GAS)
 - SBI 증권 인증 이메일 실시간 감지
 - 인증 URL 자동 추출 및 처리
 
 ### 3. 배당금 데이터 수집
 - CSV 다운로드를 통한 안정적인 데이터 수집
-- Shift_JIS 인코딩 자동 처리
 - 배당금 내역 파싱 및 구조화
 
 ### 4. LINE 알림 전송
 - Flex 메시지를 활용한 시각적 알림
-- 국기 이모지로 구분되는 종목별 정보
+- 국기 이모지로 구분되는 일본, 미국 종목별 정보
 - 카테고리별 소계 및 총합 표시
 
 ---
 
 ## 4. 기능구현
+### GAS에서 Gmail 감지
+<img src="/posts/codeLab/cha-line/gas_ko.svg" alt="SBI証券ログイン" width='300' />
+1. GAS에서 5분 단위로 gmail을 체크하여 발신자: 'cs@sbisec.co.jp', 이메일 제목:'配当金'의 이메일이 있는지 확인합니다. (평일 12:00~18:00에만 기동)
+2. 이메일이 있다면 GCP VM의 웹훅을 호출하여 Playwright를 기동합니다.
 
-### 아키텍처 다이어그램
+### Playwright 조작 순서
+**SBI증권 로그인 화면 이동**
+<img src="/posts/codeLab/cha-line/sbiLogin.avif" alt="SBI証券ログイン"  />
+1. SBI증권 로그인 화면에 이동 후, 환경변수에 등록한 아이디, 패스워드를 입력하여 로그인 합니다.
 
-```mermaid
-graph TD
-    A[Google Apps Script] -->|Gmail 모니터링| B[Gmail API]
-    B -->|인증 이메일 감지| C[GCP VM Server]
-    C -->|웹훅 호출| D[Express.js Server]
-    D -->|Playwright 실행| E[SBI 증권 웹사이트]
-    
-    E -->|1. 로그인 정보 입력| F[로그인 페이지]
-    F -->|2. 로그인 버튼 클릭| G[인증코드 화면]
-    G -->|3. 이메일 버튼 클릭| H[이메일 요청 완료]
-    
-    H -->|4. Gmail API 호출| I[인증 이메일에서 URL 추출]
-    I -->|5. 새 탭에서 인증 URL 열기| J[인증 페이지]
-    J -->|6. 인증코드 화면에서 코드 읽기| K[6자리 인증코드]
-    K -->|7. 인증 페이지에 코드 입력| L[인증 완료]
-    
-    L -->|8. 원래 탭으로 돌아가기| M[인증코드 화면]
-    M -->|9. 체크박스 클릭| N[디바이스 등록 체크]
-    N -->|10. 디바이스 인증 버튼 클릭| O[디바이스 등록 완료]
-    
-    O -->|11. 최종 로그인 완료| P[배당금 페이지]
-    P -->|12. CSV 다운로드| Q[배당금 데이터]
-    Q -->|13. CSV 파싱| R[구조화된 데이터]
-    R -->|14. LINE Flex 메시지 생성| S[LINE API]
-    S -->|15. 사용자에게 전송| T[LINE 알림 완료]
-    
-    style E fill:#e1f5fe
-    style G fill:#fff3e0
-    style J fill:#f3e5f5
-    style O fill:#e8f5e8
-    style T fill:#e8f5e8
-```
+**로그인 후 2단계 인증, 디바이스 등록**
+<img src="/posts/codeLab/cha-line/2fa.avif" alt="２段階認証"  />
+2. 디바이스 인증 화면으로 이동 후 인증 이메일 요청(탭1)
+3. GAS로 gmail에서 인증코드 화면 URL 취득, 새 탭에서 인증코드 화면 열기(탭2)
+4. 디바이스 인증 화면에서 인증코드 복사(탭1)
+5. 인증코드 화면에 복사한 인증코드 붙여넣기(탭2)
+6. 디바이스 인증 화면에서 인증 완료 체크박스에 체크 후, 디바이스 등록 버튼 클릭(탭1)
 
-### 핵심 구현 과정
+**배당금 페이지 이동, CSV다운로드**
+<img src="/posts/codeLab/cha-line/csvDownload.avif" alt="csvダウンロード"  />
+7. 로그인 후 배당금 페이지로 이동, 원래는 날짜를 지정해서 검색해야 하지만 쿼리스트링으로 바로 검색 결과 화면으로 다이렉트 이동이 가능합니다.
+최근 1주일로 설정한 쿼리스트링으로 바로 검색 결과 화면으로 이동 후, CSV 다운로드 버튼을 클릭해서 CSV를 저장 한 후 playwright를 종료합니다
 
-#### 1. SBI 증권 로그인 자동화
 
-```typescript
-// 로그인 프로세스
-async function loginToSBI(page: Page) {
-  // 1. 로그인 페이지 접속
-  await page.goto('https://site.sbisec.co.jp/ETGate/', { 
-    timeout: 120000 
-  });
-  
-  // 2. 로그인 정보 입력
-  await page.fill('#user_id', process.env.SBI_ID!);
-  await page.fill('#password', process.env.SBI_PASSWORD!);
-  
-  // 3. 로그인 버튼 클릭
-  await page.click('button[type="submit"]');
-  await page.waitForNavigation({ timeout: 120000 });
-}
-```
-
-#### 2. 복잡한 2단계 인증 처리
-
-```typescript
-// 인증코드 화면에서 이메일 요청
-async function requestEmailAuth(page: Page) {
-  // 인증코드 화면 도달 후 이메일 버튼 클릭
-  await page.waitForSelector('#code-display', { timeout: 30000 });
-  await page.click('button:has-text("メール")');
-  console.log('이메일 인증 요청 완료');
-}
-
-// Gmail에서 인증 URL 추출
-async function getAuthUrlFromGmail() {
-  const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
-  const messages = await gmail.users.messages.list({
-    userId: 'me',
-    q: `from:noreply@sbisec.co.jp subject:認証コード is:unread`,
-    maxResults: 1
-  });
-  
-  // 이메일 본문에서 인증 URL 추출
-  const message = await gmail.users.messages.get({
-    userId: 'me',
-    id: messages.data.messages?.[0]?.id!
-  });
-  
-  const body = message.data.payload?.body?.data;
-  const html = Buffer.from(body!, 'base64').toString();
-  const urlMatch = html.match(/href="([^"]*認証[^"]*)"/);
-  
-  return urlMatch ? urlMatch[1].replace(/&amp;/g, '&') : null;
-}
-
-// 새 탭에서 인증 페이지 열기
-async function openAuthPage(context: BrowserContext, authUrl: string) {
-  const newPage = await context.newPage();
-  await newPage.goto(authUrl, { timeout: 120000 });
-  return newPage;
-}
-
-// 인증코드 화면에서 코드 읽기
-async function getAuthCode(page: Page) {
-  const codeElement = await page.waitForSelector('#code-display', { timeout: 30000 });
-  const authCode = await codeElement.textContent();
-  console.log(`인증코드: ${authCode}`);
-  return authCode;
-}
-
-// 인증 페이지에 코드 입력
-async function submitAuthCode(authPage: Page, authCode: string) {
-  await authPage.fill('input[name="verifyCode"]', authCode);
-  await authPage.click('#verification');
-  await authPage.waitForLoadState('domcontentloaded');
-  await authPage.close(); // 인증 완료 후 탭 닫기
-}
-
-// 디바이스 등록 체크박스 클릭
-async function registerDevice(page: Page) {
-  // 원래 탭으로 돌아가서 디바이스 등록
-  await page.waitForSelector('#device-checkbox', { timeout: 30000 });
-  await page.check('#device-checkbox');
-  
-  // 디바이스 인증 버튼 클릭
-  await page.click('#device-auth-otp');
-  await page.waitForLoadState('domcontentloaded');
-  
-  // 로그인 완료 확인
-  await page.waitForSelector('.seeds-flex.assets-buttons', { timeout: 30000 });
-  console.log('로그인 완료!');
-}
-```
-
-#### 3. CSV 다운로드 및 파싱
+### CSV 다운로드 및 파싱
 
 ```typescript
 // CSV 다운로드 처리
@@ -229,11 +116,66 @@ async function downloadDividendCSV(page: Page) {
 }
 ```
 
+### LINE Flex 메시지로 변환
+```
+function buildItemBlocks(items: DividendItem[]) {
+  const blocks: any[] = [];
+  for (const it of items) {
+    const stock = it['銘柄名'];
+    const amount = it['受取額(税引後・円)'];
+    const qty = it['数量'];
+    const date = it['受渡日'];
+    const product = (it as any)['商品'] || '';
+    const flag = product.includes('米国') ? '🇺🇸' : ((product.includes('国内') || product.includes('現物')) ? '🇯🇵' : '');
+    const nameWithFlag = flag ? `${flag} ${stock}` : stock;
+    const acctRaw = (it as any)['口座'] || '';
+    const acctLabel = acctRaw
+      .replace('NISA（成長投資枠）', 'NISA成長')
+      .replace('NISA（つみたて投資枠）', 'NISAつみたて');
+
+    // [편집 포인트] 종목명/금액 배치: flex 비율(왼쪽 4, 오른쪽 3), wrap 여부, 텍스트 정렬(align)
+    blocks.push({
+      type: 'box',
+      layout: 'horizontal',
+      contents: [
+        { type: 'text', text: nameWithFlag, weight: 'bold', flex: 4, wrap: true },
+        { type: 'text', text: `${amount}円`, align: 'end', flex: 3 }
+      ]
+    });
+    // [편집 포인트] 보조 정보(수량/受渡日/口座) 스타일: size, color, wrap 변경
+    const metaRight = acctLabel ? ` / ${acctLabel}` : '';
+    blocks.push({ type: 'text', text: `数量: ${qty} / 受渡日: ${date}${metaRight}`, size: 'xs', color: '#888888', wrap: true });
+  }
+  return blocks;
+}
+```
+- 데이터 추출 및 가공(銘柄、受取額(税引後・円)、数量、受渡日、商品、口座)
+- 국가별 플래그 설정(🇺🇸, 🇯🇵)
+- 계좌 정보 설정(NISA（成長投資枠） → NISA成長, NISA（つみたて投資枠） → NISAつみたて)
+- Flex 메시지 블록 생성
+  - 왼쪽 (flex: 4): 종목명 + 플래그 (굵은 글씨)
+  - 오른쪽 (flex: 3): 수령액 (우측 정렬)
+  - 보조 정보 (수량/수령일/계좌): 작은 글씨, 회색, 줄바꿈
+
+### 이메일에 라벨을 추가
+```
+    if (response.getResponseCode() == 200) {
+      console.log('[운영] 웹훅 호출 성공. 이메일에 라벨을 추가합니다.');
+      const label = getOrCreateLabel(PROCESSED_LABEL);
+      for (const thread of threads) {
+        thread.addLabel(label);
+      }
+    } else {
+      console.error(`[운영] 웹훅 호출 실패: ${response.getContentText()}`);
+    }
+```
+- 완료 후 이메일에 라벨을 추가하여, 다음 스케쥴링 발동 시 대상에서 제외하도록 합니다.
+
 ### 트러블슈팅 과정
 
-#### 문제 1: Vercel에서 브라우저 실행 불가
-- **원인**: 서버리스 환경에서 브라우저 바이너리 접근 제한
-- **해결**: GCP VM으로 아키텍처 전환
+#### 문제 1: 플랫폼에 따른 브라우저 실행 불가
+- **원인**: 서버리스 환경에서 브라우저 바이너리 접근 제한(vercel, browserless, render실패)
+- **해결**: GCP VM으로 아키텍처 전환, 미국 리전의 높은 지연시간 문제 해결을 위해 도쿄 리전으로 변경(미국 리전 -> 도쿄 리전)
 - **교훈**: 클라우드 플랫폼별 제약사항 이해의 중요성
 
 #### 문제 2: 브라우저 컨텍스트 파괴
@@ -241,29 +183,24 @@ async function downloadDividendCSV(page: Page) {
 - **해결**: 컨텍스트 상태 검증 및 재생성 로직 구현
 - **교훈**: 외부 API 호출과 브라우저 자동화의 상호작용 고려
 
-#### 문제 3: CSV 인코딩 문제
-- **원인**: Shift_JIS 인코딩으로 인한 한글 깨짐
-- **해결**: `iconv-lite` 라이브러리로 인코딩 변환
-- **교훈**: 국제화된 웹사이트의 인코딩 처리 중요성
-
-#### 문제 4: 복잡한 인증 프로세스 자동화
+#### 문제 3: 복잡한 인증 프로세스 자동화
 - **원인**: SBI 증권의 복잡한 2단계 인증 및 디바이스 등록 프로세스
 - **해결**: 탭 간 동기화, 인증코드 유효기간 관리, 에러 처리 및 재시도 로직 구현
 - **교훈**: 복잡한 비즈니스 로직을 단계별로 분해하여 자동화하는 방법
 
 ---
 
-## 5. 성과
+## 5. 성과🎉
+
+<img src="/posts/codeLab/cha-line/line_flex.avif" alt="LINE通知完了" width='300' />
 
 ### 정량적 지표
-- **자동화 성공률**: 95% 이상
+- **자동화 성공**
 - **처리 시간**: 평균 2-3분 내 완료
-- **에러 발생률**: 5% 미만
 
 ### 정성적 피드백
 - **사용자 편의성**: 매일 수동 확인하던 작업이 완전 자동화
-- **안정성**: GCP VM 환경에서 24시간 안정적 운영
-- **확장성**: 다른 증권사나 금융 서비스 추가 가능한 구조
+- **안정성**: GCP VM 환경에서 24시간 안정적 운영(SBI증권의 영업시간에 맞춰 평일 12:00~18:00 서버 기동하도록 스케쥴링)
 
 ---
 
@@ -278,41 +215,17 @@ async function downloadDividendCSV(page: Page) {
 #### 2. 브라우저 자동화의 복잡성
 - 단순한 스크래핑이 아닌 복잡한 인증 프로세스 자동화
 - 봇 탐지 우회, 세션 관리, 에러 처리 등 다양한 고려사항
+- UI변경 시, 추가 대응이 필요
 
-#### 3. 모듈 시스템과 호환성
-- ES 모듈 vs CommonJS의 차이점과 호환성 문제
-- `createRequire`를 활용한 모듈 시스템 통합
-
-#### 4. 복잡한 비즈니스 로직 자동화
+#### 3. 복잡한 비즈니스 로직 자동화
 - 9단계의 복잡한 인증 프로세스를 단계별로 분해하여 자동화
 - 탭 간 동기화, 상태 관리, 에러 복구 등 고급 자동화 기법
 
 ### 아쉬운 점과 개선 방향
 
 #### 아쉬운 점
-- **초기 아키텍처 선택**: Vercel에서 시작해서 여러 번 전환
-- **에러 처리**: 더 세밀한 에러 분류 및 복구 로직 필요
-- **모니터링**: 실시간 상태 모니터링 시스템 부재
+- **초기 아키텍처 선택**: Vercel, browserless, render에서 여러 번 전환
+- **VM인스턴스**: Tokyo리전&e2-medium (vCPU 2개, 메모리 4GB)이라는 최소 사양이 필요
 
 #### 개선 방향
-- **모니터링 시스템**: Prometheus + Grafana 도입
-- **알림 시스템**: 에러 발생 시 즉시 알림
-- **데이터 저장**: 배당금 내역 데이터베이스 구축
-- **확장성**: 다른 증권사 지원 추가
-
-### 다음 프로젝트에 적용할 점
-
-1. **아키텍처 설계**: 처음부터 확장 가능한 구조로 설계
-2. **모니터링**: 개발 단계부터 모니터링 시스템 구축
-3. **테스트**: 자동화된 테스트 환경 구축
-4. **문서화**: 개발 과정과 트러블슈팅 기록 체계화
-
----
-
-## 결론
-
-이 프로젝트를 통해 **실제 사용자 문제를 해결하는 실용적인 솔루션**을 개발할 수 있었습니다. 단순한 기술 스택 나열이 아닌, **복잡한 비즈니스 로직을 자동화하는 시스템**을 구축하는 경험을 얻었습니다.
-
-특히 **클라우드 플랫폼의 제약사항을 이해하고 적절한 아키텍처로 전환**하는 과정에서, 기술적 문제 해결 능력과 시스템 설계 역량을 크게 향상시킬 수 있었습니다.
-
-앞으로는 **확장성과 모니터링을 고려한 시스템 설계**에 더 집중하여, 더욱 안정적이고 유지보수가 용이한 서비스를 개발하고 싶습니다.
+- **Oracle VM인스턴스**: 오라클의 무료 인스턴스가 GCP보다 더 좋은 사양을 제공해주기 때문에 전환 고려(계정 할당량 제한이 있기 때문에 일본 리전에 빈 자리가 있을 때 가능)
