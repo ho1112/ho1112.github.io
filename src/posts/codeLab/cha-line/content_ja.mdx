@@ -1,0 +1,231 @@
+---
+title: 'SBI証券配当金自動取得LINE Bot開発記'
+desc: 'SBI証券配当金情報を自動で収集してLINEに通知を送信するシステムの開発過程と技術的実装方法を紹介します。'
+date: 2025-09-07
+thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
+---
+
+# SBI証券配当金自動取得LINE Bot開発記
+
+## 1. 概要/目的/背景
+
+**楽天証券の配当金入金通知メール**
+![楽天証券](/posts/codeLab/pixelWalkers/rakuten.avif)
+**SBI証券の配当金入金通知メール**
+![SBI証券](/posts/codeLab/pixelWalkers/sbi.avif)
+投資をしていると配当金が入ってくる小さな楽しみがあります。🥳
+しかし楽天証券と違ってSBI証券は肝心の「どの銘柄が、いくら」入ってきたかを教えてくれませんでした。
+毎回ログインして確認する手間でこの楽しみを逃すのがもったいなくて、LINEで手軽に配当履歴を受け取れる自分専用のボットを作りました。
+
+**解決しようとした問題点:**
+- **手動確認の不便さ**: 毎回ウェブサイトにアクセスして配当金履歴を確認
+- **複雑な認証プロセス**: 2段階認証、デバイス登録など複雑なログインプロセス
+- **日常の小さな幸せの欠如**: いくら入ったかわからなくて仕事中に気分が良くなる出来事がなくなった 🥹
+
+---
+
+## 2. 技術スタック
+
+### Frontend
+- **Next.js**
+- **TypeScript**
+
+### Backend
+- **Node.js + Express.js**
+- **Playwright**
+- **Gmail API**
+
+### LINE Bot Integration
+- @line/bot-sdk (v10.0.0)
+- LINE Flex Message
+- LINE Webhook
+
+### Deployment
+- **Google Cloud Platform (VM)**
+- **PM2**
+
+---
+
+## 3. 主要機能
+
+### 1. 自動ログイン・認証
+- SBI証券ウェブサイト自動ログイン
+- 2段階認証（2FA）自動処理
+- デバイス登録自動化
+
+### 2. Gmail監視(GAS)
+- SBI証券認証メールリアルタイム検出
+- 認証URL自動抽出・処理
+
+### 3. 配当金データ収集
+- CSVダウンロードによる安定したデータ収集
+- 配当金履歴パース・構造化
+
+### 4. LINE通知送信
+- Flexメッセージを活用した視覚的通知
+- 国旗絵文字で区別される日本、米国銘柄別情報
+- カテゴリ別小計・合計表示
+
+---
+
+## 4. 機能実装
+### GASでGmail監視
+<img src="/posts/codeLab/cha-line/gas_ja.svg" alt="SBI証券ログイン" width='300' />
+1. GASで5分間隔でgmailをチェックし、送信者: 'cs@sbisec.co.jp', メール件名:'配当金'のメールがあるか確認します。(平日12:00~18:00のみ起動)
+2. メールがあればGCP VMのウェブフックを呼び出してPlaywrightを起動します。
+
+### Playwright操作順序
+**SBI証券ログイン画面移動**
+<img src="/posts/codeLab/cha-line/sbiLogin.avif" alt="SBI証券ログイン"  />
+1. SBI証券ログイン画面に移動後、環境変数に登録したID、パスワードを入力してログインします。
+
+**ログイン後2段階認証、デバイス登録**
+<img src="/posts/codeLab/cha-line/2fa.avif" alt="２段階認証"  />
+2. デバイス認証画面に移動後認証メール要求(タブ1)
+3. GASでgmailから認証コード画面URL取得、新タブで認証コード画面開く(タブ2)
+4. デバイス認証画面で認証コードコピー(タブ1)
+5. 認証コード画面にコピーした認証コード貼り付け(タブ2)
+6. デバイス認証画面で認証完了チェックボックスにチェック後、デバイス登録ボタンクリック(タブ1)
+
+**配当金ページ移動、CSVダウンロード**
+<img src="/posts/codeLab/cha-line/csvDownload.avif" alt="csvダウンロード"  />
+7. ログイン後配当金ページに移動、元々は日付を指定して検索する必要がありますがクエリストリングで直接検索結果画面にダイレクト移動が可能です。
+最近1週間に設定したクエリストリングで直接検索結果画面に移動後、CSVダウンロードボタンをクリックしてCSVを保存した後playwrightを終了します
+
+
+### CSVダウンロード・パース
+
+```typescript
+// CSVダウンロード処理
+async function downloadDividendCSV(page: Page) {
+  // 配当金ページに移動
+  const dividendUrl = `https://site.sbisec.co.jp/account/assets/dividends?dispositionDateFrom=${from}&dispositionDateTo=${to}`;
+  await page.goto(dividendUrl, { timeout: 120000 });
+  
+  // CSVダウンロードボタンクリック
+  const downloadPromise = page.waitForEvent('download');
+  await page.click('button.text-xs.link-light:has-text("CSV")');
+  const download = await downloadPromise;
+  
+  // ファイル保存・パース
+  const path = await download.path();
+  const fileBuffer = fs.readFileSync(path!);
+  const csvContent = iconv.decode(fileBuffer, 'Shift_JIS');
+  
+  return parseCSV(csvContent);
+}
+```
+
+### LINE Flexメッセージに変換
+```
+function buildItemBlocks(items: DividendItem[]) {
+  const blocks: any[] = [];
+  for (const it of items) {
+    const stock = it['銘柄名'];
+    const amount = it['受取額(税引後・円)'];
+    const qty = it['数量'];
+    const date = it['受渡日'];
+    const product = (it as any)['商品'] || '';
+    const flag = product.includes('米国') ? '🇺🇸' : ((product.includes('国内') || product.includes('現物')) ? '🇯🇵' : '');
+    const nameWithFlag = flag ? `${flag} ${stock}` : stock;
+    const acctRaw = (it as any)['口座'] || '';
+    const acctLabel = acctRaw
+      .replace('NISA（成長投資枠）', 'NISA成長')
+      .replace('NISA（つみたて投資枠）', 'NISAつみたて');
+
+    // [編集ポイント] 銘柄名/金額配置: flex比率(左4、右3)、wrap有無、テキスト整列(align)
+    blocks.push({
+      type: 'box',
+      layout: 'horizontal',
+      contents: [
+        { type: 'text', text: nameWithFlag, weight: 'bold', flex: 4, wrap: true },
+        { type: 'text', text: `${amount}円`, align: 'end', flex: 3 }
+      ]
+    });
+    // [編集ポイント] 補助情報(数量/受渡日/口座) スタイル: size, color, wrap変更
+    const metaRight = acctLabel ? ` / ${acctLabel}` : '';
+    blocks.push({ type: 'text', text: `数量: ${qty} / 受渡日: ${date}${metaRight}`, size: 'xs', color: '#888888', wrap: true });
+  }
+  return blocks;
+}
+```
+- データ抽出・加工(銘柄、受取額(税引後・円)、数量、受渡日、商品、口座)
+- 国別フラグ設定(🇺🇸, 🇯🇵)
+- 口座情報設定(NISA（成長投資枠） → NISA成長, NISA（つみたて投資枠） → NISAつみたて)
+- Flexメッセージブロック生成
+  - 左 (flex: 4): 銘柄名 + フラグ (太字)
+  - 右 (flex: 3): 受取額 (右揃え)
+  - 補助情報 (数量/受取日/口座): 小さい文字、グレー、改行
+
+### メールにラベルを追加
+```
+    if (response.getResponseCode() == 200) {
+      console.log('[運営] ウェブフック呼び出し成功。メールにラベルを追加します。');
+      const label = getOrCreateLabel(PROCESSED_LABEL);
+      for (const thread of threads) {
+        thread.addLabel(label);
+      }
+    } else {
+      console.error(`[運営] ウェブフック呼び出し失敗: ${response.getContentText()}`);
+    }
+```
+- 完了後メールにラベルを追加して、次回スケジューリング発動時に対象から除外するようにします。
+
+### トラブルシューティング過程
+
+#### 問題1: プラットフォームによるブラウザ実行不可
+- **原因**: サーバーレス環境でのブラウザバイナリアクセス制限(vercel, browserless, render失敗)
+- **解決**: GCP VMへのアーキテクチャ転換、米国リージョンの高い遅延時間問題解決のため東京リージョンに変更(米国リージョン -> 東京リージョン)
+- **教訓**: クラウドプラットフォーム別制約事項理解の重要性
+
+#### 問題2: ブラウザコンテキスト破壊
+- **原因**: Gmail API呼び出し後のブラウザコンテキスト不安定
+- **解決**: コンテキスト状態検証・再生成ロジック実装
+- **教訓**: 外部API呼び出しとブラウザ自動化の相互作用考慮
+
+#### 問題3: 複雑な認証プロセス自動化
+- **原因**: SBI証券の複雑な2段階認証・デバイス登録プロセス
+- **解決**: タブ間同期、認証コード有効期限管理、エラー処理・リトライロジック実装
+- **教訓**: 複雑なビジネスロジックを段階的に分解して自動化する方法
+
+---
+
+## 5. 成果🎉
+
+<img src="/posts/codeLab/cha-line/line_flex.avif" alt="LINE通知完了" width='300' />
+
+### 定量的指標
+- **自動化成功**
+- **処理時間**: 平均2-3分以内完了
+
+### 定性的フィードバック
+- **ユーザー利便性**: 毎日手動確認していた作業が完全自動化
+- **安定性**: GCP VM環境で24時間安定運用(SBI証券の営業時間に合わせて平日12:00~18:00サーバー起動するようスケジューリング)
+
+---
+
+## 6. インサイト
+
+### 学んだ点
+
+#### 1. クラウドプラットフォームの限界理解
+- Vercel、Renderなどのサーバーレス環境ではブラウザ自動化の根本的限界
+- 実際のGUI環境が必要な作業はVMインスタンスが必須
+
+#### 2. ブラウザ自動化の複雑性
+- 単純なスクレイピングではなく複雑な認証プロセス自動化
+- ボット検出回避、セッション管理、エラー処理など様々な考慮事項
+- UI変更時、追加対応が必要
+
+#### 3. 複雑なビジネスロジック自動化
+- 9段階の複雑な認証プロセスを段階的に分解して自動化
+- タブ間同期、状態管理、エラー復旧など高度な自動化技法
+
+### 残念な点と改善方向
+
+#### 残念な点
+- **初期アーキテクチャ選択**: Vercel、browserless、renderから複数回転換
+- **VMインスタンス**: Tokyoリージョン&e2-medium (vCPU 2個、メモリ4GB)という最小仕様が必要
+
+#### 改善方向
+- **Oracle VMインスタンス**: オラクルの無料インスタンスがGCPより良い仕様を提供してくれるため転換検討(アカウント割り当て制限があるため日本リージョンに空きがある時可能)

@@ -1,0 +1,231 @@
+---
+title: 'SBI 증권 배당금 자동 수집 및 LINE 알림 봇 개발기'
+desc: 'SBI 증권 배당금 정보를 자동으로 수집하여 LINE으로 알림을 전송하는 시스템의 개발 과정과 기술적 구현 방법을 소개합니다.'
+date: 2025-09-07
+thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
+---
+
+# SBI 증권 배당금 자동 수집 및 LINE 알림 봇 개발기
+
+## 1. 개요/목적/배경
+
+**楽天証券의 배당금 입금 안내 이메일**
+![楽天証券](/posts/codeLab/pixelWalkers/rakuten.avif)
+**SBI証券의 배당금 입금 안내 이메일**
+![SBI証券](/posts/codeLab/pixelWalkers/sbi.avif)
+투자를 하다 보면 배당금이 들어오는 소소한 즐거움이 있습니다. 🥳
+하지만 라쿠텐 증권과 달리 SBI 증권은 정작 중요한 '어떤 종목이, 얼마나' 들어왔는지 알려주지 않았죠.
+매번 로그인해서 확인해야 하는 번거로움 때문에 이 즐거움을 놓치는 게 아쉬워서 LINE으로 편하게 배당 내역을 받아볼 수 있는 저만의 봇을 만들었습니다.
+
+**해결하고자 했던 문제점:**
+- **수동 확인의 불편함**: 매번 웹사이트 접속하여 배당금 내역 확인
+- **복잡한 인증 과정**: 2단계 인증, 디바이스 등록 등 복잡한 로그인 프로세스
+- **일상의 소소한 행복 부재**: 얼마가 들어왔는지 몰라서 일하면서 기분 좋아질 일이 없어짐 🥹
+
+---
+
+## 2. 기술스택
+
+### Frontend
+- **Next.js**
+- **TypeScript**
+
+### Backend
+- **Node.js + Express.js**
+- **Playwright**
+- **Gmail API**
+
+### LINE Bot Integration
+- @line/bot-sdk (v10.0.0)
+- LINE Flex Message
+- LINE Webhook
+
+### Deployment
+- **Google Cloud Platform (VM)**
+- **PM2**
+
+---
+
+## 3. 주요기능
+
+### 1. 자동 로그인 및 인증
+- SBI 증권 웹사이트 자동 로그인
+- 2단계 인증 (2FA) 자동 처리
+- 디바이스 등록 자동화
+
+### 2. Gmail 모니터링(GAS)
+- SBI 증권 인증 이메일 실시간 감지
+- 인증 URL 자동 추출 및 처리
+
+### 3. 배당금 데이터 수집
+- CSV 다운로드를 통한 안정적인 데이터 수집
+- 배당금 내역 파싱 및 구조화
+
+### 4. LINE 알림 전송
+- Flex 메시지를 활용한 시각적 알림
+- 국기 이모지로 구분되는 일본, 미국 종목별 정보
+- 카테고리별 소계 및 총합 표시
+
+---
+
+## 4. 기능구현
+### GAS에서 Gmail 감지
+<img src="/posts/codeLab/cha-line/gas_ko.svg" alt="SBI証券ログイン" width='300' />
+1. GAS에서 5분 단위로 gmail을 체크하여 발신자: 'cs@sbisec.co.jp', 이메일 제목:'配当金'의 이메일이 있는지 확인합니다. (평일 12:00~18:00에만 기동)
+2. 이메일이 있다면 GCP VM의 웹훅을 호출하여 Playwright를 기동합니다.
+
+### Playwright 조작 순서
+**SBI증권 로그인 화면 이동**
+<img src="/posts/codeLab/cha-line/sbiLogin.avif" alt="SBI証券ログイン"  />
+1. SBI증권 로그인 화면에 이동 후, 환경변수에 등록한 아이디, 패스워드를 입력하여 로그인 합니다.
+
+**로그인 후 2단계 인증, 디바이스 등록**
+<img src="/posts/codeLab/cha-line/2fa.avif" alt="２段階認証"  />
+2. 디바이스 인증 화면으로 이동 후 인증 이메일 요청(탭1)
+3. GAS로 gmail에서 인증코드 화면 URL 취득, 새 탭에서 인증코드 화면 열기(탭2)
+4. 디바이스 인증 화면에서 인증코드 복사(탭1)
+5. 인증코드 화면에 복사한 인증코드 붙여넣기(탭2)
+6. 디바이스 인증 화면에서 인증 완료 체크박스에 체크 후, 디바이스 등록 버튼 클릭(탭1)
+
+**배당금 페이지 이동, CSV다운로드**
+<img src="/posts/codeLab/cha-line/csvDownload.avif" alt="csvダウンロード"  />
+7. 로그인 후 배당금 페이지로 이동, 원래는 날짜를 지정해서 검색해야 하지만 쿼리스트링으로 바로 검색 결과 화면으로 다이렉트 이동이 가능합니다.
+최근 1주일로 설정한 쿼리스트링으로 바로 검색 결과 화면으로 이동 후, CSV 다운로드 버튼을 클릭해서 CSV를 저장 한 후 playwright를 종료합니다
+
+
+### CSV 다운로드 및 파싱
+
+```typescript
+// CSV 다운로드 처리
+async function downloadDividendCSV(page: Page) {
+  // 배당금 페이지로 이동
+  const dividendUrl = `https://site.sbisec.co.jp/account/assets/dividends?dispositionDateFrom=${from}&dispositionDateTo=${to}`;
+  await page.goto(dividendUrl, { timeout: 120000 });
+  
+  // CSV 다운로드 버튼 클릭
+  const downloadPromise = page.waitForEvent('download');
+  await page.click('button.text-xs.link-light:has-text("CSV")');
+  const download = await downloadPromise;
+  
+  // 파일 저장 및 파싱
+  const path = await download.path();
+  const fileBuffer = fs.readFileSync(path!);
+  const csvContent = iconv.decode(fileBuffer, 'Shift_JIS');
+  
+  return parseCSV(csvContent);
+}
+```
+
+### LINE Flex 메시지로 변환
+```
+function buildItemBlocks(items: DividendItem[]) {
+  const blocks: any[] = [];
+  for (const it of items) {
+    const stock = it['銘柄名'];
+    const amount = it['受取額(税引後・円)'];
+    const qty = it['数量'];
+    const date = it['受渡日'];
+    const product = (it as any)['商品'] || '';
+    const flag = product.includes('米国') ? '🇺🇸' : ((product.includes('国内') || product.includes('現物')) ? '🇯🇵' : '');
+    const nameWithFlag = flag ? `${flag} ${stock}` : stock;
+    const acctRaw = (it as any)['口座'] || '';
+    const acctLabel = acctRaw
+      .replace('NISA（成長投資枠）', 'NISA成長')
+      .replace('NISA（つみたて投資枠）', 'NISAつみたて');
+
+    // [편집 포인트] 종목명/금액 배치: flex 비율(왼쪽 4, 오른쪽 3), wrap 여부, 텍스트 정렬(align)
+    blocks.push({
+      type: 'box',
+      layout: 'horizontal',
+      contents: [
+        { type: 'text', text: nameWithFlag, weight: 'bold', flex: 4, wrap: true },
+        { type: 'text', text: `${amount}円`, align: 'end', flex: 3 }
+      ]
+    });
+    // [편집 포인트] 보조 정보(수량/受渡日/口座) 스타일: size, color, wrap 변경
+    const metaRight = acctLabel ? ` / ${acctLabel}` : '';
+    blocks.push({ type: 'text', text: `数量: ${qty} / 受渡日: ${date}${metaRight}`, size: 'xs', color: '#888888', wrap: true });
+  }
+  return blocks;
+}
+```
+- 데이터 추출 및 가공(銘柄、受取額(税引後・円)、数量、受渡日、商品、口座)
+- 국가별 플래그 설정(🇺🇸, 🇯🇵)
+- 계좌 정보 설정(NISA（成長投資枠） → NISA成長, NISA（つみたて投資枠） → NISAつみたて)
+- Flex 메시지 블록 생성
+  - 왼쪽 (flex: 4): 종목명 + 플래그 (굵은 글씨)
+  - 오른쪽 (flex: 3): 수령액 (우측 정렬)
+  - 보조 정보 (수량/수령일/계좌): 작은 글씨, 회색, 줄바꿈
+
+### 이메일에 라벨을 추가
+```
+    if (response.getResponseCode() == 200) {
+      console.log('[운영] 웹훅 호출 성공. 이메일에 라벨을 추가합니다.');
+      const label = getOrCreateLabel(PROCESSED_LABEL);
+      for (const thread of threads) {
+        thread.addLabel(label);
+      }
+    } else {
+      console.error(`[운영] 웹훅 호출 실패: ${response.getContentText()}`);
+    }
+```
+- 완료 후 이메일에 라벨을 추가하여, 다음 스케쥴링 발동 시 대상에서 제외하도록 합니다.
+
+### 트러블슈팅 과정
+
+#### 문제 1: 플랫폼에 따른 브라우저 실행 불가
+- **원인**: 서버리스 환경에서 브라우저 바이너리 접근 제한(vercel, browserless, render실패)
+- **해결**: GCP VM으로 아키텍처 전환, 미국 리전의 높은 지연시간 문제 해결을 위해 도쿄 리전으로 변경(미국 리전 -> 도쿄 리전)
+- **교훈**: 클라우드 플랫폼별 제약사항 이해의 중요성
+
+#### 문제 2: 브라우저 컨텍스트 파괴
+- **원인**: Gmail API 호출 후 브라우저 컨텍스트 불안정
+- **해결**: 컨텍스트 상태 검증 및 재생성 로직 구현
+- **교훈**: 외부 API 호출과 브라우저 자동화의 상호작용 고려
+
+#### 문제 3: 복잡한 인증 프로세스 자동화
+- **원인**: SBI 증권의 복잡한 2단계 인증 및 디바이스 등록 프로세스
+- **해결**: 탭 간 동기화, 인증코드 유효기간 관리, 에러 처리 및 재시도 로직 구현
+- **교훈**: 복잡한 비즈니스 로직을 단계별로 분해하여 자동화하는 방법
+
+---
+
+## 5. 성과🎉
+
+<img src="/posts/codeLab/cha-line/line_flex.avif" alt="LINE通知完了" width='300' />
+
+### 정량적 지표
+- **자동화 성공**
+- **처리 시간**: 평균 2-3분 내 완료
+
+### 정성적 피드백
+- **사용자 편의성**: 매일 수동 확인하던 작업이 완전 자동화
+- **안정성**: GCP VM 환경에서 24시간 안정적 운영(SBI증권의 영업시간에 맞춰 평일 12:00~18:00 서버 기동하도록 스케쥴링)
+
+---
+
+## 6. 인사이트
+
+### 배운 점
+
+#### 1. 클라우드 플랫폼의 한계 이해
+- Vercel, Render 등 서버리스 환경에서는 브라우저 자동화의 근본적 한계
+- 실제 GUI 환경이 필요한 작업은 VM 인스턴스가 필수
+
+#### 2. 브라우저 자동화의 복잡성
+- 단순한 스크래핑이 아닌 복잡한 인증 프로세스 자동화
+- 봇 탐지 우회, 세션 관리, 에러 처리 등 다양한 고려사항
+- UI변경 시, 추가 대응이 필요
+
+#### 3. 복잡한 비즈니스 로직 자동화
+- 9단계의 복잡한 인증 프로세스를 단계별로 분해하여 자동화
+- 탭 간 동기화, 상태 관리, 에러 복구 등 고급 자동화 기법
+
+### 아쉬운 점과 개선 방향
+
+#### 아쉬운 점
+- **초기 아키텍처 선택**: Vercel, browserless, render에서 여러 번 전환
+- **VM인스턴스**: Tokyo리전&e2-medium (vCPU 2개, 메모리 4GB)이라는 최소 사양이 필요
+
+#### 개선 방향
+- **Oracle VM인스턴스**: 오라클의 무료 인스턴스가 GCP보다 더 좋은 사양을 제공해주기 때문에 전환 고려(계정 할당량 제한이 있기 때문에 일본 리전에 빈 자리가 있을 때 가능)
