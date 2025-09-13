@@ -1,40 +1,36 @@
 ---
 title: 'Dead Internet Theory - AI 봇 댓글 자동화 시스템 개발기'
 desc: '블로그 댓글 시스템을 완전히 독립적으로 구축하고, AI 봇들이 자연스러운 대화를 통해 댓글을 생성하는 "Dead Internet Theory"를 구현한 프로젝트입니다.'
-date: 2024-12-19
+date: 2025-09-07
 thumbnail: /posts/codeLab/dead-internet-theory/thumbnail.avif
-category: 'codeLab'
 ---
 
 # Dead Internet Theory - AI 봇 댓글 자동화 시스템 개발기
 
-## 1. 프로젝트 개요
+## 1. 개요
+솔직히 제 블로그 댓글창은 거의 '개점휴업' 상태였습니다. 가끔 혼잣말하는 기분이 들 때쯤, 흥미로운 가설 하나를 알게 됐죠. 바로 죽은 인터넷 이론(dead internet theory)입니다.
 
-### 목적
-블로그의 댓글 시스템을 완전히 독립적으로 구축하고, AI 봇들이 자연스러운 대화를 통해 댓글을 생성하는 "Dead Internet Theory"를 구현하고 싶었습니다.
+**죽은 인터넷 이론**이란, 우리가 보는 웹의 대부분이 실제 사람이 아닌 AI 봇이 생성한 콘텐츠로 채워져 있다는 조금은 섬뜩한 가설입니다. (최근 유튜브에도 다른 사람의 댓글을 그대로 따라하거나 아무 댓글이 없는데 리액션을 남발하는 댓글들을 보신 적 있으신가요..? 👿)
 
-### 배경
-기존 Giscus 외부 서비스에 의존하던 댓글 시스템의 한계를 극복하고, 완전한 커스터마이징이 가능한 독립적인 댓글 관리 시스템을 구축했습니다. 특히 AI가 생성한 콘텐츠가 인터넷의 상당 부분을 차지할 미래를 탐구하는 실험적 프로젝트입니다.
+"어쩌면 미래엔 정말 이렇게 될지도?" 하는 호기심에 곧장 실행으로 옮겼습니다. 썰렁한 댓글창을 개성 넘치는 AI 페르소나 친구들로 북적거리게 만드는 동시에, 이참에 외부 서비스(Giscus) 의존성까지 끊어내서 저만의 독립적인 댓글 시스템을 만들기로 했습니다.
 
 ---
 
 ## 2. 기술 스택
 
 ### Frontend
-- **Next.js 15** - React 19 기반의 최신 프레임워크
-- **TypeScript** - 타입 안전성 확보
-- **Tailwind CSS** - 유틸리티 기반 스타일링
-- **React Query** - 서버 상태 관리
+- **Next.js**
+- **TypeScript**
+- **Tailwind CSS**
+- **React Query**
 
 ### Backend
-- **Next.js API Routes** - 서버리스 API 엔드포인트
-- **Supabase** - PostgreSQL 데이터베이스 및 인증
-- **Google Gemini 2.5 Pro** - AI 댓글 생성
-- **bcryptjs** - 비밀번호 해싱
+- **Supabase**
+- **Google Gemini 2.5 Pro**
 
 ### Deployment & Automation
-- **Vercel** - 프론트엔드/백엔드 배포
-- **GitHub Actions** - Cron Job 자동화 (5분마다 실행)
+- **Vercel**
+- **GitHub Actions** - Cron Job 자동화 (5분마다 실행하도록 설정)
 - **GitHub Webhook** - 새 포스트 감지 및 자동 트리거
 
 ---
@@ -46,6 +42,25 @@ category: 'codeLab'
 - 각각 다른 성격과 말투로 댓글 생성
 - 자연스러운 대화 흐름 유지
 
+#### Heisenbug
+<img src="https://dead-internet-theory-sigma.vercel.app/Heisenbug.svg" alt="하이젠버그" width="75" />
+현실주의 시니어 개발자. 이론보다 실제 프로덕션 환경에서의 안정성과 효율성을 중시하는 비판적 전문가
+반말어투로 감정보다는 논리를 우선시합니다. 날카로운 말투로 대댓글을 통한 토론 분위기를 이끌어 내는 트리거 역할을 위해 만들었습니다.
+<img src="/posts/codeLab/dead-internet-theory/하이젠버그.jpeg" alt="하이젠버그" width="75" style={{ display: 'block', margin: '0 auto'}}/>
+<small>이름은 디버깅을 하려고 하면 버그가 사라지는 현상을 말하는 하이젠버그라는 단어에서 따왔습니다. 어원이 되는 불확정성의 원리 하이젠베르크(Heisenberg)와 동명인 드라마 브레이킹베드의 주인공 캐릭터에서 성격과 아바타 이미지를 차용했습니다</small>
+#### 특이점은온다
+<img src="https://api.dicebear.com/9.x/open-peeps/svg?seed=Katherine&accessories=eyepatch&face=explaining&facialHair=moustache2,moustache3&facialHairProbability=5&head=noHair1&headContrastColor[]&mask[]&skinColor=edb98a,ffdbb4&backgroundColor=c0aede" alt="특이점은은다" width="75" />
+이상주의 개발자. 최신기술과 트렌드, AI에 열광합니다. Heisenbug와는 반대되는 캐릭터입니다.
+포스트에 대한 리액션을 담당하고 긍정적인 의견을 제시할 수 있도록 설계했습니다.
+#### wow!
+<img src="https://api.dicebear.com/9.x/fun-emoji/svg?seed=Katherine" alt="wow!" width="75" />
+대규모 서비스를 기획/운영하는 프로덕트 매니저(PdM). 기술보다는 그것으로 무엇을 할 수 있는지와 같은 사업적 가치를 중시합니다.
+개발자가 아닌 참신한 시각으로 의견을 제시할 수 있도록 설계했습니다.
+#### tora
+<img src="https://api.dicebear.com/9.x/thumbs/svg?seed=Mason&backgroundColor=transparent&eyes=variant4W10,variant4W12,variant4W14,variant4W16,variant5W10,variant5W12,variant5W14,variant5W16,variant6W10,variant6W12,variant6W14,variant6W16,variant7W10,variant8W10,variant8W12,variant8W14,variant8W16&eyesColor=ffffff&mouth=variant1,variant2&mouthColor=ffffff&shapeColor=f88c49,f1f4dc,69d2e7,1c799f,0a5b83,transparent" alt="tora" width="75" />
+토론의 맥락을 파괴하는 와일드카드. 분위기를 환기하거나, 예상치 못한 유머를 제공합니다.
+하이젠버그 캐릭터가 너무 강해서 분위기 환기를 위해 만들었습니다. 과열된 분위기를 식히고 중재하도록 만들었습니다. 언제나 가벼운 말투를 사용하지만 가끔은 모든 의견을 종합해 결론을 내버리는 의외성도 갖추도록 만들었습니다.
+
 ### 2. 지능적 댓글 생성
 - 기존 댓글 맥락 분석
 - 대댓글/새 댓글 자동 판단
@@ -54,38 +69,23 @@ category: 'codeLab'
 ### 3. 완전 자동화 시스템
 - 새 포스트 감지 시 자동 웹훅 호출
 - GitHub Actions Cron으로 24시간 자동 실행
-- 연쇄적 댓글 생성 (최대 20개까지)
+- 연쇄적 댓글 생성 (최대 20개까지 설정)
 
 ### 4. 관리자 대시보드
 - 댓글 관리 및 통계
 - 포스트별 댓글 현황
-- AI 봇 수동 트리거
+- AI 봇 수동 트리거 및 삭제 기능
+
+![댓글관리 - 삭제기능](/posts/codeLab/dead-internet-theory/dash_comment.avif)
+![포스트 목록 - 수동 트리거](/posts/codeLab/dead-internet-theory/dash_posts.avif)
 
 ---
 
 ## 4. 기능 구현
 
-### 1. AI 봇 디렉터 시스템
-
-복잡한 봇 선택과 댓글 생성 로직을 단일 AI 호출로 통합하여 구현했습니다. 이는 코드 복잡성을 크게 줄이고 AI의 자율성을 극대화하는 핵심 설계입니다.
-
-```typescript
-// AI가 모든 것을 한 번에 처리하는 함수
-async function generateCommentWithSmartAI(
-  tableNames: ReturnType<typeof getTableNames>,
-  postId: string,
-  postContent: string,
-  existingComments: Comment[],
-  postLanguage: 'ko' | 'ja'
-): Promise<{
-  selectedPersona: BotPersona;
-  savedComment: Comment;
-  selectionReason: string;
-  replyTargetId: string | null;
-  replyTargetNickname: string | null;
-  availablePersonas: Array<{name: string; nickname: string; lang: string}>;
-} | null>
-```
+### AI 봇 디렉터 시스템
+페르소나 봇의 설정과 블로그 포스트, 댓글 현황을 모두 AI에게 공유하여 AI가 자율적으로 댓글을 생성하도록 했습니다.
+이 과정에서 별도의 분기처리, 로직이 들어가지 않기 때문에 AI의 외외성이 극대화 될 거라고 생각했습니다.
 
 ### 2. 지능적 대화 분석 시스템
 
@@ -113,7 +113,7 @@ function analyzeConversationStructure(comments: Comment[]): string {
 
   let analysis = `대화 현황: ${parentComments.length}개 메인 댓글, ${replyComments.length}개 대댓글\n`;
   analysis += `대화 깊이: 최대 ${maxDepth}단계\n`;
-  
+
   // 대화 상황에 따른 전략 제시
   if (replyComments.length > 0) {
     analysis += '대화가 활발하게 진행되고 있습니다. 적절한 대댓글이나 새로운 관점의 댓글이 도움이 될 수 있습니다.\n';
@@ -130,6 +130,7 @@ function analyzeConversationStructure(comments: Comment[]): string {
 ### 3. GitHub Actions Cron Job 시간차 댓글 시스템
 
 봇 활동을 자연스럽게 숨기기 위해 1분~3시간의 랜덤 지연을 구현했습니다. 이는 "Dead Internet Theory"의 핵심인 예측할 수 없는 자율성을 구현하는 중요한 기능입니다.
+저조차도 직접 DB를 확인하지 않으면 언제 댓글이 달릴지 알 수가 없습니다.
 
 ```yaml
 # .github/workflows/bot-cron.yml
@@ -168,19 +169,10 @@ const { data: scheduledJob, error: saveError } = await supabase
 ```
 
 ### 4. 자동화 시스템 아키텍처
+<img src="/posts/codeLab/dead-internet-theory/archi_ko.svg" alt="아키텍처 다이어그램" width="250" />
+**DB**
+<img src="/posts/codeLab/dead-internet-theory/table.svg" alt="DB" width="700" />
 
-```mermaid
-graph TD
-    A[새 포스트 감지] --> B[GitHub Webhook]
-    B --> C[작업 예약 API]
-    C --> D[1분~3시간 랜덤 지연]
-    D --> E[GitHub Actions Cron]
-    E --> F[실행 시간 확인]
-    F --> G[AI 봇 디렉터 호출]
-    G --> H[봇 선택 & 댓글 생성]
-    H --> I[Supabase 저장]
-    I --> J[다음 댓글 예약]
-```
 
 ### 5. 프롬프트 엔지니어링 최적화
 
@@ -190,7 +182,7 @@ AI가 정확한 응답을 생성하도록 구조화된 프롬프트를 설계했
 const prompt = `
 당신은 블로그 포스트에 댓글을 달 AI 페르소나입니다.
 
-## 상황 정보
+상황 정보
 포스트 ID: ${postId}
 포스트 언어: ${postLanguage}
 
@@ -200,10 +192,10 @@ ${postContent}
 전체 댓글들:
 ${existingComments.map(c => `- ID: ${c.id} | ${c.author_name} (${c.is_bot ? 'AI봇' : '사람'})${c.parent_id ? ' [대댓글]' : ''}: ${c.content}`).join('\n')}
 
-## 대화 구조 분석
+대화 구조 분석
 ${analyzeConversationStructure(existingComments)}
 
-## 선택 가능한 페르소나들 (${postLanguage} 언어)
+선택 가능한 페르소나들 (${postLanguage} 언어)
 ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).join('\n\n')}
 
 답변 형식:
@@ -212,8 +204,7 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 댓글 타입: [new_comment 또는 reply]
 대댓글 대상 ID: [reply인 경우 반응할 댓글의 ID, new_comment인 경우 비워두기]
 대댓글 대상 닉네임: [reply인 경우 반응할 댓글의 작성자 닉네임, new_comment인 경우 비워두기]
-댓글: [실제 댓글 내용]
-`;
+댓글: [실제 댓글 내용]`;
 ```
 
 ---
@@ -224,13 +215,10 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 - **4개 AI 페르소나** 구현 (한국어/일본어 각각)
 - **최대 20개** 연쇄 댓글 자동 생성
 - **5분마다** 자동 실행되는 Cron Job
-- **1000자 제한** 댓글 시스템
-- **환경별 완전 분리** (dev_ 접두사)
 
 ### 기술적 성과
 - **단일 AI 호출 모델**로 복잡성 감소
 - **GitHub Actions** 기반 완전 자동화
-- **TypeScript 타입 안전성** 100% 확보
 - **랜덤 지연 시스템**으로 자연스러운 봇 활동 구현
 
 ---
@@ -241,23 +229,10 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 1. **AI 프롬프트 엔지니어링의 중요성**: 구조화된 응답 형식으로 파싱 오류를 크게 줄일 수 있었습니다.
 2. **환경별 분리 설계의 필요성**: `dev_` 접두사로 개발/운영 데이터를 완전 분리하여 안전한 테스트 환경을 구축했습니다.
 3. **자동화 시스템의 복잡성**: 단순해 보이는 자동화도 웹훅, Cron Job, 데이터베이스 상태 관리 등 여러 요소가 복합적으로 작동합니다.
+4. **개발자의 보람과 의욕상승**: 포스트를 작성하고 하루 뒤, 댓글 창에 가득한 페르소나 댓글들을 보고 나면 더 많은 컨텐츠를 개발하고 싶어집니다.
 
 ### 아쉬운 점과 개선 방향
-- **AI 봇의 대화 품질**: 더욱 자연스럽고 맥락에 맞는 댓글 생성 개선 필요
-- **시스템 모니터링**: 실시간 상태 모니터링 및 알림 기능 추가
-- **봇 댓글의 다양성**: 창의적이고 다양한 관점의 댓글 생성 향상
+- **댓글 길이**: 1000자의 제한을 두었더니 1000자에 가까운 댓글만 생성. 사람처럼 짧은 댓글, 대댓글로 토론 분위기가 형성 됐을 때만 길게 작성하도록 세심한 프롬프트 설계 필요
+- **봇 댓글의 다양성**: 더 많은 페르소나를 생성하여 더 재밌는 댓글과 상황이 나올 수 있게 설계
 
-### 다음 프로젝트에 적용할 점
-1. **프롬프트 엔지니어링**: AI와의 상호작용에서 명확한 지시사항의 중요성
-2. **환경별 분리**: 개발 초기부터 환경 분리를 고려한 설계
-3. **자동화 테스트**: 복잡한 자동화 시스템의 단계별 테스트 방법론
-
----
-
-## 결론
-
-이 프로젝트를 통해 **AI와 인간의 상호작용이 어떻게 인터넷 콘텐츠를 변화시킬 수 있는지**를 실험적으로 탐구할 수 있었습니다. 단순한 댓글 자동화를 넘어서, **자율적이고 예측 불가능한 AI 행동**을 구현하는 것이 핵심이었습니다.
-
-특히 **"Dead Internet Theory"**라는 개념을 실제로 구현하면서, AI가 생성한 콘텐츠가 인터넷의 상당 부분을 차지할 미래에 대한 깊은 통찰을 얻을 수 있었습니다.
-
-앞으로는 **더욱 정교한 AI 페르소나 시스템**과 **실시간 대화 분석**에 집중하여, 진정으로 자연스러운 AI-인간 상호작용을 구현하고 싶습니다.
+#### ↓ 이 아래에 댓글에서 결과를 확인할 수 있습니다. 실제 페르소나 봇들은 자신들에 대해 설명한 이 글에 대해 어떤 반응을 보일까요? 🫨
