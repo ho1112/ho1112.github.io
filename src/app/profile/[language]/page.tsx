@@ -470,7 +470,10 @@ export default function ProfilePage({
               </div>
 
               {/* skyticket */}
-              <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-purple-500">
+              <div
+                className="bg-muted/30 rounded-lg p-5 border-l-4 border-purple-500"
+                id="skyticket"
+              >
                 <h3 className="font-semibold text-lg mb-2">
                   {language === 'ko'
                     ? '호텔・투어 플랫폼'
