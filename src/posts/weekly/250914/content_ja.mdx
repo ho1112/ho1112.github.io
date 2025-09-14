@@ -1,0 +1,131 @@
+---
+title: '🚀 2025-09 W2 #24'
+desc: CSSとSVGを活用したリキッドグラス効果、`bun install`の動作原理 詳細分析、npmサプライチェーン攻撃とセキュリティ | 2025年9月第2週目 週間技術ニュースレター
+date: 2025-09-14
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、CSSとSVGを活用した視覚効果からウェブパフォーマンスの最適化、そしてnpmエコシステムを揺るがしたサプライチェーン攻撃まで、フロントエンド開発の多彩なスペクトラムを深く掘り下げます。
+
+## 1. 🔍 深掘り
+- **[Liquid Glass in the Browser: Refraction with CSS and SVG](https://frontendfoc.us/link/173968/web)** (出典: *Frontend Focus #708*)
+	![ブラウザでのLiquid Glass効果](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1757496473/jyx0xnlhmyqpddg5vj1j.png)
+	-	**背景**: この記事は、Appleの「Liquid Glass」効果をウェブでどのように再現できるかを探求します。視覚的に美しい効果を純粋なウェブ技術で実装する方法について、詳細な分析を提供します。
+	-	**主な機能**: CSSとSVGの変位マップ（displacement maps）、そして物理ベースの屈折計算を組み合わせて、複雑な視覚効果を生み出します。記事には、実装プロセスを理解しやすくするための視覚資料と、実際の動作を確認できるプレイグラウンドが含まれています。（ただし、デモは現在Chromeでのみ動作します。）
+	-	**実務での適用**: ユニークでインタラクティブなユーザー体験を提供したい場合、特に製品紹介やポートフォリオサイトでユーザーの注目を集めるのに役立ちます。
+	-	**注意事項**: SVGフィルターと複雑なCSS計算はパフォーマンスに影響を与える可能性があるため、実際のプロダクション環境に適用する際には、最適化を十分に考慮する必要があります。
+
+- **[Behind the Scenes of `bun install`](https://javascriptweekly.com/link/174190/web)** (出典: *JavaScript Weekly #752*)
+	-	**背景**: Bunがどのようにしてあれほど速いパッケージインストール速度を達成するのかという単純な説明を超え、一般的なパッケージインストールプロセスの複雑さと技術的な課題を包括的に扱います。
+	-	**主な機能**: パッケージのインストールが一般的に難しい理由と、Bunがこの問題をどのように解決したかについての詳細な技術的旅路を提供します。`node_modules`の構造、依存関係解決アルゴリズム、そしてディスクI/Oの最適化など、様々な側面を探求します。
+	-	**実務での適用**: 大規模プロジェクトで依存関係管理とCI/CDパイプラインの速度を改善したい開発者にとって、Bunのアプローチは重要なインサイトを提供します。また、JavaScriptランタイムとパッケージマネージャーの内部動作原理を理解する上で大いに役立ちます。
+	-	**注意事項**: Bunの革新的なアプローチは、既存のNode.jsおよびnpmエコシステムとの完全な互換性を常に保証するわけではないため、導入前には十分なテストが必要です。
+
+---
+#### 見逃せないコンテンツ
+-	**[An Interactive Guide to TanStack DB](https://react.statuscode.com/link/174006/web)** (出典: *React Status #443*)
+	+	**要約**: TanStackコレクションの最新プロジェクトであるTanStack DBに関する実践的なガイドです。このライブラリは、組み込みのクライアントサイドデータベースで、リアルタイムのリレーショナルクエリ、ミリ秒未満のインクリメンタルアップデート、オプティミスティック書き込み（optimistic writes）をサポートします。この記事では、TanStack DBが実際の環境でどのように機能し、TanStack Queryの体験をどのように向上させるかを探ります。
+-	**[The History of Themeable User Interfaces](https://css-weekly.com/issue-621/)** (出典: *CSS Weekly #621*)
+	+	**要約**: Brad Frostが、時代の機会と制約に合わせてテーマを適用可能だったユーザーインターフェースの歴史を深く探求します。初期のオペレーティングシステムのスキンから、現代のウェブにおけるダークモードやデザイントークンに至るまで、UIカスタマイズの進化の過程を垣間見ることができます。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Andromeda: The Newest JavaScript Runtime on the Block](https://javascriptweekly.com/link/174239/web)** (出典: *JavaScript Weekly #752*)
+	![Andromedaランタイム](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/mwthqetzakzeazjrarol.jpg)
+	-	**概要**: RustベースのNovaエンジンで構築された新しいJavaScriptおよびTypeScriptランタイムです。まだ初期段階ですが、ネイティブな単一ファイルコンパイル、GPUアクセラレーションによる2D Canvas API、低いランタイムオーバーヘッド、Rustとの相互運用性など、多くの有望な機能を目標としています。
+	-	**使用法**:
+		```bash
+		# (例) Andromedaランタイムでファイルを実行
+		adn run my_script.js
+		```
+	-	**実践的なヒント**: WinterCG互換性を目指しているため、Cloudflare WorkersやDenoのような最新のエッジ環境に慣れている開発者であれば、容易に適応できるでしょう。特にパフォーマンスが重要で、Rustエコシステムを活用したい場合に注目すべきプロジェクトです。
+
+- **[React Bits: 100+ Creative, Animated React Components](https://react.statuscode.com/link/174025/web)** (出典: *React Status #443*)
+	![React Bitsコンポーネント](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/yof1nuemrhomwn5awysa.jpg)
+	-	**概要**: プロジェクトに視覚的な華やかさを加えたいときに便利な、100以上のクリエイティブでアニメーション付きのReactコンポーネント集です。様々なテキスト効果から一般的なアニメーション、歪み効果まで、多彩なコンポーネントを提供します。
+	-	**使用法**:
+		```jsx
+		import { LaserFlow } from 'react-bits';
+
+		function MyComponent() {
+		  return <LaserFlow text="Laser Effect" />;
+		}
+		```
+	-	**実践的なヒント**: 各コンポーネントは独立して使用できるため、必要な部分に簡単に統合できます。ウェブサイトにユニークなインタラクションを追加して、ユーザーエンゲージメントを高めたいときに素晴らしいソースとなるでしょう。
+
+---
+#### 見逃せないコンテンツ
+-	**[Pokémon Cards CSS Holographic Effect](https://frontendfoc.us/link/173987/web)** (出典: *Frontend Focus #708*)
+	+	**要約**: 3Dトランスフォーム、CSSグラデーション、ブレンドモードなどの高度なCSS技術を使用して、非常にリアルなポケモンカードのホログラフィック効果を再現するデモ集です。CSSだけで複雑でダイナミックな視覚効果をどのように作成できるかを示す素晴らしい例です。
+-	**[Splide: Lightweight and Accessible Slider/Carousel](https://frontendfoc.us/link/173994/web)** (出典: *Frontend Focus #708*)
+	+	**要約**: 軽量でアクセシビリティに優れたスライダー/カルーセルライブラリです。依存関係がなく、TypeScriptで書かれており、Lighthouseで高スコアを誇ります。ホームページで様々なデモを直接確認できます。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Color Shifting in CSS](https://frontendfoc.us/link/174098/web)** (出典: *Frontend Focus #708*)
+	-	**主要なインサイト**: ウェブアニメーションでは、形状や位置だけでなく、色の滑らかで魅力的な遷移も重要です。この記事は、CSSでの色遷移時に発生しうる色空間（color space）の限界と落とし穴を説明し、CSSフィルターを活用してこれを迅速かつ効果的に解決する方法を共有します。
+	-	**なぜ有益か**: ユーザーが知覚するアニメーションの品質を一段階向上させることができる実践的なヒントを提供します。特に`filter`プロパティを使用した最適化テクニックは、複雑なカラーアニメーションを実装する際のパフォーマンス低下を防ぐのに役立ちます。
+
+- **[How to Keep package.json Under Control](https://javascriptweekly.com/link/174187/web)** (出典: *JavaScript Weekly #752*)
+	![package.jsonの管理](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/qhjrvyfvoxxp652shjou.jpg)
+	-	**主要なインサイト**: 巨大化した`node_modules`フォルダに直面した開発者の経験を基に、「依存関係の衛生（dependency hygiene）」を維持する効果的な方法を提示します。`npm-check`や`depcheck`のようなツールを活用して不要な依存関係を見つけ出し、`package.json`をクリーンに管理するための実践的なヒントとツールを推奨します。
+	-	**なぜ有益か**: プロジェクトが大きくなるほど、依存関係の管理は大きな悩みの種となります。この記事は、ビルド時間を短縮し、バンドルサイズを削減し、潜在的なセキュリティ脅威を減少させる具体的な戦略を提供し、プロジェクトの長期的な保守性を向上させるのに役立ちます。
+
+---
+#### 見逃せないコンテンツ
+-	**[Optimizing Third-Party Scripts](https://www.debugbear.com/blog/partytown-web-workers)** (出典: *Smashing Newsletter #524*)
+	+	**要約**: サードパーティスクリプトがメインスレッドをブロックし、サイトの速度を低下させる問題を解決するために、Web Workerを活用する方法を説明します。Partytownライブラリを例に、サードパーティスクリプトをバックグラウンドスレッドに移動させ、レンダリングとユーザー入力の処理を高速化する実践的なワークフローを提供します。
+-	**[View Transitions: What Could Possibly Go Wrong?](https://vtbag.dev/tips/view-transition-fails-and-fixes/?utm_source=CSS-Weekly&utm_campaign=Issue-621&utm_medium=web)** (出典: *CSS Weekly #621*)
+	+	**要約**: View Transitions APIを使用する際に発生しうる様々な例外的な状況（quirks）とその解決策をまとめた便利な概要です。スムーズなページ遷移効果を実装する際に遭遇する可能性のある問題を事前に把握し、備えるのに役立ちます。
+
+---
+
+## 4. ✨ アイデア
+- **[Vibe Coding Keyboard](https://codepen.io/alvaromontoro/pen/qEBQWEm?utm_source=CSS-Weekly&utm_campaign=Issue-621&utm_medium=web)** (出典: *CSS Weekly #621*)
+	![Vibeコーディングキーボード](https://css-weekly.com/wp-content/uploads/2025/09/css-vibe-coding-keyboard.png)
+	-	**特徴**: 純粋なCSSだけで作られた、驚くほどユーモラスなキーボードのイラストレーションです。各キーのディテールとアニメーション効果は、CSSの創造的な活用の可能性を示し、開発者にインスピレーションを与えます。
+
+## 5. ⚡️ ミニノート
+- **[A Major Supply Chain Attack Hit the npm Ecosystem](https://javascriptweekly.com/link/174194/web)** (出典: *JavaScript Weekly #752*)
+	+ **要約**: Chalkやdebugなど、複数の有名なnpmパッケージのメンテナーがフィッシング攻撃の標的となり、パッケージが乗っ取られるという深刻なサプライチェーン攻撃が発生しました。この事件はnpmエコシステムのセキュリティ脆弱性を改めて浮き彫りにし、2段階認証（2FA）のようなセキュリティ対策の重要性を強調しています。
+- **[Make Your Proposals for Interop 2026](https://frontendfoc.us/link/173969/web)** (出典: *Frontend Focus #708*)
+	+ **要約**: 主要なブラウザベンダーがウェブ標準機能の相互運用性を改善するために協力するInteropプロジェクトの2026年提案募集が開始されました。ウェブ開発者が直面するクロスブラウジング問題を解決する新機能を提案できる機会です。
+- **[How AI Is Changing Search Behaviors](https://frontendfoc.us/link/173982/web)** (出典: *Frontend Focus #708*)
+	+ **要約**: 生成AIが従来の検索エンジンを置き換えるのではなく、人々が情報を探す方法を再構築していることを分析した記事です。AIは検索行動の一部として定着しつつあります。
+- **[Context-Aware Web Performance](https://csswizardry.com/Obs.js/demo/)** (出典: *Smashing Newsletter #524*)
+	+ **要約**: ユーザーのバッテリー低下、データ節約モード、弱い接続状態などを検知し、低解像度のメディアを提供したり、ウェブフォントを省略するなど、体験を動的に調整するのに役立つ`Obs.js`という小さなツールを紹介します。
+
+## 6. 🎉 リリース
+- **[Deno 2.5](https://javascriptweekly.com/link/174208/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: `deno.json`で権限セットを生成する機能、`Deno.test`の開発体験の向上、プログラマティックなバンドリングのための`deno bundle` APIなどが追加されました。
+- **[Storybook 10 Beta](https://javascriptweekly.com/link/174215/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: 最大の変更点は、ESM専用に移行し、よりシンプルで小さくなることです。移行を支援するツールも提供されます。
+- **[Node.js v24.8.0 (Current)](https://javascriptweekly.com/link/174213/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: Chrome DevToolsでHTTP/2ネットワークコールを検査できる機能がサポートされました。
+- **[ESLint v9.35.0](https://javascriptweekly.com/link/174210/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: カスタムエラーを再スローする際に、元々キャッチされたエラーが失われるのを防ぐ新しいルール（`preserve-caught-error`）が追加されました。
+- **[Ink 6.3](https://react.statuscode.com/link/174038/web)** (出典: *React Status #443*)
+	+ **アップデート**: Reactを使用してCLIアプリを作成できるライブラリです。Claude Code、Gemini CLIなど多数のアプリで使用されています。
+- **[Electron 38](https://javascriptweekly.com/link/174214/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: Chromium、Node.js、V8エンジンが最新バージョンに更新されました。
+- **[Fresh 2.0](https://javascriptweekly.com/link/174269/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: Denoベースのウェブフレームワークです。
+- **[uuid 13.0](https://javascriptweekly.com/link/174267/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: RFC9562に準拠したUUIDを生成します。
+- **[Peaks.js 4.0](https://frontendfoc.us/link/173993/web)** (出典: *Frontend Focus #708*)
+	+ **アップデート**: オーディオ波形とインタラクションするUIコンポーネントで、元々はBBC R&D部門で始まったプロジェクトです。
+- **[Ember 6.7](https://javascriptweekly.com/link/174217/web)** (出典: *JavaScript Weekly #752*)
+	+ **アップデート**: 安定したウェブアプリケーションフレームワークの最新バージョンです。
+
+## ✍️ おわりに
+今週のニュースを通じて、ウェブ技術の深さと幅広さを改めて実感します。特にCSSだけで実装された幻想的な視覚効果は、技術の芸術的な可能性を示してくれ、Bunのパッケージインストールプロセスに関する深掘り分析は、私たちが当たり前に使っていたツールの複雑な内部動作を垣間見る機会を提供してくれました。一方で、npmサプライチェーン攻撃のニュースは、利便性の裏に潜むセキュリティの脅威について警戒心を呼び起こしました。絶えず進化する技術トレンドを追い続けながらも、安定性とセキュリティという基本を忘れない、バランスの取れた開発能力を身につけることの重要性を感じます。このように多彩な技術の饗宴の中で、開発者として成長できる機会を発見できた一週間でした。
+
+#### 出典
+- [JavaScript Weekly #752](https://javascriptweekly.com/issues/752)
+- [Smashing Newsletter #524](https://mailchi.mp/smashingmagazine/524-web-performance)
+- [React Status #443](https://react.statuscode.com/issues/443)
+- [Frontend Focus #708](https://frontendfoc.us/issues/708)
+- [CSS Weekly #621](https://css-weekly.com/issue-621)
