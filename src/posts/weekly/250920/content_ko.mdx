@@ -1,0 +1,120 @@
+---
+title: '🚀 2025-09 W3 #25'
+desc: npm 공급망 공격과 보안, Safari 26.0의 새로운 기능, UX 리서치 영향력 측정 | 2025년 9월 3주차 주간 기술 뉴스레터
+date: 2025-09-20
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 npm 생태계를 위협하는 공급망 공격이 계속해서 확산되며 보안에 대한 경각심을 높였고, Safari 26.0의 새로운 기능들이 대거 공개되어 웹 개발의 미래를 엿볼 수 있었습니다. 더불어 UX 리서치의 영향력을 측정하고 개선하는 방법에 대한 깊이 있는 논의도 활발했습니다.
+
+## 1. 🔍 심층 분석
+- **[The 'Shai-Hulud' npm Supply Chain Attack Rumbles On](https://javascriptweekly.com/link/174584/web)** (출처: *JavaScript Weekly #753*)
+    - **배경**: npm 생태계에 영향을 미치는 악의적인 공급망 공격이 계속해서 규모를 키우고 있습니다. '듄'의 모래벌레 이름을 딴 이 공격은 개발자의 컴퓨터에서 토큰과 비밀 정보를 빼내기 위해 수백 개의 패키지에 영향을 미쳤습니다.
+    - **핵심 기능**: 공격은 주로 개발 환경의 환경 변수, 특히 `AWS_ACCESS_KEY_ID`, `OPENAI_API_KEY`, `NPM_TOKEN` 등 민감한 정보를 탈취하는 데 초점을 맞추고 있습니다. 이는 CI/CD 환경뿐만 아니라 로컬 개발 환경까지 위협합니다.
+    - **실무 적용**: pnpm과 같은 패키지 매니저는 `minimumReleaseAge`와 같은 설정을 도입하여 아주 최근에 배포된 패키지의 설치를 지연시키는 방식으로 대응하고 있습니다. 개발팀은 의존성 관리에 더욱 신중을 기하고, 의심스러운 패키지 사용을 피해야 합니다.
+    - **주의사항**: 이 공격은 계속 진화하고 있으므로, npm 패키지를 설치하거나 업데이트할 때 각별한 주의가 필요합니다. 의존성 버전을 고정하고, 정기적인 보안 감사를 수행하는 것이 중요합니다.
+
+- **[WebKit Features in Safari 26.0](https://frontendfoc.us/link/174372/web)** (출처: *Frontend Focus #709*)
+    ![WebKit Features in Safari 26.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758101976/cfjcdqmjupsyuw2rwe8i.png)
+    - **배경**: macOS 26, iOS 26과 함께 Safari 26.0이 출시되면서 웹킷에 다양한 새 기능이 추가되었습니다. 이번 업데이트는 웹 앱, CSS, 3D 모델링 등 여러 분야에 걸쳐 중요한 발전을 포함합니다.
+    - **핵심 기능**: 주요 기능으로는 CSS 앵커 포지셔닝, 스크롤 기반 애니메이션, 3D 모델을 웹 페이지에 삽입할 수 있는 `<model>` 요소, CSS `progress()` 함수, SVG 아이콘 지원 등이 있습니다. 또한, 이제 iOS와 iPadOS에서 모든 웹사이트를 홈 화면에 추가하여 웹 앱처럼 사용할 수 있게 되었습니다.
+    - **실무 적용**: 앵커 포지셔닝을 사용하면 툴팁이나 팝오버를 특정 요소에 쉽게 고정할 수 있으며, `<model>` 요소를 활용해 인터랙티브한 3D 경험을 제공할 수 있습니다. 웹 앱 기능 강화는 네이티브 앱과 웹 앱의 경계를 더욱 허물 것입니다.
+    - **주의사항**: 새로운 기능들은 대부분 최신 버전의 Safari에서만 지원되므로, 프로덕션 환경에 적용하기 전에 브라우저 호환성을 반드시 확인해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How To Measure UX Research Impact](https://uxinsight.org/how-to-measure-ux-research-impact-a-multi-level-framework/)** (출처: *Smashing Newsletter #525* )
+    + 요약: UX 리서치가 단순히 먼지 쌓인 보고서로 남지 않게 하려면 그 영향력을 측정하는 것이 중요합니다. 이 글은 리서치가 창출하는 가치(결과), 조직 내 변화를 주도하는지(영향력), 그리고 일상 업무에 얼마나 깊이 통합되었는지(실무)의 세 가지 레벨로 나누어 UX 리서치의 효과를 측정하는 프레임워크를 제안합니다.
+- **[Cloudflare Dashboard Outage Rooted in a useEffect Mistake](https://react.statuscode.com/link/174334/web)** (출처: *React Status #444* )
+    + 요약: Cloudflare 대시보드 중단의 원인이 React의 `useEffect` 훅의 잘못된 사용 때문이었다는 흥미로운 사례입니다. 의존성 배열이 누락된 `useEffect`가 무한 루프를 일으켜 서비스에 과도한 요청을 보내면서 발생한 장애로, 사소한 실수가 어떻게 큰 서비스 중단으로 이어질 수 있는지 보여줍니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[BlueSky Likes: Flexible Components for Displaying Bluesky Likes](https://javascriptweekly.com/link/174562/web)** (출처: *JavaScript Weekly #753*)
+    ![BlueSky Likes Component](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/eueluqk5umgmp7vfkxjm.jpg)
+    + **개요**: 탈중앙화 소셜 네트워크인 Bluesky의 '좋아요'를 표시하기 위한 유연한 웹 컴포넌트입니다. `bluesky-likes`와 `bluesky-likers` 두 가지 커스텀 엘리먼트를 제공하여, 특정 게시물의 '좋아요' 수와 '좋아요'를 누른 사용자들의 아바타 그룹을 쉽게 웹사이트에 통합할 수 있습니다.
+    + **사용법**:
+      ```html
+      <bluesky-likes post="at://did:plc:…/app.bsky.feed.post/3kwh…"></bluesky-likes>
+
+      <bluesky-likers post="at://did:plc:…/app.bsky.feed.post/3kwh…"></bluesky-likers>
+      ```
+    + **실전 팁**: 블로그나 개인 웹사이트에 자신의 Bluesky 활동을 보여주고 싶을 때 유용하게 사용할 수 있습니다. 별도의 API 연동 없이 HTML 태그만으로 간단하게 구현할 수 있는 것이 장점입니다.
+
+- **[Volume: A 3D OKLCH Color Palette Creator](https://frontendfoc.us/link/174396/web)** (출처: *Frontend Focus #709*)
+    ![Volume 3D Color Palette Creator](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758026267/ru1rueegolnopeu6kvob.png)
+    + **개요**: 평면적인 색상 견본에서 벗어나 3차원 공간에서 색상을 탐색하고 조작하여 컬러 팔레트를 만들 수 있는 독특한 도구입니다. OKLCH 색 공간을 기반으로 하여 보다 직관적이고 조화로운 색상 조합을 찾을 수 있도록 도와줍니다.
+    + **사용법**: 웹사이트에 접속하여 3D 공간을 탐색하듯 마우스를 움직여 원하는 색상을 찾고, 채도와 명도를 조절하며 팔레트를 구성할 수 있습니다.
+    + **실전 팁**: 새로운 디자인 프로젝트를 시작할 때 영감을 얻거나, 기존의 색상 시스템을 개선하고 싶을 때 사용하면 좋습니다. 3D 시각화를 통해 색상 간의 관계를 더 깊이 이해할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[npm-check-updates 18.2: Update package.json Dependencies to Latest Versions](https://javascriptweekly.com/link/174557/web)** (출처: *JavaScript Weekly #753* )
+    + 요약: `package.json`에 명시된 버전 범위를 넘어 최신 버전으로 의존성을 업데이트해주는 도구입니다. 특히 최근 18.2 버전에서는 공급망 공격에 대응하기 위해 패키지 게시 후 일정 시간이 지나야만 업데이트 대상으로 고려하는 'cooldown' 기능이 추가되었습니다.
+- **[React Bits: 100+ Creative, Animated React Components](https://frontendfoc.us/link/174405/web)** (출처: *Frontend Focus #709* )
+    + 요약: 프로젝트에 시각적인 화려함을 더하고 싶을 때 유용한 100개 이상의 창의적이고 애니메이션이 적용된 React 컴포넌트 모음입니다. 다양한 텍스트 효과, 일반 애니메이션, 왜곡 효과 등을 제공하여 사용자 경험을 풍부하게 만들 수 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[What Can We Actually Do With `corner-shape`?](https://frontendfoc.us/link/174374/web)** (출처: *Frontend Focus #709*)
+    + **핵심 인사이트**: `border-radius`를 넘어 요소의 모서리를 다양하게 스타일링할 수 있는 `corner-shape` CSS 속성을 소개합니다. 현재는 Chrome/Edge에서만 지원되지만, 이 속성을 사용하면 `angle`, `scoop` 등 다양한 형태로 모서리를 꾸밀 수 있어 창의적인 UI 디자인이 가능해집니다. 이 글은 여러 데모를 통해 `corner-shape`의 잠재력을 보여주며, 예상보다 훨씬 더 많은 활용 가능성이 있음을 증명합니다.
+    + **왜 이 글이 유익한가**: 표준으로 자리 잡기 전인 새로운 CSS 기능을 미리 학습하고, 미래의 웹 디자인 트렌드를 준비할 수 있는 좋은 기회를 제공합니다.
+
+- **[Follow-the-Leader Pattern with CSS Anchor Positioning](https://frontendfoc.us/link/174381/web)** (출처: *Frontend Focus #709*)
+    ![Follow-the-Leader Pattern Demo](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758113235/bdmfvohdb5v6zkzbtui9.jpg)
+    + **핵심 인사이트**: CSS 앵커 포지셔닝을 사용하여 '따라다니는' 요소를 만드는 'Follow-the-Leader' 패턴을 소개합니다. 이 패턴은 사용자의 입력이나 상태 변화에 따라 한 요소(follower)가 다른 요소(leader)를 동적으로 따라다니도록 하는 기술입니다. JavaScript 없이 순수 CSS만으로 복잡한 UI 상호작용을 구현할 수 있는 앵커 포지셔닝의 강력함을 보여줍니다. (현재 Chromium 계열 브라우저에서만 지원)
+    + **왜 이 글이 유익한가**: 복잡한 DOM 구조나 JavaScript 계산 없이도 유연한 UI를 구축할 수 있는 현대적인 CSS 기법을 배울 수 있습니다.
+
+- **[Affinity Mapping In UX](https://medium.com/design-bridges/affinity-mapping-b0b9faddccfb)** (출처: *Smashing Newsletter #525*)
+    ![Affinity Mapping Example](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/784395d4-f79c-2605-9405-b0b2452c1abf.png)
+    + **핵심 인사이트**: 고객 경험 리서치나 브레인스토밍에서 얻은 통찰력을 정리하는 강력한 도구인 어피니티 매핑(친화도 매핑)을 제대로 활용하는 방법을 설명합니다. 단순히 메모를 주제별로 그룹화하는 것을 넘어, 양질의 노트를 작성하고, 캔버스에 체계적으로 정리하며, 클러스터를 통해 계층 구조를 만드는 7단계 접근법을 제시합니다.
+    + **왜 이 글이 유익한가**: 리서치 결과를 실행 가능한 결정으로 이끌어내는 체계적인 방법을 배울 수 있어, 팀의 의사결정 과정을 개선하는 데 실질적인 도움이 됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[You Don't Need Animations](https://frontendfoc.us/link/174382/web)** (출처: *Frontend Focus #709* )
+    + 요약: UI에 애니메이션을 언제 추가하고, 언제 추가하지 말아야 하는지에 대한 훌륭한 입문서입니다. 효과적이고 목적에 맞는 애니메이션을 구현하는 방법에 대한 지침을 제공하여, 불필요한 움직임으로 사용자 경험을 해치지 않도록 도와줍니다.
+- **[How to Keep `package.json` Under Control](https://react.statuscode.com/link/174335/web)** (출처: *React Status #444* )
+    + 요약: 863MB에 달하는 `node_modules` 폴더를 보고 '의존성 위생'에 대해 고찰하게 된 개발자의 글입니다. `package.json`의 크기와 복잡성을 제어하기 위한 실용적인 팁과 도구를 추천합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Brutalita Sans: An Experimental Font and Font Editor](https://frontendfoc.us/link/174399/web)** (출처: *Frontend Focus #709*)
+    ![Brutalita Sans Font Editor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758102857/bmzgvbkl0scqhexstazs.png)
+    + **특징**: 단순히 폰트를 제공하는 것을 넘어, 웹사이트에서 직접 각 글자를 편집하여 자신만의 커스텀 버전을 만들 수 있는 실험적인 프로젝트입니다. 사용자가 직접 폰트 디자인 과정에 참여할 수 있는 새로운 형태의 인터랙션을 제공하며, 타이포그래피에 대한 창의적인 영감을 줍니다.
+
+## 5. ⚡️ 짧은 소식
+- **[This Is for Everyone](https://frontendfoc.us/link/174404/web)** (출처: *Frontend Focus #709*)
+    + 요약: 월드 와이드 웹의 창시자인 팀 버너스리 경의 새로운 회고록이 출간되었습니다. 웹의 역사와 미래에 대한 그의 통찰을 엿볼 수 있습니다.
+- **[Browserslist now supports Baseline](https://frontendfoc.us/link/174378/web)** (출처: *Frontend Focus #709*)
+    + 요약: 웹 기능의 브라우저 지원 범위를 설정하는 데 널리 사용되는 도구인 Browserslist가 이제 MDN의 Baseline을 지원합니다. 이를 통해 보다 명확하고 표준화된 기준으로 타겟 브라우저를 설정할 수 있게 되었습니다.
+- **[React Won by Default – And It's Killing Frontend Innovation](https://javascriptweekly.com/link/174553/web)** (출처: *JavaScript Weekly #753*)
+    + 요약: '기본값이 된 React'가 프론트엔드 생태계의 혁신을 저해하고 있다는 도발적인 주장을 담은 글로, 이번 주 커뮤니티에서 많은 논의를 불러일으켰습니다.
+- **[create your own Space Invader](https://frontendfoc.us/link/174379/web)** (출처: *Frontend Focus #709*)
+    + 요약: 재미로 즐길 수 있는 작은 웹 프로젝트로, 자신만의 스페이스 인베이더 캐릭터를 만들고 움직이는 애니메이션을 볼 수 있습니다.
+
+## 6. 🎉 릴리스
+- **[Expo SDK 54 Released](https://react.statuscode.com/link/174349/web)** (출처: *React Status #444* )
+    + 업데이트: React Native 개발을 위한 Expo 프레임워크의 대규모 업데이트입니다. 사전 컴파일된 iOS 빌드를 통해 빌드 시간을 크게 단축했으며, React Native 0.81 및 React 19.1을 지원합니다. 안정화된 Expo File System도 포함되었습니다.
+- **[pnpm 10.16](https://react.statuscode.com/link/174341/web)** (출처: *React Status #444* )
+    + 업데이트: npm 공급망 공격에 대응하기 위해 `minimumReleaseAge` 설정을 추가했습니다. 이 설정은 특정 기간보다 최신인 패키지의 설치를 막아 잠재적인 위협을 완화하는 데 도움을 줍니다.
+- **[Kirby 5.1.0 Released](https://frontendfoc.us/link/174397/web)** (출처: *Frontend Focus #709* )
+    + 업데이트: 인기 있는 PHP 기반 CMS인 Kirby의 최신 버전입니다. 새로운 네비게이션 옵션, 중첩된 다이얼로그 지원, UI 개선 등이 포함되었습니다.
+- **[React on Rails 16.0](https://react.statuscode.com/link/174359/web)** (출처: *React Status #444* )
+    + 업데이트: Ruby on Rails 앱에 React를 통합하기 위한 라이브러리의 새 버전입니다.
+- **[TypeBox 1.0](https://javascriptweekly.com/link/174566/web)** (출처: *JavaScript Weekly #753* )
+    + 업데이트: TypeScript 타입으로 추론되는 인메모리 JSON 스키마 객체를 생성하는 런타임 타입 시스템의 첫 메이저 버전입니다.
+- **[Hexo 8.0](https://javascriptweekly.com/link/174574/web)** (출처: *JavaScript Weekly #753* )
+    + 업데이트: 인기 있는 블로그 프레임워크 및 정적 사이트 생성기의 새로운 메이저 버전입니다.
+- **[Fresh 2.1](https://javascriptweekly.com/link/174575/web)** (출처: *JavaScript Weekly #753* )
+    + 업데이트: Deno 기반의 웹 프레임워크 Fresh의 새 버전이 릴리스되었습니다.
+
+## ✍️ 마치며
+이번 주 기술 동향은 보안의 중요성을 다시 한번 일깨워 주었습니다. npm 공급망 공격은 우리가 사용하는 오픈소스 생태계가 얼마나 취약할 수 있는지, 그리고 이를 방어하기 위한 커뮤니티의 신속한 대응이 얼마나 중요한지를 보여줍니다. 개발자로서 단순히 코드를 작성하는 것을 넘어, 우리가 사용하는 도구와 의존성에 대한 깊은 이해와 책임감을 가져야 할 때입니다. 동시에 Safari 26.0과 같은 브라우저의 발전은 웹 플랫폼이 여전히 역동적으로 진화하고 있음을 증명하며, 우리에게 새로운 창작의 가능성을 열어주고 있습니다. 끊임없이 배우고 경계하며, 더 안전하고 풍부한 웹을 만들어나가야겠습니다.
+
+#### 출처
+- [JavaScript Weekly #753](https://javascriptweekly.com/issues/753)
+- [Smashing Newsletter #525](https://mailchi.mp/smashingmagazine/525-ux-research)
+- [React Status #444](https://react.statuscode.com/issues/444)
+- [Frontend Focus #709](https://frontendfoc.us/issues/709)

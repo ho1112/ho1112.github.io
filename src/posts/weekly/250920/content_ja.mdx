@@ -1,0 +1,120 @@
+---
+title: '🚀 2025-09 W3 #25'
+desc: npmサプライチェーン攻撃とセキュリティ、Safari 26.0の新機能、UXリサーチインパクトの測定 | 2025年9月第3週目 週間技術ニュースレター
+date: 2025-09-20
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、npmエコシステムを脅かすサプライチェーン攻撃が拡大し続け、セキュリティへの警戒心を高めました。また、Safari 26.0の新機能が多数公開され、ウェブ開発の未来を垣間見ることができました。さらに、UXリサーチの影響力を測定し、改善する方法についての深い議論も活発に行われました。
+
+## 1. 🔍 深掘り
+- **[The 'Shai-Hulud' npm Supply Chain Attack Rumbles On](https://javascriptweekly.com/link/174584/web)** (出典: *JavaScript Weekly #753*)
+	- **背景**: npmエコシステムに影響を与える悪意のあるサプライチェーン攻撃が、引き続き規模を拡大しています。「デューン」のサンドワームにちなんで名付けられたこの攻撃は、開発者のコンピュータからトークンや秘密情報を盗み出すために、数百のパッケージに影響を及ぼしました。
+	- **主な機能**: この攻撃は、主に開発環境の環境変数、特に`AWS_ACCESS_KEY_ID`、`OPENAI_API_KEY`、`NPM_TOKEN`などの機密情報を窃取することに焦点を当てています。これはCI/CD環境だけでなく、ローカルの開発環境まで脅かします。
+	- **実務への適用**: pnpmのようなパッケージマネージャーは、`minimumReleaseAge`のような設定を導入し、ごく最近にデプロイされたパッケージのインストールを遅らせることで対応しています。開発チームは依存関係の管理にさらに慎重を期し、疑わしいパッケージの使用を避けるべきです。
+	- **注意事項**: この攻撃は進化し続けているため、npmパッケージをインストールまたは更新する際には特に注意が必要です。依存関係のバージョンを固定し、定期的なセキュリティ監査を実施することが重要です。
+
+- **[WebKit Features in Safari 26.0](https://frontendfoc.us/link/174372/web)** (出典: *Frontend Focus #709*)
+	![WebKit Features in Safari 26.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758101976/cfjcdqmjupsyuw2rwe8i.png)
+	- **背景**: macOS 26、iOS 26とともにSafari 26.0がリリースされ、WebKitに様々な新機能が追加されました。今回のアップデートは、ウェブアプリ、CSS、3Dモデリングなど、多くの分野にわたる重要な進展を含んでいます。
+	- **主な機能**: 主な機能としては、CSSアンカーポジショニング、スクロールベースドアニメーション、3Dモデルをウェブページに埋め込むことができる`<model>`要素、CSS `progress()`関数、SVGアイコンのサポートなどがあります。また、iOSとiPadOSですべてのウェブサイトをホーム画面に追加し、ウェブアプリのように使用できるようになりました。
+	- **実務への適用**: アンカーポジショニングを使えば、ツールチップやポップオーバーを特定の要素に簡単に固定でき、`<model>`要素を活用してインタラクティブな3D体験を提供できます。ウェブアプリ機能の強化は、ネイティブアプリとウェブアプリの境界をさらに曖昧にするでしょう。
+	- **注意事項**: 新機能のほとんどは最新バージョンのSafariでのみサポートされているため、本番環境に適用する前にブラウザの互換性を必ず確認する必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[How To Measure UX Research Impact](https://uxinsight.org/how-to-measure-ux-research-impact-a-multi-level-framework/)** (出典: *Smashing Newsletter #525* )
+	+ まとめ: UXリサーチが単に埃をかぶったレポートで終わらないようにするためには、その影響力を測定することが重要です。この記事は、リサーチが生み出す価値（成果）、組織内の変化を主導しているか（影響力）、そして日常業務にどれだけ深く統合されているか（実務）の3つのレベルに分けてUXリサーチの効果を測定するフレームワークを提案します。
+- **[Cloudflare Dashboard Outage Rooted in a useEffect Mistake](https://react.statuscode.com/link/174334/web)** (出典: *React Status #444* )
+	+ まとめ: Cloudflareダッシュボードの障害の原因が、Reactの`useEffect`フックの誤った使用によるものだったという興味深い事例です。依存性配列が欠落した`useEffect`が無限ループを引き起こし、サービスに過剰なリクエストを送信したことで発生した障害で、些細なミスがどのようにして大規模なサービス停止につながるかを示しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[BlueSky Likes: Flexible Components for Displaying Bluesky Likes](https://javascriptweekly.com/link/174562/web)** (出典: *JavaScript Weekly #753*)
+	![BlueSky Likes Component](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/eueluqk5umgmp7vfkxjm.jpg)
+	+ **概要**: 分散型ソーシャルネットワークであるBlueskyの「いいね」を表示するための柔軟なWebコンポーネントです。`bluesky-likes`と`bluesky-likers`の2つのカスタム要素を提供し、特定の投稿の「いいね」数と「いいね」したユーザーのアバターグループを簡単にウェブサイトに統合できます。
+	+ **使用方法**:
+		```html
+		<bluesky-likes post="at://did:plc:…/app.bsky.feed.post/3kwh…"></bluesky-likes>
+
+		<bluesky-likers post="at://did:plc:…/app.bsky.feed.post/3kwh…"></bluesky-likers>
+		```
+	+ **実践的なヒント**: ブログや個人のウェブサイトに自身のBlueskyでの活動を表示したいときに便利です。別途API連携なしで、HTMLタグだけで簡単に実装できるのが利点です。
+
+- **[Volume: A 3D OKLCH Color Palette Creator](https://frontendfoc.us/link/174396/web)** (出典: *Frontend Focus #709*)
+	![Volume 3D Color Palette Creator](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758026267/ru1rueegolnopeu6kvob.png)
+	+ **概要**: 平面的な色見本から脱却し、3次元空間で色を探索・操作してカラーパレットを作成できるユニークなツールです。OKLCH色空間をベースにしており、より直感的で調和のとれた色の組み合わせを見つけるのに役立ちます。
+	+ **使用方法**: ウェブサイトにアクセスし、3D空間を探索するようにマウスを動かして希望の色を見つけ、彩度と明度を調整しながらパレットを構成できます。
+	+ **実践的なヒント**: 新しいデザインプロジェクトを始めるときにインスピレーションを得たり、既存のカラーシステムを改善したいときに使うと良いでしょう。3Dの視覚化を通じて、色と色の関係をより深く理解できます。
+
+---
+#### 見逃せないコンテンツ
+- **[npm-check-updates 18.2: Update package.json Dependencies to Latest Versions](https://javascriptweekly.com/link/174557/web)** (出典: *JavaScript Weekly #753* )
+	+ まとめ: `package.json`に記載されたバージョン範囲を超えて、依存関係を最新バージョンに更新してくれるツールです。特に最近のバージョン18.2では、サプライチェーン攻撃に対応するため、パッケージ公開後、一定時間が経過しないと更新対象とみなさない「クールダウン」機能が追加されました。
+- **[React Bits: 100+ Creative, Animated React Components](https://frontendfoc.us/link/174405/web)** (出典: *Frontend Focus #709* )
+	+ まとめ: プロジェクトに視覚的な華やかさを加えたいときに役立つ、100以上の創造的でアニメーションが適用されたReactコンポーネント集です。様々なテキスト効果、一般的なアニメーション、歪み効果などを提供し、ユーザーエクスペリエンスを豊かにすることができます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[What Can We Actually Do With `corner-shape`?](https://frontendfoc.us/link/174374/web)** (出典: *Frontend Focus #709*)
+	+ **主要なインサイト**: `border-radius`を超えて、要素の角を多様にスタイリングできる`corner-shape` CSSプロパティを紹介します。現在はChrome/Edgeでのみサポートされていますが、このプロパティを使えば`angle`、`scoop`など様々な形で角を装飾でき、創造的なUIデザインが可能になります。この記事は、いくつかのデモを通じて`corner-shape`のポテンシャルを示し、予想以上に多くの活用可能性があることを証明しています。
+	+ **この記事が有益な理由**: 標準となる前の新しいCSS機能を事前に学習し、未来のウェブデザインのトレンドに備える良い機会を提供します。
+
+- **[Follow-the-Leader Pattern with CSS Anchor Positioning](https://frontendfoc.us/link/174381/web)** (出典: *Frontend Focus #709*)
+	![Follow-the-Leader Pattern Demo](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758113235/bdmfvohdb5v6zkzbtui9.jpg)
+	+ **主要なインサイト**: CSSアンカーポジショニングを使用して「追従する」要素を作成する「Follow-the-Leader」パターンを紹介します。このパターンは、ユーザーの入力や状態の変化に応じて、ある要素（フォロワー）が別の要素（リーダー）に動的に追従するようにする技術です。JavaScriptなしで、純粋なCSSだけで複雑なUIインタラクションを実装できるアンカーポジショニングの強力さを示しています。（現在、Chromiumベースのブラウザでのみサポート）
+	+ **この記事が有益な理由**: 複雑なDOM構造やJavaScriptの計算なしで、柔軟なUIを構築できる現代的なCSSテクニックを学ぶことができます。
+
+- **[Affinity Mapping In UX](https://medium.com/design-bridges/affinity-mapping-b0b9faddccfb)** (出典: *Smashing Newsletter #525*)
+	![Affinity Mapping Example](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/784395d4-f79c-2605-9405-b0b2452c1abf.png)
+	+ **主要なインサイト**: 顧客体験リサーチやブレインストーミングで得られた洞察を整理するための強力なツールであるアフィニティマッピングを正しく活用する方法を説明します。単にメモをテーマ別にグループ化するだけでなく、質の高いノートを作成し、キャンバスに体系的に整理し、クラスターを通じて階層構造を作る7段階のアプローチを提示します。
+	+ **この記事が有益な理由**: リサーチ結果を実行可能な決定に導く体系的な方法を学ぶことができ、チームの意思決定プロセスを改善する上で実質的な助けとなります。
+
+---
+#### 見逃せないコンテンツ
+- **[You Don't Need Animations](https://frontendfoc.us/link/174382/web)** (出典: *Frontend Focus #709* )
+	+ まとめ: UIにアニメーションをいつ追加し、いつ追加すべきでないかについての優れた入門書です。効果的で目的に合ったアニメーションを実装するための指針を提供し、不必要な動きでユーザーエクスペリエンスを損なわないように助けます。
+- **[How to Keep `package.json` Under Control](https://react.statuscode.com/link/174335/web)** (出典: *React Status #444* )
+	+ まとめ: 863MBにもなる`node_modules`フォルダを見て、「依存性の衛生」について考察することになった開発者の記事です。`package.json`のサイズと複雑さを制御するための実用的なヒントとツールを推奨しています。
+---
+
+## 4. ✨ アイデア
+- **[Brutalita Sans: An Experimental Font and Font Editor](https://frontendfoc.us/link/174399/web)** (出典: *Frontend Focus #709*)
+	![Brutalita Sans Font Editor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758102857/bmzgvbkl0scqhexstazs.png)
+	+ **特徴**: 単にフォントを提供するだけでなく、ウェブサイト上で直接各文字を編集して自分だけのカスタムバージョンを作成できる実験的なプロジェクトです。ユーザーが直接フォントデザインの過程に参加できる新しい形のインタラクションを提供し、タイポグラフィに対する創造的なインスピレーションを与えます。
+
+## 5. ⚡️ ミニノート
+- **[This Is for Everyone](https://frontendfoc.us/link/174404/web)** (出典: *Frontend Focus #709*)
+	+ まとめ: ワールド・ワイド・ウェブの創始者であるティム・バーナーズ＝リー卿の新しい回顧録が出版されました。ウェブの歴史と未来に対する彼の洞察を垣間見ることができます。
+- **[Browserslist now supports Baseline](https://frontendfoc.us/link/174378/web)** (出典: *Frontend Focus #709*)
+	+ まとめ: ウェブ機能のブラウザサポート範囲を設定するために広く使用されているツールであるBrowserslistが、MDNのBaselineをサポートするようになりました。これにより、より明確で標準化された基準でターゲットブラウザを設定できるようになります。
+- **[React Won by Default – And It's Killing Frontend Innovation](https://javascriptweekly.com/link/174553/web)** (出典: *JavaScript Weekly #753*)
+	+ まとめ: 「デフォルトとなったReact」がフロントエンドエコシステムのイノベーションを阻害しているという挑発的な主張を盛り込んだ記事で、今週コミュニティで多くの議論を呼び起こしました。
+- **[create your own Space Invader](https://frontendfoc.us/link/174379/web)** (出典: *Frontend Focus #709*)
+	+ まとめ: 楽しむための小さなウェブプロジェクトで、自分だけのスペースインベーダーキャラクターを作り、動くアニメーションを見ることができます。
+
+## 6. 🎉 リリース
+- **[Expo SDK 54 Released](https://react.statuscode.com/link/174349/web)** (出典: *React Status #444* )
+	+ アップデート: React Native開発のためのExpoフレームワークの大規模アップデートです。事前コンパイルされたiOSビルドによりビルド時間を大幅に短縮し、React Native 0.81およびReact 19.1をサポートします。安定化されたExpo File Systemも含まれています。
+- **[pnpm 10.16](https://react.statuscode.com/link/174341/web)** (出典: *React Status #444* )
+	+ アップデート: npmサプライチェーン攻撃に対応するため、`minimumReleaseAge`設定を追加しました。この設定は、特定の期間よりも新しいパッケージのインストールを防ぎ、潜在的な脅威を緩和するのに役立ちます。
+- **[Kirby 5.1.0 Released](https://frontendfoc.us/link/174397/web)** (出典: *Frontend Focus #709* )
+	+ アップデート: 人気のあるPHPベースのCMSであるKirbyの最新バージョンです。新しいナビゲーションオプション、ネストされたダイアログのサポート、UIの改善などが含まれています。
+- **[React on Rails 16.0](https://react.statuscode.com/link/174359/web)** (出典: *React Status #444* )
+	+ アップデート: Ruby on RailsアプリにReactを統合するためのライブラリの新バージョンです。
+- **[TypeBox 1.0](https://javascriptweekly.com/link/174566/web)** (出典: *JavaScript Weekly #753* )
+	+ アップデート: TypeScriptの型から推論されるインメモリJSONスキーマオブジェクトを生成するランタイム型システムの初のメジャーバージョンです。
+- **[Hexo 8.0](https://javascriptweekly.com/link/174574/web)** (出典: *JavaScript Weekly #753* )
+	+ アップデート: 人気のブログフレームワークであり静的サイトジェネレーターの新しいメジャーバージョンです。
+- **[Fresh 2.1](https://javascriptweekly.com/link/174575/web)** (出典: *JavaScript Weekly #753* )
+	+ アップデート: DenoベースのウェブフレームワークFreshの新バージョンがリリースされました。
+
+## ✍️ おわりに
+今週の技術動向は、セキュリティの重要性を改めて気づかせてくれました。npmのサプライチェーン攻撃は、私たちが使用するオープンソースエコシステムがいかに脆弱であるか、そしてそれを防御するためのコミュニティの迅速な対応がいかに重要かを示しています。開発者として、単にコードを書くだけでなく、私たちが使用するツールや依存関係に対する深い理解と責任感を持つべき時です。同時に、Safari 26.0のようなブラウザの進化は、ウェブプラットフォームが依然としてダイナミックに進化していることを証明し、私たちに新しい創造の可能性を開いてくれています。絶えず学び、警戒し、より安全で豊かなウェブを築いていかなければなりません。
+
+#### 出典
+- [JavaScript Weekly #753](https://javascriptweekly.com/issues/753)
+- [Smashing Newsletter #525](https://mailchi.mp/smashingmagazine/525-ux-research)
+- [React Status #444](https://react.statuscode.com/issues/444)
+- [Frontend Focus #709](https://frontendfoc.us/issues/709)
