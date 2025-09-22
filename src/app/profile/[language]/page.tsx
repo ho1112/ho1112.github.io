@@ -157,15 +157,15 @@ export default function ProfilePage({
                   {(language === 'ko'
                     ? [
                         '신졸용 인재 스카우트 시스템의 toB, toC시스템 개발',
-                        '검색, 유저 리스트, 오퍼, 이벤트 기능 추가',
+                        '학생관리, 검색, 유저 리스트, 오퍼, 이벤트 기능 추가',
                         '컴포넌트 구조 재설계, 리팩토링',
                         '기업 리브랜딩 대응',
                         '생산성 향상(storybook, playwirght, pre-commit hooks)',
                         'Sentry 에러 모니터링 및 버그 수정',
                       ]
                     : [
-                        '新卒向けの人材スカウトシステムのto B・to Cシステム開発',
-                        '検索, ユーザーリスト、 オファー, イベント機能追加',
+                        '新卒向けの人材スカウトシステムのtoB・toCシステム開発',
+                        '学生管理、検索、 ユーザーリスト、 オファー, イベント機能追加',
                         'コンポーネント構造の再設計、リファクタリング',
                         '企業リブランディング対応',
                         '生産性向上(storybook, playwirght, pre-commit hooks)',
@@ -389,19 +389,21 @@ export default function ProfilePage({
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        '기업 리브랜딩에 대응해 테마 컬러 변경 작업, 가이드라인 컬러 통합 관리',
+                        '기업용 대시보드에서 과거 6개월간의 오퍼 수나 이벤트 참가 수 등의 주요 지표를 집계하여 전월 대비 증감률과 함께 수치와 그래프로 시각화하는 기능을 개발',
                         '검색 조건 저장, 유저 숨기기, 한정 이벤트 기능 추가',
+                        '기업 리브랜딩에 대응해 테마 컬러 변경 작업, 가이드라인 컬러 통합 관리',
                         'storybook 도입으로 컴포넌트 문서화, 디자이너 연계 강화',
-                        'pre-commit hook 도입으로 ESLint 자동 실행(import sort & unused)',
+                        'pre-commit hooks 도입으로 ESLint 자동 실행(import sort & unused)',
                         'E2E 테스트 도입(playwright)으로 테스트 자동화, 기존 15분짜리 수동 테스트를 2분으로 단축',
                         'Sentry 에러 모니터링 및 수정, 주간 에러 건수를 94% 절감(1,065건 -> 60건)',
                         'Node, Next.js 버전 업그레이드 대응',
                       ]
                     : [
-                        '企業リブランディング対応に伴い、テーマカラー変更作業、ガイドラインカラー統合管理',
+                        '企業向けダッシュボードにおいて、過去6ヶ月間のオファー数やイベント参加数などの主要指標を集計し、前月比の増減率と共に数値とグラフで可視化する機能を開発',
                         '検索条件保存、ユーザー非表示、限定イベント機能追加',
+                        '企業リブランディング対応に伴い、テーマカラー変更作業、ガイドラインカラー統合管理',
                         'storybook導入でコンポーネントドキュメント化、デザイナー連携強化',
-                        'pre-commit hook導入でESLint自動実行(import sort & unused)',
+                        'pre-commit hooks導入でESLint自動実行(import sort & unused)',
                         'E2Eテスト導入(playwright)でテスト自動化、従来15分の手動テストを2分に短縮',
                         'Sentryエラー監視と修正、週次エラー件数を94%削減(1,065件 -> 60件)',
                         'Node, Next.jsバージョンアップデート対応',
@@ -504,9 +506,9 @@ export default function ProfilePage({
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        'PHP, Vue, React 등 다양한 기술 스택 간 호환성을 위한 서비스 통합 네비게이션을 Web Components로 개발',
+                        'PHP(항공), Vue(렌터카), React(호텔) 등 서로 다른 기술 스택으로 구성된 서비스들의 사용자 경험을 통일하기 위해, Web Components를 사용하여 사이트 전체의 글로벌 내비게이션 시스템을 설계 및 개발',
                         'E2E 테스트 도입(Cypress)',
-                        '호텔 성인 어린이 인원 별 검색, 단체 예약을 위한 다중 객실 검색 기능 추가',
+                        '호텔, 료칸의 성인 어린이 인원 별 검색, 단체 예약을 위한 다중 객실 검색 기능 추가',
                         '해외 호텔 검색 메인 페이지 작성 및 콘텐츠 추가',
                         'Core Web Vitals 개선 - FCP, LCP, CLS 개선',
                         'SEO 최적화를 위한 BreadCrumb 링크, 메타데이터 설정 및 canonical tag를 활용한 URL 정규화 구현',
@@ -518,9 +520,9 @@ export default function ProfilePage({
                         'Google BigQuery에서 데이터를 추출하여 프론트엔드에서 가공 및 표시하는 시스템 구축',
                       ]
                     : [
-                        'PHP, Vue, React 等の各技術スタック間の互換性向上のため、サービス全体の統合ナビゲーションをWeb Componentsで開発',
+                        'PHP(航空)、Vue(レンタカー)、React(ホテル)など、それぞれ異なる技術スタックで構成されたサービスたちのユーザー体験を統一するため、Web Componentsを使用してサイト全体のグローバルナビゲーションシステムを設計・開発',
                         'E2Eテスト導入(Cypress)',
-                        'ホテル, 温泉の大人・子供別検索, 団体予約用の複数部屋検索機能追加',
+                        'ホテル, 旅館の大人・子供別検索, 団体予約用の複数部屋検索機能追加',
                         '海外ホテル検索メインページ作成とコンテンツ追加',
                         'Core Web Vitals改善 - FCP, LCP, CLS改善',
                         'SEO最適化のためのBreadCrumbリンク, メタデータ設定とcanonical tagを利用したURL正規化実装',
