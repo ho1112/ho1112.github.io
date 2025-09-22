@@ -208,12 +208,14 @@ export default function ProfilePage({
                 <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
+                        'MAU700만의 자사 서비스',
                         '호텔·투어·항공권 예약 시스템 및 캠페인 페이지 개발',
                         '다중 기술 스택 환경에서 Web Components를 활용한 통합 네비게이션 개발',
                         'SEO 최적화 및 Core Web Vitals 개선 작업',
                         '외부 API 연동 및 데이터 분석 시스템 구축',
                       ]
                     : [
+                        'MAU700万の自社サービス',
                         'ホテル・ツアー・航空券予約システム及びキャンペーンページ開発',
                         '複数技術スタック環境でWeb Componentsを活用した統合ナビゲーション開発',
                         'SEO最適化及びCore Web Vitals改善作業',
@@ -504,11 +506,11 @@ export default function ProfilePage({
                     ? [
                         'PHP, Vue, React 등 다양한 기술 스택 간 호환성을 위한 서비스 통합 네비게이션을 Web Components로 개발',
                         'E2E 테스트 도입(Cypress)',
-                        '호텔 어른, 어린이 인원 별 검색, 단체 예약을 위한 다중 객실 검색 기능 추가',
+                        '호텔 성인 어린이 인원 별 검색, 단체 예약을 위한 다중 객실 검색 기능 추가',
                         '해외 호텔 검색 메인 페이지 작성 및 콘텐츠 추가',
                         'Core Web Vitals 개선 - FCP, LCP, CLS 개선',
                         'SEO 최적화를 위한 BreadCrumb 링크, 메타데이터 설정 및 canonical tag를 활용한 URL 정규화 구현',
-                        'SEO 대응을 위한 호텔, 온천 목록 페이지 자동 생성',
+                        'SEO전용 호텔, 온천 목록 페이지 자동 생성',
                         'SSR, SSG(ISR) 페이지 작성',
                         '외부 리뷰 시스템(yotpo) 연동',
                         '외부 API 연동으로 호텔 애널리틱스 데이터 수집 및 SEO 최적화 FAQ 페이지 구축',
@@ -522,7 +524,7 @@ export default function ProfilePage({
                         '海外ホテル検索メインページ作成とコンテンツ追加',
                         'Core Web Vitals改善 - FCP, LCP, CLS改善',
                         'SEO最適化のためのBreadCrumbリンク, メタデータ設定とcanonical tagを利用したURL正規化実装',
-                        'SEO対策のためのホテル, 温泉一覧ページ大量生成',
+                        'SEO専用のホテル, 温泉一覧ページ大量生成',
                         'SSR, SSG(ISR)ページ作成',
                         '外部レビューシステム(yotpo)連携',
                         '外部API連携によるホテルアメニティデータ収集とSEO最適化FAQページ構築',
