@@ -186,7 +186,7 @@ export default function ProfilePage({
                     ? [
                         '웹소설 응모 페이지 마이그레이션(vue -> react)',
                         'Next.js, Tailwind CSS 도입으로 성능 개선',
-                        '신규 캠페인 페이지 작성',
+                        '신규 캠페인 페이지 작성 scroll, observer event 디자인 적용',
                         '응모폼, 서버 전송 API 연결',
                       ]
                     : [
@@ -235,8 +235,8 @@ export default function ProfilePage({
                   {(language === 'ko'
                     ? ['레거시 시스템 최신화 및 리팩토링', '리뉴얼 작업']
                     : [
-                        'レガシー システムの最新化とリファクタリング',
-                        'リニューアル 作業',
+                        'レガシーシステムの最新化とリファクタリング',
+                        'リニューアル作業',
                       ]
                   ).map((item, index) => (
                     <li key={index}>{item}</li>
