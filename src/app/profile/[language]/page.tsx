@@ -156,19 +156,19 @@ export default function ProfilePage({
                 <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   {(language === 'ko'
                     ? [
-                        '신졸용 인재 스카우트 시스템의 toB,toC시스템 개발',
-                        '검색, 이벤트 기능 추가',
+                        '신졸용 인재 스카우트 시스템의 toB, toC시스템 개발',
+                        '검색, 유저 리스트, 오퍼, 이벤트 기능 추가',
                         '컴포넌트 구조 재설계, 리팩토링',
                         '기업 리브랜딩 대응',
-                        '생산성 향상',
+                        '생산성 향상(storybook, playwirght, pre-commit hooks)',
                         'Sentry 에러 모니터링 및 버그 수정',
                       ]
                     : [
                         '新卒向けの人材スカウトシステムのto B・to Cシステム開発',
-                        '新規検索, オファー, イベント機能追加',
+                        '検索, ユーザーリスト、 オファー, イベント機能追加',
                         'コンポーネント構造の再設計、リファクタリング',
                         '企業リブランディング対応',
-                        '生産性向上',
+                        '生産性向上(storybook, playwirght, pre-commit hooks)',
                         'Sentryエラーモニタリングとバグ修正',
                       ]
                   ).map((item, index) => (
