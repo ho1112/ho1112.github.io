@@ -229,3 +229,25 @@ function buildItemBlocks(items: DividendItem[]) {
 
 #### 개선 방향
 - **Oracle VM인스턴스**: 오라클의 무료 인스턴스가 GCP보다 더 좋은 사양을 제공해주기 때문에 전환 고려(계정 할당량 제한이 있기 때문에 일본 리전에 빈 자리가 있을 때 가능)
+
+---
+
+## 유지보수 현황
+### 9월 1일
+<img src="/posts/codeLab/cha-line/250901_gmail.avif" alt="250901配当金入金メール" width='300' />
+9월 1일, 15:07분 배당금 입금 메일이 왔습니다. 몇 분 뒤 GAS에서 이메일을 감지하고 배당금 내역을 LINE에 통지해줄거라고 기대했습니다만...
+
+실패했습니다!
+원인은 인증코드 화면에 새로운 피싱 주의 팝업이 추가되었기 때문이었습니다.
+![](/posts/codeLab/cha-line/fishing.avif)
+화면 전체에 오버레이 되는 것이기 때문에 클릭하기 전까진 인증코드를 입력할 수 없어서 실패했던 것입니다.
+그래서 이 팝업을 클릭하는 처리를 playwright에 추가하고 수동으로 다시 시도해주었습니다.
+<img src="/posts/codeLab/cha-line/250901_line.avif" alt="250901修正後、LINE通知完了" width='300' />
+무사히 성공하였습니다.
+
+### 9월 8일
+<img src="/posts/codeLab/cha-line/250908_gmail.avif" alt="250908配当金入金メール" width='300' />
+9월 8일 15:25분 새로운 배당금 입금 메일이 왔습니다.
+<img src="/posts/codeLab/cha-line/250908_line.avif" alt="250908LINE通知完了" width='300' />
+15:32분 LINE에 통지 완료.
+이번엔 문제없이 한 번에 처리가 완료 되었습니다. 🎉

@@ -229,3 +229,27 @@ function buildItemBlocks(items: DividendItem[]) {
 
 #### 改善方向
 - **Oracle VMインスタンス**: オラクルの無料インスタンスがGCPより良い仕様を提供してくれるため転換検討(アカウント割り当て制限があるため日本リージョンに空きがある時可能)
+
+---
+
+## 保守状況
+
+### 9月1日
+<img src="/posts/codeLab/cha-line/250901_gmail.avif" alt="250901配当金入金メール" width='300' />
+9月1日 15:07に配当金入金メールが届きました。数分後にGASがメールを検知して、配当内訳をLINEに通知してくれるはずでしたが...
+
+失敗しました！
+
+原因は、認証コード画面に新しいフィッシング注意のポップアップが追加されたためでした。
+![](/posts/codeLab/cha-line/fishing.avif)
+画面全体にオーバーレイされるため、クリックするまで認証コードを入力できず失敗していました。
+このポップアップをクリックする処理をplaywrightに追加して手動で再実行しました。
+<img src="/posts/codeLab/cha-line/250901_line.avif" alt="250901修正後、LINE通知完了" width='300' />
+無事に成功しました。
+
+### 9月8日
+<img src="/posts/codeLab/cha-line/250908_gmail.avif" alt="250908配当金入金メール" width='300' />
+9月8日 15:25に新しい配当金入金メールが届きました。
+<img src="/posts/codeLab/cha-line/250908_line.avif" alt="250908LINE通知完了" width='300' />
+15:32にLINEへ通知完了。
+今回は問題なく一度で処理が完了しました。🎉
