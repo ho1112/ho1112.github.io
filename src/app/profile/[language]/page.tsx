@@ -165,7 +165,7 @@ export default function ProfilePage({
                       ]
                     : [
                         '新卒向けの人材スカウトシステムのtoB・toCシステム開発',
-                        '学生管理、検索、 ユーザーリスト、 オファー, イベント機能追加',
+                        '学生管理、検索、ユーザーリスト、オファー、イベント機能追加',
                         'コンポーネント構造の再設計、リファクタリング',
                         '企業リブランディング対応',
                         '生産性向上(storybook, playwirght, pre-commit hooks)',
@@ -510,7 +510,7 @@ export default function ProfilePage({
                         'E2E 테스트 도입(Cypress)',
                         '호텔, 료칸의 성인 어린이 인원 별 검색, 단체 예약을 위한 다중 객실 검색 기능 추가',
                         '해외 호텔 검색 메인 페이지 작성 및 콘텐츠 추가',
-                        'Core Web Vitals 개선 - FCP, LCP, CLS 개선',
+                        'Core Web Vitals 개선 - FCP, LCP, CLS 개선 이미지 최적화로 UX 개선',
                         'SEO 최적화를 위한 BreadCrumb 링크, 메타데이터 설정 및 canonical tag를 활용한 URL 정규화 구현',
                         'SEO전용 호텔, 온천 목록 페이지 자동 생성',
                         'SSR, SSG(ISR) 페이지 작성',
@@ -522,11 +522,11 @@ export default function ProfilePage({
                     : [
                         'PHP(航空)、Vue(レンタカー)、React(ホテル)など、それぞれ異なる技術スタックで構成されたサービスたちのユーザー体験を統一するため、Web Componentsを使用してサイト全体のグローバルナビゲーションシステムを設計・開発',
                         'E2Eテスト導入(Cypress)',
-                        'ホテル, 旅館の大人・子供別検索, 団体予約用の複数部屋検索機能追加',
+                        'ホテル、旅館の大人・子供別検索、団体予約用の複数部屋検索機能追加',
                         '海外ホテル検索メインページ作成とコンテンツ追加',
-                        'Core Web Vitals改善 - FCP, LCP, CLS改善',
-                        'SEO最適化のためのBreadCrumbリンク, メタデータ設定とcanonical tagを利用したURL正規化実装',
-                        'SEO専用のホテル, 温泉一覧ページ大量生成',
+                        'Core Web Vitals改善 - FCP, LCP, CLS改善、イメージ最適化でUX向上',
+                        'SEO最適化のためのBreadCrumbリンク、メタデータ設定とcanonical tagを利用したURL正規化実装',
+                        'SEO専用のホテル、温泉一覧ページ大量生成',
                         'SSR, SSG(ISR)ページ作成',
                         '外部レビューシステム(yotpo)連携',
                         '外部API連携によるホテルアメニティデータ収集とSEO最適化FAQページ構築',
