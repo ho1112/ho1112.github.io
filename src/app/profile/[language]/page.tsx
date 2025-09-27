@@ -406,7 +406,7 @@ export default function ProfilePage({
                   {language === 'ko' ? '인재스카우트' : '人材スカウト'}
                 </h3>
                 <p className="text-chomin font-medium mb-3">
-                  {language === 'ko' ? '2024.03 - 현재' : '2023.03 - 現在'}
+                  {language === 'ko' ? '2024.03 - 현재' : '2024.03 - 現在'}
                 </p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
@@ -463,9 +463,7 @@ export default function ProfilePage({
                     : 'webマンガ・ノベルプラットフォーム'}
                 </h3>
                 <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2023.09 - 2024.02'
-                    : '2023.09 - 2024.02'}
+                  2023.09 - 2024.02
                 </p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
@@ -521,9 +519,7 @@ export default function ProfilePage({
                     : 'ホテル・ツアープラットフォーム'}
                 </h3>
                 <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2021.05 - 2023.07'
-                    : '2021.05 - 2023.07'}
+                  2021.05 - 2023.07
                 </p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
@@ -587,9 +583,7 @@ export default function ProfilePage({
                   {language === 'ko' ? '웹 게임' : 'Webゲーム'}
                 </h3>
                 <p className="text-chomin font-medium mb-3">
-                  {language === 'ko'
-                    ? '2020.12 - 2021.04'
-                    : '2020.12 - 2021.04'}
+                  2020.12 - 2021.04
                 </p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'
@@ -682,11 +676,7 @@ export default function ProfilePage({
                     <IconGithub className="w-6 h-6" />
                   </a>
                   <a
-                    href={
-                      language === 'ko'
-                        ? 'https://mintora.me/blog/ko/'
-                        : 'https://mintora.me/blog/ja/'
-                    }
+                    href={`https://mintora.me/blog/${language}/`}
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
                     <IconBlog className="w-6 h-6" />
@@ -899,9 +889,7 @@ export default function ProfilePage({
 
               {/* css 린터 npm/vscode 확장프로그램 */}
               <div className="bg-muted/30 rounded-lg p-5 border-l-4 border-teal-500">
-                <h3 className="font-semibold text-lg mb-2">
-                  {language === 'ko' ? 'CSS linter' : 'CSS linter'}
-                </h3>
+                <h3 className="font-semibold text-lg mb-2">CSS linter</h3>
                 <p className="text-chomin font-medium mb-3">{'style sentry'}</p>
                 <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
                   {(language === 'ko'

@@ -41,9 +41,7 @@ export default function JavaProjectsAccordion({
                 ? '주식 투자 정보 검색 서비스'
                 : '株式投資情報検索サービス'}
             </h3>
-            <p className="text-chomin font-medium mb-3">
-              {language === 'ko' ? '2020.01 - 2020.11' : '2020.01 - 2020.11'}
-            </p>
+            <p className="text-chomin font-medium mb-3">2020.01 - 2020.11</p>
             <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
               {(language === 'ko'
                 ? [
@@ -88,9 +86,7 @@ export default function JavaProjectsAccordion({
                 ? '물류・재고관리 시스템'
                 : '物流・在庫管理システム'}
             </h3>
-            <p className="text-chomin font-medium mb-3">
-              {language === 'ko' ? '2019.08 - 2019.12' : '2019.08 - 2019.12'}
-            </p>
+            <p className="text-chomin font-medium mb-3">2019.08 - 2019.12</p>
             <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
               {(language === 'ko'
                 ? [
@@ -133,9 +129,7 @@ export default function JavaProjectsAccordion({
                 ? '전기 제어・하네스 설계 소프트웨어'
                 : '電気制御・ハーネス設計ソフトウェア'}
             </h3>
-            <p className="text-chomin font-medium mb-3">
-              {language === 'ko' ? '2019.01 - 2019.06' : '2019.01 - 2019.06'}
-            </p>
+            <p className="text-chomin font-medium mb-3">2019.01 - 2019.06</p>
             <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
               {(language === 'ko'
                 ? [
@@ -176,9 +170,7 @@ export default function JavaProjectsAccordion({
                 ? '부품 정보 검색 시스템'
                 : '部品情報検索システム'}
             </h3>
-            <p className="text-chomin font-medium mb-3">
-              {language === 'ko' ? '2018.09 - 2018.12' : '2018.09 - 2018.12'}
-            </p>
+            <p className="text-chomin font-medium mb-3">2018.09 - 2018.12</p>
             <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
               {(language === 'ko'
                 ? ['사내 부품 등록, 검색 화면 개발', '테스트 케이스 작성']
@@ -211,9 +203,7 @@ export default function JavaProjectsAccordion({
                 ? '보험 서비스 간 통합 인증 시스템(SSO)'
                 : '保険サービス間の統合認証システム(SSO)'}
             </h3>
-            <p className="text-chomin font-medium mb-3">
-              {language === 'ko' ? '2018.04 - 2018.08' : '2018.04 - 2018.08'}
-            </p>
+            <p className="text-chomin font-medium mb-3">2018.04 - 2018.08</p>
             <ul className="text-muted-foreground mb-4 list-disc list-inside space-y-1">
               {(language === 'ko'
                 ? ['기존 서비스와 신규 서비스 통합, 레거시 코드 최신화']
