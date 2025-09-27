@@ -338,11 +338,13 @@ export default function ProfilePage({
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    'React',
-                    'Next.js',
-                    'TypeScript',
-                    'Vue.js',
-                    'Tailwind CSS',
+                    TECH_STACK.REACT,
+                    TECH_STACK.NEXTJS,
+                    TECH_STACK.JAVASCRIPT,
+                    TECH_STACK.TYPESCRIPT,
+                    TECH_STACK.TAILWIND,
+                    TECH_STACK.STYLED_COMPONENTS,
+                    TECH_STACK.SCSS,
                   ].map((tech) => (
                     <span
                       key={tech}
@@ -355,10 +357,30 @@ export default function ProfilePage({
               </div>
               <div>
                 <h3 className="font-semibold mb-3 text-lg">
+                  {language === 'ko' ? '테스팅' : 'テスト'}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    TECH_STACK.PLAYWRIGHT,
+                    TECH_STACK.CYPRESS,
+                    TECH_STACK.STORYBOOK,
+                    TECH_STACK.JEST,
+                  ].map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-4 py-2 rounded-full text-sm font-medium"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-lg">
                   {language === 'ko' ? '개발 도구' : '開発ツール'}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {['Git', 'Docker', 'AWS', 'Vercel', 'Figma'].map((tool) => (
+                  {['Git', TECH_STACK.DOCKER, 'Figma'].map((tool) => (
                     <span
                       key={tool}
                       className="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-full text-sm font-medium"
@@ -668,6 +690,14 @@ export default function ProfilePage({
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
                     <IconBlog className="w-6 h-6" />
+                    main
+                  </a>
+                  <a
+                    href={`/blog/${language}/blog/`}
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconBlog className="w-6 h-6" />
+                    post
                   </a>
                 </div>
               </div>
@@ -711,6 +741,7 @@ export default function ProfilePage({
                     TECH_STACK.GEMINI,
                     TECH_STACK.SUPABASE,
                     TECH_STACK.VERCEL,
+                    'GitHub Actions',
                   ].map((tech) => (
                     <span
                       key={tech}
