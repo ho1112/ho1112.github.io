@@ -1,0 +1,135 @@
+---
+title: '🚀 2025-09 W4 #26'
+desc: Chrome DevTools의 AI 에이전트 연동, 2025년 최신 CSS 핵심 지식, GitHub Copilot CLI 공개 프리뷰 | 2025년 9월 4주차 주간 기술 뉴스레터
+date: 2025-09-27
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 AI가 개발자의 워크플로우에 깊숙이 통합되는 한 주였습니다. Chrome DevTools가 AI 에이전트에게 디버깅 및 분석 기능을 개방한 소식은 앞으로의 개발 환경 변화를 예고하며, AI 기반 코드 리뷰 툴의 발전은 생산성과 코드 품질을 한 단계 끌어올릴 잠재력을 보여줍니다. 더불어 최신 CSS 기능과 복잡한 UI를 위한 디자인 패턴에 대한 논의는 프런트엔드 개발의 깊이를 더해주고 있습니다.
+
+## 1. 🔍 심층 분석
+- **[Give Your AI Eyes: Introducing Chrome DevTools MCP](https://javascriptweekly.com/link/174839/web)** (출처: *JavaScript Weekly #754*)
+    ![AI an eye](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lvp70veabqdiook705cs.jpg)
+    - **배경**: Chrome팀이 AI 코딩 에이전트가 웹 페이지를 직접 디버깅하고 성능을 분석할 수 있도록 새로운 Model Context Protocol (MCP) 서버의 공개 프리뷰를 출시했습니다.
+    - **핵심 기능**: Claude Code나 OpenAI Codex 같은 AI 에이전트가 Chrome DevTools의 강력한 기능을 활용하여 웹 앱의 동작을 분석하고, 성능 병목 현상을 파악하며, 자동화된 테스트를 수행할 수 있게 됩니다. 이는 AI를 단순한 코드 생성을 넘어, 능동적인 디버깅 파트너로 만드는 중요한 전환점입니다.
+    - **실무 적용**: 개발자는 반복적인 디버깅 작업을 AI에게 위임하여 복잡한 문제 해결에 더 집중할 수 있습니다. 또한, AI가 자동으로 성능 보고서를 생성하고 개선점을 제안하는 시나리오도 가능해집니다.
+    - **주의사항**: 초기 프리뷰 버전이므로 실제 프로덕션 환경에 적용하기보다는 실험적인 용도로 활용하며 잠재력을 탐색하는 것이 좋습니다.
+
+- **[What You Need to Know About Modern CSS (2025 Edition)](https://frontendfoc.us/link/174593/web)** (출처: *Frontend Focus #710*)
+    ![Modern CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758700676/ljwsfiv6dqu873lqohwj.jpg)
+    - **배경**: 브라우저 지원이 확대되면서 새롭게 주목해야 할 최신 CSS 기능들이 많아졌습니다. 이 글은 2025년 현재 프런트엔드 개발자가 알아야 할 가치 있는 CSS 속성 및 함수들을 포괄적으로 다룹니다.
+    - **핵심 기능**: `popover` 속성을 활용한 네이티브 팝업 구현, 조건부 스타일링을 위한 `if()` 함수, 동적인 폼 입력을 위한 `field-sizing` 속성 등 다양한 최신 CSS 기능들을 소개합니다.
+    - **실무 적용**: 이 기능들을 활용하면 JavaScript 의존성을 줄이고 CSS만으로 더 선언적이고 효율적인 UI를 구축할 수 있습니다. 특히 `popover`는 복잡한 UI 상태 관리 없이도 강력한 인터랙션을 구현하게 해줍니다.
+    - **주의사항**: 소개된 기능들의 브라우저 지원 범위를 반드시 확인하고, 점진적 향상(Progressive Enhancement) 전략을 함께 고려해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Web’s Most Tolerated Feature](https://frontendfoc.us/link/174594/web)** (출처: *Frontend Focus #710*)
+  + **요약**: 한때 비표준 IE 전용 기능이었던 `zoom` 속성이 25년의 여정을 거쳐 Interop 2025의 일부로 표준화된 과정을 되짚어봅니다. 이제 이 속성이 어떻게 독특한 레이아웃 기능을 제공하는지 설명합니다.
+- **[Design Patterns For AI Chat Interfaces](https://www.linkedin.com/posts/vitalyfriedman_ux-design-activity-7354454045761126401-sgyj/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAACDcgQBa_vsk5breYKwZAgyIhsHtJaFbL8)** (출처: *Smashing Newsletter #526*)
+  + **요약**: 사용자가 AI와 상호작용하고 있음을 명확히 하고, 의도를 명확하게 표현하도록 돕는 방법 등 더 유용하고 덜 성가신 AI 채팅 인터페이스를 설계하기 위한 실용적인 가이드라인을 제시합니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[GitHub Copilot CLI Now in Public Preview](https://javascriptweekly.com/link/174874/web)** (출처: *JavaScript Weekly #754*)
+    ![GitHub Copilot CLI](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/c1vjniffzpf5a4gkp0zd.jpg)
+    - **개요**: GitHub이 Node.js 기반의 CLI 버전 Copilot을 공개 프리뷰로 출시했습니다. 이제 터미널 환경에서 직접 AI의 도움을 받아 명령어를 실행하고 코드를 생성할 수 있습니다.
+    - **사용법**:
+      ```bash
+      # 셸 명령어를 생성하고 실행하는 데 도움을 받기
+      ?? what is the command to list all running docker containers
+
+      # git 커밋 메시지 제안 받기
+      git commit -m "$(?? fix: resolve issue with api endpoint)"
+      ```
+    - **실전 팁**: 복잡한 `git` 명령어 조합이나 `awk`, `sed` 같은 유틸리티 사용법이 기억나지 않을 때 자연어로 질문하여 즉시 필요한 명령어를 얻을 수 있어 터미널 작업의 생산성을 크게 향상시킬 수 있습니다.
+
+- **[repo2txt: Converts GitHub Repository Contents Into a Single Formatted Text File](https://frontendfoc.us/link/174614/web)** (출처: *Frontend Focus #710*)
+    - **개요**: GitHub 리포지토리 전체 또는 로컬 디렉토리의 콘텐츠를 LLM 프롬프트에 입력하기 좋은 단일 텍스트 파일로 변환해주는 도구입니다. 특정 파일이나 확장자를 필터링하는 기능도 제공합니다.
+    - **사용법**: 웹사이트([Use it here](https://frontendfoc.us/link/174615/web))를 통해 GitHub 리포지토리 URL을 입력하거나 로컬 디렉토리를 업로드하여 변환할 수 있습니다.
+    - **실전 팁**: 기존 프로젝트의 코드베이스 전체를 AI에게 컨텍스트로 제공하여 리팩토링 방향을 제안받거나, 새로운 기능 추가에 대한 아이디어를 얻는 등 고차원적인 코드 분석 및 생성 작업에 유용하게 활용할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[eslint-plugin-react-you-might-not-need-an-effect](https://react.statuscode.com/link/174699/web)** (출처: *React Status #445*)
+  + **요약**: React 개발에서 불필요하게 사용되는 `useEffect`를 찾아주는 ESLint 플러그인입니다. 많은 경우 `useEffect` 남용은 버그의 원인이 되거나 코드를 복잡하게 만드는데, 이 플러그인이 적절한 대안을 찾도록 도와줍니다.
+- **[ASCIIFlow: A Web-Based Tool for Drawing ASCII Diagrams](https://frontendfoc.us/link/174617/web)** (출처: *Frontend Focus #710*)
+  + **요약**: 일반적인 그래픽 편집기처럼 실행 취소/다시 실행, 이동 등의 기능을 갖춘 웹 기반 ASCII 다이어그램 드로잉 툴입니다. 화살표, 선, 상자 등을 그리고 텍스트로 내보낼 수 있어 마크다운 문서나 코드 주석에 다이어그램을 쉽게 추가할 수 있습니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Bulk Import UX](https://medium.com/design-bootcamp/ux-case-study-bulk-upload-feature-785803089328)** (출처: *Smashing Newsletter #526*)
+    ![Bulk Import UX](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/a11334b9-6f4a-76bf-f711-e63cfe4f4884.png)
+    - **핵심 인사이트**: 대량 업로드 기능은 단순히 파일을 올리는 것 이상으로, 지저분한 데이터, 엣지 케이스, 에러 검증 등 복잡한 사용자 경험을 고려해야 합니다. 이 글은 온라인 채용 도구의 대량 업로드 기능을 개선한 사례 연구를 통해, 사용자가 쉽게 에러를 수정하고 원활하게 파일을 가져올 수 있는 경험을 설계하는 과정을 상세히 보여줍니다.
+    - **왜 이 글이 유익한가**: 복잡한 데이터 처리 기능의 UX를 설계할 때 겪는 일반적인 문제들과 그 해결책을 구체적인 사례를 통해 배울 수 있습니다. 특히 디자인 결정을 이해관계자에게 설득하는 과정까지 포함되어 있어 실무에 바로 적용할 수 있는 인사이트를 제공합니다.
+
+- **[From Steam to Floppy: Porting Modern TypeScript to Run on DOS](https://javascriptweekly.com/link/174862/web)** (출처: *JavaScript Weekly #754*)
+    - **핵심 인사이트**: 최신 TypeScript로 개발된 스팀 게임을 실제 DOS 환경에서 실행하기 위해 포팅한 흥미로운 여정을 다룹니다. DOS용 JavaScript 엔진인 jSH를 활용하여 현대적인 코드를 구형 시스템에 맞추는 과정에서 발생하는 기술적 도전과 해결 과정을 공유합니다.
+    - **왜 이 글이 유익한가**: 최신 기술을 극한의 제약 환경에 적용하는 과정을 통해 JavaScript 엔진의 내부 동작과 트랜스파일링, 폴리필 등에 대한 깊은 이해를 얻을 수 있습니다. 개발자에게 창의적인 문제 해결의 영감을 줍니다.
+
+- **[Context Menus UX](https://height.app/blog/guide-to-build-context-menus)** (출처: *Smashing Newsletter #526*)
+    ![Context Menus UX](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/9e412ece-de29-591e-59ad-97ada9fdabc6.png)
+    - **핵심 인사이트**: 수십 년간 사용되어 온 컨텍스트 메뉴지만, 웹 앱마다 동작 방식이 달라 사용자에게 혼란을 줍니다. 이 글은 메뉴의 위치 선정, 키보드 네비게이션, 서브메뉴 접근, 콘텐츠 오버플로우 처리 등 직관적이고 끊김 없는 컨텍스트 메뉴를 만들기 위한 기본 원칙과 고급 상호작용 기법을 포괄적으로 안내합니다.
+    - **왜 이 글이 유익한가**: 당연하게 사용하던 UI 요소에 대해 깊이 고찰하고, 사용자 중심적인 인터랙션을 설계하는 방법을 배울 수 있습니다. 웹 접근성과 사용성을 한 단계 높이는 데 실질적인 도움이 됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[You May Be Looking for a `useSyncExternalStore`](https://react.statuscode.com/link/174683/web)** (출처: *React Status #445*)
+  + **요약**: `useEffect`와 `useState`를 조합하여 외부 스토어의 값을 동기화하는 패턴을 볼 때, 실제로는 `useSyncExternalStore` 훅을 사용해야 하는 경우가 많다는 점을 지적하며, 더 정확하고 효율적인 상태 관리 방법을 제안합니다.
+- **[JSON is Not JSON Across Languages](https://javascriptweekly.com/link/174867/web)** (출처: *JavaScript Weekly #754*)
+  + **요약**: 다른 언어로 구축된 시스템 간에 JSON으로 통신할 때, 각 언어의 라이브러리가 JSON을 다르게 해석하여 예기치 않은 버그가 발생할 수 있음을 경고합니다. 이는 디버깅을 매우 어렵게 만들 수 있는 함정입니다.
+
+---
+
+## 4. ✨ 아이디어
+- **[React Old Icons: 2000+ Classic Vintage Icons](https://react.statuscode.com/link/174693/web)** (출처: *React Status #445*)
+    ![React Old Icons](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hjda05gojhj4v7k0qfxp.jpg)
+    - **특징**: Windows 95와 같은 빈티지 운영체제 및 앱에서 사용되던 2000개 이상의 클래식 아이콘을 제공하는 React 컴포넌트 라이브러리입니다. 레트로 감성의 프로젝트나 재미있는 사이드 프로젝트에 독특한 시각적 재미를 더할 수 있습니다. (단, 아이콘 저작권 문제로 상업적 사용 시 주의가 필요합니다.)
+
+- **[Kigen Color Generator: Create Modern Color Palettes for Your Design Systems](https://frontendfoc.us/link/174621/web)** (출처: *Frontend Focus #710*)
+    ![Kigen Color Generator](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758709964/sfovsgsxwre2g7zfhg7j.png)
+    - **특징**: 기본 색상을 선택하면 9가지 다른 알고리즘을 통해 현대적인 디자인 시스템에 적합한 색상 팔레트를 생성해주는 도구입니다. 슬라이더를 통해 미세 조정이 가능하며, SVG나 다양한 형식의 코드로 내보낼 수 있어 디자인 초기 단계에서 빠르고 일관된 색상 체계를 구축하는 데 유용합니다.
+
+## 5. ⚡️ 짧은 소식
+- **[The State of JavaScript survey is back for 2025.](https://frontendfoc.us/link/174602/web)** (출처: *Frontend Focus #710*)
+    - **요약**: 2025년 State of JavaScript 설문조사가 시작되었습니다. 전 세계 개발자들의 기술 스택, 라이브러리 선호도, 트렌드 등을 파악할 수 있는 중요한 설문입니다.
+- **[Webflow has donated $150,000 to support Astro’s 'Open Source Mission'.](https://frontendfoc.us/link/174597/web)** (출처: *Frontend Focus #710*)
+    - **요약**: 노코드 웹사이트 빌더인 Webflow가 오픈소스 웹 프레임워크인 Astro의 미션을 지원하기 위해 15만 달러를 기부했습니다.
+- **[Google's Gemini is getting integrated within Chrome, adding AI assistance.](https://frontendfoc.us/link/174598/web)** (출처: *Frontend Focus #710*)
+    - **요약**: 구글의 AI 모델 Gemini가 Chrome 브라우저에 통합되어 AI 지원 기능이 추가될 예정입니다.
+- **[Netscape Navigator 2.0 Beta was released 30 years ago](https://javascriptweekly.com/link/174846/web)** (출처: *JavaScript Weekly #754*)
+    - **요약**: 30년 전, JavaScript를 지원한 최초의 브라우저인 Netscape Navigator 2.0 베타가 출시되었습니다.
+- **[NPM Security Best Practices](https://javascriptweekly.com/link/174865/web)** (출처: *JavaScript Weekly #754*)
+    - **요약**: npm 생태계와 도구를 더 안전하게 사용하기 위한 모범 사례, 기술, 아이디어를 총망라한 광범위한 목록입니다.
+
+## 6. 🎉 릴리스
+- **[TanStack Start v1 Release Candidate](https://react.statuscode.com/link/174676/web)** (출처: *React Status #445*)
+    - **업데이트**: TanStack Router 기반의 풀스택 프레임워크인 TanStack Start가 v1.0 릴리스 후보(RC) 버전을 공개했습니다. 타입 안정성과 고성능을 목표로 하는 React 앱을 위한 새로운 선택지가 될 것으로 기대됩니다.
+- **[Wasm 3.0 Completed](https://frontendfoc.us/link/174596/web)** (출처: *Frontend Focus #710*)
+    - **업데이트**: WebAssembly 3.0 표준이 공식 발표되었으며, 이미 대부분의 브라우저에 탑재되었습니다. 64비트 주소 공간, 가비지 컬렉션, 예외 처리 등 JS와의 상호 운용성을 개선하는 주요 기능들이 포함되었습니다.
+- **[Middleware Now Stable in React Router](https://react.statuscode.com/link/174677/web)** (출처: *React Status #445*)
+    - **업데이트**: React Router 7.9.0부터 `future.v8_middleware` 플래그를 통해 미들웨어 기능이 안정화되었습니다. 이를 통해 라우팅 로직에서 인증, 로깅 등 다양한 횡단 관심사(cross-cutting concerns)를 더 효과적으로 처리할 수 있게 됩니다.
+- **[Node.js v24.9.0 (Current) and v22.20.0 (LTS)](https://javascriptweekly.com/link/174857/web)** (출처: *JavaScript Weekly #754*)
+    - **업데이트**: Node.js의 최신 버전(Current)과 장기 지원 버전(LTS)이 각각 릴리스되었습니다.
+- **[pnpm 10.17](https://javascriptweekly.com/link/174855/web)** (출처: *JavaScript Weekly #754*)
+    - **업데이트**: 새로운 `minimumReleaseAgeExclude` 옵션이 추가되어 특정 패키지 그룹을 최소 릴리스 기간 검사에서 제외할 수 있는 패턴을 지원합니다.
+- **[Astro 5.14](https://javascriptweekly.com/link/174856/web)** (출처: *JavaScript Weekly #754*)
+    - **업데이트**: 다양한 기능과 개발자 경험(DX) 개선 사항이 대거 포함된 업데이트가 릴리스되었습니다.
+- **[Billboard.js 3.17.0](https://javascriptweekly.com/link/174881/web)** (출처: *JavaScript Weekly #754*)
+    - **업데이트**: 인기 있는 차트 라이브러리인 Billboard.js가 이미지 라벨 지원, 라벨 테두리 스타일링, 동적 라벨 색상 제어 기능을 추가했습니다.
+- **[Docusaurus 3.9](https://javascriptweekly.com/link/174885/web)** (출처: *JavaScript Weekly #754*)
+    - **업데이트**: React와 MDX 기반의 인기 있는 정적 사이트 생성기 Docusaurus의 새 버전이 출시되었습니다.
+
+## ✍️ 마치며
+이번 주 기술 동향을 살펴보면서, 개발 도구가 점점 더 지능화되고 있다는 것을 다시 한번 실감하게 됩니다. 특히 AI가 단순히 코드를 제안하는 수준을 넘어, DevTools와 결합하여 스스로 문제를 진단하고 분석하는 단계로 나아가는 모습은 매우 인상적입니다. 이는 개발자의 역할이 '작성자'에서 '감독자' 또는 '설계자'로 점차 변화해 갈 것임을 시사합니다.
+
+한편으로는 WebAssembly나 새로운 CSS 표준처럼 웹의 근간을 이루는 기술들이 꾸준히 발전하며 플랫폼 자체의 가능성을 넓히고 있다는 점도 주목할 만합니다. 결국 우리는 더욱 강력해진 도구와 탄탄해진 기반 위에서, 복잡한 사용자 경험과 같은 본질적인 문제에 더 깊이 집중할 수 있게 될 것입니다. 기술의 발전을 따라가는 것도 중요하지만, 그 기술을 통해 어떤 가치를 만들어낼 것인지 고민하는 것이 개발자에게 항상 필요한 자세인 것 같습니다.
+
+#### 출처
+- [JavaScript Weekly #754](https://javascriptweekly.com/issues/754)
+- [Smashing Newsletter #526](https://mailchi.mp/smashingmagazine/526-design-patterns-for-complex-uis)
+- [React Status #445](https://react.statuscode.com/issues/445)
+- [Frontend Focus #710](https://frontendfoc.us/issues/710)

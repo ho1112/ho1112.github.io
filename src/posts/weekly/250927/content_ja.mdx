@@ -1,0 +1,135 @@
+---
+title: '🚀 2025-09 W4 #26'
+desc: Chrome DevToolsのAIエージェント連携、2025年版 モダンCSSの必須知識、GitHub Copilot CLI パブリックプレビュー | 2025年9月第4週目 週間技術ニュースレター
+date: 2025-09-27
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、AIが開発者のワークフローに深く統合された一週間でした。Chrome DevToolsがAIエージェントにデバッグおよび分析機能を開放したニュースは、今後の開発環境の変化を予告し、AIベースのコードレビューツールの発展は、生産性とコード品質を一段階引き上げる可能性を示しています。さらに、最新のCSS機能や複雑なUIのためのデザインパターンに関する議論は、フロントエンド開発の奥深さを増しています。
+
+## 1. 🔍 深掘り
+- **[Give Your AI Eyes: Introducing Chrome DevTools MCP](https://javascriptweekly.com/link/174839/web)** (出典: *JavaScript Weekly #754*)
+	![AIの目](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lvp70veabqdiook705cs.jpg)
+	- **背景**: Chromeチームが、AIコーディングエージェントがウェブページを直接デバッグし、パフォーマンスを分析できるようにする新しいModel Context Protocol (MCP)サーバーのパブリックプレビューをリリースしました。
+	- **主な機能**: Claude CodeやOpenAI CodexのようなAIエージェントが、Chrome DevToolsの強力な機能を活用してウェブアプリの動作を分析し、パフォーマンスのボトルネックを特定し、自動テストを実行できるようになります。これは、AIを単なるコード生成を超え、能動的なデバッグパートナーにする重要な転換点です。
+	- **実務への応用**: 開発者は反復的なデバッグ作業をAIに委任し、複雑な問題の解決により集中できます。また、AIが自動的にパフォーマンスレポートを生成し、改善点を提案するシナリオも可能になります。
+	- **注意事項**: 初期のプレビュー版であるため、実際の本番環境に適用するよりは、実験的な用途で活用し、その可能性を探ることが推奨されます。
+
+- **[What You Need to Know About Modern CSS (2025 Edition)](https://frontendfoc.us/link/174593/web)** (出典: *Frontend Focus #710*)
+	![モダンCSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758700676/ljwsfiv6dqu873lqohwj.jpg)
+	- **背景**: ブラウザのサポートが拡大するにつれて、新たに注目すべき最新のCSS機能が多くなりました。この記事は、2025年現在、フロントエンド開発者が知っておくべき価値のあるCSSプロパティおよび関数を包括的に扱います。
+	- **主な機能**: `popover`プロパティを活用したネイティブなポップアップの実装、条件付きスタイリングのための`if()`関数、動的なフォーム入力のための`field-sizing`プロパティなど、さまざまな最新のCSS機能を紹介します。
+	- **実務への応用**: これらの機能を活用すれば、JavaScriptへの依存を減らし、CSSだけでより宣言的で効率的なUIを構築できます。特に`popover`は、複雑なUIの状態管理なしに強力なインタラクションを実現させてくれます。
+	- **注意事項**: 紹介された機能のブラウザサポート範囲を必ず確認し、プログレッシブエンハンスメント戦略を併せて考慮する必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[The Web’s Most Tolerated Feature](https://frontendfoc.us/link/174594/web)** (出典: *Frontend Focus #710*)
+	+ **要約**: かつて非標準のIE専用機能だった`zoom`プロパティが、25年の道のりを経てInterop 2025の一部として標準化された過程を振り返ります。現在、このプロパティがどのようにユニークなレイアウト機能を提供するかを説明します。
+- **[Design Patterns For AI Chat Interfaces](https://www.linkedin.com/posts/vitalyfriedman_ux-design-activity-7354454045761126401-sgyj/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAACDcgQBa_vsk5breYKwZAgyIhsHtJaFbL8)** (出典: *Smashing Newsletter #526*)
+	+ **要約**: ユーザーがAIと対話していることを明確にし、意図を明確に表現できるよう支援する方法など、より有用で煩わしさの少ないAIチャットインターフェースを設計するための実用的なガイドラインを提示します。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[GitHub Copilot CLI Now in Public Preview](https://javascriptweekly.com/link/174874/web)** (出典: *JavaScript Weekly #754*)
+	![GitHub Copilot CLI](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/c1vjniffzpf5a4gkp0zd.jpg)
+	- **概要**: GitHubがNode.jsベースのCLI版Copilotをパブリックプレビューとしてリリースしました。これからはターミナル環境から直接AIの助けを借りてコマンドを実行し、コードを生成できます。
+	- **使用方法**:
+		```bash
+		# シェルコマンドを生成して実行するのを助けてもらう
+		?? what is the command to list all running docker containers
+
+		# gitのコミットメッセージの提案を受ける
+		git commit -m "$(?? fix: resolve issue with api endpoint)"
+		```
+	- **実践的なヒント**: 複雑な`git`コマンドの組み合わせや`awk`、`sed`のようなユーティリティの使い方が思い出せない時に、自然言語で質問してすぐに必要なコマンドを得ることができ、ターミナル作業の生産性を大幅に向上させることができます。
+
+- **[repo2txt: Converts GitHub Repository Contents Into a Single Formatted Text File](https://frontendfoc.us/link/174614/web)** (出典: *Frontend Focus #710*)
+	- **概要**: GitHubリポジトリ全体またはローカルディレクトリのコンテンツを、LLMプロンプトに入力しやすい単一のテキストファイルに変換してくれるツールです。特定のファイルや拡張子をフィルタリングする機能も提供します。
+	- **使用方法**: ウェブサイト([Use it here](https://frontendfoc.us/link/174615/web))を通じてGitHubリポジトリのURLを入力するか、ローカルディレクトリをアップロードして変換できます。
+	- **実践的なヒント**: 既存プロジェクトのコードベース全体をAIにコンテキストとして提供し、リファクタリングの方向性を提案してもらったり、新機能追加に関するアイデアを得るなど、高次元のコード分析および生成作業に役立ちます。
+
+---
+#### 見逃せないコンテンツ
+- **[eslint-plugin-react-you-might-not-need-an-effect](https://react.statuscode.com/link/174699/web)** (出典: *React Status #445*)
+	+ **要約**: React開発で不必要に使用される`useEffect`を見つけてくれるESLintプラグインです。多くの場合、`useEffect`の乱用はバグの原因になったりコードを複雑にしたりしますが、このプラグインが適切な代替案を見つける手助けをします。
+- **[ASCIIFlow: A Web-Based Tool for Drawing ASCII Diagrams](https://frontendfoc.us/link/174617/web)** (出典: *Frontend Focus #710*)
+	+ **要約**: 一般的なグラフィックエディタのように、元に戻す/やり直し、移動などの機能を備えたウェブベースのASCIIダイアグラム描画ツールです。矢印、線、ボックスなどを描いてテキストとしてエクスポートできるため、マークダウン文書やコードコメントにダイアグラムを簡単に追加できます。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Bulk Import UX](https://medium.com/design-bootcamp/ux-case-study-bulk-upload-feature-785803089328)** (出典: *Smashing Newsletter #526*)
+	![バルクインポートUX](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/a11334b9-6f4a-76bf-f711-e63cfe4f4884.png)
+	- **主要なインサイト**: 一括アップロード機能は、単にファイルをアップロードするだけでなく、不整理なデータ、エッジケース、エラー検証など、複雑なユーザー体験を考慮する必要があります。この記事は、オンライン採用ツールの一括アップロード機能を改善したケーススタディを通じて、ユーザーが簡単にエラーを修正し、スムーズにファイルをインポートできる体験を設計する過程を詳細に示しています。
+	- **この記事が役立つ理由**: 複雑なデータ処理機能のUXを設計する際に直面する一般的な問題とその解決策を、具体的な事例を通じて学ぶことができます。特に、デザインの決定をステークホルダーに説得する過程まで含まれており、実務にすぐに適用できるインサイトを提供します。
+
+- **[From Steam to Floppy: Porting Modern TypeScript to Run on DOS](https://javascriptweekly.com/link/174862/web)** (出典: *JavaScript Weekly #754*)
+	- **主要なインサイト**: 最新のTypeScriptで開発されたSteamゲームを、実際のDOS環境で実行するためにポーティングした興味深い旅路を扱っています。DOS用のJavaScriptエンジンであるjSHを活用し、現代的なコードを旧式のシステムに合わせる過程で発生する技術的な挑戦と解決プロセスを共有します。
+	- **この記事が役立つ理由**: 最新技術を極限の制約環境に適用する過程を通じて、JavaScriptエンジンの内部動作やトランスパイル、ポリフィルなどに対する深い理解を得ることができます。開発者に創造的な問題解決のインスピレーションを与えます。
+
+- **[Context Menus UX](https://height.app/blog/guide-to-build-context-menus)** (出典: *Smashing Newsletter #526*)
+	![コンテキストメニューUX](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/9e412ece-de29-591e-59ad-97ada9fdabc6.png)
+	- **主要なインサイト**: 数十年間使われてきたコンテキストメニューですが、ウェブアプリごとに動作方法が異なり、ユーザーに混乱を与えます。この記事は、メニューの位置選定、キーボードナビゲーション、サブメニューへのアクセス、コンテンツのオーバーフロー処理など、直感的で途切れのないコンテキストメニューを作成するための基本原則と高度なインタラクション技法を包括的に案内します。
+	- **この記事が役立つ理由**: 当たり前に使っていたUI要素について深く考察し、ユーザー中心のインタラクションを設計する方法を学ぶことができます。ウェブアクセシビリティとユーザビリティを一段階高める上で、実質的な助けとなります。
+
+---
+#### 見逃せないコンテンツ
+- **[You May Be Looking for a `useSyncExternalStore`](https://react.statuscode.com/link/174683/web)** (出典: *React Status #445*)
+	+ **要約**: `useEffect`と`useState`を組み合わせて外部ストアの値を同期させるパターンを見かける際、実際には`useSyncExternalStore`フックを使用すべき場合が多いことを指摘し、より正確で効率的な状態管理方法を提案します。
+- **[JSON is Not JSON Across Languages](https://javascriptweekly.com/link/174867/web)** (出典: *JavaScript Weekly #754*)
+	+ **要約**: 異なる言語で構築されたシステム間でJSON通信を行う際、各言語のライブラリがJSONを異なる方法で解釈し、予期せぬバグが発生する可能性があると警告しています。これはデバッグを非常に困難にする可能性のある落とし穴です。
+
+---
+
+## 4. ✨ アイデア
+- **[React Old Icons: 2000+ Classic Vintage Icons](https://react.statuscode.com/link/174693/web)** (出典: *React Status #445*)
+	![React Old Icons](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hjda05gojhj4v7k0qfxp.jpg)
+	- **特徴**: Windows 95のようなヴィンテージOSやアプリで使用されていた2000以上のクラシックアイコンを提供するReactコンポーネントライブラリです。レトロな感性のプロジェクトや楽しいサイドプロジェクトに、ユニークな視覚的面白さを加えることができます。（ただし、アイコンの著作権問題により、商用利用には注意が必要です。）
+
+- **[Kigen Color Generator: Create Modern Color Palettes for Your Design Systems](https://frontendfoc.us/link/174621/web)** (出典: *Frontend Focus #710*)
+	![Kigen Color Generator](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1758709964/sfovsgsxwre2g7zfhg7j.png)
+	- **特徴**: 基本色を選択すると、9つの異なるアルゴリズムを通じて、モダンなデザインシステムに適したカラーパレットを生成してくれるツールです。スライダーで微調整が可能で、SVGやさまざまな形式のコードとしてエクスポートできるため、デザインの初期段階で迅速かつ一貫した色彩体系を構築するのに役立ちます。
+
+## 5. ⚡️ ミニノート
+- **[The State of JavaScript survey is back for 2025.](https://frontendfoc.us/link/174602/web)** (出典: *Frontend Focus #710*)
+	- **要約**: 2025年のState of JavaScriptサーベイが始まりました。世界中の開発者の技術スタック、ライブラリの好み、トレンドなどを把握できる重要な調査です。
+- **[Webflow has donated $150,000 to support Astro’s 'Open Source Mission'.](https://frontendfoc.us/link/174597/web)** (出典: *Frontend Focus #710*)
+	- **要約**: ノーコードウェブサイトビルダーであるWebflowが、オープンソースのウェブフレームワークであるAstroのミッションを支援するために15万ドルを寄付しました。
+- **[Google's Gemini is getting integrated within Chrome, adding AI assistance.](https://frontendfoc.us/link/174598/web)** (出典: *Frontend Focus #710*)
+	- **要約**: GoogleのAIモデルGeminiがChromeブラウザに統合され、AI支援機能が追加される予定です。
+- **[Netscape Navigator 2.0 Beta was released 30 years ago](https://javascriptweekly.com/link/174846/web)** (出典: *JavaScript Weekly #754*)
+	- **要約**: 30年前、JavaScriptをサポートした最初のブラウザであるNetscape Navigator 2.0ベータがリリースされました。
+- **[NPM Security Best Practices](https://javascriptweekly.com/link/174865/web)** (出典: *JavaScript Weekly #754*)
+	- **要約**: npmエコシステムとツールをより安全に使用するためのベストプラクティス、技術、アイデアを網羅した広範なリストです。
+
+## 6. 🎉 リリース
+- **[TanStack Start v1 Release Candidate](https://react.statuscode.com/link/174676/web)** (出典: *React Status #445*)
+	- **アップデート**: TanStack RouterベースのフルスタックフレームワークであるTanStack Startがv1.0リリース候補版(RC)を公開しました。型安全と高性能を目指すReactアプリのための新しい選択肢となることが期待されます。
+- **[Wasm 3.0 Completed](https://frontendfoc.us/link/174596/web)** (出典: *Frontend Focus #710*)
+	- **アップデート**: WebAssembly 3.0標準が公式に発表され、すでにほとんどのブラウザに搭載されています。64ビットアドレス空間、ガベージコレクション、例外処理など、JSとの相互運用性を改善する主要な機能が含まれています。
+- **[Middleware Now Stable in React Router](https://react.statuscode.com/link/174677/web)** (出典: *React Status #445*)
+	- **アップデート**: React Router 7.9.0から`future.v8_middleware`フラグを通じてミドルウェア機能が安定化しました。これにより、ルーティングロジックで認証、ロギングなど、さまざまな横断的関心事をより効果的に処理できるようになります。
+- **[Node.js v24.9.0 (Current) and v22.20.0 (LTS)](https://javascriptweekly.com/link/174857/web)** (出典: *JavaScript Weekly #754*)
+	- **アップデート**: Node.jsの最新版(Current)と長期サポート版(LTS)がそれぞれリリースされました。
+- **[pnpm 10.17](https://javascriptweekly.com/link/174855/web)** (出典: *JavaScript Weekly #754*)
+	- **アップデート**: 新しい`minimumReleaseAgeExclude`オプションが追加され、特定のパッケージグループを最小リリース期間のチェックから除外するパターンをサポートします。
+- **[Astro 5.14](https://javascriptweekly.com/link/174856/web)** (出典: *JavaScript Weekly #754*)
+	- **アップデート**: さまざまな機能と開発者体験(DX)の改善点が多数含まれたアップデートがリリースされました。
+- **[Billboard.js 3.17.0](https://javascriptweekly.com/link/174881/web)** (出典: *JavaScript Weekly #754*)
+	- **アップデート**: 人気のあるチャートライブラリであるBillboard.jsが、画像ラベルのサポート、ラベルの境界線スタイリング、動的なラベル色の制御機能を追加しました。
+- **[Docusaurus 3.9](https://javascriptweekly.com/link/174885/web)** (出典: *JavaScript Weekly #754*)
+	- **アップデート**: ReactとMDXベースの人気のある静的サイトジェネレータDocusaurusの新バージョンがリリースされました。
+
+## ✍️ おわりに
+今週の技術動向を見ながら、開発ツールがますます知的になっていることを改めて実感します。特にAIが単にコードを提案するレベルを超え、DevToolsと連携して自ら問題を診断し分析する段階に進んでいる様子は非常に印象的です。これは、開発者の役割が「作成者」から「監督者」または「設計者」へと徐々に変化していくことを示唆しています。
+
+一方では、WebAssemblyや新しいCSS標準のように、ウェブの根幹をなす技術が着実に発展し、プラットフォーム自体の可能性を広げている点も注目に値します。結局のところ、私たちはより強力になったツールと堅固になった基盤の上で、複雑なユーザー体験といった本質的な問題により深く集中できるようになるでしょう。技術の発展に追いつくことも重要ですが、その技術を通じてどのような価値を生み出すのかを考えることが、開発者にとって常に必要な姿勢だと思います。
+
+#### 出典
+- [JavaScript Weekly #754](https://javascriptweekly.com/issues/754)
+- [Smashing Newsletter #526](https://mailchi.mp/smashingmagazine/526-design-patterns-for-complex-uis)
+- [React Status #445](https://react.statuscode.com/issues/445)
+- [Frontend Focus #710](https://frontendfoc.us/issues/710)
