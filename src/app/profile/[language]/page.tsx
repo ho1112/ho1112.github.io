@@ -1,4 +1,5 @@
 import IconBlog from '@/components/icon/Blog'
+import IconExternalLink from '@/components/icon/ExternalLink'
 import IconGithub from '@/components/icon/Github'
 import IconLinkedin from '@/components/icon/LinkedIn'
 import IconNpm from '@/components/icon/Npm'
@@ -682,22 +683,18 @@ export default function ProfilePage({
                     <IconGithub className="w-6 h-6" />
                   </a>
                   <a
-                    href={
-                      language === 'ko'
-                        ? 'https://mintora.me/blog/ko/'
-                        : 'https://mintora.me/blog/ja/'
-                    }
-                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
-                  >
-                    <IconBlog className="w-6 h-6" />
-                    main
-                  </a>
-                  <a
                     href={`/blog/${language}/blog/`}
                     className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
                   >
                     <IconBlog className="w-6 h-6" />
                     post
+                  </a>
+                  <a
+                    href={`/blog/${language}/`}
+                    className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+                  >
+                    <IconExternalLink className="w-6 h-6" />
+                    main
                   </a>
                 </div>
               </div>
