@@ -1,0 +1,119 @@
+---
+title: '🚀 2025-10 W2 #28'
+desc: React財団の設立、Core Web Vitalsの歴史、Prettierの誕生秘話 | 2025年10月第2週目 週間技術ニュースレター
+date: 2025-10-11
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、ReactがMetaの手を離れ、独立した財団として新たにスタートし、ガバナンスの大きな変化を予告しました。同時に、Viteのドキュメンタリーが公開され、Prettierの誕生秘話が共有されるなど、今や標準となったフロントエンドツールの歴史を振り返り、エコシステムの成熟を実感できる一週間でした。
+
+## 1. 🔍 深掘り
+- **[The History of Core Web Vitals](https://frontendfoc.us/link/175288/web)** (出典: *Frontend Focus #712*)
+	![Core Web Vitalsの歴史を示す画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1759870684/z9y3yfjsanzzx0sr3t4c.png)
+		- **背景**: ウェブパフォーマンスがユーザー体験に与える影響を定量的に測定し、改善するためにGoogle Chromeチームが開始したイニシアチブです。この記事は、Core Web Vitals(CWV)がどのように発展してきたか、そしてウェブパフォーマンスエコシステム全体にどのような影響を与えたかを詳細に記録しています。
+		- **核心内容**: CWVが導入されて以来、Chromeユーザーは合計で30,000年に相当する読み込み待機時間を節約できたといいます。LCP、FID、CLSといった主要な指標がどのように定義され改善されてきたか、そしてそれが開発者のパフォーマンスに対する見方をどう変えたかを説明します。
+		- **実務適用**: CWV指標を理解し、PageSpeed Insightsのようなツールを活用すれば、ユーザーが実際に体感するウェブサイトの品質を具体的なデータに基づいて改善できます。これは検索エンジンの順位にも肯定的な影響を与えます。
+		- **意義**: 単なる技術的な指標を超え、「ユーザー中心のパフォーマンス測定」という哲学が、どのようにしてウェブエコシステム全体の標準として定着したのか、その過程を深く理解することができます。
+
+- **[The Birth of Prettier](https://javascriptweekly.com/link/175487/web)** (出典: *JavaScript Weekly #756*)
+	![Prettierのロゴ画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kfb0ugcp5tq2hkyadoph.jpg)
+		- **背景**: 10年前、コードフォーマットに関する論争で開発チームの時間が浪費されるのを防ぐために始まったプロジェクトです。Prettierの共同制作者であるChristopher Chedeauが、Prettierがどのように誕生したのか、その背景と過程を振り返ります。
+		- **核心機能**: PrettierはAST(抽象構文木)を基にコードを完全に再構成し、開発者のスタイル設定に関わらず一貫した結果を保証します。これは、従来のリンターが単にルール違反を検出するのを超え、コードを「美しく」書き直すというパラダイムシフトをもたらしました。
+		- **実務適用**: `git commit`フックにPrettierを連携させれば、チーム全体のコードスタイルを自動的に統一し、コードレビュー時のフォーマットに関する議論を根本からなくすことができます。これにより、開発者はビジネスロジックにのみ集中できるようになります。
+		- **注意事項**: Prettierは「意見のある(opinionated)」ツールであるため、すべての設定をカスタマイズしようとするよりは、Prettierの基本哲学を受け入れて使用する方が精神衛生上良いでしょう。
+
+---
+#### 見逃せないコンテンツ
+- **[A Pragmatic Guide to Modern CSS Colours](https://frontendfoc.us/link/175290/web)** (出典: *Frontend Focus #712, CSS Weekly #623*)
+	+ **要約**: 最新のCSSカラー技法(OKLCH, `color-mix()`など)に不慣れな開発者のための実用的な入門書です。様々な例を通して、CSSカラー機能の現在と未来を簡単に理解できます。
+- **[Vite: The Documentary](https://javascriptweekly.com/link/175529/web)** (出典: *JavaScript Weekly #756*)
+	+ **要約**: Evan You、Rich Harrisなど主要なオープンソースリーダーたちのインタビューを通じて、Viteがどのようにフロントエンドエコシステムを揺るがすビルドツールとなったのか、その誕生と発展の過程を収めた39分のドキュメンタリーです。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Coinbase Open Sources CDS (Coinbase Design System)](https://react.statuscode.com/link/175331/web)** (出典: *React Status #447, JavaScript Weekly #756*)
+	![Coinbase Design Systemのコンポーネント例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/pd59joisiqwqnb4stfjp.jpg)
+	+ **概要**: グローバルな暗号資産取引所であるCoinbaseが、自社のデザインシステム(CDS)をReactおよびReact Native向けのクロスプラットフォームコンポーネントライブラリとしてオープンソース化しました。Apache 2.0ライセンスで公開されています。
+	+ **主な特徴**: 数字が自然にスクロールしながら変更される「rolling number」コンポーネントや、多段階プロセスを視覚的に表現する「stepper」など、金融サービスに特化した洗練された完成度の高いUIコンポーネントを多数含んでいます。
+	+ **実践のヒント**: 新しいデザインシステムを構築したり、既存のシステムを改善したりする際の優れた参考資料になります。特にデータ可視化やインタラクティブな数字表現が重要なサービスでインスピレーションを得るのに適しています。
+
+- **[Accented: A Frontend Library for Continuous Accessibility Testing](https://frontendfoc.us/link/175306/web)** (出典: *Frontend Focus #712*)
+	+ **概要**: ウェブアクセシビリティ問題の解決を支援するフロントエンドライブラリです。アプリにわずか数行のコードを追加するだけで、Axe-coreエンジンをベースに、アクセシビリティの問題がある要素の横にインタラクティブな説明ウィンドウを表示します。
+	+ **使用法**: 開発過程でリアルタイムにアクセシビリティ問題を確認し、すぐに修正できるため、別途テスト段階を待つ必要なく、開発フローの中で自然にアクセシビリティを改善できます。Stackblitzで[ライブデモ](https://frontendfoc.us/link/175308/web)を直接体験できます。
+	+ **実践のヒント**: QA段階以前に開発者が直接アクセシビリティ問題を認識し修正するよう促すことで、全体的な開発およびテストコストを削減するのに効果的です。
+
+---
+#### 見逃せないコンテンツ
+- **[Viz.js 3.20: Work with Graphviz in the Browser](https://javascriptweekly.com/link/175497/web)** (出典: *JavaScript Weekly #756*)
+	+ **要約**: 30年の歴史を持つグラフ可視化ツールであるGraphvizをWebAssemblyでビルドし、ブラウザで使用できるようにしたライブラリです。複雑なデータ関係やシステムアーキテクチャをウェブ上で簡単に可視化できます。
+- **[EmbedPDF: A PDF Viewer That Integrates with Any JavaScript Project](https://javascriptweekly.com/link/175500/web)** (出典: *JavaScript Weekly #756*)
+	+ **要約**: 依存関係なしに、あらゆるJavaScriptプロジェクトに統合できるPDFビューアです。テーマ、注釈、検索、スムーズスクロールなど、多様な機能を開発者に優しいAPIで提供します。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[15 Recent Node.js Features That Can Replace Popular npm Packages](https://javascriptweekly.com/link/175489/web)** (出典: *JavaScript Weekly #756*)
+	+ **核心的なインサイト**: かつては`node-fetch`、`nodemon`、`dotenv`といったnpmパッケージに依存しなければならなかった多くの機能が、今ではNode.jsランタイム自体に組み込まれています。例えば、`fetch` API、`--watch`フラグ、`.env`ファイルのサポートなどが標準で提供されます。この記事を通じて、不要な外部依存関係を排除し、より軽量で安全、かつ高速なアプリケーションを構築する方法を学べます。
+
+- **[Getting Creative With `shape-outside`](https://css-tricks.com/getting-creative-with-shape-outside/?utm_source=CSS-Weekly&utm_campaign=Issue-623&utm_medium=web)** (出典: *CSS Weekly #623, Frontend Focus #712*)
+	![shape-outsideを活用した創造的なテキストレイアウトの例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1759921757/qio0cyepd6cdgdouqgaf.png)
+	+ **核心的なインサイト**: CSSの`shape-outside`プロパティを使用すると、一般的な四角いボックスモデルから脱却し、円、楕円、多角形など特定の形状に沿ってテキストを流し込むことができます。これにより、はるかに創造的でダイナミックなページレイアウトを実現できます。Andy Clarkeが提供する様々なデモを通じて、`shape-outside`の可能性を確認し、デザインに個性を加える方法を学べます。
+
+- **[CSS to Speech: Alternative Text for CSS-Generated Content](https://www.sarasoueidan.com/blog/alt-text-for-css-generated-content/?utm_source=CSS-Weekly&utm_campaign=Issue-623&utm_medium=web)** (出典: *CSS Weekly #623*)
+	![CSSで生成されたコンテンツにaltテキストを追加するコード例](https://css-weekly.com/wp-content/uploads/2025/10/alt-text-for-css-generated-content.png)
+	+ **核心的なインサイト**: CSSの`::before`や`::after`疑似要素を通じて生成されたコンテンツ(例: アイコン)は、スクリーンリーダーが読み上げられない場合が多くあります。この記事は、`content`プロパティ内でスラッシュ(`/`)を使用して代替テキストを提供する最新のCSS仕様を紹介します。マークアップを変更することなくウェブアクセシビリティを向上させる実用的なヒントを提供します。
+
+---
+#### 見逃せないコンテンツ
+- **[How to Group Arrays Without `reduce()`](https://javascriptweekly.com/link/175491/web)** (出典: *JavaScript Weekly #756*)
+	+ **要約**: 複雑な`reduce`ロジックの代わりに、最新のJavaScript標準に追加された`Object.groupBy()`と`Map.groupBy()`を使用して、配列を簡潔かつ直感的にグループ化する方法を紹介します。
+- **[How to Detect Safari and iOS Versions from JavaScript](https://frontendfoc.us/link/175302/web)** (出典: *Frontend Focus #712*)
+	+ **要約**: プログレッシブエンハンスメントが最善ですが、やむを得ずSafariや特定のiOSバージョンを検出する必要がある場合に使用できるJavaScriptコードスニペットと注意事項を扱います。
+---
+
+## 4. ✨ アイデア
+- **[Messenger - A Small World Inside Your Browser](https://messenger.abeto.co/)** (出典: *Smashing Newsletter #528*)
+	![小さな惑星の上を走るメッセンジャーのキャラクター](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/8f57233a-9c20-ef15-2ade-e97ca13e29df.png)
+	+ **特徴**: 小さな惑星を舞台に手紙や小包を配達するメッセンジャーになってみる、美しい3Dブラウザゲームです。WebGLとThree.jsで制作され、モバイルとデスクトップの両方でスムーズに動作し、今日のブラウザ技術の可能性を示す素晴らしい事例です。
+
+- **[Electric Border](https://codepen.io/BalintFerenczy/pen/KwdoyEN?utm_source=CSS-Weekly&utm_campaign=Issue-623&utm_medium=web)** (出典: *CSS Weekly #623*)
+	![電気が流れるようなアニメーションのボーダー効果](https://css-weekly.com/wp-content/uploads/2025/10/css-electric-border.jpg)
+	+ **特徴**: 特定の要素を劇的に強調できる、クールなボーダーアニメーションです。CSSだけで実装されたこの効果は、ユーザーインタラクションに躍動感を加えたい時に素晴らしいインスピレーションを与えてくれます。
+
+## 5. ⚡️ ミニノート
+- **[Introducing the *React Foundation*](https://react.statuscode.com/link/175321/web)** (出典: *React Status #447, JavaScript Weekly #756*)
+	+ **要約**: React Conf 2025で、ReactとReact Nativeの管理主体がMetaから独立した財団に移管されると発表されました。Amazon、Expo、Meta、Microsoftなどが初期メンバーとして参加します。
+- **[React 19.2 Released](https://react.statuscode.com/link/175322/web)** (出典: *React Status #447*)
+	+ **要約**: UIと内部状態を非表示にしてから復元できる`<Activity />`コンポーネントと`useEffectEvent`フックが新たに導入され、Chrome DevToolsのパフォーマンスプロファイリング機能が改善されました。
+- **[v1.0 of React Compiler Went Live](https://react.statuscode.com/link/175324/web)** (出典: *React Status #447*)
+	+ **要約**: Reactコードを最適化された通常のJavaScriptに自動変換するReact Compilerのv1.0がリリースされました。段階的に導入する方法も併せて紹介されています。
+- **[Deno Serves Oracle First Request for Documents in Trademark Dispute](https://javascriptweekly.com/link/175480/web)** (出典: *JavaScript Weekly #756*)
+	+ **要約**: 「JavaScript」の商標権を巡ってOracleと紛争中のDenoが、Oracle側に最初の文書提出を要求し、法廷闘争を続けています。
+
+## 6. 🎉 リリース
+- **[Next.js 16 Beta](https://javascriptweekly.com/link/175484/web)** (出典: *JavaScript Weekly #756*)
+	+ **アップデート**: Turbopackが安定版となり、デフォルトのバンドラとして使用されます。また、React 19.2とReact Compilerが安定してサポートされます。
+- **[Playwright v1.56](https://javascriptweekly.com/link/175541/web)** (出典: *JavaScript Weekly #756*)
+	+ **アップデート**: Microsoftのブラウザ自動化ライブラリで、AIベースでテストを生成・管理するPlaywright Agents機能が新たに追加されました。
+- **[Reactylon v3.2](https://react.statuscode.com/link/175343/web)** (出典: *React Status #447, JavaScript Weekly #756*)
+	+ **アップデート**: Babylon.jsベースのReact用XR(拡張現実)フレームワークです。
+- **[react-map-gl v8.1](https://javascriptweekly.com/link/175510/web)** (出典: *React Status #447, JavaScript Weekly #756*)
+	+ **アップデート**: MapboxGL JSをReactで簡単に使用できるようにラップしたAPIラッパーライブラリです。
+- **[Marked v16.4](https://javascriptweekly.com/link/175517/web)** (出典: *JavaScript Weekly #756*)
+	+ **アップデート**: 高速で柔軟なマークダウンパーサーおよびコンパイラです。
+- **[Pixi.js v8.14](https://javascriptweekly.com/link/175518/web)** (出典: *JavaScript Weekly #756*)
+	+ **アップデート**: 高速で柔軟な2D WebGLレンダラーです。
+- **[Javet v5.0](https://javascriptweekly.com/link/175519/web)** (出典: *JavaScript Weekly #756*)
+	+ **アップデート**: Node.jsとV8エンジンをJavaアプリケーションに組み込むことを可能にするライブラリです。
+- **[React Admin v5.12](https://react.statuscode.com/link/175341/web)** (出典: *React Status #447*)
+	+ **アップデート**: B2Bフロントエンドインターフェース構築のためのフレームワークです。
+
+## ✍️ おわりに
+今週は、Reactが財団として独立し、新しい時代を切り開く様子を見守ることができました。これは、特定の企業の影響力から脱し、コミュニティ中心でプロジェクトがより健全に発展するための重要な転換点となるでしょう。また、ViteやPrettierといった主要なツールの発展史を振り返ることで、私たちが現在当たり前のように使用している開発環境が、数多くの開発者の悩みと努力の末に作られたものであることを改めて感じることができました。技術の変化を追い続けると同時に、その技術がどのような哲学と背景から生まれたのかを理解することが、より良い開発者として成長するための重要な糧となるでしょう。
+
+#### 出典
+- [JavaScript Weekly #756](https://javascriptweekly.com/issues/756)
+- [Smashing Newsletter #528](https://mailchi.mp/smashingmagazine/528-design-experiments-and-little-gems)
+- [React Status #447](https://react.statuscode.com/issues/447)
+- [Frontend Focus #712](https://frontendfoc.us/issues/712)
+- [CSS Weekly #623](https://css-weekly.com/issue-623)
