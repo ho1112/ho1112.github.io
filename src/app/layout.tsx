@@ -48,7 +48,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <link rel="icon" type="image/x-icon" href="/icon/m_favicon.png" />
-      <body className="font-pretendard flex min-h-screen flex-col">
+      <body className="font-lineseed flex min-h-screen flex-col">
         <QueryProvider>
           <ThemeProvider>
             <Header />

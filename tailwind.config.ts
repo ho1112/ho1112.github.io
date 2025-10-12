@@ -14,7 +14,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        pretendard: ['Pretendard'],
+        lineseed: ['LINE Seed KR', 'LINE Seed JP', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
