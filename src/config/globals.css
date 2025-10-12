@@ -13,6 +13,7 @@
       format('woff2'),
     url('/fonts/LINE_SeedKR_2023.09.06/Web/woff/LINESeedKR-Th.woff')
       format('woff');
+  unicode-range: U+AC00-D7AF, U+1100-11FF, U+3130-318F;
 }
 
 @font-face {
@@ -24,6 +25,7 @@
       format('woff2'),
     url('/fonts/LINE_SeedKR_2023.09.06/Web/woff/LINESeedKR-Rg.woff')
       format('woff');
+  unicode-range: U+AC00-D7AF, U+1100-11FF, U+3130-318F;
 }
 
 @font-face {
@@ -35,6 +37,7 @@
       format('woff2'),
     url('/fonts/LINE_SeedKR_2023.09.06/Web/woff/LINESeedKR-Bd.woff')
       format('woff');
+  unicode-range: U+AC00-D7AF, U+1100-11FF, U+3130-318F;
 }
 
 /* LINE Seed JP - 일본어 폰트 */
@@ -47,6 +50,7 @@
       format('woff2'),
     url('/fonts/LINESeedJP_20241105/Web/WOFF/LINESeedJP_OTF_Th.woff')
       format('woff');
+  unicode-range: U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+3000-303F;
 }
 
 @font-face {
@@ -58,6 +62,7 @@
       format('woff2'),
     url('/fonts/LINESeedJP_20241105/Web/WOFF/LINESeedJP_OTF_Rg.woff')
       format('woff');
+  unicode-range: U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+3000-303F;
 }
 
 @font-face {
@@ -69,6 +74,7 @@
       format('woff2'),
     url('/fonts/LINESeedJP_20241105/Web/WOFF/LINESeedJP_OTF_Bd.woff')
       format('woff');
+  unicode-range: U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+3000-303F;
 }
 
 @font-face {
@@ -80,6 +86,7 @@
       format('woff2'),
     url('/fonts/LINESeedJP_20241105/Web/WOFF/LINESeedJP_OTF_Eb.woff')
       format('woff');
+  unicode-range: U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+3000-303F;
 }
 
 @tailwind base;
