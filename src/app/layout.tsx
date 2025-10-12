@@ -9,11 +9,11 @@ import '@/config/globals.css'
 // import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 // import { Analytics } from '@vercel/analytics/react'
 // import { SpeedInsights } from '@vercel/speed-insights/next'
+import { FontProvider } from '@/layouts/FontProvider'
 import { Footer } from '@/layouts/Footer'
 import { Header } from '@/layouts/Header'
 import { QueryProvider } from '@/layouts/query/QueryProvider'
 import { ThemeProvider } from '@/layouts/theme/ThemeProvider'
-import { FontProvider } from '@/layouts/FontProvider'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
