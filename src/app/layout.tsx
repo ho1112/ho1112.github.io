@@ -13,6 +13,7 @@ import { Footer } from '@/layouts/Footer'
 import { Header } from '@/layouts/Header'
 import { QueryProvider } from '@/layouts/query/QueryProvider'
 import { ThemeProvider } from '@/layouts/theme/ThemeProvider'
+import { FontProvider } from '@/layouts/FontProvider'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
@@ -51,6 +52,7 @@ export default function RootLayout({
       <body className="font-lineseed flex min-h-screen flex-col">
         <QueryProvider>
           <ThemeProvider>
+            <FontProvider />
             <Header />
             <main className="mt-[64px] flex flex-1 flex-col">{children}</main>
             <Footer />
