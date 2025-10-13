@@ -9,6 +9,7 @@ import '@/config/globals.css'
 // import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 // import { Analytics } from '@vercel/analytics/react'
 // import { SpeedInsights } from '@vercel/speed-insights/next'
+import { FontProvider } from '@/layouts/FontProvider'
 import { Footer } from '@/layouts/Footer'
 import { Header } from '@/layouts/Header'
 import { QueryProvider } from '@/layouts/query/QueryProvider'
@@ -48,9 +49,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <link rel="icon" type="image/x-icon" href="/icon/m_favicon.png" />
-      <body className="font-pretendard flex min-h-screen flex-col">
+      <body className="font-lineseed flex min-h-screen flex-col">
         <QueryProvider>
           <ThemeProvider>
+            <FontProvider />
             <Header />
             <main className="mt-[64px] flex flex-1 flex-col">{children}</main>
             <Footer />
