@@ -36,7 +36,7 @@ export const Header = () => {
             </Link>
             <Link
               href={`/profile/${currentLanguage}/`}
-              className="animate-tada-delayed"
+              className="animate-tada-delayed font-bold"
             >
               profile
             </Link>
