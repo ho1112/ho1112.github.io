@@ -1,0 +1,124 @@
+---
+title: '🚀 2025-10 W4 #30'
+desc: 점진적 이미지 렌더링 심층 분석, AI 시대의 '제로 클릭' 트래픽, Vitest 4.0 및 Next.js 16 릴리스 | 2025년 10월 4주차 주간 기술 뉴스레터
+date: 2025-10-25
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 AI가 검색 엔진과 브라우저 시장에 미치는 영향부터, Vitest 4.0, Next.js 16 등 주요 프레임워크의 대형 릴리스, 그리고 모던 CSS의 발전상까지, 프론트엔드 생태계의 현재와 미래를 동시에 조망하는 소식들이 주를 이뤘습니다.
+
+## 1. 🔍 심층 분석
+- **[The Present and Potential Future of Progressive Image Rendering](https://jakearchibald.com/2025/present-and-future-of-progressive-image-rendering/?utm_source=CSS-Weekly&utm_campaign=Issue-624&utm_medium=web)** (출처: *CSS Weekly #624*)
+   ![점진적 이미지 렌더링을 보여주는 다이어그램](https://css-weekly.com/wp-content/uploads/2025/10/present-and-future-of-progressive-image-rendering.jpg)
+    -   **배경**: 사용자는 이미지가 로드될 때 빈 공간을 보기보다 점진적으로 선명해지는 경험을 선호합니다. 이 글은 JPEG, PNG, WebP, AVIF, JPEG XL 등 다양한 이미지 포맷이 이러한 점진적 렌더링(Progressive Image Rendering)을 어떻게 지원하는지, 그리고 그 장단점은 무엇인지 깊이 있게 탐구합니다.
+    -   **핵심 기능**: 각 포맷(예: 프로그레시브 JPEG, 인터레이싱 PNG)의 기술적 작동 원리를 비교 분석하고, 흔한 오해들을 바로잡습니다.
+    -   **실무 적용**: 현재 시점에서 점진적 렌더링을 위한 가장 실용적이고 효과적인 솔루션으로 AVIF 포맷을 사용하는 방안을 제안합니다.
+
+- **[Traffic In A Zero-Click World](https://sparktoro.com/blog/in-a-zero-click-world-traffic-is-a-terrible-goal/)** (출처: *Smashing Newsletter #530*)
+   ![트래픽은 감소하고 노출은 증가하는 '앨리게이터 그래프'](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/1217f565-3004-6c23-2d83-e72c1a6e1d9d.png)
+    -   **배경**: Google 검색 결과의 30-40%가 AI 요약(AI Overviews)을 반환함에 따라, 사용자가 웹사이트를 직접 클릭하지 않는 '제로 클릭(zero-click)' 현상이 심화되고 있습니다. 이로 인해 많은 사이트가 검색 노출은 증가하지만 실제 클릭(트래픽)은 감소하는 '앨리게이터 그래프' 현상을 겪고 있습니다.
+    -   **핵심 인사이트**: 마케팅 전문가 Rand Fishkin은 이러한 환경에서 기존의 '트래픽 증가' 목표는 더 이상 유효하지 않다고 주장합니다.
+    -   **실무 적용**: 단순 트래픽 확보 노력 대신, 비즈니스의 근본적인 목표 달성에 집중해야 합니다. 또한, 사용자가 실제 조언을 구하는 Reddit, LinkedIn, YouTube 같은 플랫폼에서 유용하고 도움이 되는 리소스를 제공하는 방향으로 전략을 전환할 것을 권장합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How AI Is Changing Search Behaviors](https://www.nngroup.com/articles/ai-changing-search-behaviors/)** (출처: *Smashing Newsletter #530*)
+    + **요약**: Nielsen Norman Group의 질적 연구에 따르면, 사용자들은 AI 검색 도구와 챗봇의 등장에도 불구하고 여전히 Google 검색과 같은 전통적인 습관을 유지하고 있으며, 종종 두 도구를 교차 검증(fact-checking)을 위해 함께 사용하는 것으로 나타났습니다.
+- **[Making Context-Aware Components: How CSS inherit() Could Simplify Design Systems](https://www.alwaystwisted.com/articles/making-context-aware-components?utm_source=CSS-Weekly&utm_campaign=Issue-624&utm_medium=web)** (출처: *CSS Weekly #624*)
+    + **요약**: CSS에 새롭게 개발 중인 `inherit()` 함수는 `var()`와 유사하게 작동하며, 컴포넌트가 컨테이너(부모)의 컨텍스트(예: 간격, 색상)를 자연스럽게 상속받을 수 있게 합니다. Stuart Robson은 이 기능이 디자인 시스템의 토큰 중복을 줄이고 컴포넌트를 더욱 유연하게 만드는 방법을 설명합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[JustGage 2.0: Draw and Animate Dashboard-Style SVG Gauges](https://toorshia.github.io/justgage/)** (출처: *Frontend Focus #714*)
+   ![다양한 스타일의 SVG 게이지 차트 예시](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/i7jbtsctzjh03rmc6rwj.jpg)
+    -   **개요**: 10년 이상 된 대시보드 게이지 라이브러리인 JustGage가 네이티브 SVG API를 사용하도록 현대화된 2.0 버전으로 출시되었습니다.
+    -   **특징**: SVG를 사용하여 깔끔한 대시보드 스타일 게이지를 그리고 애니메이션을 적용할 수 있으며, 공식 사이트의 플레이그라운드를 통해 다양한 옵션과 스타일을 실시간으로 테스트해 볼 수 있습니다.
+
+- **[OpenAI’s AI-Fueled Browser, *ChatGPT Atlas*, is Here](https://frontendfoc.us/link/175933/web)** (출처: *Frontend Focus #714*)
+    -   **개요**: OpenAI가 자체 AI 기반 웹 브라우저인 'ChatGPT Atlas'를 출시했습니다.
+    -   **특징**: Chromium을 기반으로 하며, 채팅, 에이전트, 웹 브라우저가 결합된 하이브리드 경험을 제공하는 것을 목표로 합니다.
+    -   **플랫폼**: 현재 macOS 버전만 제공되며, Windows, iOS, Android 버전이 순차적으로 출시될 예정입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Web Codegen Scorer: A Tool for Evaluating the Quality of LLM-Generated Web Code](https://github.com/angular/web-codegen-scorer)** (출처: *Frontend Focus #714*)
+    + **요약**: Google의 Angular 팀이 개발한 도구로, LLM(거대 언어 모델)이 생성한 웹 코드(HTML, CSS 등)의 품질을 평가하는 데 사용됩니다. 여러 모델의 결과물을 비교하거나 시간 경과에 따른 품질을 모니터링하는 데 유용합니다.
+- **[Obra Icons: A Simple, Consistent Set of Icons for User Interfaces](https://icons.obra.studio/)** (출처: *Frontend Focus #714*)
+    + **요약**: 1000개 이상의 일관된 UI 아이콘 세트입니다. SVG, PNG로 다운로드하거나 React, Svelte 코드로 복사할 수 있으며, 웹사이트에서 색상, 굵기, 크기를 실시간으로 커스터마이징할 수 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[25 Rad CSS Features in 25 Minutes](https://frontendfoc.us/link/175928/web)** (출처: *Frontend Focus #714*)
+   ![강연자가 25가지 CSS 기능을 소개하는 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bp9dtgiwlumdurxwbscm.jpg)
+    -   **핵심 인사이트**: Adam Argyle이 Cascadia JS 컨퍼런스에서 발표한 강연으로, 25분 만에 25가지의 최신 CSS 기능들을 빠르게 소개합니다.
+    -   **주요 기능**: 필드 크기 조절(`field-sizing`), 커스텀 스크롤바 스타일링, CSS 수학 함수, 스크롤 기반 애니메이션(`scroll-driven animations`) 등이 포함됩니다.
+    -   **참고**: 영상 시청이 어렵다면, 코드 샘플이 포함된 슬라이드덱(slidedeck)을 통해 내용을 확인할 수 있습니다.
+
+- **[Solved By Modern CSS: Section Layout](https://ishadeed.com/article/modern-css-section-layout/?utm_source=CSS-Weekly&utm_campaign=Issue-624&utm_medium=web)** (출처: *CSS Weekly #624*)
+   ![모던 CSS를 활용해 개선된 섹션 레이아웃 예시](https://css-weekly.com/wp-content/uploads/2025/10/modern-css-section-layout.jpg)
+    -   **핵심 인사이트**: CSS 전문가 Ahmad Shadeed가 일반적인 정적 섹션 레이아웃을 모던 CSS 기능을 활용해 동적으로 개선하는 방법을 상세히 설명합니다.
+    -   **적용 기술**: 컨테이너 쿼리(Container Queries), `:has()` 선택자, `clamp()` 함수, CSS `grid`를 조합하여, 콘텐츠나 뷰포트 크기에 따라 유연하게 반응하는 역동적인 섹션 디자인을 구현하는 방법을 보여줍니다.
+
+- **[9 UX Best Practice Design Patterns for Autocomplete Suggestions](https://baymard.com/blog/autocomplete-design)** (출처: *Smashing Newsletter #530*)
+   ![자동완성 UX 디자인 패턴을 보여주는 예시](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d8525cb7-f108-ec7e-3f76-20d92fd50528.png)
+    -   **핵심 인사이트**: Baymard Institute의 연구에 따르면, 이커머스 사이트의 80%가 검색 자동완성 기능을 제공하지만, 이 중 단 19%만이 모든 세부 구현을 올바르게 처리하고 있습니다.
+    -   **주요 팁**: 이 아티클은 데스크톱과 모바일 환경 모두에서 자동완성 목록을 관리 가능한 수로 유지하는 법, 제안 항목 간에 적절한 시각적 간격을 제공하는 법 등, 사용성 문제를 제거하고 자동완성 기능의 잠재력을 최대한 활용할 수 있는 9가지 UX 베스트 프랙티스를 제공합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Big Gotcha with `@starting-style`](https://www.joshwcomeau.com/css/starting-style/)** (출처: *Frontend Focus #714*)
+    + **요약**: Josh W. Comeau가 CSS 진입 애니메이션(enter animations)을 구현할 수 있게 해주는 `@starting-style` 규칙을 분석합니다. 현재 약 85%의 지원율을 보이지만, 이 규칙의 의도된 사용 사례와 실제 유용성이 즉각적으로 명확하지 않을 수 있는 'Gotcha(함정)'에 대해 탐구합니다.
+- **[Rethinking Async Loops in JavaScript](https://allthingssmitty.com/2025/10/22/rethinking-async-loops-in-javascript/)** (출처: *JavaScript Weekly #758*)
+    + **요약**: 루프 안에서 `await`를 사용하면 비동기 작업이 병렬이 아닌 순차적으로 실행됩니다. 또한 `map()`과 `await`를 함께 사용하면 의도대로 기다리지 않을 수 있습니다. Matt Smith가 `forEach`와 `async`를 사용할 때 흔히 저지르는 실수를 지적하고, 실제로 작동하는 올바른 비동기 루프 패턴을 분석합니다.
+- **[Importing vs Fetching JSON](https://jakearchibald.com/2025/importing-vs-fetching-json/)** (출처: *JavaScript Weekly #758*)
+    + **요약**: 이제 대부분의 브라우저에서 지원되는 'Import attributes'를 사용하면 `import` 문으로 JSON 파일을 직접 가져올 수 있습니다. Jake Archibald가 이 방식과 전통적인 `fetch`를 사용하는 방식을 비교하며 어떤 차이가 있는지 탐구합니다.
+---
+
+## 4. ✨ 아이디어
+- **[DNA Strand 🧬 (CSS, SVG:Gooey)](https://codepen.io/konstantindenerz/pen/ExJZPZO?utm_source=CSS-Weekly&utm_campaign=Issue-624&utm_medium=web)** (출처: *CSS Weekly #624*)
+    ![CSS와 SVG로 만든 DNA 가닥 애니메이션](https://css-weekly.com/wp-content/uploads/2025/10/dna-strand-css-svg-gooey.jpg)
+    -   **특징**: Konstantin Denerz가 CSS와 SVG의 `feGaussianBlur` 및 `feColorMatrix` 필터를 결합하여 만드는 'Gooey' 효과를 활용하여, 마치 살아있는 듯 유기적으로 움직이는 DNA 이중 나선 구조를 구현한 CodePen 데모입니다. 시각적으로 매우 인상적이며 부드러운 애니메이션을 보여줍니다.
+
+## 5. ⚡️ 짧은 소식
+- **[The Nordic.js 2025 Talk Videos](https://javascriptweekly.com/link/176092/web)** (출처: *JavaScript Weekly #758*)
+    + **요약**: 최근 열린 Nordic.js 2025 컨퍼런스의 강연 영상들이 공개되었습니다. ES2026/2027 전망, 패스키(passkeys), JavaScript로 에뮬레이터 작성하기 등 다양한 주제를 다룹니다.
+- **[Cascadia JS conference talks](https://frontendfoc.us/link/175930/web)** (출처: *Frontend Focus #714*)
+    + **요약**: 최근 Cascadia JS 컨퍼런스에서 공유된 새로운 강연들을 모두 시청할 수 있습니다. (위 '추천 아티클 & 팁'의 "25 Rad CSS Features"도 이 컨퍼런스 강연 중 하나입니다.)
+- **[WordPress has a public domain stock photo library](https://frontendfoc.us/link/175938/web)** (출처: *Frontend Focus #714*)
+    + **요약**: 워드프레스(WordPress)가 28,000개 이상의 이미지를 보유한 퍼블릭 도메인 스톡 사진 라이브러리를 운영하고 있다는 소식입니다.
+- **[Google ends several Privacy Sandbox technologies](https://frontendfoc.us/link/175934/web)** (출처: *Frontend Focus #714*)
+    + **요약**: Google이 "낮은 채택률(low levels of adoption)"을 이유로 Topics API를 포함한 여러 프라이버시 샌드박스 기술의 종료를 공식 발표했습니다.
+- **[State of JavaScript 2025 survey](https://javascriptweekly.com/link/176100/web)** (출처: *JavaScript Weekly #758*)
+    + **요약**: 전 세계 JavaScript 개발자들의 생태계 현황을 파악하는 *State of JavaScript 2025* 설문조사가 마감까지 단 1주일 남았습니다.
+
+## 6. 🎉 릴리스
+- **[Vitest 4.0](https://javascriptweekly.com/link/176085/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: Vite 네이티브 테스트 프레임워크인 Vitest 4.0이 출시되었습니다. 시각적 회귀 테스트(visual regression testing) 도입, '브라우저 모드' 안정화, Playwright Traces 지원 등이 추가되었습니다. 또한, Angular 21부터 Karma와 Jasmine을 대체하여 기본 테스트 러너로 채택될 예정입니다.
+- **[Next.js 16](https://javascriptweekly.com/link/176090/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: Next.js 16이 Next.js Conf와 함께 출시되었습니다. 명시적 캐싱 컴포넌트, AI 지원 디버깅을 위한 MCP 서버, 그리고 Turbopack 및 React Compiler 지원이 안정화(stable)되었습니다.
+- **[Bun v1.3.1](https://javascriptweekly.com/link/176103/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: 최근 대규모 기능이 추가된 1.3 릴리스에 이은 후속 포인트 릴리스(point release)입니다.
+- **[Biome v2.3](https://javascriptweekly.com/link/176105/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: 빠른 속도를 자랑하는 포맷터 겸 린터인 Biome이 v2.3에서 Vue, Svelte, Astro 파일 포맷을 공식 지원합니다.
+- **[Boa v0.21](https://javascriptweekly.com/link/176102/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: Rust로 작성된 JavaScript 엔진인 Boa의 중요 릴리스입니다. 이번 버전에서는 Temporal API 지원이 포함되었습니다.
+- **[Ky 1.13](https://javascriptweekly.com/link/176124/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: Fetch API 기반의 경량 HTTP 클라이언트인 Ky의 1.13 버전입니다. 재사용 가능한 API 클라이언트를 더 쉽게 생성할 수 있도록 도와주는 'context' 기능이 추가되었습니다.
+- **[Solito 5.0](https://javascriptweekly.com/link/176129/web)** (출처: *JavaScript Weekly #758*)
+    + **업데이트**: React Native와 Next.js 간의 코드 공유 및 내비게이션을 지원하는 Solito의 5.0 버전입니다. Next.js 16 및 Expo 54를 지원하며, React Native Web 의존성을 제거했습니다.
+- **[URLPattern (Baseline Newly available)](https://frontendfoc.us/link/175935/web)** (출처: *Frontend Focus #714*)
+    + **업데이트**: 라우팅 등에 유용한 URL 패턴을 다룰 수 있는 URLPattern API가 주요 브라우저에서 모두 지원되는 'Baseline Newly available' 상태가 되었습니다.
+- **[Same-document view transitions (Baseline Newly available)](https://frontendfoc.us/link/175936/web)** (출처: *Frontend Focus #714*)
+    + **업데이트**: SPA 등에서 페이지 전환 효과를 부드럽게 처리하는 동일 문서 내 뷰 전환(same-document view transitions) 기능이 Baseline 'Newly available' 상태가 되었습니다.
+- **[Safari Technology Preview 230](https://frontendfoc.us/link/175937/web)** (출처: *Frontend Focus #714*)
+    + **업데이트**: Safari Technology Preview 230의 릴리스 노트가 공개되었습니다.
+
+## ✍️ 마치며
+AI가 검색 엔진과 브라우저라는 웹의 핵심 관문에 통합되면서, '제로 클릭' 현상과 같이 개발자와 콘텐츠 제작자의 생존 방식 자체를 고민하게 만드는 변화가 가속화되고 있습니다. 이러한 거대한 흐름 속에서도 Vitest, Next.js, Biome과 같은 핵심 개발 도구들은 꾸준히 진화하며 개발 환경을 개선하고 있습니다. 또한 `URLPattern`이나 `inherit()` 같은 새로운 표준 API의 등장은 웹 플랫폼 자체가 얼마나 견고하게 발전하고 있는지를 보여줍니다. 급변하는 AI의 물결과 견고하게 다져지는 웹 표준의 발전 사이에서 균형 잡힌 시각을 유지하는 것이 무엇보다 중요해 보입니다.
+
+#### 출처
+- [JavaScript Weekly #758](https://javascriptweekly.com/issues/758)
+- [Smashing Newsletter #530](https://mailchi.mp/smashingmagazine/530-state-of-search-in-2025)
+- [Frontend Focus #714](https://frontendfoc.us/issues/714)
+- [CSS Weekly #623](https://css-weekly.com/issue-624)
