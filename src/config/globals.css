@@ -8,6 +8,7 @@
   font-family: 'LINE Seed KR';
   font-weight: 100;
   font-style: normal;
+  font-display: swap;
   src:
     url('/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Th.woff2')
       format('woff2'),
@@ -20,6 +21,7 @@
   font-family: 'LINE Seed KR';
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
   src:
     url('/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Rg.woff2')
       format('woff2'),
@@ -32,6 +34,7 @@
   font-family: 'LINE Seed KR';
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
   src:
     url('/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Bd.woff2')
       format('woff2'),
@@ -45,6 +48,7 @@
   font-family: 'LINE Seed JP';
   font-weight: 100;
   font-style: normal;
+  font-display: swap;
   src:
     url('/fonts/LINESeedJP_20241105/Web/WOFF2/LINESeedJP_OTF_Th.woff2')
       format('woff2'),
@@ -57,6 +61,7 @@
   font-family: 'LINE Seed JP';
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
   src:
     url('/fonts/LINESeedJP_20241105/Web/WOFF2/LINESeedJP_OTF_Rg.woff2')
       format('woff2'),

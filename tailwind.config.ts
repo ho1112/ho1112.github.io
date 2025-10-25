@@ -14,7 +14,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        lineseed: ['LINE Seed KR', 'LINE Seed JP', 'sans-serif'],
+        lineseed: ['LINE Seed JP', 'LINE Seed KR', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -68,6 +68,9 @@ const config = {
       typography: {
         DEFAULT: {
           css: {
+            h1: {
+              fontWeight: '700',
+            },
             'h2, h3, h4': {
               scrollMarginTop: '5rem',
             },

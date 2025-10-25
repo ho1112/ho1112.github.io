@@ -49,6 +49,21 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <link rel="icon" type="image/x-icon" href="/icon/m_favicon.png" />
+      {/* 폰트 preload - FOIT(Flash of Invisible Text) */}
+      <link
+        rel="preload"
+        href="/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Rg.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      />
+      <link
+        rel="preload"
+        href="/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Bd.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      />
       <body className="font-lineseed flex min-h-screen flex-col">
         <QueryProvider>
           <ThemeProvider>
