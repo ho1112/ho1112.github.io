@@ -69,9 +69,51 @@ export default function ProfilePage({
     GAS: 'Google Apps Script',
   }
 
+  const tocItems = [
+    {
+      id: 'work-experience',
+      title: language === 'ko' ? '경력' : '経歴',
+    },
+    {
+      id: 'tech-stack',
+      title: language === 'ko' ? '기술 스택' : '技術スタック',
+    },
+    {
+      id: 'professional-projects',
+      title: language === 'ko' ? '참가 프로젝트' : '参画プロジェクト',
+    },
+    {
+      id: 'personal-projects',
+      title: language === 'ko' ? '🌟 개인 프로젝트' : '🌟 個人プロジェクト',
+    },
+  ]
+
   return (
     <div className="relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
       <div className="py-8">
+        {/* 목차 섹션 */}
+        <div className="mb-6 border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/10 w-fit">
+          <h2 className="text-sm font-semibold mb-2 flex items-center">
+            <span className="text-base mr-1.5">📑</span>
+            {language === 'ko' ? '목차' : '目次'}
+          </h2>
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
+            {tocItems.map((item, index) => (
+              <span key={item.id} className="flex items-center">
+                <a
+                  href={`#${item.id}`}
+                  className="text-xs hover:text-chomin transition-colors"
+                >
+                  {item.title}
+                </a>
+                {index < tocItems.length - 1 && (
+                  <span className="ml-3 text-xs text-muted-foreground">|</span>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* 헤더 섹션 */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold">
@@ -135,7 +177,10 @@ export default function ProfilePage({
         {/* 프로필 콘텐츠 섹션들 - 하이브리드 스타일 */}
         <div className="space-y-8">
           {/* 경력 섹션 - 카드 스타일 + 타임라인 */}
-          <section className="border rounded-lg p-6 shadow-sm">
+          <section
+            id="work-experience"
+            className="border rounded-lg p-6 shadow-sm"
+          >
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <span className="w-2 h-2 bg-chomin rounded-full mr-3"></span>
               Work Experience
@@ -327,7 +372,7 @@ export default function ProfilePage({
           </section>
 
           {/* 기술 스택 섹션 - 카드 스타일 + 태그 */}
-          <section className="border rounded-lg p-6 shadow-sm">
+          <section id="tech-stack" className="border rounded-lg p-6 shadow-sm">
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <span className="w-2 h-2 bg-chomin rounded-full mr-3"></span>
               Tech Stack
@@ -395,7 +440,10 @@ export default function ProfilePage({
           </section>
 
           {/* Professional Projects 섹션 */}
-          <section className="border rounded-lg p-6 shadow-sm">
+          <section
+            id="professional-projects"
+            className="border rounded-lg p-6 shadow-sm"
+          >
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <span className="w-2 h-2 bg-chomin rounded-full mr-3"></span>
               Professional Projects
@@ -628,7 +676,10 @@ export default function ProfilePage({
           </section>
 
           {/* Personal Projects 섹션 */}
-          <section className="border rounded-lg p-6 shadow-sm">
+          <section
+            id="personal-projects"
+            className="border rounded-lg p-6 shadow-sm"
+          >
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <span className="w-2 h-2 bg-chomin rounded-full mr-3"></span>
               Personal Projects
