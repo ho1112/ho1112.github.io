@@ -2,7 +2,7 @@
 title: 'ブログリニューアル！レスポンシブデザイン整備と独自ドメイン(mintora.me)取得'
 desc: これまでGitHubページで運営していたブログを本格的にリニューアル。新しいレスポンシブデザインの導入、mintora.meドメインの取得、そしてGoogleにブログを認識させるための初期設定まで、一連の過程を共有します。
 date: 2025-07-13
-thumbnail: /posts/blog/mintora_1.0.4/1.0.4.avif
+thumbnail: /posts/blog/mintora_v4/1.0.4.avif
 ---
 
 <h1>レスポンシブデザイン + ドメイン + Google Search Console</h1>
@@ -27,9 +27,9 @@ thumbnail: /posts/blog/mintora_1.0.4/1.0.4.avif
 		- *~639px
 			- 最新タブがスペースを確保できず、重なってしまう問題
 
-![pc](/posts/blog/mintora_1.0.4/pc_ja.avif)
-![tb](/posts/blog/mintora_1.0.4/tb_ja.avif)
-![sp](/posts/blog/mintora_1.0.4/sp_ja.avif)
+![pc](/posts/blog/mintora_v4/pc_ja.avif)
+![tb](/posts/blog/mintora_v4/tb_ja.avif)
+![sp](/posts/blog/mintora_v4/sp_ja.avif)
 
 今回の新しいデザインの目標と仕様は以下の通りです。
 ### Goal
@@ -64,9 +64,9 @@ thumbnail: /posts/blog/mintora_1.0.4/1.0.4.avif
 			- 1行に1件、最大3件表示
 ---
 ### 作業後
-![pc](/posts/blog/mintora_1.0.4/pc_ja_new.avif)
-![tb](/posts/blog/mintora_1.0.4/tb_ja_new.avif)
-![sp](/posts/blog/mintora_1.0.4/sp_ja_new.avif)
+![pc](/posts/blog/mintora_v4/pc_ja_new.avif)
+![tb](/posts/blog/mintora_v4/tb_ja_new.avif)
+![sp](/posts/blog/mintora_v4/sp_ja_new.avif)
 
 このように変わりました。
 タイトルがサムネイルの上に重なる方式は、最初は綺麗に見えましたが、サムネイル画像によっては可読性が低下する問題が発生したため、
@@ -77,13 +77,13 @@ thumbnail: /posts/blog/mintora_1.0.4/1.0.4.avif
 ## ドメイン適用
 ドメインは[ムームードメイン](https://muumuu-domain.com/)で購入しました。
 .meを購入し、1年で1,144円でした。techドメインが割引中だったので悩みましたが、やはりmeが短くてシンプルで、mintoraにも合っていると思い、meに決めました。
-![DNS設定](/posts/blog/mintora_1.0.4/muumuu.avif)
+![DNS設定](/posts/blog/mintora_v4/muumuu.avif)
 
 ---
 
 ## Google Search Console + sitemap
 最後にGoogle Search Consoleへの登録を行いました。
-![ドメイン認証](/posts/blog/mintora_1.0.4/searchConsole_ja.avif)
+![ドメイン認証](/posts/blog/mintora_v4/searchConsole_ja.avif)
 ドメイン認証という新しい認証方式ができていました。DNS設定で指定された文字列を設定するだけで簡単に認証が完了する方式です。
 今回はこれを使って認証しました。DNS設定の画像にあるTXT設定が、まさにこの認証です。
 
@@ -128,5 +128,5 @@ Allow: /
 Sitemap: https://mintora.me/sitemap.xml
 ```
 
-![sitemap](/posts/blog/mintora_1.0.4/sitemap.avif)
+![sitemap](/posts/blog/mintora_v4/sitemap.avif)
 登録成功！データの収集までには数日かかります。
