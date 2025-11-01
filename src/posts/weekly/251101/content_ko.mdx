@@ -1,0 +1,126 @@
+---
+title: '🚀 2025-11 W1 #31'
+desc: 네이티브 CSS의 진화 (앵커 포지셔닝), React Compiler 1.0 정식 릴리스, Next.js 16 베타| 2025년 11월 1주차 주간 기술 뉴스레터
+date: 2025-11-01
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 네이티브 CSS의 발전과 React 생태계의 주요 업데이트가 중심을 이뤘습니다. CSS는 `linear()` 타이밍 함수와 앵커 포지셔닝(Anchor Positioning) 같은 새로운 기능으로 복잡한 애니메이션과 UI를 자바스크립트 없이 구현할 수 있는 가능성을 열었습니다. 동시에 React 진영에서는 React Compiler 1.0, Next.js 16 Beta, Bun 1.3 등 핵심 도구들이 대거 릴리스되며 개발 환경의 큰 변화를 예고했습니다.
+
+## 1. 🔍 심층 분석
+
+- **[Springs and Bounces in Native CSS](https://frontendfoc.us/link/176210/web)** (출처: *Frontend Focus #715*)
+    ![Springs and Bounces in Native CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1761736308/fg4ro1px2ykwcqnnnppo.png)
+    - **배경**: 전통적으로 스프링(spring)이나 바운스(bounce) 같은 물리 기반 애니메이션은 JavaScript 라이브러리의 영역이었습니다. 하지만 CSS `linear()` 타이밍 함수가 등장하면서 네이티브 CSS만으로도 이러한 정교한 효과를 구현할 수 있게 되었습니다.
+    - **핵심 기능**: Josh W. Comeau가 `linear()` 함수를 사용하여 스프링 및 바운스 효과를 만드는 접근 방식을 탐구합니다. 그는 "일반적인 타이밍 함수 몇 개를 전역 CSS 변수에 저장하는" 방식을 통해 지금 당장 이 기능들을 가장 잘 활용할 수 있는 팁을 공유합니다.
+    - **실무 적용**: `linear()` 함수는 `transition-timing-function` 이나 `animation-timing-function` 속성에서 복잡한 Easing 곡선을 정의할 수 있게 해줍니다.
+    - **참고**: `linear()` 타이밍 함수(사전 설정된 `linear` 값과는 다름)의 브라우저 지원 범위는 현재 약 88%입니다. (출처: *Frontend Focus #715*)
+
+- **[CSS Anchor Positioning](https://ishadeed.com/article/anchor-positioning/)** (출처: *Smashing Newsletter #531*)
+    ![The Basics Of Anchor Positioning](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/337786aa-6ab7-b4f3-52f5-3818c50aac8a.png)
+    - **배경**: 특정 요소를 다른 요소(부모가 아닐 수도 있음)에 상대적으로 배치하는 것은 CSS에서 까다로운 작업이었습니다. 예를 들어, 카드 내의 태그를 이미지의 특정 모서리에 고정시키려 할 때, 카드 레이아웃이 변경되면(예: 데스크톱에서 수평 정렬) 배치가 깨지기 쉬웠습니다.
+    - **핵심 기능**: 앵커 포지셔닝(Anchor Positioning) API는 한 요소가 다른 '앵커' 요소에 상대적으로 위치를 잡을 수 있도록 허용합니다. 이는 두 요소가 DOM 트리 상에서 부모-자식 관계가 아니더라도 가능합니다.
+    - **실무 적용**: Ahmad Shadeed는 이 기능을 사용하여 툴팁이나 팝오버를 특정 UI 요소에 연결하는 방법을 소개합니다. 특히 `position-try-fallbacks` 속성을 사용하면, 대상 요소가 뷰포트에 맞지 않을 경우 자동으로 위치를 전환(예: 툴팁을 위에서 아래로)하도록 설정할 수 있어, 깨지기 쉬운 핵(hack) 없이도 훨씬 강력한 UI 구현이 가능해집니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Present and Potential Future of Progressive Image Rendering](https://frontendfoc.us/link/176212/web)** (출처: *Frontend Focus #715*)
+    + **요약**: 프로그레시브 이미지 렌더링(이미지가 점진적으로 선명해지는 기술)이 오늘날 얼마나 유용한지 탐구합니다. Jake Archibald가 AVIF, JPEG XL 등 다양한 이미지 포맷을 여러 브라우저와 네트워크 조건에서 테스트한 데모와 함께 현 상태를 분석합니다.
+- **[Directives and the Platform Boundary](https://javascriptweekly.com/link/176430/web)** (출처: *JavaScript Weekly #759*)
+    + **요약**: `"use strict"`에서 시작해 최근의 `"use client"`, `"use server"`, 그리고 React의 `"use no memo"`에 이르기까지, 다양한 '지시어(directives)'들이 표준 JS 기능이 아님에도 불구하고 확산되고 있습니다. Tanner Linsley는 이러한 지시어의 확산이 프레임워크와 도구에 대한 종속성(lock-in) 위험을 증가시키는 대가를 치른다고 지적합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[Triplex: A Newly Open Sourced Workspace for Building React and React Three Fiber Components](https://react.statuscode.com/link/175661/web)** (출처: *React Status #448*)
+    ![Triplex open source announcement](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dagqqwnducpge9ncoiir.jpg)
+    - **개요**: Triplex는 원래 React Three Fiber로 렌더링되는 3D 씬(scene)에서 컴포넌트를 시각적으로 레이아웃하기 위한 상용 도구였습니다.
+    - **핵심 기능**: 이 도구가 오픈 소스로 전환되었으며, Poimandres Collective(Three Fiber, Jotai, Zustand 개발 그룹)에 합류했습니다. 이제 VS Code 확장 기능을 포함하며, 3D뿐만 아니라 일반 React DOM 요소 및 컴포넌트까지 지원하도록 범위가 확장되었습니다. 3D와 2D React 컴포넌트를 위한 통합 워크스페이스를 제공합니다.
+
+- **[Navcat: 3D Floor-Based Pathfinding Library](https://javascriptweekly.com/link/176464/web)** (출처: *JavaScript Weekly #759*)
+    ![Navcat demo showing cats following laser pointers](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/p3mups03qqsb60z4eb6j.jpg)
+    - **개요**: Navcat은 게임이나 시뮬레이션을 대상으로 하는 3D 공간 길찾기(pathfinding) 라이브러리입니다.
+    - **특징**: 물체가 3D 공간을 통해 경로를 찾을 수 있도록 지원합니다. 홈페이지의 데모(고양이와 레이저 포인터)가 인상적이며, 다양한 데모를 통해 라이브러리의 활용법을 보여줍니다. (GitHub 리포: [링크](https://javascriptweekly.com/link/176467/web))
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Introducing ArkRegex: It's `RegExp()` with Types](https://javascriptweekly.com/link/176468/web)** (출처: *JavaScript Weekly #759*)
+    + **요약**: 기존의 `RegExp` 생성자나 정규식 리터럴 대신 이 타입-래퍼(typed wrapper)를 사용하면, 정규식 패턴과 캡처 그룹에 대한 TypeScript 타입을 얻을 수 있습니다. ArkType 프로젝트의 일부입니다.
+- **[New CSS Reset (UA+)](https://fokus.dev/tools/uaplus/)** (출처: *Smashing Newsletter #531*)
+    + **요약**: Manuel Matuzović가 만든 'UA+'는 기존의 CSS 리셋과는 다른 접근 방식을 취합니다. 속성을 무조건 초기화하는 대신, 기존 사용자 에이전트(브라우저) 스타일을 '개선'하고 브라우저가 부족한 부분에만 새로운 스타일을 추가하는 데 중점을 둡니다. 특히 접근성에 중점을 둔 가볍고 강력한 CSS 리셋입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[I Built the Same App 10 Times: Evaluating Frameworks for Mobile Performance](https://javascriptweekly.com/link/176449/web)** (출처: *JavaScript Weekly #759*)
+    + **핵심 인사이트**: 모바일 기기를 타겟으로 할 때는 작은 번들 크기와 빠른 렌더링 시간이 핵심입니다. 이 글은 동일한 앱을 Marko, SolidStart, SvelteKit, Qwik, Nuxt, Next.js 등 10가지 다른 접근 방식으로 구축하여 모바일 성능을 비교 분석합니다. 어떤 프레임워크가 모바일 환경에서 뛰어난 성능을 보이는지 실제 데이터를 통해 확인할 수 있습니다.
+
+- **[Compressed Fluid Typography](https://matthiasott.com/notes/compressed-fluid-typography)** (출처: *Smashing Newsletter #531*)
+    ![Compressed Fluid Typography example](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/cf485292-226d-79ce-3717-fa59913c68be.jpg)
+    + **핵심 인사이트**: 유동적인 타이포그래피(Fluid Typography) 계산은 보통 기본 폰트 크기를 16px로 가정합니다. 하지만 사용자가 브라우저의 기본 폰트 크기를 24px로 변경하면 어떻게 될까요? Matthias Ott는 사용자의 기본 폰트 크기가 커질수록 타이포그래피의 전반적인 증가율을 늦추는 '감쇠 계수(damping factor)'를 계산에 도입하는 접근 방식을 공유합니다. 이를 통해 사용자의 선호도를 존중하면서도 폰트 스케일이 제어 불가능하게 커지는 것을 방지할 수 있습니다.
+
+- **[Inlining Critical CSS: Does It Make Your Website Faster?](https://www.debugbear.com/blog/critical-css?utm_source=CSS-Weekly&utm_campaign=Issue-625&utm_medium=web)** (출처: *CSS Weekly #625*)
+    + **핵심 인사이트**: 'Critical CSS'는 페이지의 스크롤 없이 볼 수 있는 부분(above-the-fold)을 렌더링하는 데 필요한 최소한의 CSS를 의미합니다. Matt Zeunert는 이 Critical CSS가 무엇인지, 이를 인라인(inline)으로 삽입하여 페이지 로드 성능(특히 FCP, LCP)을 개선하는 방법과, 이로 인해 발생하는 트레이드오프(캐싱 문제 등)에 대해 설명합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Why `NaN !== NaN` in JavaScript (and the IEEE 754 Story Behind It)](https://javascriptweekly.com/link/176452/web)** (출처: *JavaScript Weekly #759*)
+    + **요약**: `NaN`은 숫자(number) 타입이지만, 동시에 '숫자가 아님(Not a Number)'을 의미합니다. 이로 인해 `NaN === NaN`이 `false`가 되는 잘 알려진 동작이 발생합니다. 이 글은 이것이 JavaScript의 버그가 아니라, 부동소수점 표준인 IEEE 754에서 비롯된 이유를 설명합니다.
+- **[CSS Round-Out Tabs](https://frontendmasters.com/blog/modern-css-round-out-tabs/)** (출처: *Smashing Newsletter #531*)
+    + **요약**: Chris Coyier가 CSS의 `shape()` 함수와 `clip-path`를 사용하여 UI의 탭 부분이 아래 콘텐츠 영역과 부드러운 곡선으로 연결되는 '라운드-아웃(round-out)' 탭 효과를 만드는 방법을 소개합니다. 과거에는 추가 요소를 사용한 핵(hack)이 필요했지만, 이제는 CSS 네이티브 기능으로 구현할 수 있습니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[Split Flap CSS](https://fx.hot.page/split-flap)** (출처: *Smashing Newsletter #531*)
+    ![Split Flap CSS animation](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d851cd1f-d3da-b4bb-1bb6-590203561c95.png)
+    - **특징**: 기차역에서 볼 수 있었던, 글자판이 회전하며 목적지나 시간을 표시하던 '스플릿 플랩(Split Flap)' 보드를 기억하시나요? Tim Farnam이 이 아날로그 효과를 순수 CSS로 재현했습니다. 단순히 재현하는 것을 넘어, 유리 효과나 루빅스 큐브 효과 등 다양한 스타일의 스플릿 플랩 예제와 함께 자신만의 애니메이션을 만들 수 있는 플레이그라운드도 제공합니다.
+
+- **[Web MIDI, Web Audio, and What the Web Does Best](https://frontendfoc.us/link/176222/web)** (출처: *Frontend Focus #715*)
+    ![Web MIDI and Audio visualization](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1761747046/oocjjmcx7gqe6fzmyovo.png)
+    - **특징**: Web MIDI, Web Audio API 및 기타 웹 기술들이 하나로 합쳐졌을 때 어떤 창의적인 작업을 할 수 있는지 보여주는 재미있는 탐험입니다. Katie Fenn이 이 기술들을 조합하여 Daft Punk의 1997년 히트곡 'Around the World'를 창의적인 코드로 구현한 결과를 보여줍니다.
+
+## 5. ⚡️ 짧은 소식
+- **[TypeScript Leaps to #1 Most Used Language on GitHub](https://javascriptweekly.com/link/176432/web)** (출처: *JavaScript Weekly #759*)
+    + GitHub Universe 이벤트에서 발표된 연례 보고서에 따르면, TypeScript가 GitHub에서 가장 많이 사용되는 언어 1위를 차지했습니다. 작년에는 Python이 1위, JavaScript가 3위였으나, 올해 TypeScript가 정상에 올랐습니다.
+- **[Google Says It's (Almost) Time for HTTPS by Default](https://frontendfoc.us/link/176289/web)** (출처: *Frontend Focus #715*)
+    + 2026년 10월에 출시될 Chrome 154부터 "항상 보안 연결 사용"이 기본으로 활성화될 예정입니다. 이는 사용자가 `http://` 사이트에 접근하려 할 때 경고가 표시됨을 의미합니다.
+- **[CSS `@starting-style` debugging is now available in Chrome DevTools](https://frontendfoc.us/link/176214/web)** (출처: *Frontend Focus #715*)
+    + CSS의 `@starting-style` 규칙을 디버깅하는 기능이 Chrome 개발자 도구에 추가되었습니다.
+- **[Vercel now supports the Bun runtime](https://javascriptweekly.com/link/176437/web)** (출처: *JavaScript Weekly #759*)
+    + Vercel에서 이제 Bun 런타임을 공식적으로 지원합니다.
+- **[GitHub is making changes to strengthen npm security](https://react.statuscode.com/link/175695/web)** (출처: *React Status #448*)
+    + GitHub가 npm 보안을 강화하기 위한 변경을 진행 중입니다. 패키지를 게시하는 개발자, 특히 기존 토큰을 사용하는 경우 영향을 받을 수 있습니다.
+
+## 6. 🎉 릴리스
+- **[React Compiler v1.0](https://react.statuscode.com/link/175666/web)** (출처: *React Status #448*)
+    + **업데이트**: React Compiler가 드디어 안정 버전(v1.0)이 되었습니다. 코드를 분석하여 자동으로 메모이제이션(auto-memoization)을 적용함으로써 앱 최적화를 돕습니다. `useMemo`나 `useCallback`을 여전히 사용할 수 있습니다.
+- **[Next.js 16 Beta Released](https://react.statuscode.com/link/175683/web)** (출처: *React Status #448*)
+    + **업데이트**: Turbopack 지원이 안정화되었으며 새 앱의 기본 번들러가 되었습니다. React 19.2 및 React Compiler를 지원하며, 추가 캐싱 기능이 포함되었습니다. 라우팅 및 네비게이션 시스템이 대대적으로 개편되어 테스트가 권장됩니다.
+- **[Bun 1.3: The Alternative Full-Stack JS Runtime](https://react.statuscode.com/link/175668/web)** (출처: *React Status #448*)
+    + **업데이트**: 성능 중심의 Bun 런타임이 핫 리로딩(React Fast Refresh 포함)을 지원하는 개발 서버, React 프로젝트 스캐폴딩 기능, 격리된 패키지 설치 기본 적용 등 '풀스택 런타임'으로서의 기능이 대폭 강화되었습니다.
+- **[Node.js v24.11.0 (LTS)](https://javascriptweekly.com/link/176438/web)** (출처: *JavaScript Weekly #759*)
+    + **업데이트**: Node.js v24가 Active LTS 릴리스로 전환되었으며, 2028년 4월까지 지원될 예정입니다.
+- **[React Native 0.82: A New Era](https://react.statuscode.com/link/175670/web)** (출처: *React Status #448*)
+    + **업데이트**: 새로운 아키텍처(New Architecture)에서 완전히 실행되는 최초의 React Native 릴리스입니다. 더 빠른 새 버전의 Hermes JS 엔진(Hermes V1)을 실험적으로 옵트인할 수 있습니다.
+- **[Electron 39](https://javascriptweekly.com/link/176442/web)** (출처: *JavaScript Weekly #759*)
+    + **업데이트**: 크로스 플랫폼 데스크톱 앱 프레임워크가 Chromium 142, V8 14.2, Node 22.20으로 업그레이드되었습니다.
+- **[Vite 7.2.0 Beta 1](https://javascriptweekly.com/link/176446/web)** (출처: *JavaScript Weekly #759*)
+    + **업데이트**: Vite 7.2.0의 첫 번째 베타 버전이 릴리스되었습니다. (변경 사항: [링크](https://javascriptweekly.com/link/176447/web))
+- **[Ember 6.8](https://javascriptweekly.com/link/176443/web)** (출처: *JavaScript Weekly #759*)
+    + **업데이트**: 새로운 `renderComponent` API가 추가되었으며, Embroider 및 Vite가 기본으로 활성화되어 훨씬 빠른 빌드 속도를 제공합니다.
+- **[React Chrono 3.0](https://react.statuscode.com/link/175678/web)** (출처: *React Status #448*)
+    + **업데이트**: 동적이고 상호작용적인 타임라인 컴포넌트입니다. v3.0은 대규모 리팩토링, React 19 호환성, Google Fonts 통합 등을 추가했습니다.
+- **[uikit 1.0: Build 3D UIs in React Three Fiber Apps](https://frontendfoc.us/link/176291/web)** (출처: *Frontend Focus #715*)
+    + **업데이트**: React Three Fiber(R3F) 앱에서 3D UI를 구축하기 위한 라이브러리입니다. v1.0은 HTML/CSS 동작 및 기술과 더 가깝게 정렬되었습니다.
+
+## ✍️ 마치며
+이번 주 소식은 React 생태계의 대대적인 도구(Compiler, Next.js, Bun) 업데이트와 함께, CSS가 얼마나 정교한 수준까지 발전했는지(애니메이션, 앵커 포지셔닝)를 동시에 보여주고 있습니다. 특히 React Compiler 1.0의 등장은 React 개발의 패러다임을 또 한 번 바꿀 수 있는 잠재력을 지니고 있어, 앞으로의 성능 최적화 추이를 지켜볼 필요가 있겠습니다. 네이티브 웹 플랫폼의 기능이 강력해지는 만큼, 이를 활용하는 프레임워크와 도구들도 함께 진화하는 한 주였습니다.
+
+#### 출처
+- [JavaScript Weekly #759](https://javascriptweekly.com/issues/759)
+- [Smashing Newsletter #531](https://mailchi.mp/smashingmagazine/531-new-css-techniques)
+- [Frontend Focus #715](https://frontendfoc.us/issues/715)
+- [React Status #449](https://react.statuscode.com/issues/449)
+- [CSS Weekly #625](hhttps://css-weekly.com/issue-625)

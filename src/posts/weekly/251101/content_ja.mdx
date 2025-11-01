@@ -1,0 +1,126 @@
+---
+title: '🚀 2025-11 W1 #31'
+desc: ネイティブCSSの進化 (アンカーポジショニング), React Compiler 1.0 正式リリース, Next.js 16ベータ | 2025年11月第1週目 週間技術ニュースレター
+date: 2025-11-01
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、ネイティブCSSの進化とReactエコシステムの主要なアップデートが中心となりました。CSSは `linear()` タイミング関数やアンカーポジショニング（Anchor Positioning）といった新機能により、複雑なアニメーションやUIをJavaScriptなしで実装できる可能性を切り開きました。同時に、React陣営ではReact Compiler 1.0、Next.js 16 Beta、Bun 1.3など、主要なツールが多数リリースされ、開発環境の大きな変化を予告しています。
+
+## 1. 🔍 深掘り
+
+- **[Springs and Bounces in Native CSS](https://frontendfoc.us/link/176210/web)** (出典: *Frontend Focus #715*)
+	![Springs and Bounces in Native CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1761736308/fg4ro1px2ykwcqnnnppo.png)
+	- **背景**: 伝統的にスプリング（spring）やバウンス（bounce）のような物理ベースのアニメーションは、JavaScriptライブラリの領域でした。しかし、CSSの `linear()` タイミング関数が登場したことで、ネイティブCSSだけでもこれらの洗練されたエフェクトを実装できるようになりました。
+	- **主な機能**: Josh W. Comeauが `linear()` 関数を使用してスプリング及びバウンス効果を生み出すアプローチを探求します。彼は「一般的なタイミング関数いくつかをグローバルCSS変数に保存する」方法を通じて、今すぐこれらの機能を最大限に活用するためのヒントを共有しています。
+	- **実務への適用**: `linear()` 関数は、`transition-timing-function` や `animation-timing-function` プロパティで複雑なイージングカーブを定義できるようにします。
+	- **参考**: `linear()` タイミング関数（事前設定された `linear` 値とは異なる）のブラウザサポート範囲は、現在約88%です。(出典: *Frontend Focus #715*)
+
+- **[CSS Anchor Positioning](https://ishadeed.com/article/anchor-positioning/)** (出典: *Smashing Newsletter #531*)
+	![The Basics Of Anchor Positioning](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/337786aa-6ab7-b4f3-52f5-3818c50aac8a.png)
+	- **背景**: 特定の要素を他の要素（親でない場合もある）に対して相対的に配置することは、CSSでは難しい作業でした。例えば、カード内のタグを画像の特定の角に固定しようとする際、カードのレイアウトが変更されると（例：デスクトップで水平配置）、配置が崩れやすかったです。
+	- **主な機能**: アンカーポジショニング（Anchor Positioning）APIは、ある要素が他の「アンカー」要素に対して相対的に位置決めできるようにします。これは、2つの要素がDOMツリー上で親子関係になくても可能です。
+	- **実務への適用**: Ahmad Shadeedは、この機能を使用してツールチップやポップオーバーを特定のUI要素に連携させる方法を紹介しています。特に `position-try-fallbacks` プロパティを使用すると、ターゲット要素がビューポートに収まらない場合に自動的に位置を切り替える（例：ツールチップを上から下へ）ように設定でき、壊れやすいハック（hack）なしでも、はるかに強力なUI実装が可能になります。
+
+---
+#### 見逃せないコンテンツ
+- **[The Present and Potential Future of Progressive Image Rendering](https://frontendfoc.us/link/176212/web)** (出典: *Frontend Focus #715*)
+	+ **要約**: プログレッシブ画像レンダリング（画像が徐々に鮮明になる技術）が今日どれほど有用かを探求します。Jake ArchibaldがAVIF、JPEG XLなど様々な画像フォーマットを複数のブラウザとネットワーク条件でテストしたデモと共に、現状を分析します。
+- **[Directives and the Platform Boundary](https://javascriptweekly.com/link/176430/web)** (出典: *JavaScript Weekly #759*)
+	+ **要約**: `"use strict"` から始まり、最近の `"use client"`、`"use server"`、そしてReactの `"use no memo"` に至るまで、様々な「ディレクティブ（directives）」が標準JS機能ではないにもかかわらず普及しています。Tanner Linsleyは、これらのディレクティブの普及が、フレームワークやツールへの依存性（ロックイン）リスクを高めるという代償を払っていると指摘します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[Triplex: A Newly Open Sourced Workspace for Building React and React Three Fiber Components](https://react.statuscode.com/link/175661/web)** (出典: *React Status #448*)
+	![Triplex open source announcement](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dagqqwnducpge9ncoiir.jpg)
+	- **概要**: Triplexは元々、React Three Fiberでレンダリングされる3Dシーン（scene）において、コンポーネントを視覚的にレイアウトするための商用ツールでした。
+	- **主な機能**: このツールがオープンソースに移行され、Poimandres Collective（Three Fiber、Jotai、Zustandの開発グループ）に加わりました。現在はVS Code拡張機能を含み、3Dだけでなく通常のReact DOM要素やコンポーネントまでサポート範囲が拡張されています。3Dと2DのReactコンポーネントのための統合ワークスペースを提供します。
+
+- **[Navcat: 3D Floor-Based Pathfinding Library](https://javascriptweekly.com/link/176464/web)** (出典: *JavaScript Weekly #759*)
+	![Navcat demo showing cats following laser pointers](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/p3mups03qqsb60z4eb6j.jpg)
+	- **概要**: Navcatは、ゲームやシミュレーションを対象とした3D空間の経路探索（pathfinding）ライブラリです。
+	- **特徴**: オブジェクトが3D空間を通じて経路を見つけられるようサポートします。ホームページのデモ（猫とレーザーポインター）が印象的で、様々なデモを通じてライブラリの活用法を紹介しています。(GitHubリポジトリ: [リンク](https://javascriptweekly.com/link/176467/web))
+
+---
+#### 見逃せないコンテンツ
+- **[Introducing ArkRegex: It's `RegExp()` with Types](https://javascriptweekly.com/link/176468/web)** (出典: *JavaScript Weekly #759*)
+	+ **要約**: 既存の `RegExp` コンストラクタや正規表現リテラルの代わりに、この型ラッパー（typed wrapper）を使用すると、正規表現パターンとキャプチャグループに対するTypeScriptの型を取得できます。ArkTypeプロジェクトの一部です。
+- **[New CSS Reset (UA+)](https://fokus.dev/tools/uaplus/)** (出典: *Smashing Newsletter #531*)
+	+ **要約**: Manuel Matuzovićが作成した「UA+」は、既存のCSSリセットとは異なるアプローチを取ります。プロパティを無条件に初期化する代わりに、既存のユーザーエージェント（ブラウザ）スタイルを「改善」し、ブラウザが不足している部分にのみ新しいスタイルを追加することに重点を置いています。特にアクセシビリティに焦点を当てた、軽量で強力なCSSリセットです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[I Built the Same App 10 Times: Evaluating Frameworks for Mobile Performance](https://javascriptweekly.com/link/176449/web)** (出典: *JavaScript Weekly #759*)
+	+ **主要なインサイト**: モバイルデバイスをターゲットにする際は、小さなバンドルサイズと高速なレンダリング時間が鍵となります。この記事は、同じアプリをMarko、SolidStart、SvelteKit、Qwik、Nuxt、Next.jsなど10種類の異なるアプローチで構築し、モバイルパフォーマンスを比較分析します。どのフレームワークがモバイル環境で優れたパフォーマンスを発揮するか、実際のデータを通じて確認できます。
+
+- **[Compressed Fluid Typography](https://matthiasott.com/notes/compressed-fluid-typography)** (出典: *Smashing Newsletter #531*)
+	![Compressed Fluid Typography example](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/cf485292-226d-79ce-3717-fa59913c68be.jpg)
+	+ **主要なインサイト**: 流動的なタイポグラフィ（Fluid Typography）の計算は、通常、デフォルトのフォントサイズを16pxと想定しています。しかし、ユーザーがブラウザのデフォルトフォントサイズを24pxに変更したらどうなるでしょうか？ Matthias Ottは、ユーザーのデフォルトフォントサイズが大きくなるほど、タイポグラフィ全体の増加率を遅らせる「減衰係数（damping factor）」を計算に導入するアプローチを共有しています。これにより、ユーザーの好みを尊重しつつも、フォントスケールが制御不能なほど大きくなるのを防ぐことができます。
+
+- **[Inlining Critical CSS: Does It Make Your Website Faster?](https://www.debugbear.com/blog/critical-css?utm_source=CSS-Weekly&utm_campaign=Issue-625&utm_medium=web)** (出典: *CSS Weekly #625*)
+	+ **主要なインサイト**: 「クリティカルCSS」とは、ページのスクロールせずに見える部分（above-the-fold）をレンダリングするために必要な最小限のCSSを意味します。Matt Zeunertは、このクリティカルCSSが何であるか、それをインライン（inline）で挿入してページ読み込みパフォーマンス（特にFCP、LCP）を改善する方法、そしてそれによって発生するトレードオフ（キャッシング問題など）について説明します。
+
+---
+#### 見逃せないコンテンツ
+- **[Why `NaN !== NaN` in JavaScript (and the IEEE 754 Story Behind It)](https://javascriptweekly.com/link/176452/web)** (出典: *JavaScript Weekly #759*)
+	+ **要約**: `NaN` は数値（number）型ですが、同時に「数字ではない（Not a Number）」ことを意味します。これにより、`NaN === NaN` が `false` になるというよく知られた動作が発生します。この記事は、これがJavaScriptのバグではなく、浮動小数点標準であるIEEE 754に由来する理由を説明します。
+- **[CSS Round-Out Tabs](https://frontendmasters.com/blog/modern-css-round-out-tabs/)** (出典: *Smashing Newsletter #531*)
+	+ **要約**: Chris CoyierがCSSの `shape()` 関数と `clip-path` を使用して、UIのタブ部分が下のコンテンツ領域と滑らかな曲線でつながる「ラウンドアウト（round-out）」タブ効果を作成する方法を紹介します。以前は追加の要素を使用したハック（hack）が必要でしたが、今ではCSSネイティブ機能で実装できます。
+---
+
+## 4. ✨ アイデア
+
+- **[Split Flap CSS](https://fx.hot.page/split-flap)** (出典: *Smashing Newsletter #531*)
+	![Split Flap CSS animation](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d851cd1f-d3da-b4bb-1bb6-590203561c95.png)
+	- **特徴**: 駅で見かけた、文字盤が回転して目的地や時間を表示していた「スプリットフラップ（Split Flap）」ボードを覚えていますか？ Tim Farnamがこのアナログ効果を純粋なCSSで再現しました。単に再現するだけでなく、ガラス効果やルービックキューブ効果など、様々なスタイルのスプリットフラップの例と共に、独自のアニメーションを作成できるプレイグラウンドも提供しています。
+
+- **[Web MIDI, Web Audio, and What the Web Does Best](https://frontendfoc.us/link/176222/web)** (出典: *Frontend Focus #715*)
+	![Web MIDI and Audio visualization](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1761747046/oocjjmcx7gqe6fzmyovo.png)
+	- **特徴**: Web MIDI、Web Audio API、その他のWeb技術が一つに合わさった時、どのような創造的な作業ができるかを示す興味深い探求です。Katie Fennがこれらの技術を組み合わせて、Daft Punkの1997年のヒット曲「Around the World」を創造的なコードで実装した結果を紹介しています。
+
+## 5. ⚡️ ミニノート
+- **[TypeScript Leaps to #1 Most Used Language on GitHub](https://javascriptweekly.com/link/176432/web)** (出典: *JavaScript Weekly #759*)
+	+ GitHub Universeイベントで発表された年次報告書によると、TypeScriptがGitHubで最も多く使用される言語の1位を獲得しました。昨年はPythonが1位、JavaScriptが3位でしたが、今年TypeScriptがトップに躍り出ました。
+- **[Google Says It's (Almost) Time for HTTPS by Default](https://frontendfoc.us/link/176289/web)** (出典: *Frontend Focus #715*)
+	+ 2026年10月にリリースされるChrome 154から、「常に安全な接続を使用する」がデフォルトで有効になる予定です。これは、ユーザーが `http://` サイトにアクセスしようとすると警告が表示されることを意味します。
+- **[CSS `@starting-style` debugging is now available in Chrome DevTools](https://frontendfoc.us/link/176214/web)** (出典: *Frontend Focus #715*)
+	+ CSSの `@starting-style` ルールをデバッグする機能がChrome開発者ツールに追加されました。
+- **[Vercel now supports the Bun runtime](https://javascriptweekly.com/link/176437/web)** (出典: *JavaScript Weekly #759*)
+	+ VercelでBunランタイムが公式にサポートされました。
+- **[GitHub is making changes to strengthen npm security](https://react.statuscode.com/link/175695/web)** (出典: *React Status #448*)
+	+ GitHubがnpmのセキュリティを強化するための変更を進めています。パッケージを公開する開発者、特に既存のトークンを使用している場合に影響を受ける可能性があります。
+
+## 6. 🎉 リリース
+- **[React Compiler v1.0](https://react.statuscode.com/link/175666/web)** (出典: *React Status #448*)
+	+ **アップデート**: React Compilerがついに安定版（v1.0）になりました。コードを分析して自動的にメモ化（auto-memoization）を適用し、アプリの最適化を支援します。`useMemo` や `useCallback` も引き続き使用できます。
+- **[Next.js 16 Beta Released](https://react.statuscode.com/link/175683/web)** (出典: *React Status #448*)
+	+ **アップデート**: Turbopackのサポートが安定化し、新しいアプリのデフォルトバンドラになりました。React 19.2及びReact Compilerをサポートし、追加のキャッシング機能が含まれています。ルーティング及びナビゲーションシステムが大幅に刷新されたため、テストが推奨されます。
+- **[Bun 1.3: The Alternative Full-Stack JS Runtime](https://react.statuscode.com/link/175668/web)** (出典: *React Status #448*)
+	+ **アップデート**: パフォーマンス重視のBunランタイムが、ホットリローディング（React Fast Refreshを含む）をサポートする開発サーバー、Reactプロジェクトのスキャフォールディング機能、隔離されたパッケージインストールのデフォルト適用など、「フルスタックランタイム」としての機能が大幅に強化されました。
+- **[Node.js v24.11.0 (LTS)](https://javascriptweekly.com/link/176438/web)** (出典: *JavaScript Weekly #759*)
+	+ **アップデート**: Node.js v24がActive LTSリリースに移行し、2028年4月までサポートされる予定です。
+- **[React Native 0.82: A New Era](https://react.statuscode.com/link/175670/web)** (出典: *React Status #448*)
+	+ **アップデート**: 新しいアーキテクチャ（New Architecture）で完全に実行される初のReact Nativeリリースです。より高速な新バージョンのHermes JSエンジン（Hermes V1）を実験的にオプトインできます。
+- **[Electron 39](https://javascriptweekly.com/link/176442/web)** (出典: *JavaScript Weekly #759*)
+	+ **アップデート**: クロスプラットフォームのデスクトップアプリフレームワークがChromium 142、V8 14.2、Node 22.20にアップグレードされました。
+- **[Vite 7.2.0 Beta 1](https://javascriptweekly.com/link/176446/web)** (出典: *JavaScript Weekly #759*)
+	+ **アップデート**: Vite 7.2.0の最初のベータ版がリリースされました。(変更点: [リンク](https://javascriptweekly.com/link/176447/web))
+- **[Ember 6.8](https://javascriptweekly.com/link/176443/web)** (出典: *JavaScript Weekly #759*)
+	+ **アップデート**: 新しい `renderComponent` APIが追加され、Embroider及びViteがデフォルトで有効になり、より高速なビルド速度を提供します。
+- **[React Chrono 3.0](https://react.statuscode.com/link/175678/web)** (出典: *React Status #448*)
+	+ **アップデート**: ダイナミックでインタラクティブなタイムラインコンポーネントです。v3.0は大規模なリファクタリング、React 19との互換性、Google Fontsの統合などが追加されました。
+- **[uikit 1.0: Build 3D UIs in React Three Fiber Apps](https://frontendfoc.us/link/176291/web)** (出典: *Frontend Focus #715*)
+	+ **アップデート**: React Three Fiber (R3F) アプリで3D UIを構築するためのライブラリです。v1.0はHTML/CSSの動作や技術とより密接に連携するようになりました。
+
+## ✍️ おわりに
+今週のニュースは、Reactエコシステムの大規模なツール（Compiler、Next.js、Bun）のアップデートと共に、CSSがどれほど洗練されたレベルまで進化しているか（アニメーション、アンカーポジショニング）を同時に示しています。特にReact Compiler 1.0の登場は、React開発のパラダイムを再び変える可能性を秘めており、今後のパフォーマンス最適化の推移を見守る必要があります。ネイティブWebプラットフォームの機能が強力になるにつれ、それを活用するフレームワークやツールも共に進化する一週間でした。
+
+#### 出典
+- [JavaScript Weekly #759](https://javascriptweekly.com/issues/759)
+- [Smashing Newsletter #531](https://mailchi.mp/smashingmagazine/531-new-css-techniques)
+- [Frontend Focus #715](https://frontendfoc.us/issues/715)
+- [React Status #449](https://react.statuscode.com/issues/449)
+- [CSS Weekly #625](hhttps://css-weekly.com/issue-625)
