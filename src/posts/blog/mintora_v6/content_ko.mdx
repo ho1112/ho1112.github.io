@@ -2,7 +2,7 @@
 title: '폰트 변경 toc 스크롤바, 목차'
 desc: LINESEED 폰트 도입, TOC 스크롤바 도입과 자동 스크롤, 프로필 페이지 목차 추가
 date: 2025-10-15
-thumbnail: /posts/blog/mintora_v5/thumbnail.avif
+thumbnail: /posts/blog/mintora_v6/thumb.png
 ---
 
 <h1>새로운 폰트 도입 / TOC 스크롤 / 프로필 목차</h1>
@@ -17,31 +17,143 @@ thumbnail: /posts/blog/mintora_v5/thumbnail.avif
 ## 새로운 폰트 도입
 
 ### LINESEED폰트
-![](/posts/blog/mintora_v6/before_pretender.avif)
+![Pretendard](/posts/blog/mintora_v6/before_pretender.avif)
+기존의 Pretendard 폰트는 한자를 지원하지 않아서 기본 브라우저 폰트로 변환되어 렌더링 되고 있었습니다.
+외견상 위화감이 있거나 하지는 않았지만 폰트 통일성을 위해서 한자 문제를 해결하고 싶었습니다.
 
-![](/posts/blog/mintora_v6/after_LINE.avif)
+후보는 2가지
+1. Pretendard JP
+2. 일본어+한자, 한글을 지원하는 새로운 폰트
+
+이왕 하는 김에 새로운 폰트를 도입해보기로 했고 일본어/한국어를 모두 다르는 서비스라면 역시 LINE인가라는 생각해 LINE에서 만든 폰트가 있나 검색해보았습니다.
+역시 바로 [LINESEED](https://seed.line.me/index_jp.html)라는 라인이 개발한 폰트가 있었습니다. LINESEED JP, KR을 다운받아 globals.css에 적용하였습니다.
+
+```css
+/* LINE Seed KR - 한국어 폰트 */
+@font-face {
+  font-family: 'LINE Seed KR';
+  font-weight: 100;
+  /* ... */
+}
+@font-face {
+  font-family: 'LINE Seed KR';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Rg.woff2')
+      format('woff2'),
+    url('/fonts/LINE_SeedKR_2023.09.06/Web/woff/LINESeedKR-Rg.woff')
+      format('woff');
+}
+@font-face {
+  font-family: 'LINE Seed KR';
+  font-weight: 700;
+  /* ... */
+}
+
+/* LINE Seed JP - 일본어 폰트 */
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 100;
+  /* ... */
+}
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('/fonts/LINESeedJP_20241105/Web/WOFF2/LINESeedJP_OTF_Rg.woff2')
+      format('woff2'),
+    url('/fonts/LINESeedJP_20241105/Web/WOFF/LINESeedJP_OTF_Rg.woff')
+      format('woff');
+}
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 700;
+  /* ... */
+}
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 800;
+  /* ... */
+}
+```
+
+![LINESEED JP](/posts/blog/mintora_v6/after_LINE.avif)
+LINESEED JP로 통일되었습니다!
+
+### 적용, 그리고 새로운 발견
+폰트 스택은 `font-family: 'LINE Seed JP', 'LINE Seed KR', sans-serif;`와 같이 JP팩을 KR팩보다 우선하도록 설정했습니다. JP팩이 한자를 포함하고 있기 때문입니다.
+그런데 폰트를 적용하고 개발자 도구의 `Computed` 탭을 통해 렌더링을 확인하는 과정에서 한 가지 의아한 점을 발견했습니다.
+한국어 페이지에서 한글은 KR팩으로 렌더링되지만 띄어쓰기나 알파벳 같은 공통 문자는 font-family 스택의 우선순위에 따라 JP팩으로 렌더링되고 있었습니다. 일본어 페이지에 한국어 띄어쓰기가 적용되는 것보다는 낫지만 완벽한 통일이라고 부르기엔 미묘한 위화감이 있었습니다.
+이것이 의도한 사용자 경험인지 아니면 제 실수인지 확인하기 위해 폰트를 제작한 LINE Yahoo의 공식 기술 블로그를 직접 방문해 확인해 보았습니다.
+확인해보니 라인야후 블로그의 한국어 페이지도 저와 같이 동일한 현상이 나타나고 있었습니다.
+
+![LY Corporation Tech Blog / 타이틀의 한글 17글자](/posts/blog/mintora_v6/line_blog.avif)
+
+한글은 KR팩으로 띄어쓰기나 공통 문자는 JP팩으로 렌더링되고 있었습니다. 폰트를 만든 곳에서도 이 방식을 택했다는 것은 이는 버그가 아니라 성능과 통일성 사이의 합리적인 트레이드오프로 볼 수 있을거 같습니다. <small>아마도..?🤔</small>
+이번 업데이트의 주 목적은 Pretendard에서 한자가 깨지는 문제를 해결하고 폰트의 큰 틀을 통일하는 것이었습니다. 따라서 이 미묘한 공통 문자의 차이는 일단 허용 수준으로 판단하고 이번 작업에서는 스코프 아웃했습니다. 외견상으로도 큰 차이가 없기도 하고..
+
+향후 이 문제를 조금이나마 해결해본다면 LINE Seed EN 팩을 공통 문자팩으로 별도 도입하고 `unicode-range`를 사용해 한글과 일본어를 분리 로드하는 방법으로 조금은 더 최적화를 시도해 볼 수 있지 않을까 합니다.
+또는 지금처럼 두 개의 언어팩을 모두 로드하는 대신 실제 사용되는 글자들만 추려서 폰트 파일의 용량을 줄이는 서브셋 파일을 직접 만드는 것도 좋은 개선점이 될 것 같습니다.
+
+우선은 Pretendard의 한자 폴백 문제가 해결됐고 일관된 타이포그래피를 제공하게 된 것만으로도 개선이라고 생각합니다.
 
 ---
 
 ## TOC 스크롤
 
-### 긴 TOC를 위한 스크롤 도입
+### 긴 포스트의 TOC 문제
+포스트의 분량이 많아서 사이드바에 표시되는 TOC가 화면에 모두 표시되지 않는 경우가 있었습니다.
 ![화면 하단에서 짤려있음](/posts/blog/mintora_v6/before_toc.avif)
+이렇게 화면 끝까지도 표시하고도 공간이 부족해 후반부의 섹션 제목이 짤려버려 외견상으로도 사용자 경험에도 좋지 못했습니다.
+
 ![포스트의 끝까지 내려야 하단부의 toc를 확인가능했다](/posts/blog/mintora_v6/before_toc_end.avif)
+후반부의 섹션은 스크롤을 내려 포스트의 거의 끝까지 내려야 TOC에서 확인 가능했습니다.
+그래서 TOC내에서도 스크롤이 가능하도록 수정 작업을 했습니다.
 
-### 현재 섹션 동기화(자동 스크롤)
+### 스크롤 도입과 현재 섹션 동기화(자동 스크롤)
+우선 화면에 꽉 차버리지 않도록 수정하여 어느 포스트에서도 같은 UI/UX를 주도록 수정했습니다.
 ![하단에 여유가 생김](/posts/blog/mintora_v6/after_toc.avif)
-![스크롤 가능하도록](/posts/blog/mintora_v6/after_scroll.avif)
 
+TOC가 길어질 경우 스크롤이 가능해졌습니다.
+![스크롤 가능하도록](/posts/blog/mintora_v6/after_toc_scroll.avif)
+여기까지도 충분하지만 포스트의 후반부를 보고 있을 경우 TOC를 수동으로 스크롤 해야 해당 섹션이 하이라이트 된 모습을 볼 수 있었습니다.
+
+그래서 포스트를 내릴 경우 TOC가 거기에 반응해 해당 섹션이 TOC에 하이라이트 되도록 했습니다.
+```tsx
+  useEffect(() => {
+    if (!scrollRef.current) return
+    const activeEl = scrollRef.current.querySelector(
+      '[data-active="true"]',
+    ) as HTMLElement | null
+    if (activeEl) {
+      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [activeIdList])
+
+  return (
+   ...
+      <li
+        key={item.link}
+        data-active={isIntersecting ? 'true' : 'false'}
+        ...
+      >
+```
 
 <video loop autoPlay muted playsInline controls>
   <source src="/posts/blog/mintora_v6/after_toc.webm" type="video/webm" />
 </video>
-
+TOC 내에서 스크롤을 따로 하지 않아도 자동으로 스크롤 되기 때문에 사용자 경험이 더 향상될 거라 생각합니다.
 
 ---
 
 ## 프로필 목차 추가
 
+프로필 페이지가 점점 길어지면서 페이지 진입 시 어떤 섹션들이 있는지 한눈에 파악하기 어려워졌습니다. 사용자가 원하는 정보를 빠르게 찾을 수 있도록 페이지 상단에 목차를 추가했습니다.
+무엇보다 이 프로필의 핵심인 '개인 프로젝트' 소개가 맨 아래쪽에 있었는데 스크롤을 다 내리지 않으면 못 보고 지나칠 것 같아서 목차를 만든 이유가 가장 큽니다.
 
-
+![프로필 목차](/posts/blog/mintora_v6/profile_ja.avif)
+상단에 있는 목차를 클릭하면 해당 섹션으로 바로 이동할 수 있어 탐색이 훨씬 쉬워졌습니다.
