@@ -49,7 +49,22 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <link rel="icon" type="image/x-icon" href="/icon/m_favicon.png" />
-      {/* 폰트 preload - FOIT(Flash of Invisible Text) */}
+      {/* LINE Seed JP */}
+      <link
+        rel="preload"
+        href="/fonts/LINESeedJP_20241105/Web/WOFF2/LINESeedJP_OTF_Rg.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      />
+      <link
+        rel="preload"
+        href="/fonts/LINESeedJP_20241105/Web/WOFF2/LINESeedJP_OTF_Bd.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      />
+      {/* LINE Seed KR */}
       <link
         rel="preload"
         href="/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Rg.woff2"
