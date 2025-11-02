@@ -1,0 +1,159 @@
+---
+title: 'LINESEEDフォント導入、TOC改善、プロフィール目次追加'
+desc: Pretendardの漢字サポート問題を解決するためLINESEEDフォントに変更しました。長い記事でのTOCスクロールと自動同期機能を追加し、プロフィールページに目次を導入してナビゲーション性を改善しました。
+date: 2025-11-03
+thumbnail: /posts/blog/mintora_v6/thumb.png
+---
+
+<h1>新規フォント導入 / TOCスクロール / プロフィール目次</h1>
+
+今回のアップデートでは、可読性とナビゲーション性を向上させるため、3つの整備を行いました。
+従来のPretendardフォントが漢字をサポートしておらず、日本語の漢字がシステムのデフォルトフォントで表示されていました。タイポグラフィの統一性を図るため、日本語と漢字の両方をサポートするLINESEEDにデフォルトフォントを切り替えました。
+また、サイドバーのTOCにスクロールとスクロールスパイを適用し、長い記事で下部のセクションが見えなかった問題を解決し、現在位置を正確に追従するように改善しました。
+プロフィールページには、アクセスしてすぐにどのような項目があるか一目で把握できるよう目次を追加し、セクション間の移動も可能にしました。
+
+---
+
+## 新規フォント導入
+
+### LINESEEDフォント
+![Pretendard](/posts/blog/mintora_v6/before_pretender.avif)
+従来のPretendardフォントは漢字をサポートしていないため、デフォルトのブラウザフォントに変換されてレンダリングされていました。
+見た目も違和感があるわけではありませんでしたが、フォントの統一性のために漢字問題を解決したいと思いました。
+
+候補は2つありました。
+1. Pretendard JP
+2. 日本語+漢字、ハングルをサポートする新しいフォント
+
+せっかくなので新しいフォントを導入してみることにし、日本語/韓国語の両方を扱うサービスなら、やはりLINEかなと思い、LINEが作ったフォントがあるか検索してみました。
+やはりすぐに[LINESEED](https://seed.line.me/index_jp.html)というLINEが開発したフォントがありました。LINESEED JP、KRをダウンロードしてglobals.cssに適用しました。
+
+```css
+/* LINE Seed KR - 한국어 폰트 */
+@font-face {
+  font-family: 'LINE Seed KR';
+  font-weight: 100;
+  /* ... */
+}
+@font-face {
+  font-family: 'LINE Seed KR';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('/fonts/LINE_SeedKR_2023.09.06/Web/woff2/LINESeedKR-Rg.woff2')
+      format('woff2'),
+    url('/fonts/LINE_SeedKR_2023.09.06/Web/woff/LINESeedKR-Rg.woff')
+      format('woff');
+}
+@font-face {
+  font-family: 'LINE Seed KR';
+  font-weight: 700;
+  /* ... */
+}
+
+/* LINE Seed JP - 일본어 폰트 */
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 100;
+  /* ... */
+}
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('/fonts/LINESeedJP_20241105/Web/WOFF2/LINESeedJP_OTF_Rg.woff2')
+      format('woff2'),
+    url('/fonts/LINESeedJP_20241105/Web/WOFF/LINESeedJP_OTF_Rg.woff')
+      format('woff');
+}
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 700;
+  /* ... */
+}
+@font-face {
+  font-family: 'LINE Seed JP';
+  font-weight: 800;
+  /* ... */
+}
+```
+
+![LINESEED JP](/posts/blog/mintora_v6/after_LINE.avif)
+LINESEED JPに統一されました！
+
+### 適用、そして新たな発見
+フォントスタックは `font-family: 'LINE Seed JP', 'LINE Seed KR', sans-serif;` のように、JPパックをKRパックより優先するよう設定しました。JPパックが漢字を含んでいるためです。
+ところが、フォントを適用し開発者ツールの `Computed` タブでレンダリングを確認する過程で、一つ疑問な点を発見しました。
+韓国語ページではハングルはKRパックでレンダリングされますが、スペースやアルファベットのような共通文字はfont-familyスタックの優先順位に従ってJPパックでレンダリングされていました。日本語ページに韓国語のスペースが適用されるよりはマシですが、完璧な統一と呼ぶには微妙な違和感がありました。
+これが意図したユーザーエクスペリエンスなのか、それとも私のミスなのか確認するため、フォントを制作したLINE Yahooの公式技術ブログを直接訪問して確認してみました。
+確認してみたところ、LINEヤフーブログの韓国語ページでも、私と同様の現象が発生していました。
+
+![LY Corporation Tech Blog / タイトルのハングル17文字](/posts/blog/mintora_v6/line_blog.avif)
+
+ハングルはKRパックで、スペースや共通文字はJPパックでレンダリングされていました。フォントを制作した側でもこの方式を選んだということは、これはバグではなく、パフォーマンスと統一性の間の合理的なトレードオフと見なすことができそうです。<small>たぶん…？🤔</small>
+今回のアップデートの主な目的は、Pretendardでの漢字の表示崩れの問題を解決し、フォントの大枠を統一することでした。
+したがって、この微妙な共通文字の違いは、一旦許容範囲と判断し、今回の作業ではスコープアウトしました。見た目も大きな違いはありませんし…
+
+今後、この問題を少しでも解決するとすれば、LINE Seed ENパックを共通文字パックとして別途導入し、`unicode-range` を使用してハングルと日本語を分離ロードする方法で、もう少し最適化を試みることができるかもしれません。
+または、現在のように2つの言語パックをすべてロードする代わりに、実際に使用される文字だけを選び出して、フォントファイルの容量を減らすサブセットファイルを直接作成することも、良い改善点になりそうです。
+まずはPretendardの漢字フォールバック問題が解決され、一貫したタイポグラフィを提供できるようになっただけでも、改善だと思います。
+
+---
+
+## TOCスクロール
+
+### 長い記事のTOC問題
+記事の分量が多く、サイドバーに表示されるTOCが画面に収まりきらない場合がありました。
+![画面下部で切れている](/posts/blog/mintora_v6/before_toc.avif)
+このように画面の端まで表示してもスペースが足りず、後半のセクションタイトルが切れてしまい、見た目もユーザーエクスペリエンス上も良くありませんでした。
+
+![記事の最後までスクロールしないと下部のTOCを確認できなかった](/posts/blog/mintora_v6/before_toc_end.avif)
+後半のセクションは、スクロールして記事のほぼ最後まで行かないとTOCで確認できませんでした。
+そこで、TOC内でもスクロールできるように修正作業を行いました。
+
+### スクロール導入と現在セクションの同期（自動スクロール）
+まず、画面いっぱいに表示されないよう修正し、どの記事でも同じUI/UXを提供するよう修正しました。
+![下部に余裕ができる](/posts/blog/mintora_v6/after_toc.avif)
+
+TOCが長くなる場合、スクロールが可能になりました。
+![スクロール可能に](/posts/blog/mintora_v6/after_toc_scroll.avif)
+ここまででも十分ですが、記事の後半を見ている場合、TOCを手動でスクロールして初めて、該当セクションがハイライトされた様子を見ることができました。
+
+そこで、記事をスクロールした場合にTOCがそれに反応し、該当セクションがTOCでハイライトされるようにしました。
+```tsx
+  useEffect(() => {
+    if (!scrollRef.current) return
+    const activeEl = scrollRef.current.querySelector(
+      '[data-active="true"]',
+    ) as HTMLElement | null
+    if (activeEl) {
+      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [activeIdList])
+
+  return (
+   ...
+      <li
+        key={item.link}
+        data-active={isIntersecting ? 'true' : 'false'}
+        ...
+      >
+```
+
+<video loop autoPlay muted playsInline controls>
+  <source src="/posts/blog/mintora_v6/after_toc.webm" type="video/webm" />
+</video>
+TOC内で別途スクロールしなくても自動でスクロールされるため、ユーザーエクスペリエンスがさらに向上すると考えます。
+
+---
+
+## プロフィール目次追加
+
+[プロフィール](https://mintora.me/profile/ja/)ページが次第に長くなり、ページにアクセスした際にどのセクションがあるか一目で把握するのが難しくなりました。ユーザーが求める情報に素早くアクセスできるよう、ページ上部に目次を追加しました。
+何よりも、このプロフィールの核心である「個人プロジェクト」の紹介が一番下にあり、最後までスクロールしなければ見過ごされてしまう可能性があったため、目次を作成した理由が最も大きいです。
+
+![プロフィール目次](/posts/blog/mintora_v6/profile_ja.avif)
+上部にある目次をクリックすると、該当セクションに直接移動でき、ナビゲーションがはるかに容易になりました。
