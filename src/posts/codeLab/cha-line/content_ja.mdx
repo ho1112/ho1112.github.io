@@ -123,6 +123,10 @@ async function downloadDividendCSV(page: Page) {
 ```
 
 ### LINE Flexメッセージに変換
+LINE FlexメッセージはLINEが提供するリッチメッセージ形式で、レイアウト、スタイル、ボタンなどをJSON形式で自由に構成できます。通常のテキストメッセージよりも視覚的で情報伝達が容易なため、配当金明細のように構造化されたデータを見やすく表示するのに適しています。
+[LINE Flex Messageとは？](https://developers.line.biz/ja/docs/messaging-api/using-flex-messages/)
+公式アカウントから受け取るLINEメッセージを想像していただければと思います！
+
 ```typescript
 function buildItemBlocks(items: DividendItem[]) {
   const blocks: any[] = [];
@@ -162,6 +166,10 @@ function buildItemBlocks(items: DividendItem[]) {
   - 左 (flex: 4): 銘柄名 + フラグ (太字)
   - 右 (flex: 3): 受取額 (右揃え)
   - 補助情報 (数量/受取日/口座): 小さい文字、グレー、改行
+
+LINE Flexメッセージのシミュレーターも提供されているため、プレビューを見ながら作業することもできます。
+![](/posts/codeLab/cha-line/flex-message-simulator-ja.avif)
+[Flex Message Simulator](https://developers.line.biz/flex-simulator/)(LINE Developersログインが必要です！)
 
 ### メールにラベルを追加
 ```javascript
