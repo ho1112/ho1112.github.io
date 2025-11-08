@@ -1,0 +1,133 @@
+---
+title: '🚀 2025-11 W2 #32'
+desc: JavaScriptソースマップの内部動作原理、Storybook 10のESM専用リリース、Anchor Positioningと'field-sizing' CSS | 2025年11月第2週 週間技術ニュースレター
+date: 2025-11-08
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 今週の主要テーマ
+今週の開発者コミュニティにおける中心的な話題は、基盤技術の詳細な理解とエコシステムの重大な現代化に要約されます。JavaScriptソースマップの内部動作原理や`position: sticky`の落とし穴のように、開発者が日常的に使用していながら深くは知らなかった核心原理を掘り下げた分析が注目を集めました。同時に、Storybook 10がESM専用に切り替わってリリースされたことは、多くのニュースレターで共通して取り上げられたエコシステム最大のニュースでした。さらに、ツールチップ配置のためのAnchor Positioning API、コンテンツベースのフォームサイズ調整のための`field-sizing`など、新しく実用的なCSS機能が成熟段階に入り、実際の適用事例が活発に共有されました。最後に、モダンHTML Eメール開発という特化したトピックが、ダークモードから互換性ツールまで幅広く取り上げられ、専門領域への関心も高まりました。
+
+## 1. 🔍 深掘り
+- **[The Inner Workings of JavaScript Source Maps](https://javascriptweekly.com/link/176757/web)** (出典: *JavaScript Weekly #760*)
+	![ソースマップの動作方式を説明するダイアグラム](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/mettuhpw65jeltbt2jio.jpg)
+	- **背景**: 開発中のデバッグ時、ブラウザは難読化・最小化されたJavaScriptコードではなく、元のソースコードを魔法のように表示します。これは「ソースマップ」という技術のおかげです。
+	- **核心機能**: この記事は、ソースマップが正確にどのように動作するのか、VLQ（Variable-length quantity）エンコーディングを使用して、最小化されたコードの各地点を元のソースコードの位置（行、列）にマッピングするプロセスを詳細に説明します。
+	- **実務適用**: ソースマップの原理を理解すると、ビルドプロセスで発生する問題を解決したり、デバッグ環境を最適化したりするのに役立ちます。
+	- **注意事項**: ソースマップファイル（.map）は、プロダクション環境にデプロイされると元のコードを露出させる可能性があるため、セキュリティに敏感な場合は外部からのアクセスを制限する必要があります。
+
+- **[The Weird Parts of position: sticky;](https://frontendmasters.com/blog/the-weird-parts-of-position-sticky/?utm_source=CSS-Weekly&utm_campaign=Issue-626&utm_medium=web)** (出典: *CSS Weekly #626*)
+	![position: stickyを説明する視覚資料](https://css-weekly.com/wp-content/uploads/2025/10/the-weird-parts-of-position-sticky.jpg)
+	- **背景**: `position: sticky`は、スクロール位置に応じて要素が通常のフロー（relative）と固定された状態（fixed）を行き来するようにする強力なCSSプロパティです。しかし、しばしば期待通りに動作せず、開発者を混乱させます。
+	- **核心機能**: この記事は、`position: sticky`が動作する原理を紹介し、最も一般的に遭遇する失敗例（例：親要素の`overflow`プロパティの問題、`containing block`の概念など）を分析します。
+	- **実務適用**: ナビゲーションバー、サイドバーの目次、テーブルヘッダーなどをスクロールに応じて固定する際に役立ちます。
+	- **注意事項**: `sticky`要素の親または祖先要素に`overflow: hidden`、`overflow: auto`などが設定されていると、`sticky`が意図した通りに動作しません。この記事は、これらの一般的な落とし穴を避ける方法を説明します。
+
+---
+#### 見逃せないコンテンツ
+- **[Perfectly Pointed Tooltips](https://frontendfoc.us/link/176542/web)** (出典: *Frontend Focus #716*)
+	+ **要約**: CSS Anchor Positioning APIを使用して、ツールチップやポップオーバーを完璧に配置する方法を探求します。このAPIは、ツールチップが画面の端にぶつかったときに自動的に位置を調整するなど、複雑な配置ロジックをCSSだけで簡単に処理できるようにします。
+- **[HTML Emails in 2025](https://mailchi.mp/smashingmagazine/532-html-email-tools-and-techniques?e=02d8dcf17a)** (出典: *Smashing Newsletter #532*)
+	+ **要約**: 2025年現在、複雑さで有名なHTML Eメールを作成することはどのようなものでしょうか？このニュースレターは、さまざまなEメールクライアントの互換性の問題、ダークモードのサポート、便利なツールとガイドラインを含め、最新のHTML Eメール開発の世界に光を当てます。
+
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Can I Email](https://www.caniemail.com/)** (出典: *Smashing Newsletter #532*)
+	![Can I Email ウェブサイトのスクリーンショット](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/0c9fab12-9908-d25f-a25a-955116aa4cb6.png)
+	- **概要**: Web開発の「Can I Use」と同様のサービスで、HTMLおよびCSSの機能が各種Eメールクライアント（Gmail、Outlook、Apple Mailなど）でサポートされているかを確認できます。
+	- **特徴**: 300以上のHTML/CSS機能を41のEメールクライアントにわたってサポート状況を提供し、Eメール開発時に発生する互換性の問題を事前に把握し、対応するのに大いに役立ちます。
+	- **実践チップ**: HTML Eメールテンプレートをデザインしたりコーディングしたりする前に、使用しようとするCSSプロパティ（例：`flexbox`や`grid`）がターゲットのEメールクライアントでサポートされているか、まず確認してみてください。
+
+- **[Born React Native Godot: Embed Godot Engine in React Native Apps](https://react.statuscode.com/link/176574/web)** (出典: *React Status #450*)
+	- **概要**: 人気のあるオープンソース2D/3DゲームエンジンであるGodotを、React Nativeアプリに組み込むことができるようにする新しいオープンソースプロジェクトです。
+	- **特徴**: AndroidとiOSの両方をサポートし、JavaScriptからGodotエンジンのAPIに完全にアクセスできます。これにより、React Nativeアプリ内に高性能なゲームや複雑な3Dインタラクションを統合することができます。
+	- **実践チップ**: アプリの一部の機能として簡単なゲームを提供したり、製品を3Dで表示するインタラクティブなデモを実装したりする際に活用できます。
+
+---
+#### 見逃せないコンテンツ
+- **[spoilerjs: Framework-Agnostic 'Spoiler Effects'](https://frontendfoc.us/link/176558/web)** (出典: *Frontend Focus #716*)
+	+ **要約**: Telegramアプリからインスピレーションを受けたネタバレ非表示効果をWebで実装するWebコンポーネントです。クリックするまでテキストや機密データを隠したい場合に便利に使用できます。
+- **[image-dimensions: Get the Dimensions of Images](https://javascriptweekly.com/link/176795/web)** (出典: *JavaScript Weekly #760*)
+	+ **要約**: 依存関係なし（zero-dependency）でJPEG、PNG、GIF、WebPなど、さまざまな画像ファイルのピクセル幅と高さを取得できるライブラリです。ブラウザ、Node.jsなど、すべての最新JavaScript環境で動作します。
+
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Anders Hejlsberg's Take on the Rise of TypeScript](https://javascriptweekly.com/link/176759/web)** (出典: *JavaScript Weekly #760*)
+	- **主要なインサイト**: TypeScriptの共同創始者であるAnders Hejlsbergが、TypeScriptの成功（2025年にGitHubで1位の言語を達成）についての所感と、現在進行中のGoへのコンパイラ再作成、そしてAIがプログラミングに与える影響についての考えを共有します。
+
+- **[Use Cases for Field Sizing](https://frontendfoc.us/link/176544/web)** (出典: *Frontend Focus #716*)
+	![field-sizing CSSプロパティの例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1762346422/qjxxxjyax4q7ym8w2mkt.png)
+	- **主要なインサイト**: `textarea`や`input`フィールドのサイズがコンテンツに合わせて自動的に調整されることを望みますか？CSSの`field-sizing`プロパティがまさにこの問題を解決します。この記事は、`field-sizing: content`を使用して入力フィールドのサイズを動的に調整する実用的な例と、レイアウトデザインでの活用法を示します。
+
+- **[Getting Creative With Small Screens](https://css-tricks.com/getting-creative-with-small-screens/?utm_source=CSS-Weekly&utm_campaign=Issue-626&utm_medium=web)** (出典: *CSS Weekly #626*)
+	![小さな画面のデザイン例](https://css-weekly.com/wp-content/uploads/2025/10/getting-creative-with-small-screens.jpg)
+	- **主要なインサイト**: 小さな画面（モバイル）のデザインは、単にデスクトップレイアウトを縮小することではありません。この記事は、さまざまな創造的な技術を通じて、狭いスペースでもユーザーがコンテンツを簡単に探索し、理解できるように支援する効果的な小型スクリーンデザインの方法を提示します。
+
+---
+#### 見逃せないコンテンツ
+- **[Your URL is Your State](https://frontendfoc.us/link/176610/web)** (出典: *Frontend Focus #716*)
+	+ **主要なインサイト**: URLは単なるアドレスではなく、それ自体がアプリケーションの状態（State）を反映する強力なツールです。この記事は、URLの各構成要素（path、query-stringなど）を活用して、アプリケーションの状態をエレガントに管理する「見過ごされてきた力」について探求します。
+- **[Grayscale Testing: The Missing Step in Color Accessibility](https://frontendfoc.us/link/176549/web)** (出典: *Frontend Focus #716*)
+	+ **主要なインサイト**: Webアクセシビリティをテストする際、グレースケール（白黒）テストがなぜ重要なのかを説明します。色だけに依存して情報を伝達していないかを確認し、色覚異常のあるユーザーを含むすべてのユーザーがコンテンツを明確に認識できるように保証する実用的な方法を共有します。
+
+---
+
+## 4. ✨ アイデア
+- **[Pointer Pointer](https://frontendfoc.us/link/176567/web)** (出典: *Frontend Focus #716*)
+	![マウスカーソルを指さす指の写真](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1762347251/j6sbtznab7xdcfqhib1i.png)
+	- **特徴**: 面白いインタラクティブなウェブサイトです。画面上のどこにマウスカーソルを置いても、そのカーソルを指で指している写真をすぐに見つけて表示します。
+
+- **[Chrome: CSS Scroll with @function](https://codepen.io/pimskie/pen/jEWKQdB?utm_source=CSS-Weekly&utm_campaign=Issue-626&utm_medium=web)** (出典: *CSS Weekly #626*)
+	![CSS @functionを活用したスクロールデモ](https://css-weekly.com/wp-content/uploads/2025/10/chrome-css-scroll-with-at-function.png)
+	- **特徴**: CSSの新しい`@function`ルール（実験的機能）を活用し、スクロール位置に応じて動的な効果を生み出す素晴らしいCodePenデモです。
+
+## 5. ⚡️ ミニノート
+- **[Critical vulnerability in React Native Community CLI](https://react.statuscode.com/link/176576/web)** (出典: *React Status #450*)
+	+ **要約**: React Native Community CLIでリモートコード実行が可能な深刻なセキュリティ脆弱性が発見されました。開発サーバーを実行する際に影響を受ける可能性があるため、直ちに確認が必要です。
+- **[npm security changes: classic tokens update](https://javascriptweekly.com/link/176763/web)** (出典: *JavaScript Weekly #760*)
+	+ **要約**: GitHubがnpmのセキュリティ変更に関する告知を更新しました。現在、「クラシック」npmトークンはもはや生成できず、既存のトークンは遅くとも2026年2月3日まで動作します。
+- **[Google shares more info on the deprecation of XSLT](https://frontendfoc.us/link/176612/web)** (出典: *Frontend Focus #716*)
+	+ **要約**: Googleがブラウザのセキュリティ強化のため、XSLTのサポートを中止することに関する追加情報を共有しました。
+- **[JSHeroes conference CFP is open](https://javascriptweekly.com/link/176767/web)** (出典: *JavaScript Weekly #760*)
+	+ **要約**: 2026年5月14-15日にルーマニアで開催されるJSHeroesカンファレンスの発表者募集（CFP）が12月31日まで行われます。
+- **[Meet Accessible UX Research, A Brand-New Smashing Book](https://www.smashingmagazine.com/2025/06/accessible-ux-research-pre-release/)** (出典: *Smashing Newsletter #532*)
+	+ **要約**: Smashing Magazineが、多様なニーズを持つ参加者を受け入れる包括的なUXリサーチの実施方法を扱った新刊「Accessible UX Research」を出版（2025年秋予定）します。
+
+## 6. 🎉 リリース
+- **[Storybook 10](https://react.statuscode.com/link/176571/web)** (出典: *React Status #450*)
+	+ **アップデート**: 人気のあるフロントエンドコンポーネントワークショップツールであるStorybookが10.0バージョンをリリースしました。これにより、CommonJSの代わりにESM専用に切り替わり、29%軽量化されました。Vitest 4およびNext.js 16をサポートします。
+- **[htmx 4.0 Alpha 1](https://javascriptweekly.com/link/176769/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: JavaScriptなしでも動的なWebページを実装できるhtmxが4.0アルファ1リリースを公開しました。
+- **[Perspective 4.0](https://javascriptweekly.com/link/176788/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: JP Morganで始まった高性能データ可視化・分析コンポーネント（WebAssemblyベース）が4.0バージョンとともにOpenJS Foundationに移管されました。大容量のストリーミングデータセット処理に適しています。
+- **[Svelte November 2025 update](https://javascriptweekly.com/link/176765/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: SvelteチームがSvelteの最新の変更点と新機能に関する2025年11月のアップデートを共有しました。
+- **[Next.js 16](https://frontendfoc.us/link/176555/web)** (出典: *Frontend Focus #716*)
+	+ **アップデート**: Next.js 16の新機能と、それがフロントエンド開発者にどのような意味を持つかを紹介します。（Storybook 10のリリースノートでもNext.js 16のサポートが言及されました。）
+- **[React Email 5.0](https://javascriptweekly.com/link/176812/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: ReactでEメールを作成するためのコンポーネント集です。ダークモードスイッチャーとTailwind 4をサポートします。
+- **[WebKit Features for Safari 26.1](https://frontendfoc.us/link/176545/web)** (出典: *Frontend Focus #716*)
+	+ **アップデート**: Safari 26.1に適用されるWebKitの新機能が公開されました。Anchor Positioningの改善、SVGの相対単位サポートなどが含まれます。
+- **[Vue Data UI 3.6](https://javascriptweekly.com/link/176793/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: Vueベースのデータストーリーテリングコンポーネントライブラリです。多様なチャート、ヒートマップ、ワードクラウドなどを提供します。
+- **[react-jsonschema-form 6.0](https://react.statuscode.com/link/176586/web)** (出典: *React Status #450*)
+	+ **アップデート**: JSONスキーマドキュメントに基づいてHTMLフォームをビルドするReactコンポーネントです。
+- **[Slim Select 3.0](https://react.statuscode.com/link/176590/web)** (出典: *React Status #450*)
+	+ **アップデート**: 依存関係のない高度な`<select>`ドロップダウンコントロールです。v3.0で公式Reactコンポーネントオプションが追加され、アクセシビリティが向上しました。
+- **[Video.js v10](https://javascriptweekly.com/link/176771/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: WebビデオプレーヤーライブラリであるVideo.jsが10.0メジャーバージョンをリリースしました。
+- **[Turborepo 2.6](https://javascriptweekly.com/link/176770/web)** (出典: *JavaScript Weekly #760*)
+	+ **アップデート**: 高性能ビルドシステムTurborepoの2.6バージョンがリリースされました。
+
+## ✍️ おわりに
+今週のニュースは、私たちが毎日使用する技術の根幹（ソースマップ、CSSポジショニング）に対するより深い理解が重要になっていることを明確に示しています。同時に、Storybook 10のような主要なリリースが登場し、React Nativeにゲームエンジンを組み込むなど、新しい領域での実験が続く中で、エコシステムは急速に拡大し続けています。このような流れの中で、基礎を固めることと最新技術を習得することの間のバランスを取る努力が必要と思われます。
+
+
+#### 出典
+- [JavaScript Weekly #760](https://javascriptweekly.com/issues/760)
+- [Smashing Newsletter #532](https://mailchi.mp/smashingmagazine/532-html-email-tools-and-techniques)
+- [Frontend Focus #716](https://frontendfoc.us/issues/716)
+- [React Status #450](https://react.statuscode.com/issues/450)
+- [CSS Weekly #626](hhttps://css-weekly.com/issue-626)
