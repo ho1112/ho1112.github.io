@@ -1,0 +1,129 @@
+---
+title: '🚀 2025-11 W3 #33'
+desc: 웹 애니메이션 성능 티어 리스트, 100+ 자바스크립트 엔진 Zoo, AI 제품 신뢰성 UX| 2025년 11월 3주차 주간 기술 뉴스레터
+date: 2025-11-15
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 이번 주 핵심 테마
+웹 애니메이션 성능의 모든 것과 AI 시대의 신뢰성 있는 UI/UX 디자인, 그리고 자바스크립트 엔진의 생태계를 깊이 있게 다룹니다.
+
+## 1. 🔍 심층 분석
+- **[The Web Animation Performance Tier List](https://frontendfoc.us/link/176860/web)** (출처: *Frontend Focus #717*)
+   ![Web Animation Performance Tier List](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1762952319/caot5btb8r3cvj3gqear.png)
+    - **배경**: 부드럽고 반응성 좋은 UI를 구현하기 위해 애니메이션 성능은 매우 중요합니다. 하지만 어떤 애니메이션 기법이 성능에 어떤 영향을 미치는지 명확히 알기 어려웠습니다.
+    - **핵심 기능**: 이 가이드는 렌더 파이프라인, 하드웨어 가속, 그리고 다양한 애니메이션 기법(CSS Transitions, Web Animations API, `requestAnimationFrame` 등)이 성능에 미치는 영향을 티어(Tier) 목록으로 분류하여 상세히 설명합니다.
+    - **실무 적용**: `transform` 및 `opacity`를 사용한 애니메이션이 왜 가장 성능이 좋은지(compositor-only), `will-change`를 언제 사용해야 하는지, 그리고 CSS 변수를 애니메이션에 활용할 때의 성능 저하 이유 등을 명확히 이해하고 프로젝트에 적용할 수 있습니다.
+    - **주의사항**: 각 브라우저의 렌더링 엔진에 따라 성능 특성이 다소 다를 수 있으므로, 타겟 환경에서의 테스트가 권장됩니다.
+
+- **[JavaScript Engines Zoo: Learn About Over 100 JS Engines](https://javascriptweekly.com/link/177056/web)** (출처: *JavaScript Weekly #761*)
+   ![JavaScript Engines Zoo](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/sest28jyubncgvbyhloa.jpg)
+    - **배경**: V8, SpiderMonkey, JavaScriptCore 외에도 수많은 JavaScript 엔진이 존재합니다. 이 문서는 100개가 넘는 JS 엔진의 방대한 생태계를 정리한 저장소입니다.
+    - **핵심 기능**: 각 엔진을 성능, 개발 상태, 사용자(임베디드, 브라우저 등)별로 비교하고 정렬할 수 있는 거대한 데이터 테이블을 제공합니다. 엔진 이름을 클릭하면 해당 엔진의 개발 역사, 주요 특징, 사용 사례 등을 자세히 볼 수 있습니다.
+    - **실무 적용**: 특정 환경(예: 저사양 임베디드 기기, 특수 목적 애플리케이션)에 최적화된 JS 엔진을 찾아야 할 때 유용한 리소스입니다. 또한, 각 엔진을 테스트해 볼 수 있는 Dockerfile도 제공됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Building Trust In AI Products](https://koistudios.kit.com/ai-ux)** (출처: *Smashing Newsletter #533*)
+  + **요약**: KoiStudios에서 발행한 PDF 가이드로, 신뢰의 심리학과 AI 제품에서 신뢰를 구축하기 위한 10가지 필수 UX 패턴을 실제 사례와 함께 탐구합니다.
+- **[V8's Garbage Collector Developments in Recent Years](https://javascriptweekly.com/link/177078/web)** (출처: *JavaScript Weekly #761*)
+  + **요약**: V8 및 JavaScriptCore 작업 경험이 있는 개발자가 지난 몇 년간 V8 엔진의 가비지 컬렉터(GC)에서 이루어진 주요 발전 사항들을 매우 기술적인 관점에서 검토합니다.
+
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[Valdi: Snap's Newly-Open Cross-Platform UI Framework](https://javascriptweekly.com/link/177061/web)** (출처: *JavaScript Weekly #761*)
+   ![Valdi Framework Logo](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/sest28jyubncgvbyhloa.jpg)
+    - **개요**: Snapchat을 만든 Snap 팀이 지난 8년간 프로덕션 앱에서 사용해 온 크로스플랫폼 UI 프레임워크 'Valdi'를 오픈소스로 공개했습니다.
+    - **사용법**: 선언형 TypeScript로 UI를 한 번 작성하면, 웹뷰나 JavaScript 브릿지 없이 iOS, Android, macOS의 네이티브 뷰로 직접 컴파일됩니다.
+    - **실전 팁**: FAQ에 따르면 Valdi는 React Native와 유사한 영역을 다루지만, 네이티브 플랫폼과의 더 깊은 통합과 성능을 목표로 설계되었습니다. 네이티브 성능이 극도로 중요한 크로스플랫폼 앱을 고려 중이라면 검토해 볼 만합니다.
+
+- **[Umami 3.0: Self-Hosted, Privacy-Focused Google Analytics Alternative](https://frontendfoc.us/link/176877/web)** (출처: *Frontend Focus #717*)
+   ![Umami Analytics Dashboard](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1762901462/inygvppjha2wjtsdvcfr.jpg)
+    - **개요**: Umami는 Google Analytics나 Plausible의 대안으로 사용할 수 있는, 개인정보 보호에 중점을 둔 자가 호스팅(self-hosted) 웹 분석 도구입니다.
+    - **특징**: 개인 식별 정보를 수집하지 않으며, 모든 데이터를 직접 소유하고 제어할 수 있습니다. 경량 스크립트를 제공하여 웹사이트 성능에 미치는 영향을 최소화합니다.
+    - **실전 팁**: 버전 3.0이 출시되었으며, 유료 호스팅 서비스도 제공되어 인프라 관리에 부담을 느끼는 사용자도 쉽게 도입할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[ElevenLabs UI: <code>shadcn/ui</code>-Based Components for Multimodal Agent Use Cases](https://react.statuscode.com/link/176946/web)** (출처: *React Status #451*)
+  + **요약**: <code>shadcn/ui</code>를 기반으로, 오디오 및 에이전트 앱(음성 파형, 보이스 에이전트, 오디오 플레이어 등)에 특화된 독특한 React 컴포넌트 라이브러리입니다.
+- **[imgui-react-runtime: React + Dear ImGui + Static Hermes](https://javascriptweekly.com/link/177089/web)** (출처: *JavaScript Weekly #761*)
+  + **요약**: 인기 있는 경량 GUI 라이브러리인 'Dear ImGui'와 React, 그리고 Static Hermes 엔진을 결합하여 네이티브 앱을 구축하는 새로운 접근 방식입니다.
+
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Don't Blindly Use <code>useTransition</code> Everywhere](https://react.statuscode.com/link/176933/web)** (출처: *React Status #451*)
+   ![useTransition code snippet](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jjw8rfhd8wyn4akpqaei.jpg)
+    - **핵심 인사이트**: React의 `useTransition` 훅은 UI 업데이트를 중단 가능하게 만들어 사용자 경험을 향상시킬 수 있지만, 무분별하게 사용하면 오히려 복잡하고 지저분한 경험을 초래할 수 있습니다. 이 아티클은 `useTransition`의 남용을 비판하며, 실제 예제를 통해 대안적인 접근 방식을 제안합니다.
+
+- **[The Weird Parts of <code>position: sticky;</code>](https://frontendfoc.us/link/176862/web)** (출처: *Frontend Focus #717*)
+    - **핵심 인사이트**: CSS의 `position: sticky;`는 매우 유용하지만, 완벽하게 동작하게 만들기 까다로운 속성 중 하나입니다. 이 글은 `sticky`가 작동하는 방식과, 개발자들이 자주 겪는 일반적인 문제(예: 부모 요소의 `overflow` 문제)를 해결하는 방법을 명확하게 설명합니다.
+
+- **[pathLength Makes SVG Path Animations Easier to Manage](https://frontendfoc.us/link/176867/web)** (출처: *Frontend Focus #717*)
+   ![SVG Path Animation Example](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1762947932/wb3bxpifclknfy2ye1kd.png)
+    - **핵심 인사이트**: SVG 경로(path)를 따라 그리는 애니메이션을 구현할 때 `stroke-dasharray`와 `stroke-dashoffset`을 사용합니다. 이때 SVG `<path>` 요소의 `pathLength` 속성을 '1' (또는 100)과 같은 정규화된 값으로 설정하면, 실제 경로의 복잡한 길이를 계산할 필요 없이 CSS 트랜지션을 훨씬 쉽게 관리할 수 있는 퀵팁을 소개합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Programming principles for self taught front-end developers](https://piccalil.li/blog/programming-principles-for-self-taught-front-end-developers/?utm_source=CSS-Weekly&utm_campaign=Issue-627&utm_medium=web)** (출처: *CSS Weekly #627*)
+  + **요약**: 독학 프론트엔드 개발자가 더 나은 코드를 작성하고 합리적인 결정을 내리는 데 도움이 될, 실용적이고 경험에 기반한 몇 가지 프로그래밍 원칙과 규칙을 제안합니다.
+- **[Comparing Electron vs. Tauri for Building and Distributing a Desktop App](https://javascriptweekly.com/link/177080/web)** (출처: *JavaScript Weekly #761*)
+  + **요약**: 기존 Electron 기반의 데스크톱 앱을 Rust 기반의 Tauri로 전환하는 과정을 비교 분석한 글입니다. 긍정적인 결과가 많았지만, 몇 가지 혼합된 결과도 공유합니다.
+
+---
+
+## 4. ✨ 아이디어
+- **[Crafting Generative CSS Worlds](https://tympanus.net/codrops/2025/11/10/crafting-generative-css-worlds?utm_source=CSS-Weekly&utm_campaign=Issue-627&utm_medium=web)** (출처: *CSS Weekly #627*)
+   ![Generative CSS Worlds visualization](https://css-weekly.com/wp-content/uploads/2025/11/crafting-generative-css-worlds.jpg)
+    - **특징**: 순수 CSS의 힘(stacked grids와 3D transforms)만을 사용하여 높이맵(heightmaps)을 기반으로 한 생성형 3D 지형을 만드는 방법을 탐구합니다. 시각적으로 매우 인상적인 데모를 제공합니다.
+
+- **[The Scope Creep](https://frontendfoc.us/link/176888/web)** (출처: *Frontend Focus #717*)
+   ![Scope Creep Game Screenshot](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1762949075/ijpar5zycxncnhxvij20.png)
+    - **특징**: '자신만의 모험을 선택하는' 스타일의 재미있는 인터랙티브 내러티브 게임입니다. 플레이어는 프로젝트 관리자가 되어 '저주받은' 웹사이트 기획을 성공적으로 완수해야 하며, 이 과정에서 필연적으로 발생하는 다양한 이슈와 선택에 직면하게 됩니다.
+
+## 5. ⚡️ 짧은 소식
+- **[OWASP Top 10 Web Application Security Threats in 2025](https://javascriptweekly.com/link/177112/web)** (출처: *JavaScript Weekly #761*)
+  + **요약**: OWASP(Open Worldwide Application Security Project)가 2025년 웹 애플리케이션 보안 위협 상위 10개 목록을 발표했습니다.
+- **[GitHub no longer uses 'toasts'](https://frontendfoc.us/link/176864/web)** (출처: *Frontend Focus #717*)
+  + **요약**: GitHub가 접근성 및 사용성 문제를 이유로 더 이상 '토스트(Toast)' 알림(작고 네모난 팝업 알림)을 사용하지 않기로 결정했습니다.
+- **[TC39 committee meeting agenda](https://javascriptweekly.com/link/177064/web)** (출처: *JavaScript Weekly #761*)
+  + **요약**: ECMAScript 표준을 담당하는 TC39 위원회가 다음 주 111번째 회의를 앞두고 있으며, 논의할 안건이 꽉 찬 의제를 공개했습니다.
+- **[Firefox mascot... 'Kit'](https://frontendfoc.us/link/176929/web)** (출처: *Frontend Focus #717*)
+  + **요약**: Mozilla가 Firefox의 마스코트에 새로운 느낌을 더했습니다. 'Kit'이라는 이름의 새로운 마스코트를 만나보세요.
+- **[Dan Abramov is looking for a job in Japan](https://react.statuscode.com/link/176938/web)** (출처: *React Status #451*)
+  + **요약**: React의 핵심 개발자 중 한 명인 Dan Abramov가 현재 일본에서 구직 중임을 밝혔습니다.
+
+## 6. 🎉 릴리스
+- **[Bun v1.3.2](https://javascriptweekly.com/link/177070/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: v1.3에서 기본값이 되었던 격리된 패키지 설치 방식이 기존 프로젝트에서 문제를 일으켜, 다시 'hoisted' 설치가 기본값으로 롤백되었습니다. `bun install` 속도가 더욱 빨라졌으며 `--cpu-prof` 플래그를 통한 CPU 프로파일링을 지원합니다.
+- **[Node.js v25.2.0 (Current)](https://javascriptweekly.com/link/177071/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: 타입 스트리핑(type stripping) 기능이 안정(Stable)으로 표시되었습니다. (v24에서도 동일하게 작동)
+- **[Node.js v24.11.1 (LTS)](https://javascriptweekly.com/link/177075/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: LTS(장기 지원) 버전의 마이너 업데이트가 릴리스되었습니다.
+- **[esbuild 0.27](https://javascriptweekly.com/link/177073/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: 인기 있는 번들러 esbuild의 새 버전이 릴리스되었습니다. 몇 가지 브레이킹 체인지(breaking changes)가 포함되어 있으므로, 버전을 고정(pin)하고 있는지 확인해야 합니다.
+- **[pnpm 10.21](https://javascriptweekly.com/link/177096/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: 이제 의존성의 `engines.runtime` 필드에 선언된 Node.js 버전을 자동으로 설치하여 CLI 앱과 `postinstall` 스크립트가 지정된 버전으로 실행되도록 보장합니다. `trustPolicy` 설정이 추가되어 공급망 공격 방어 기능이 향상되었습니다.
+- **[Ink 6.5: Build Interactive CLI Apps using React](https://react.statuscode.com/link/176950/web)** (*React Status #451*)
+  + **업데이트**: React 컴포넌트를 사용하여 반응형 터미널 앱을 구축하는 인기 라이브러리입니다. v6.5에서는 증분 렌더링(incremental rendering) 옵션이 추가되었습니다.
+- **[Valtio 2.2: Proxy State Made Simple](https://react.statuscode.com/link/176953/web)** (*React Status #451*)
+  + **업데이트**: 객체를 프록시로 변환하여 컴포넌트 외부에서도 상태에 접근하고 변경 사항을 구독할 수 있게 해주는 간단한 상태 관리 라이브러리입니다.
+- **[sitemap.js 9.0](https://frontendfoc.us/link/176884/web)** (*Frontend Focus #717*)
+  + **업데이트**: XML 사이트맵 생성을 위한 Node.js 라이브러리 및 CLI 도구입니다.
+- **[vis-timeline 8.4](https://javascriptweekly.com/link/177100/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: 데이터를 시간 축에 따라 시각화하는 인터랙티브 타임라인 컨트롤 라이브러리입니다.
+- **[TanStack DB 0.5](https://javascriptweekly.com/link/177074/web)** (*JavaScript Weekly #761*)
+  + **업데이트**: TanStack 제품군의 새로운 데이터베이스 솔루션이 업데이트되었습니다.
+
+## ✍️ 마치며
+이번 주는 특히 웹 애니메이션 성능에 대한 심도 있는 분석 자료가 인상적이었습니다. 단순히 '어떤 속성이 빠르다'를 넘어, 렌더링 파이프라인의 어떤 단계에서 작동하기 때문에 성능 이점이 있는지를 명확히 짚어주어, 개발자들이 더 근본적인 이해를 바탕으로 최적화에 접근할 수 있게 도와줍니다.
+또한, Snap이 8년간 사용해 온 'Valdi' 프레임워크를 공개한 것은, React Native나 Flutter와 같은 기존 강자들 외에 또 다른 네이티브 UI 접근 방식이 여전히 유효함을 보여줍니다. AI 시대를 맞아 '신뢰'를 주제로 한 UX 패턴 가이드가 나오는 등, 기술이 사용자와 상호작용하는 방식에 대한 고민도 깊어지는 한 주였습니다.
+
+#### 출처
+- [JavaScript Weekly #761](https://javascriptweekly.com/issues/761)
+- [Smashing Newsletter #533](https://mailchi.mp/smashingmagazine/533-design-patterns-for-building-trust)
+- [Frontend Focus #717](https://frontendfoc.us/issues/717)
+- [React Status #451](https://react.statuscode.com/issues/451)
+- [CSS Weekly #627](hhttps://css-weekly.com/issue-627)
