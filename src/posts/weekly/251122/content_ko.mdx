@@ -1,0 +1,133 @@
+---
+title: '🚀 2025-11 W4 #34'
+desc: Cloudflare 장애 분석, AI 채팅 접근성 가이드, Angular v21 발표| 2025년 11월 4주차 주간 기술 뉴스레터
+date: 2025-11-22
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 이번 주 핵심 테마
+
+이번 주는 프레임워크의 거침없는 진화와 웹 인프라의 안정성에 대한 경각심이 교차하는 한 주였습니다. Google은 Angular v21을 통해 Signal 기반 폼과 AI 통합을 선보이며 프레임워크의 새로운 기준을 제시했고, React Native의 CSS Grid 도입 소식은 웹과 모바일 개발 경험의 경계를 허무는 신호탄이 되었습니다. 반면, 전 세계적인*Cloudflare 장애는 인프라 의존성에 대한 깊은 기술적 고찰을 안겨주었으며, AI 접근성(Accessibility)에 대한 논의는 기술의 발전 속도만큼이나 '포용성'이 중요한 설계 원칙이 되어야 함을 강조하고 있습니다.
+
+## 1. 🔍 심층 분석
+
+- **[The Cloudflare Outage of November 18, 2025](https://frontendfoc.us/link/177223/web)** (출처: *Frontend Focus #718*)
+  ![The Cloudflare Outage of November 18, 2025](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1763555332/ciiwhcr8bhnihfeijkqp.png)
+    - **배경**: 2025년 11월 18일, 글로벌 웹 트래픽의 중추를 담당하는 Cloudflare 네트워크에서 발생한 대규모 장애는 현대 웹 생태계의 취약점을 드러냈습니다.
+    - **핵심 내용**: 사후 분석에 따르면 이번 장애는 데이터베이스 권한 변경 작업 중 발생한 사이드 이펙트가 원인이었습니다. 이 글은 단순한 사고 리포트를 넘어, 단일 서비스 제공자(SPOF)에 대한 과도한 의존이 초래할 수 있는 리스크를 기술적 관점에서 분석합니다.
+    - **실무 적용**: 핵심 비즈니스 로직에 대한 Multi-CDN 전략이나 Failover 아키텍처를 재점검하고, 외부 의존성 장애 시 서비스 가용성을 유지할 수 있는 BCP(업무 연속성 계획)를 수립해야 합니다.
+    - **관련 논의**: 개발자 커뮤니티에서는 "Cloudflare 없는 웹이 가능한가?"라는 근본적인 질문과 함께 중앙화된 편의성과 탈중앙화된 안정성 사이의 트레이드오프에 대한 토론이 이어지고 있습니다.
+
+- **[Accessible AI Chat](https://medium.com/design-ibm/catching-up-on-accessibility-with-ai-chat-1129be33c184)** (출처: *Smashing Newsletter #534*)
+  ![Accessible AI Chat](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/068e877a-d3db-3767-5cc6-00c2ff0466cf.png)
+    - **배경**: AI 챗봇이 모든 서비스의 기본 인터페이스로 자리 잡고 있지만, 시각 장애인이나 보조 기술 사용자에게는 여전히 높은 진입 장벽이 존재합니다.
+    - **핵심 기능**: 이 아티클은 AI 채팅 UI를 위한 구체적인 접근성 디자인 패턴을 제시합니다. 실시간 스트리밍 응답을 스크린 리더에 알리는 방법(Announcements), 명확한 포커스 관리, 그리고 입력 필드의 시멘틱한 처리를 다룹니다.
+    - **실무 적용**: 챗봇 구현 시 `aria-live="polite"` 속성을 활용해 응답 생성 상태를 알리고, 메시지 전송 버튼과 입력창 사이의 탭 순서를 논리적으로 설계하여 키보드 사용자 경험을 개선해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Catching Up On Accessibility With AI Chat](https://medium.com/design-ibm/catching-up-on-accessibility-with-ai-chat-1129be33c184)** (출처: *Smashing Newsletter #534*)
+  + 요약: IBM 디자인 팀의 시각으로 본 AI 채팅 접근성 가이드로, 기술적 구현뿐만 아니라 사용자 경험 측면에서의 포용적 설계 원칙을 다룹니다.
+- **[Accessibility and the Agentic Web](https://tetralogical.com/blog/2025/08/08/accessibility-and-the-agentic-web/)** (출처: *Smashing Newsletter #534*)
+  + 요약: AI 에이전트가 시각 정보가 부족한 웹 환경(예: alt 태그가 없는 쇼핑몰)에서 어떻게 보조 도구로서 기능할 수 있는지, '에이전트형 웹'의 미래 가능성을 탐구합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[Google Announces Angular v21](https://javascriptweekly.com/link/177388/web)** (출처: *JavaScript Weekly #762*)
+  ![Google Announces Angular v21](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/nrddlxtqseqwhpcjyyfc.jpg)
+    - **개요**: 구글이 Angular v21을 발표하며 프레임워크의 현대화를 가속화했습니다. 이번 버전은 반응성(Reactivity)과 개발자 경험(DX) 개선에 초점을 맞췄습니다.
+    - **핵심 기능**:
+        - **Signal 기반 폼(Forms):** 복잡한 폼 상태 관리를 Signal 아키텍처로 재설계하여 렌더링 성능과 코드 가독성을 동시에 높였습니다.
+        - **AI 통합 강화:** AI 에이전트 기능을 쉽게 통합할 수 있는 MCP 서버 지원이 추가되었습니다.
+        - **접근성 컴포넌트:** 접근성이 내장된 헤드리스 컴포넌트를 제공하여 UI 개발의 기본 품질을 상향 평준화했습니다.
+    - **실전 팁**: 구글이 제공하는 레트로 게임 테마의 'Angular AI Tutor'를 통해 변경된 문법과 개념을 인터랙티브하게 학습해보는 것을 추천합니다.
+
+- **[Webpack Bundle Analyzer 5.0](https://javascriptweekly.com/link/177431/web)** (출처: *JavaScript Weekly #762*)
+  ![Webpack Bundle Analyzer 5.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/owmwl53xr3x2niy4htem.jpg)
+    - **개요**: 프론트엔드 성능 최적화의 필수품인 Webpack Bundle Analyzer가 v5.0으로 메이저 업데이트되었습니다.
+    - **사용법**: 빌드 과정에 플러그인을 주입하면 결과물의 모듈 구성을 대화형 트리맵(Treemap)으로 시각화해 줍니다.
+    - **실전 팁**: 앱 초기 로딩 속도 개선이 필요할 때 가장 먼저 실행해야 할 도구입니다. `node_modules` 중 실수로 포함된 거대 라이브러리나 중복 번들링된 패키지를 즉각적으로 식별하고 제거 전략을 수립하세요.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[TanStack DB 0.5](https://javascriptweekly.com/link/177433/web)** (출처: *JavaScript Weekly #762*)
+  + 요약: 'Query-Driven Sync'라는 혁신적인 개념을 도입했습니다. 컴포넌트 레벨에서 작성한 쿼리가 곧 백엔드 API 호출이 되어, 복잡한 데이터 페칭 로직을 획기적으로 줄여줍니다.
+- **[Fumadocs: A Documentation Framework for React](https://react.statuscode.com/link/177274/web)** (출처: *React Status #452*)
+  + 요약: Next.js 기반의 문서화 프레임워크로, MDX를 기본 지원하며 강력한 커스터마이징이 가능한 헤드리스 모드를 제공해 독자적인 디자인 시스템을 적용하기 용이합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[Tooltip Components Should Not Exist](https://javascriptweekly.com/link/177413/web)** (출처: *JavaScript Weekly #762*)
+  ![Tooltip Components Should Not Exist](https://res.cloudinary.com/cpress/image/upload/c_limit,w_480,h_480,q_auto/copm/1d9e84d0.png)
+    - **핵심 인사이트**: TkDodo(React Query 메인테이너)가 제시하는 도발적인 아키텍처 제안입니다. 그는 툴팁을 `<Tooltip />`과 같이 별도 컴포넌트로 분리하는 것이 잘못된 추상화라고 지적합니다. 툴팁은 본질적으로 트리거 요소와 강하게 결합되어야 하며, 이를 분리할 경우 발생하는 접근성 문제와 유지보수의 복잡성을 구체적인 예시와 함께 설명합니다. "재사용성"이라는 명목하에 무분별하게 이루어지는 컴포넌트 분리에 대해 다시 생각하게 만듭니다.
+
+- **[More CSS random() Learning Through Experiments](https://frontendmasters.com/blog/more-css-random-learning-through-experiments/?utm_source=CSS-Weekly&utm_campaign=Issue-628&utm_medium=web)** (출처: *CSS Weekly #628*)
+  ![More CSS random() Learning Through Experiments](https://css-weekly.com/wp-content/uploads/2025/11/more-css-random-learning-through-experiments.jpg)
+    - **핵심 인사이트**: JavaScript의 영역이었던 '무작위성'이 CSS로 넘어오고 있습니다. Chris Coyier가 CSS의 새로운 `random()` 함수를 활용해 배경 패턴 생성, 애니메이션 타이밍 변화 등 자연스럽고 유기적인 디자인을 구현하는 실험적인 기법들을 공유합니다. 이는 정적인 웹 디자인에 생동감을 불어넣는 새로운 방법론이 될 것입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Building a multi stage timetable with modern CSS](https://9elements.com/blog/building-a-multi-stage-timetable-with-modern-css-using-grid-subgrid-round-and-mod/?utm_source=CSS-Weekly&utm_campaign=Issue-628&utm_medium=web)** (출처: *CSS Weekly #628*)
+  + 요약: CSS Grid와 Subgrid, 그리고 최신 수학 함수인 `round()`, `mod()`를 결합하여, 복잡한 시간표 레이아웃을 JavaScript 계산 없이 순수 CSS로 구현하는 고급 기법을 다룹니다.
+- **[Six Things I Bet You Didn't Know You Could Do With Chrome's DevTools](https://javascriptweekly.com/link/177418/web)** (출처: *JavaScript Weekly #762*)
+  + 요약: 개발자 도구의 숨겨진 기능(타임라인 제어, DOM 변경 브레이크포인트, 사용자 흐름 녹화 등)을 활용해 디버깅 생산성을 높이는 팁을 소개합니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[Pure CSS (-_-) I See U](https://codepen.io/9am/pen/oNVKOKB?utm_source=CSS-Weekly&utm_campaign=Issue-628&utm_medium=web)** (출처: *CSS Weekly #628*)
+    - ![Pure CSS (-_-) I See U](https://css-weekly.com/wp-content/uploads/2025/11/pure-css-i-see-u.png)
+    - **특징**: 마우스 커서를 따라 움직이는 눈동자를 오직 CSS만으로 구현했습니다. JavaScript 없이 CSS 변수와 수학 함수만으로 인터랙티브한 애니메이션을 만들어낸 기술적 창의성이 돋보입니다.
+- **[ZenPaint](https://react.statuscode.com/link/177265/web)** (출처: *React Status #452*)
+    - **특징**: 과거의 명작 MacPaint를 웹 브라우저상에 픽셀 단위까지 완벽하게 이식한 React 프로젝트입니다. 레트로 UI를 현대적인 기술 스택으로 재해석한 훌륭한 사례입니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **[State of React 2025 설문 조사 시작](https://javascriptweekly.com/link/177391/web)** (출처: *JavaScript Weekly #762*)
+  + 요약: React 생태계의 현재와 미래를 가늠할 수 있는 연례 설문 조사가 시작되었습니다. 전 세계 개발자들의 기술 스택 변화를 파악할 수 있는 중요한 지표입니다.
+- **[React Native에 CSS Grid 지원 예정](https://javascriptweekly.com/link/177395/web)** (출처: *JavaScript Weekly #762*)
+  + 요약: React Native 레이아웃 시스템에 CSS Grid가 도입될 예정입니다. 웹과 앱 간의 코드 공유와 레이아웃 구현 방식이 획기적으로 통일될 것으로 기대됩니다.
+- **[Gemini 3 Pro 프리뷰 공개](https://frontendfoc.us/link/177298/web)** (출처: *Frontend Focus #718*)
+  + 요약: 구글의 최신 AI 모델 Gemini 3 Pro가 공개되었습니다. 특히 프론트엔드 개발자들 사이에서 웹 페이지 디자인 이해도와 코드 생성 능력이 탁월하다는 평가를 받고 있습니다.
+- **[Masonry 레이아웃을 위한 `display: grid-lanes`](https://frontendfoc.us/link/177228/web)** (출처: *Frontend Focus #718*)
+  + 요약: 핀터레스트 스타일의 Masonry 레이아웃을 표준 CSS로 구현하기 위한 문법으로 `display: grid-lanes`가 채택되었습니다.
+- **[JS 게임 렌더링 벤치마크](https://frontendfoc.us/link/177243/web)** (출처: *Frontend Focus #718*)
+  + 요약: 웹 게임 엔진 성능 비교 결과, **Babylon.js, Pixi.js, Phaser**가 렌더링 성능과 최적화 측면에서 가장 우수한 라이브러리로 선정되었습니다.
+
+## 6. 🎉 릴리스
+
+- **[Prisma 7.0](https://javascriptweekly.com/link/177396/web)** (*JavaScript Weekly #762*)
+  + 업데이트: Node.js/TypeScript 진영의 대표 ORM입니다. 이번 v7.0부터 Rust 의존성을 제거한 순수 JS 클라이언트를 기본으로 채택하여 서버리스 환경에서의 콜드 스타트 문제를 대폭 개선했습니다.
+- **[pnpm 10.23](https://javascriptweekly.com/link/177397/web)** (*JavaScript Weekly #762*)
+  + 업데이트: 디스크 공간 효율성과 설치 속도가 강점인 패키지 매니저 pnpm의 최신 업데이트입니다.
+- **[Node.js v25.2.1 (Current)](https://javascriptweekly.com/link/177398/web)** (*JavaScript Weekly #762*)
+  + 업데이트: 최신 기능을 빠르게 도입하는 Node.js Current 라인의 유지보수 업데이트입니다.
+- **[Astro 5.16](https://javascriptweekly.com/link/177474/web)** (*JavaScript Weekly #762*)
+  + 업데이트: 콘텐츠 중심 웹사이트 구축에 최적화된 Astro 프레임워크의 최신 버전입니다.
+- **[React Player 3.4](https://react.statuscode.com/link/177280/web)** (*React Status #452*)
+  + 업데이트: YouTube, Vimeo 등 다양한 비디오 소스를 통합 인터페이스로 제어할 수 있는 React 컴포넌트입니다.
+- **[react-native-mmkv 4.0](https://react.statuscode.com/link/177282/web)** (*React Status #452*)
+  + 업데이트: React Native용 고성능 키-값 저장소 라이브러리입니다. 내부 엔진이 Nitro로 변경되어 마이그레이션 시 주의가 필요합니다.
+- **[React Stripe.js 5.4](https://react.statuscode.com/link/177284/web)** (*React Status #452*)
+  + 업데이트: 글로벌 결제 서비스 Stripe를 React 애플리케이션에 손쉽게 연동할 수 있는 컴포넌트 라이브러리입니다.
+- **[PlayCanvas glTF Viewer 5.7](https://javascriptweekly.com/link/177440/web)** (*JavaScript Weekly #762*)
+  + 업데이트: 웹에서 glTF 2.0 및 PLY 형식의 3D 모델을 검토할 수 있는 뷰어 업데이트입니다.
+- **[Wasp 0.19](https://javascriptweekly.com/link/177442/web)** (*JavaScript Weekly #762*)
+  + 업데이트: React, Node.js, Prisma 스택을 통합하여 Rails와 같은 생산성을 제공하는 풀스택 프레임워크입니다.
+- **[Deque Axe AI](https://www.deque.com/axe/ai/)** (*Smashing Newsletter #534*)
+  + 업데이트: 개발자가 코드 작성 단계에서 접근성 오류를 실시간으로 탐지하고 수정할 수 있도록 돕는 AI 기반 도구 모음이 출시되었습니다.
+
+## ✍️ 마치며
+
+이번 주는 기술의 속도와 방향을 모두 고민하게 만드는 한 주였습니다. Angular v21이나 Gemini 3 Pro 같은 소식은 기술이 얼마나 빠르게 발전하고 있는지를 보여주지만, Cloudflare 장애와 AI 접근성 이슈는 우리가 그 속도 속에서 무엇을 놓치지 말아야 하는지를 상기시켜 줍니다.
+
+인프라의 편의성에 기댈수록 만약의 상황(What if)을 대비하는 엔지니어링의 기본기가 중요해지고 있으며, AI라는 강력한 도구가 자칫 누군가를 소외시키는 장벽이 되지 않도록 접근성(Accessibility)을 설계 초기부터 고려해야 한다는 점입니다. 화려한 신기술 뒤에 숨겨진 안정성과 포용성이라는 가치를 다시 한번 되새겨보는 한 주가 되시길 바랍니다.
+
+#### 출처
+- [JavaScript Weekly #762](https://javascriptweekly.com/issues/762)
+- [Smashing Newsletter #534](https://mailchi.mp/smashingmagazine/534-ai-accessibility)
+- [Frontend Focus #718](https://frontendfoc.us/issues/718)
+- [React Status #452](https://react.statuscode.com/issues/452)
+- [CSS Weekly #628](hhttps://css-weekly.com/issue-628)
