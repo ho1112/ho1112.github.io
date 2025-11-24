@@ -1,0 +1,211 @@
+---
+title: 'SEO의 과거, 현재, 그리고 미래 | 알고리즘 전쟁: 구글 vs 블랙햇 #1'
+desc: SEO는 죽었다?" AI 시대의 검색을 이해하기 위해 구글의 20년 전쟁사를 되짚어봅니다. PageRank의 탄생부터 BMW 퇴출 사건, 판다와 펭귄 업데이트까지. 알고리즘을 속이려는 자(블랙햇)와 지키려는 자(구글)의 치열한 공방전을 다룹니다.
+date: 2025-11-25
+thumbnail: /posts/deepDive/seo-chronicle-1-history/thumbnail.avif
+---
+
+## SEO is dead?
+
+![](/posts/deepDive/seo-chronicle-1-history/seo-dead.avif)
+
+**"SEO는 죽었다."**
+
+AI 시대가 열리면서 주위에서 심심찮게 들리는 말입니다. 하지만 개발자인 저에게 SEO는 끝난 기술이 아니라 시대에 맞춰 계속해서 변화하고 있는 영역이라고 생각합니다.
+
+저는 프론트엔드 개발자로 일하면서 사내 SEO 개선팀에서 일했던 경험이 있습니다.
+평소에는 특정 기능이나 페이지 단위의 개발에 집중했다면 SEO 팀에서는 서비스 전반의 구조를 개선하거나 검색 타겟 콘텐츠를 만들어내는 등 보다 거시적인 관점의 작업을 수행했습니다. 이는 프론트엔드 엔지니어로서 시야를 넓히는 데 큰 자산이 되었습니다.
+
+무엇보다 프론트엔드 개발의 핵심이자 기본인 Core Web Vitals를 집중적으로 개선해 보면서 기술적 최적화가 실제 비즈니스 성과로 이어지는 과정을 깊이 있게 경험할 수 있었습니다.
+그러던 중 최근 AI가 등장하면서 GEO(Generative Engine Optimization)라는 낯선 개념이 들려오자 한 가지 생각이 들기 시작했습니다.
+"검색의 패러다임이 바뀌고 있다는데 과연 프론트엔드 개발에는 어떤 변화가 생길까? 지금까지와는 전혀 다른 방식의 대응이 필요한 시점이 온 것은 아닐까?"
+
+이런 질문을 던지다 보니 자연스럽게 지금의 검색 엔진이 어떤 과정을 거쳐 여기까지 왔는지 궁금해졌습니다. 갑자기 등장한 GEO라는 개념을 제대로 이해하기 위해서는 구글이 지난 20년간 웹 생태계를 어떻게 만들어왔는지 그 흐름을 먼저 되짚어보는 게 도움이 될 거라 생각했습니다.
+그래서 개인적인 호기심에서 시작된 공부 내용을 바탕으로 1990년대의 혼돈부터 AI시대의 서막까지 검색의 진화 과정을 3부작으로 정리해보려 합니다.
+
+그 첫 번째는 **알고리즘을 속이려는 인간과 막으려는 구글의 전쟁**에 대한 이야기입니다.
+
+---
+
+## 챕터 1. 키워드 매칭의 한계와 구글의 등장
+
+### 초기 검색 엔진의 한계 (1990년대 후반)
+
+혹시 1990년대 후반의 인터넷을 기억하시나요? 인터넷은 폭발적으로 팽창하고 있었지만 당시의 검색 엔진들 알타비스타(AltaVista), 야후(Yahoo!), 라이코스(Lycos)는 이 속도를 따라잡지 못하고 있었습니다.
+당시 검색 엔진의 작동 방식은 매우 원시적이었습니다. 유일한 기준은 사용자가 입력한 단어가 페이지에 얼마나 많이 포함되어 있는가? (Keyword Density)였습니다.
+
+![altavista 1997년의 모습](/posts/deepDive/seo-chronicle-1-history/altavista-1997.avif)
+![yahoo 1997년의 모습](/posts/deepDive/seo-chronicle-1-history/yahoo-1997.avif)
+
+개발자 관점에서 보자면 마치 DB에서 LIKE '%keyword%' 조건으로 데이터를 조회한 뒤 단순히 매칭된 단어의 개수(Count)가 많은 순서대로 정렬해서 보여주는 로직과 다를 바 없었습니다.
+예를 들어 '자동차'를 검색하면, 자동차에 대한 깊이 있는 칼럼보다 배경색과 같은 흰색 폰트로 '자동차'라는 단어만 5,000번 복사해 넣은 스팸 사이트가 1위에 올랐습니다. 도서관에 갔는데 사서가 책 내용은 보지 않고 "이 책에 '자동차'란 단어가 제일 많이 나오네요"라며 낙서장을 건네주는 꼴이었습니다.
+
+정보는 넘쳐났지만 정작 원하는 정보는 찾을 수 없었던 이 혼돈을 잠재운 건, 스탠포드 기숙사의 대학원생 래리 페이지(Larry Page)와 세르게이 브린(Sergey Brin)이었습니다.
+![Larry Page / Sergey Brin](/posts/deepDive/seo-chronicle-1-history/래리페이지_세르게이브린.webp)
+
+그들은 1996년, 웹페이지의 링크 관계를 분석하는 새로운 검색 엔진 프로젝트를 시작했습니다. 초기 이름은 백럽(BackRub)이었지만, 곧 **구글(Google)** 이라는 이름으로 세상에 알려지게 됩니다.
+그리고 신생 기업이었던 구글이 기존의 거대 검색 엔진들을 제치고 시장을 장악할 수 있었던 결정적인 무기, 그것이 바로 페이지랭크(PageRank)였습니다."
+
+---
+
+## 챕터 2. PageRank의 수학적 원리
+
+래리 페이지와 세르게이 브린은 기존 엔진들의 단순함에 한계를 느꼈습니다. 그들은 학계의 논문 인용 색인(Citation Index)에서 중요한 힌트를 얻습니다.
+> Academic citation literature has been applied to the web, largely by counting citations or backlinks to a given page. ... PageRank extends this idea by not counting links from all pages equally...
+> *"학술 문헌의 인용(Citation) 개념을 웹에 적용했습니다... 페이지랭크는 모든 링크를 동등하게 세지 않음으로써 이 아이디어를 확장했습니다."*
+[The anatomy of a large-scale hypertextual Web search engine(1998)](https://share.google/8L6bl8arI2lENmQaF)
+
+즉, 권위 있는 논문에 많이 인용될수록 좋은 논문이라는 학계의 평가 방식을 웹사이트의 링크 구조에 그대로 적용하기로 한 것입니다.
+이 가설이 현대 검색 엔진의 근간이 된 페이지랭크(PageRank) 알고리즘을 탄생시켰습니다.
+
+### 1. 링크는 투표다 (Link is a Vote)
+기존 엔진들이 페이지 내부(On-page)의 텍스트만 분석할 때, 구글은 페이지 외부(Off-page)의 관계를 분석했습니다. A사이트가 B사이트로 링크를 걸면 구글은 이를 A가 B를 신뢰한다는 투표로 간주했습니다.
+
+### 2. 불평등한 투표권 (Weighted Voting)
+하지만 여기서 민주주의와 다른 결정적인 차이가 발생합니다. 모든 투표가 평등하지 않다는 점입니다.
+
+* 내 친구의 블로그가 나를 링크하는 것 (가중치 1)
+* 백악관 홈페이지(.gov)가 나를 링크하는 것 (가중치 100,000)
+
+구글은 단순히 링크의 개수(Quantity)가 아니라 링크를 건 사이트의 권위(Quality)를 수학적으로 계산했습니다. "권위 있는 사이트가 추천한 사이트는 권위가 있다"는 재귀적(Recursive)인 논리입니다.
+
+### 3. 랜덤 서퍼(Random Surfer) 모델과 댐핑 팩터
+이 논리를 수학적으로 완성한 것이 바로 그 유명한 PageRank 공식입니다.
+
+![](/posts/deepDive/seo-chronicle-1-history/Summation_Formula.svg)
+
+* $PR(A)$: 페이지 A의 페이지랭크 점수
+* $d$ (Damping Factor): 보통 0.85로 설정되는 이 상수는 랜덤 서퍼 모델의 핵심입니다.
+
+![](/posts/deepDive/seo-chronicle-1-history/PageRanks-Example.svg)
+랜덤 서퍼 모델이란 인터넷을 서핑하는 가상의 유저가 무작위로 링크를 클릭하며 돌아다니는 상황을 가정한 것입니다. 유저는 계속 링크를 타고 이동하다가 어느 순간 지루해져서 서핑을 멈추거나 다른 주소를 입력합니다. 그 확률이 바로 $d$(0.85)입니다.
+
+이 알고리즘의 등장으로 스팸 사이트들은 순위권 밖으로 밀려났고 구글은 검색 시장의 왕좌를 차지하게 됩니다.
+
+![구글의 성장과 알타비스타의 몰락](/posts/deepDive/seo-chronicle-1-history/altavista-google.webp)
+
+---
+
+## 챕터 3. 알고리즘의 맹점: 블랙햇(Black Hat) 기법의 등장
+
+페이지랭크의 등장으로 검색 품질은 비약적으로 상승했지만 동시에 이 알고리즘의 맹점을 파고드는 시도들도 당연히 생겨났습니다. 이를 블랙햇(Black Hat)SEO라고 부릅니다.
+
+'블랙햇'이라는 용어는 서부영화에서 유래했습니다. 영화 속에서 주인공이 '흰색 모자(White Hat)'를 썼다면 악당은 항상 '검은색 모자(Black Hat)'를 쓰고 등장했던 것에서 따온 표현입니다. 즉, 검색 엔진이 정한 규칙(가이드라인)을 어기고 부정한 방법으로 순위를 조작하는 기법을 의미합니다.
+![black hat](/posts/deepDive/seo-chronicle-1-history/blackhat.avif)
+
+당시 마케터와 개발자들은 정당한 콘텐츠 경쟁 대신 시스템을 속여 상위 노출을 차지하기 위해 4가지의 대표적인 우회 기법들을 적극적으로 활용했습니다.
+
+### 1. 키워드 스터핑 (Keyword Stuffing)과 은닉
+가장 원초적인 방법입니다. 검색 엔진이 "키워드 밀도"를 본다는 점을 악용해, 문맥과 상관없이 키워드를 무한정 채워 넣는(Stuffing) 것입니다. 하지만 사용자가 보기에 지저분하므로 그들은 CSS를 이용해 텍스트를 숨기는 기술로 진화했습니다.
+
+```css
+/* 블랙햇의 은닉술 예시 */
+.hidden-text {
+  text-indent: -9999px; /* 화면 밖으로 텍스트 밀어내기 */
+  font-size: 0;         /* 글자 크기 0 */
+  color: white;         /* 배경색과 동일하게 */
+  display: none;        /* 아예 숨기기 */
+}
+```
+* **원리:** 구글 봇(Crawler)은 HTML 소스를 읽기 때문에 이 키워드들을 모두 인식하지만 실제 사람의 눈에는 깔끔한 화면만 보입니다.
+
+### 2. 링크 팜 (Link Farm)
+페이지랭크 알고리즘을 무력화하기 위한 방법입니다. 서로 아무런 관련이 없는 수천 개의 웹사이트를 개설하고 서로가 서로를 거미줄처럼 링크해주는 가짜 네트워크를 구축하는 것입니다.
+* **원리:** A 사이트가 B를, B가 C를, C가 다시 A를 링크합니다. 이렇게 하면 실제로는 아무런 가치가 없는 사이트들이지만 서로 '투표(링크)'를 주고받으며 페이지랭크 점수를 인위적으로 부풀릴 수 있습니다.
+
+### 3. 클로킹 (Cloaking)
+기술적으로 가장 고도화된 기법 중 하나입니다. '망토를 두르다(Cloak)'라는 어원처럼, 접속하는 주체에 따라 서로 다른 콘텐츠를 제공(Serving)하는 방식입니다.
+
+* **원리:** 서버는 클라이언트의 접속 요청이 들어오면 `User-Agent`나 IP 주소를 확인합니다. 만약 Googlebot이라면 검색 최적화된 페이지를 응답하고 일반 사용자라면 도박이나 광고 사이트로 리다이렉트합니다. 이는 검색 엔진을 기만하는 행위이므로 적발 시 검색 결과에서 영구히 삭제(De-index)되는 등 플랫폼 차원의 가장 강력한 제재가 가해집니다.
+
+### 4. 도어웨이 페이지 (Doorway Pages)
+오직 검색 결과에 노출되기 위해 만든 가짜 문(Door)입니다.
+* **원리:** '서울 호텔', '도쿄 호텔', '뉴욕 호텔'... 지역명만 바꾼 수백 개의 페이지를 만듭니다. 사용자가 검색해서 들어오면 자동으로 본래 목적인 쇼핑몰로 리다이렉트(Redirect) 시키거나 거대한 링크 하나만 덩그러니 보여줍니다. 정보는 없고 트래픽을 빨아들이기 위한 통로 역할만 하는 페이지입니다.
+
+이 4가지 대표 기법 외에도 자동화 프로그램으로 남의 글을 교묘하게 바꾸는 **아티클 스피닝(Article Spinning)**, 블로그 댓글에 링크를 도배하는 **댓글 스팸(Comment Spam)** 등 수많은 기법들이 난무했습니다.
+
+---
+
+## 챕터 4. 인터넷 낚시글
+
+이러한 블랙햇 기술은 단순히 기계적인 조작에 그치지 않았습니다. 사람들의 호기심을 악용하는 낚시 문화도 함께 발전했습니다. 한 번쯤 겪어봤을거라고 생각합니다.
+
+#### "기승전... 히오스?"와 "립버전의 추억"
+![스타립버전 키워드 낚시](/posts/deepDive/seo-chronicle-1-history/스타립버전.avif)
+
+한국 유저들은 스타크래프트 1.16.1 립버전 다운로드라는 키워드에 수없이 낚였습니다. 파일을 찾으러 들어갔는데, 정작 파일은 없고 "제 블로그로 오세요"라는 텍스트와 성인 광고만 가득했던 경험이 있으실 겁니다. 이는 블랙햇들이 인기 키워드로 트래픽을 유도하기 위해 파놓은 전형적인 함정이었습니다.
+![레스토랑스](/posts/deepDive/seo-chronicle-1-history/히오스.avif)
+
+또는 감동적인 글인 줄 알고 읽었는데 갑자기 화면이 전환되며 시공의 폭풍(히어로즈 오브 더 스톰) 로고가 나오는 낚시 패턴도 유명했습니다.
+
+또한 만화나 애니메이션을 불법으로 찾으려는 이들을 노린 **`zip`, `rar`, `raw`** 키워드 낚시도 성행했습니다. 다운로드 링크를 누르면 파일 대신 악성코드가 반겨주곤 했죠.
+
+---
+
+## 챕터 5. 검색 품질의 재정립: 시스템적 대응과 알고리즘 업데이트
+
+구글은 이런 상황을 해결하기 위해 개별 사이트를 제재하는 방식만으로는 한계가 있음을 인지하고 검색 알고리즘의 평가 기준 자체를 대대적으로 개편하기 시작했습니다.
+이때 단행된 두 번의 업데이트가 바로 현대 SEO의 기틀을 마련한 **판다(Panda)** 와 **펭귄(Penguin)** 업데이트 입니다.
+
+### [Case Study 1] 기술로 속이다: BMW 퇴출 사건 (2006)
+![https://www.pinsentmasons.com/out-law/news/google-removes-bmwde-over-optimisation-tactic](/posts/deepDive/seo-chronicle-1-history/bmw.avif)
+2006년, BMW의 독일 사이트(bmw.de)는 '중고차' 키워드로 상위 노출을 하기 위해 도어웨이 페이지와 클로킹 기술을 사용했습니다.
+구글 봇에게는 중고차라는 단어가 가득한 페이지를 보여주고 사람에게는 화려한 이미지 페이지로 이동시키는 방식이었습니다.
+이를 적발한 구글은 즉각 BMW 홈페이지를 검색 인덱스에서 삭제(De-index) 조치했습니다. 이는 대기업이라도 가이드라인을 위반하면 예외 없이 제재를 받는다는 사실을 보여준 상징적 사건이었습니다.
+
+### [Case Study 2] 돈으로 사다: J.C. Penney 사건 (2011)
+![https://searchengineland.com/new-york-times-exposes-j-c-penney-link-scheme-that-causes-plummeting-rankings-in-google-64529](/posts/deepDive/seo-chronicle-1-history/jcpenny_link.avif)
+BMW가 기술로 속였다면 미국의 거대 백화점 J.C. Penney는 링크 팜을 이용해 알고리즘을 매수하려 했습니다.
+2010년 쇼핑 시즌 그들은 Dresses, Bedding 등 수천 개의 키워드에서 1위를 차지했습니다. 하지만 뉴욕 타임스의 탐사 보도로 그들이 핵 공학 사이트, 카지노 사이트 등 잡동사니 웹사이트에 돈을 주고 링크를 심어둔 사실이 발각되었습니다.
+구글은 즉시 수동 조치를 내렸고 1위였던 J.C. Penney의 순위는 68위로 곤두박질쳤습니다.
+
+### [Algorithm Update] 판다와 펭귄의 등장
+개별 사이트 처벌을 넘어 구글은 알고리즘 자체를 진화시켰습니다.
+
+#### 🐼 판다 업데이트 (Panda Update, 2011)
+판다의 목표는 명확했습니다. 바로 '콘텐츠 팜(Content Farm)'이었습니다.
+당시 eHow 같은 회사들은 프리랜서들을 고용해 검색량은 많지만 질은 낮은 '껍데기 글'을 하루에 수천 개씩 생산하고 있었습니다.
+
+구글은 이를 해결하기 위해 머신러닝을 도입했습니다. 사람이 직접 평가한 데이터를 학습시켜 "무엇이 인간에게 유용한 글인가?"를 기계가 스스로 판단하게 만든 것입니다.
+
+* **주요 단속 대상:** 내용이 부실한 글, 글보다 광고가 더 많은 페이지, 복제된 콘텐츠.
+* **결과:** 구글 공식 발표에 따르면 전체 검색 결과의 약 **11.8%** 가 변동되는 큰 변화가 있었습니다. 콘텐츠 팜들의 트래픽은 급감했고 '양'보다 '질'이 중요하다는 인식이 자리 잡기 시작했습니다.
+출처: [Google Official Blog (2011)](https://googleblog.blogspot.com/2011/02/finding-more-high-quality-sites-in.html)
+
+#### 🐧 펭귄 업데이트 (Penguin Update, 2012)
+판다가 '글의 내용'을 봤다면, 펭귄은 링크의 진정성을 파고들었습니다.
+펭귄 알고리즘은 링크를 걸 때 사용하는 앵커 텍스트(Anchor Text)의 패턴을 분석했습니다.
+
+자연스러운 추천이라면 "이 블로그", "출처", "여기" 등 다양한 단어가 사용되어야 합니다. 하지만 순위 조작을 노린 사이트들은 ["최저가 대출", "최저가 대출"...] 처럼 상업적 키워드만 반복하는 부자연스러운 패턴을 보였습니다. 펭귄은 이를 기계적인 스팸으로 판정했습니다.
+
+* **주요 단속 대상:** 유료 링크 구매, 링크 팜, 부자연스러운 앵커 텍스트.
+* **결과:** 전체 영어 검색어의 약 **3.1%** 에 영향을 미쳤습니다. 수치상으로는 작아 보이지만 그동안 블랙햇으로 순위를 유지하던 사이트들이 대거 검색 결과에서 사라지며 SEO 업계에 큰 충격을 주었습니다.
+출처: [Google Search Central Blog (2012)](https://developers.google.com/search/blog/2012/04/another-step-to-reward-high-quality)
+
+![blackhat out!](/posts/deepDive/seo-chronicle-1-history/panda_penguin.avif)
+
+참고로 판다는 동물 판다가 아니라 구글 엔지니어 나브니트 판다(Navneet Panda)의 이름에서 따왔다고 합니다. [Google_Panda wiki](https://en.wikipedia.org/wiki/Google_Panda)
+그 뒤로도 Google Hummingbird, Google Pigeon과 같이 구글 검색엔진은 동물 이름으로 명명되고 있습니다. <small>초창기 안드로이드처럼 구글은 시리즈로 이름을 만드는 걸 좋아하나봅니다</small>
+
+---
+
+## 마치며
+
+지금까지 1990년대의 혼란의 시기부터 판다, 펭귄 업데이트에 이르기까지 20여 년간 이어진 검색 알고리즘의 진화 과정을 살펴보았습니다.
+
+초기의 검색 엔진은 단순히 키워드의 빈도수에 의존했지만 점차 링크의 신뢰도와 콘텐츠의 품질을 평가하는 방향으로 고도화되었습니다.
+과거에는 알고리즘의 허점을 파고드는 '블랙햇' 기법이 통했을지 모르지만 머신러닝과 AI가 도입된 지금의 환경에서는 더 이상 단순한 기술적 우회로는 상위 노출을 보장받을 수 없게 되었습니다.
+
+이 시기를 거치며 SEO의 중심축은 '검색 순위' 그 자체에서 웹사이트가 제공하는 사용자 경험(User Experience)과 기술적 완성도로 완전히 이동했습니다. 이것이 바로 현대의 SEO가 마케팅 영역을 넘어 프론트엔드 개발의 영역과 밀접해진 이유라고 생각합니다.
+다음 2부에서는 이러한 흐름 속에서 개발자가 구체적으로 어떤 역할을 했었는지, Core Web Vitals와 구조화된 데이터를 중심으로 이야기를 이어가겠습니다.
+
+---
+
+#### 참고 문헌 및 추천 자료
+* [The anatomy of a large-scale hypertextual Web search engine(1998)](https://share.google/8L6bl8arI2lENmQaF)
+* [Google removes BMW.de over optimisation tactic](https://www.pinsentmasons.com/out-law/news/google-removes-bmwde-over-optimisation-tactic)
+* [PageRank wikipedia](https://en.wikipedia.org/wiki/PageRank)
+* [New York Times Exposes J.C. Penney Link Scheme That Causes Plummeting Rankings in Google (2011)](https://searchengineland.com/new-york-times-exposes-j-c-penney-link-scheme-that-causes-plummeting-rankings-in-google-64529)
+* [Google Search Central: Spam Policies](https://developers.google.com/search/docs/essentials/spam-policies)
+* [Finding more high-quality sites in search](https://googleblog.blogspot.com/2011/02/finding-more-high-quality-sites-in.html)
+* [Another step to reward high-quality sites](https://developers.google.com/search/blog/2012/04/another-step-to-reward-high-quality)
