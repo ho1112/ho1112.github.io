@@ -1,0 +1,144 @@
+---
+title: '🚀 2025-11 W5 #35'
+desc: Webパフォーマンスの不平等格差、CSS Subgridレイアウト、VercelのReact Native導入 | 2025年11月第5週目 週間技術ニュースレター
+date: 2025-11-29
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はウェブパフォーマンスの「不平等格差（Inequality Gap）」に関する警告とともに、これを技術標準と測定体系で克服しようとする動きが目立ちます。**Alex Russell**は肥大化するJSバンドルが低スペックデバイスのユーザーに及ぼす悪影響を指摘し、実ユーザー中心のパフォーマンス最適化を強調しました。CSS界隈では**Subgrid**とスタイルクエリが主要ブラウザに定着し、レイアウト実装の複雑さを劇的に減らしています。また**React**エコシステムは、Vercelのネイティブアプリ拡張の成功事例とフロントエンドにおける役割論に対する省察が共存しており、UX分野ではデザインの価値を客観的指標（KPI）で証明しようとする試みが続いています。
+
+## 1. 🔍 深掘り
+
+- **[The Performance Inequality Gap in 2026](https://javascriptweekly.com/link/177745/web)** (出典: *JavaScript Weekly #763*)
+  ![The Performance Inequality Gap in 2026](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ubkmmm6hco3bmr2of2zs.jpg)
+  - **背景**: ブラウザとウェブ標準の専門家であるAlex Russellが、クライアントサイドのウェブパフォーマンスの現状を診断します。
+  - **主要機能**: ユーザーが実際に使用するデバイスとネットワーク帯域幅を考慮すべきであり、継続的に増加するJavaScriptバンドルサイズが招くパフォーマンス格差について警告しています。
+  - **実務への適用**: 2026年を見据え、現在のウェブ開発がどのパフォーマンス指標を目標にすべきかについて、データに基づいた洞察を提供します。
+  - **注意事項**: 高スペックな開発機器基準ではなく、実際のユーザー環境（低スペックデバイス、遅いネットワーク）を基準にパフォーマンスを測定する必要があります。
+
+- **[Brand New Layouts Achievable with CSS Subgrid](https://frontendfoc.us/link/177573/web)** (出典: *Frontend Focus #719*)
+  ![Brand New Layouts Achievable with CSS Subgrid](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1764160400/wto62pofjumy4mkbxdpx.png)
+  - **背景**: Josh W. Comeauが、すべての主要ブラウザでサポートされ始めたCSS Subgridが開いた新しいレイアウトの可能性を探求します。
+  - **主要機能**: 親グリッドのトラック定義を子要素がそのまま継承して使用できるようにする機能で、ネストされた構造でも一貫したグリッド配置を可能にします。
+  - **コード例**:
+    ```css
+    .card {
+      grid-row: span 3;
+      display: grid;
+      grid-template-rows: subgrid;
+    }
+    ```
+  - **実務への適用**: カードUI内部のコンテンツの高さを兄弟要素と完璧に整列させたり、複雑なダッシュボードレイアウトを構成する際に非常に有用です。
+
+---
+#### 見逃せないコンテンツ
+- **[Practical Guide To Measuring UX](https://uxplanet.org/measuring-ux-your-first-step-towards-objective-evaluation-a408b312777b)** (出典: *Smashing Newsletter #535*)
+  + **要約**: UMUX、SEQのような用語に怖気づくことなく、デザインを客観的に評価するための第一歩を助けるガイドです。統計の専門家でなくても始められるUX測定方法を提示します。
+- **[Migrating 6000 React Tests Using AI Agents and ASTs](https://react.statuscode.com/link/177613/web)** (出典: *React Status #453*)
+  + **要約**: AIエージェントとAST（抽象構文木）を活用して、たった一週間で6000個のReactテストを移行した事例です。退屈なメンテナンス作業においてAIがもたらす生産性向上を示しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[Driver.js v1.4: Tours, Highlights, Contextual Help, and More](https://frontendfoc.us/link/177593/web)** (出典: *Frontend Focus #719*)
+  ![Driver.js v1.4](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xxzkh2swioe2x73n1k1m.jpg)
+  - **概要**: ウェブページ内でユーザーにガイドを提供したり、特定の要素を強調する際に使用するバニラJavaScriptライブラリです。
+  - **使用法**:
+    ```javascript
+    const driver = window.driver.js.driver();
+    driver.highlight({
+      element: "#some-element",
+      popover: {
+        title: "Title",
+        description: "Description"
+      }
+    });
+    ```
+  - **実践チップ**: オンボーディングツアーだけでなく、状況に応じたヘルプシステムを構築するのにも効果的であり、フレームワークに依存せず使用できます。
+
+- **[Ant Design 6.0: The React UI Design Language and UI Library](https://react.statuscode.com/link/177621/web)** (出典: *React Status #453*)
+  ![Ant Design 6.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jhzeot8ktdpqyj7n1tgs.jpg)
+  - **概要**: エンタープライズ級のReact UIライブラリであるAnt Designのメジャーアップデートバージョンです。
+  - **特徴**: React 19との互換性に重点を置いており、パフォーマンスの最適化が行われました。特にv5ユーザーは、別途のコード修正ツール（codemods）なしでもスムーズに移行できる点が大きなメリットです。
+  - **実践チップ**: 企業向けアプリケーションや管理者ダッシュボード構築時に、安定的かつ洗練されたUIを素早く構成できる選択肢です。
+
+---
+#### 見逃せないコンテンツ
+- **[React Lite YouTube Embed v3.2.0](https://react.statuscode.com/link/177631/web)** (出典: *React Status #453*)
+  + **要約**: YouTube映像を埋め込む際の初期ロード速度を改善し、よりすっきりとしたUIを提供するReactコンポーネントです。
+- **[Polypane 27: Projects, A Snippets Panel and Chromium 142](https://frontendfoc.us/link/177596/web)** (出典: *Frontend Focus #719*)
+  + **要約**: 開発者専用ブラウザであるPolypaneの最新バージョンで、プロジェクト中心のワークフロー、新しいスニペットパネル、DOM編集機能が改善されました。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[Range Syntax for Style Queries](https://frontendfoc.us/link/177576/web)** (出典: *Frontend Focus #719*)
+  - **主要なインサイト**: メディアクエリやコンテナクエリのように、スタイルクエリでも値の範囲を指定してレスポンシブスタイルを適用する方法が改善されています。事前に定義された状態だけでなく、特定の範囲に応じてスタイルを制御できる可能性を示しています。
+
+- **[How Vercel Built Its First Mobile App with React Native](https://react.statuscode.com/link/177609/web)** (出典: *React Status #453*)
+  ![Vercel Mobile App](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xtbnltgnrlg6wua6mhjt.jpg)
+  - **主要なインサイト**: Vercelが自社のAIベースアプリ開発ツールであるv0をモバイルへ拡張するために、React NativeとExpoを活用した過程を詳細に共有しています。スムーズなUXと反応性を確保するために解決しなければならなかった技術的な問題とその解決策を扱っています。
+
+---
+#### 見逃せないコンテンツ
+- **[Why Use React? (On the Frontend)](https://react.statuscode.com/link/177611/web)** (出典: *React Status #453*)
+  + **要約**: Reactのサーバーサイド機能は素晴らしいですが、純粋なフロントエンド領域での役割について疑問を投げかけ、Preactのような代替案がより適している可能性を示唆する記事です。
+- **[Keyframes Tokens: Standardizing Animation Across Projects](https://www.smashingmagazine.com/2025/11/keyframes-tokens-standardizing-animation-across-projects/?utm_source=CSS-Weekly&utm_campaign=Issue-629&utm_medium=web)** (出典: *Issue #629 – CSS Weekly*)
+  + **要約**: 色やタイポグラフィのように、アニメーションのキーフレームもトークン化し、プロジェクト全般で標準化して一貫性を持って管理する方法を提案しています。
+---
+
+## 4. ✨ アイデア
+
+- **[Hypnotic Animation Using sibling-Index() + corner-shape](https://codepen.io/cbolson/pen/PwNQWNa?utm_source=CSS-Weekly&utm_campaign=Issue-629&utm_medium=web)** (出典: *Issue #629 – CSS Weekly*)
+  ![Hypnotic Animation](https://css-weekly.com/wp-content/uploads/2025/11/hypnotic-animation-using-sibling-index-corner-shape.jpg)
+  - **特徴**: `sibling-index()`と`corner-shape`を組み合わせて、CSSだけで実装した催眠的なアニメーション効果です。最新のCSS機能が視覚的表現の限界をどのように拡張しているかを示す良い事例です。
+
+- **[Fran Sans Essay](https://frontendfoc.us/link/177603/web)** (出典: *Frontend Focus #719*)
+  ![Fran Sans Essay](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1764157129/brr2h2llbdwhc3lajwuq.png)
+  - **特徴**: サンフランシスコ・ミュニ（Muni）のLCDディスプレイからインスピレーションを受けて制作された新しいディスプレイフォントのデザインプロセスと、ビハインドストーリーを盛り込んだエッセイです。
+
+## 5. ⚡️ ミニノート
+
+- **[The npm ecosystem is currently undergoing a new wave of 'Shai Hulud' attacks](https://react.statuscode.com/link/177641/web)** (出典: *React Status #453*)
+  + **要約**: npmエコシステムで、悪意のあるパッケージがトークンを奪取し他のパッケージを感染させる新しい形態のワーム攻撃が発生しており、注意が必要です。
+- **[WebGPU is now supported across major browsers](https://frontendfoc.us/link/177577/web)** (出典: *Frontend Focus #719*)
+  + **要約**: 高性能な3DグラフィックスとGPU演算のためのWebGPU APIが、主要ブラウザでサポートされるようになりました。
+- **[Wikipedia: Unifying Mobile and Desktop Domains](https://frontendfoc.us/link/177575/web)** (出典: *Frontend Focus #719*)
+  + **要約**: ウィキペディアがモバイルとデスクトップのドメインを統合する過程で得たパフォーマンス向上（モバイル応答速度20%改善）とSEOの利点を共有しました。
+- **[Google unveiled Angular v21](https://react.statuscode.com/link/177644/web)** (出典: *React Status #453*)
+  + **要約**: Googleが人気JavaScriptフレームワークの最新バージョンであるAngular v21を公開しました。
+
+## 6. 🎉 リリース
+
+- **[Prettier 3.7](https://javascriptweekly.com/link/177805/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: 広く使用されているコードフォーマッターの最新アップデートです。
+- **[pnpm 10.24](https://javascriptweekly.com/link/177748/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: 適応型ネットワーク同時実行機能により、速度がさらに向上しました。
+- **[Bun 1.3.3](https://javascriptweekly.com/link/177749/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: `CompressionStream`、`DecompressionStream`のサポート追加およびSQLite 3.51.0へのアップデートが含まれました。
+- **[Playwright 1.57](https://javascriptweekly.com/link/177808/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: HTMLレポートにテスト速度を確認できる「speedboard」タブが追加され、Chromiumの代わりに「Chrome for Testing」を使用します。
+- **[Next.js v16.0.5](https://javascriptweekly.com/link/177753/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: Vercelの人気Reactフレームワークのマイナーアップデートです。
+- **[React Suite 6.0](https://react.statuscode.com/link/177623/web)** (出典: *React Status #453*)
+  + **アップデート**: エンタープライズ級Reactコンポーネントライブラリのメジャーバージョンアップデートです。
+- **[Cedar v1](https://react.statuscode.com/link/177626/web)** (出典: *React Status #453*)
+  + **アップデート**: RedwoodJSから分離されたフルスタックReactフレームワークの最初の安定版です。
+- **[React Virtuoso 4.15.0](https://react.statuscode.com/link/177639/web)** (出典: *React Status #453*)
+  + **アップデート**: 強力な仮想リストコンポーネントライブラリのアップデートです。
+- **[Storybook 10.1](https://javascriptweekly.com/link/177752/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: UIコンポーネント開発ツールの最新アップデートです。
+- **[Heat.js 4.5](https://javascriptweekly.com/link/177775/web)** (出典: *JavaScript Weekly #763*)
+  + **アップデート**: GitHubのコントリビューショングラフと類似したヒートマップ可視化ライブラリです。
+
+## ✍️ おわりに
+
+今週はウェブエコシステムの成熟度がより一層深まる様子を確認できました。CSS Subgridが主要ブラウザに定着しレイアウトの制約がなくなりつつあり、パフォーマンス最適化の議論は単純なロード速度を超え、ユーザーの実際の環境格差（Inequality Gap）を縮める方向へと進んでいます。また、ReactエコシステムはVercelのモバイルアプリ事例やAnt Design 6.0のような大きなリリースを通じて依然として強力な立地を見せていますが、同時に「フロントエンドにおいてReactは果たして最善なのか？」という自浄的な問いも共に投げかけています。ツールはより強力になっていますが、これを適材適所に使用する開発者の洞察力が、いつにも増して重要な時点です。
+
+#### 出典
+- [JavaScript Weekly #763](https://javascriptweekly.com/issues/763)
+- [Smashing Newsletter #535](https://mailchi.mp/smashingmagazine/535-measure-ux-and-design-kpis)
+- [Frontend Focus #719](https://frontendfoc.us/issues/719)
+- [React Status #453](https://react.statuscode.com/issues/453)
+- [CSS Weekly #629](hhttps://css-weekly.com/issue-629)
