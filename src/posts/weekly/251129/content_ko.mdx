@@ -1,0 +1,144 @@
+---
+title: '🚀 2025-11 W5 #35'
+desc: 웹 성능 불평등 격차, CSS Subgrid 레이아웃, Vercel의 React Native 도입| 2025년 11월 5주차 주간 기술 뉴스레터
+date: 2025-11-29
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 웹 성능의 '불평등 격차(Inequality Gap)'에 대한 경고와 함께, 이를 기술 표준과 측정 체계로 극복하려는 움직임이 돋보입니다. **Alex Russell**은 비대해지는 JS 번들이 저사양 기기 사용자에게 미치는 악영향을 지적하며 실사용자 중심의 성능 최적화를 강조했고, CSS 진영에서는 **Subgrid**와 스타일 쿼리가 주요 브라우저에 안착하며 레이아웃 구현의 복잡성을 획기적으로 줄여주고 있습니다. 또한 **React** 생태계는 Vercel의 네이티브 앱 확장 성공 사례와 프론트엔드에서의 역할론에 대한 성찰이 공존하며, UX 분야에서는 디자인의 가치를 객관적 지표(KPI)로 증명하려는 시도가 이어지고 있습니다.
+
+## 1. 🔍 심층 분석
+
+- **[The Performance Inequality Gap in 2026](https://javascriptweekly.com/link/177745/web)** (출처: *JavaScript Weekly #763*)
+  ![The Performance Inequality Gap in 2026](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ubkmmm6hco3bmr2of2zs.jpg)
+  - **배경**: 브라우저와 웹 표준 전문가인 Alex Russell이 클라이언트 사이드 웹 성능의 현주소를 진단합니다.
+  - **핵심 기능**: 사용자가 실제로 사용하는 기기와 네트워크 대역폭을 고려해야 하며, 지속적으로 증가하는 자바스크립트 번들 크기가 초래하는 성능 격차에 대해 경고합니다.
+  - **실무 적용**: 2026년을 바라보며 현재의 웹 개발이 어떤 성능 지표를 목표로 해야 하는지에 대한 데이터 기반의 통찰을 제공합니다.
+  - **주의사항**: 고사양 개발 장비 기준이 아닌, 실제 사용자 환경(저사양 기기, 느린 네트워크)을 기준으로 성능을 측정해야 합니다.
+
+- **[Brand New Layouts Achievable with CSS Subgrid](https://frontendfoc.us/link/177573/web)** (출처: *Frontend Focus #719*)
+  ![Brand New Layouts Achievable with CSS Subgrid](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1764160400/wto62pofjumy4mkbxdpx.png)
+  - **배경**: Josh W. Comeau가 모든 주요 브라우저에서 지원되기 시작한 CSS Subgrid가 열어준 새로운 레이아웃 가능성을 탐구합니다.
+  - **핵심 기능**: 부모 그리드의 트랙 정의를 자식 요소가 그대로 상속받아 사용할 수 있게 해주는 기능으로, 중첩된 구조에서도 일관된 그리드 배치를 가능하게 합니다.
+  - **코드 예제**:
+    ```css
+    .card {
+      grid-row: span 3;
+      display: grid;
+      grid-template-rows: subgrid;
+    }
+    ```
+  - **실무 적용**: 카드 UI 내부의 콘텐츠 높이를 형제 요소들과 완벽하게 정렬하거나, 복잡한 대시보드 레이아웃을 구성할 때 매우 유용합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Practical Guide To Measuring UX](https://uxplanet.org/measuring-ux-your-first-step-towards-objective-evaluation-a408b312777b)** (출처: *Smashing Newsletter #535*)
+  + **요약**: UMUX, SEQ 같은 용어에 겁먹지 않고 디자인을 객관적으로 평가하기 위한 첫걸음을 돕는 가이드입니다. 통계 전문가가 아니더라도 시작할 수 있는 UX 측정 방법을 제시합니다.
+- **[Migrating 6000 React Tests Using AI Agents and ASTs](https://react.statuscode.com/link/177613/web)** (출처: *React Status #453*)
+  + **요약**: AI 에이전트와 AST(추상 구문 트리)를 활용해 단 일주일 만에 6000개의 리액트 테스트를 마이그레이션한 사례입니다. 지루한 유지보수 작업에서 AI가 가져다주는 생산성 향상을 보여줍니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[Driver.js v1.4: Tours, Highlights, Contextual Help, and More](https://frontendfoc.us/link/177593/web)** (출처: *Frontend Focus #719*)
+  ![Driver.js v1.4](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xxzkh2swioe2x73n1k1m.jpg)
+  - **개요**: 웹 페이지 내에서 사용자에게 가이드를 제공하거나 특정 요소를 강조할 때 사용하는 바닐라 자바스크립트 라이브러리입니다.
+  - **사용법**:
+    ```javascript
+    const driver = window.driver.js.driver();
+    driver.highlight({
+      element: "#some-element",
+      popover: {
+        title: "Title",
+        description: "Description"
+      }
+    });
+    ```
+  - **실전 팁**: 온보딩 투어뿐만 아니라 상황에 맞는 도움말 시스템을 구축하는 데에도 효과적이며, 프레임워크에 구애받지 않고 사용할 수 있습니다.
+
+- **[Ant Design 6.0: The React UI Design Language and UI Library](https://react.statuscode.com/link/177621/web)** (출처: *React Status #453*)
+  ![Ant Design 6.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jhzeot8ktdpqyj7n1tgs.jpg)
+  - **개요**: 엔터프라이즈급 리액트 UI 라이브러리인 Ant Design의 메이저 업데이트 버전입니다.
+  - **특징**: React 19와의 호환성에 중점을 두었으며, 성능 최적화가 이루어졌습니다. 특히 v5 사용자들은 별도의 코드 수정 도구(codemods) 없이도 매끄럽게 마이그레이션할 수 있다는 점이 큰 장점입니다.
+  - **실전 팁**: 기업용 애플리케이션이나 관리자 대시보드 구축 시 안정적이고 세련된 UI를 빠르게 구성할 수 있는 선택지입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[React Lite YouTube Embed v3.2.0](https://react.statuscode.com/link/177631/web)** (출처: *React Status #453*)
+  + **요약**: 유튜브 영상을 임베드할 때 초기 로딩 속도를 개선하고 더 깔끔한 UI를 제공하는 리액트 컴포넌트입니다.
+- **[Polypane 27: Projects, A Snippets Panel and Chromium 142](https://frontendfoc.us/link/177596/web)** (출처: *Frontend Focus #719*)
+  + **요약**: 개발자 전용 브라우저인 Polypane의 최신 버전으로, 프로젝트 중심의 워크플로우, 새로운 스니펫 패널, DOM 편집 기능이 개선되었습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[Range Syntax for Style Queries](https://frontendfoc.us/link/177576/web)** (출처: *Frontend Focus #719*)
+  - **핵심 인사이트**: 미디어 쿼리나 컨테이너 쿼리처럼 스타일 쿼리에서도 값의 범위를 지정하여 반응형 스타일을 적용하는 방법이 개선되고 있습니다. 이제 미리 정의된 상태뿐만 아니라 특정 범위에 따라 스타일을 제어할 수 있는 가능성을 보여줍니다.
+
+- **[How Vercel Built Its First Mobile App with React Native](https://react.statuscode.com/link/177609/web)** (출처: *React Status #453*)
+  ![Vercel Mobile App](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xtbnltgnrlg6wua6mhjt.jpg)
+  - **핵심 인사이트**: Vercel이 자사의 AI 기반 앱 개발 도구인 v0를 모바일로 확장하기 위해 React Native와 Expo를 활용한 과정을 상세히 공유합니다. 부드러운 UX와 반응성을 확보하기 위해 해결해야 했던 기술적 문제들과 그 해결책을 다룹니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Why Use React? (On the Frontend)](https://react.statuscode.com/link/177611/web)** (출처: *React Status #453*)
+  + **요약**: React의 서버 사이드 기능은 훌륭하지만, 순수 프론트엔드 영역에서의 역할에 대해 의문을 제기하며 Preact와 같은 대안이 더 적합할 수 있음을 시사하는 글입니다.
+- **[Keyframes Tokens: Standardizing Animation Across Projects](https://www.smashingmagazine.com/2025/11/keyframes-tokens-standardizing-animation-across-projects/?utm_source=CSS-Weekly&utm_campaign=Issue-629&utm_medium=web)** (출처: *Issue #629 – CSS Weekly*)
+  + **요약**: 색상이나 타이포그래피처럼 애니메이션 키프레임도 토큰화하여 프로젝트 전반에서 표준화하고 일관성 있게 관리하는 방법을 제안합니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[Hypnotic Animation Using sibling-Index() + corner-shape](https://codepen.io/cbolson/pen/PwNQWNa?utm_source=CSS-Weekly&utm_campaign=Issue-629&utm_medium=web)** (출처: *Issue #629 – CSS Weekly*)
+  ![Hypnotic Animation](https://css-weekly.com/wp-content/uploads/2025/11/hypnotic-animation-using-sibling-index-corner-shape.jpg)
+  - **특징**: `sibling-index()`와 `corner-shape`를 결합하여 CSS만으로 구현한 최면적인 애니메이션 효과입니다. 최신 CSS 기능이 시각적 표현의 한계를 어떻게 확장하는지 보여주는 좋은 사례입니다.
+
+- **[Fran Sans Essay](https://frontendfoc.us/link/177603/web)** (출처: *Frontend Focus #719*)
+  ![Fran Sans Essay](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1764157129/brr2h2llbdwhc3lajwuq.png)
+  - **특징**: 샌프란시스코 뮤니(Muni)의 LCD 디스플레이에서 영감을 받아 제작된 새로운 디스플레이 폰트의 디자인 과정과 비하인드 스토리를 담은 에세이입니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **[The npm ecosystem is currently undergoing a new wave of 'Shai Hulud' attacks](https://react.statuscode.com/link/177641/web)** (출처: *React Status #453*)
+  + **요약**: npm 생태계에서 악성 패키지가 토큰을 탈취하고 다른 패키지를 감염시키는 새로운 형태의 웜 공격이 발생하고 있어 주의가 필요합니다.
+- **[WebGPU is now supported across major browsers](https://frontendfoc.us/link/177577/web)** (출처: *Frontend Focus #719*)
+  + **요약**: 고성능 3D 그래픽과 GPU 연산을 위한 WebGPU API가 이제 주요 브라우저에서 지원됩니다.
+- **[Wikipedia: Unifying Mobile and Desktop Domains](https://frontendfoc.us/link/177575/web)** (출처: *Frontend Focus #719*)
+  + **요약**: 위키백과가 모바일과 데스크톱 도메인을 통합하는 과정에서 얻은 성능 향상(모바일 응답 속도 20% 개선)과 SEO 이점을 공유했습니다.
+- **[Google unveiled Angular v21](https://react.statuscode.com/link/177644/web)** (출처: *React Status #453*)
+  + **요약**: 구글이 인기 자바스크립트 프레임워크의 최신 버전인 Angular v21을 공개했습니다.
+
+## 6. 🎉 릴리스
+
+- **[Prettier 3.7](https://javascriptweekly.com/link/177805/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: 널리 사용되는 코드 포매터의 최신 업데이트입니다.
+- **[pnpm 10.24](https://javascriptweekly.com/link/177748/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: 적응형 네트워크 동시성 기능을 통해 속도가 더욱 향상되었습니다.
+- **[Bun 1.3.3](https://javascriptweekly.com/link/177749/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: `CompressionStream`, `DecompressionStream` 지원 추가 및 SQLite 3.51.0 업데이트가 포함되었습니다.
+- **[Playwright 1.57](https://javascriptweekly.com/link/177808/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: HTML 리포트에 테스트 속도를 확인할 수 있는 'speedboard' 탭이 추가되었으며, Chromium 대신 'Chrome for Testing'을 사용합니다.
+- **[Next.js v16.0.5](https://javascriptweekly.com/link/177753/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: Vercel의 인기 있는 리액트 프레임워크 마이너 업데이트입니다.
+- **[React Suite 6.0](https://react.statuscode.com/link/177623/web)** (출처: *React Status #453*)
+  + **업데이트**: 엔터프라이즈급 리액트 컴포넌트 라이브러리의 메이저 버전 업데이트입니다.
+- **[Cedar v1](https://react.statuscode.com/link/177626/web)** (출처: *React Status #453*)
+  + **업데이트**: RedwoodJS에서 분리된 풀스택 리액트 프레임워크의 첫 번째 안정 버전입니다.
+- **[React Virtuoso 4.15.0](https://react.statuscode.com/link/177639/web)** (출처: *React Status #453*)
+  + **업데이트**: 강력한 가상 리스트 컴포넌트 라이브러리 업데이트입니다.
+- **[Storybook 10.1](https://javascriptweekly.com/link/177752/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: UI 컴포넌트 개발 도구의 최신 업데이트입니다.
+- **[Heat.js 4.5](https://javascriptweekly.com/link/177775/web)** (출처: *JavaScript Weekly #763*)
+  + **업데이트**: 깃허브 기여 그래프와 유사한 히트맵 시각화 라이브러리입니다.
+
+## ✍️ 마치며
+
+이번 주는 웹 생태계의 성숙도가 한층 깊어지는 모습을 확인할 수 있었습니다. CSS Subgrid가 주요 브라우저에 안착하며 레이아웃의 제약이 사라지고 있고, 성능 최적화 논의는 단순한 로딩 속도를 넘어 사용자의 실제 환경 격차(Inequality Gap)를 줄이는 방향으로 나아가고 있습니다. 또한, React 생태계는 Vercel의 모바일 앱 사례와 Ant Design 6.0 같은 굵직한 릴리스를 통해 여전히 강력한 입지를 보여주지만, 동시에 "프론트엔드에서 React가 과연 최선인가?"라는 자정적인 질문도 함께 던지고 있습니다. 도구는 더욱 강력해지고 있지만, 이를 적재적소에 사용하는 개발자의 통찰력이 그 어느 때보다 중요한 시점입니다.
+
+#### 출처
+- [JavaScript Weekly #763](https://javascriptweekly.com/issues/763)
+- [Smashing Newsletter #535](https://mailchi.mp/smashingmagazine/535-measure-ux-and-design-kpis)
+- [Frontend Focus #719](https://frontendfoc.us/issues/719)
+- [React Status #453](https://react.statuscode.com/issues/453)
+- [CSS Weekly #629](hhttps://css-weekly.com/issue-629)
