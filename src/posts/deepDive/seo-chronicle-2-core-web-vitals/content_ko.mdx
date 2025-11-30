@@ -96,26 +96,52 @@ Core Web Vitals 3대장에는 포함되지 않지만 프론트엔드 개발자�
 
 ---
 
-## 챕터 3. [Architecture] 렌더링과 인덱싱: 봇을 위한 설계
+## 챕터 3. [Architecture] 프레임워크와 아키텍처: Next.js를 활용한 기술적 대응
 
-성능 최적화가 사용자를 위한 것이라면 렌더링과 인덱싱 최적화는 우리 사이트를 방문하는 검색 봇(Bot)을 위한 배려입니다.
+성능 최적화(챕터 2)가 사용자의 쾌적한 경험을 위한 것이라면 렌더링 전략과 메타데이터 관리는 우리 사이트를 분석하러 온 검색 봇(Bot)을 위한 배려입니다.
+과거에는 이 두 가지를 모두 잡기 위해 많은 공수가 필요했지만 모던 웹 프레임워크인 Next.js를 활용하면 봇 친화적인 아키텍처를 효율적으로 구축할 수 있습니다.
 
-### 1. 렌더링 전략의 다변화 (Next.js 활용)
+### 1. 렌더링 전략의 다변화 (SSR/SSG)
 과거의 SPA(Single Page Application)에서 주로 사용하던 CSR(Client Side Rendering) 방식은 초기 로딩 시 빈 화면만 보여주기 때문에 검색 봇이 콘텐츠를 수집하는 데 치명적인 한계가 있었습니다.
-
 이 문제를 해결하기 위해 **Next.js** 와 같은 프레임워크를 도입하여 페이지의 목적에 맞는 렌더링 전략을 수립하는 것이 일반적입니다.
+
 * **SSR (Server Side Rendering):** 검색 결과 페이지나 마이페이지 등 실시간 데이터가 중요한 페이지는 요청 시 서버에서 HTML을 완성해 내려주어 봇이 즉시 유의미한 텍스트를 읽을 수 있게 합니다.
 * **SSG (Static Site Generation):** 회사 소개, 약관 등 변경이 적은 페이지는 빌드 타임에 미리 HTML을 생성해 두어 최고의 로딩 속도를 확보합니다.
 * **ISR (Incremental Static Regeneration):** 블로그나 상품 상세처럼 적당한 업데이트가 필요한 경우 정적 페이지의 빠른 속도를 유지하면서도 설정한 주기마다 백그라운드에서 최신 데이터를 반영하는 ISR이 매우 효과적입니다.
 
+### 2. 내장 컴포넌트를 통한 성능 자동화
+LCP와 CLS 같은 Core Web Vitals 지표를 일일이 코드로 잡는 것은 매우 번거로운 작업입니다. Next.js는 이를 위한 전용 컴포넌트를 제공하여 최적화를 자동화합니다.
+
+* **이미지 최적화 (`next/image`):** 기존 `<img>` 태그 대신 사용합니다. 브라우저 환경에 맞춰 webp/avif 포맷으로 자동 변환하고 디바이스 크기에 맞게 리사이징하여 LCP 성능을 극대화합니다. 또한 `width/height`를 기반으로 공간을 미리 확보하여 CLS를 방지합니다.
+* **폰트 최적화 (`next/font`):** 구글 폰트 등을 빌드 타임에 다운로드하여 호스팅합니다. 폰트 로딩 시 텍스트가 깜빡이거나 흔들리는 현상(FOUT/FOIT)을 `size-adjust` 속성 자동 조절로 해결하여 시각적 안정성을 확보합니다.
+
+### 3. 메타데이터의 프로그래머틱 관리
+수천 개의 페이지에 각각 다른 메타 태그(`title`, `description`, `og:image`)를 달아주는 것은 수동으로 관리하기 어렵습니다.
+Next.js의 Metadata API를 활용하면 페이지의 데이터를 기반으로 SEO 태그를 동적으로 생성할 수 있습니다.
+
+```javascript
+// app/hotels/[id]/page.js 예시
+export async function generateMetadata({ params }) {
+  const hotel = await getHotelInfo(params.id);
+
+  return {
+    title: `${hotel.name} - 오사카 추천 호텔`,
+    description: hotel.summary,
+    openGraph: {
+      images: [hotel.thumbnailUrl],
+    },
+  }
+}
+```
+
 ### 2. 크롤링 예산(Crawl Budget)과 인덱싱
-서비스 규모가 커질수록 봇이 하루에 긁어갈 수 있는 페이지의 수, 즉 크롤링 예산이 부족해지는 문제가 발생합니다. 봇이 중요한 페이지를 놓치지 않고 효율적으로 탐색하도록 유도해야 합니다.
+마지막으로, 봇이 사이트를 효율적으로 탐색하도록 길을 터주는 작업입니다. 서비스 규모가 커질수록 봇이 하루에 긁어갈 수 있는 페이지의 수, 즉 크롤링 예산이 부족해지는 문제가 발생합니다. 봇이 중요한 페이지를 놓치지 않고 효율적으로 탐색하도록 유도해야 합니다.
 
 * **HTML Sitemap 구축:** `sitemap.xml` 파일은 기본입니다. 여기에 더해 봇이 링크를 타고 사이트 깊숙한 곳(Deep Link)까지 도달할 수 있도록 서비스 내 모든 중요 카테고리와 링크를 모아둔 HTML Sitemap 페이지를 별도로 구축합니다. 이는 사용자에게는 사이트 맵 역할을 봇에게는 훌륭한 내비게이션 역할을 합니다.
 <img src="/posts/deepDive/seo-chronicle-2-core-web-vitals/onsen.avif" alt="skyticket onsen" width='300' style={{margin: 'auto'}} />
 <small>2023년 당시 제가 seo팀에서 일 하던 때 만들었던 HTML Sitemap 페이지 입니다. 하위 페이지로 연결되는 링크를 모아두어 검색 봇이 구석구석 크롤링할 수 있도록 유도했습니다.</small>
 
-* **URL 정규화 (Canonical & Trailing Slash):** `example.com/page`와 `example.com/page/`는 기술적으로 다른 URL입니다. 검색 엔진이 이를 중복 콘텐츠로 오해하여 랭킹을 분산시키는 것을 막기 위해, **Trailing Slash** 정책을 통일하고 모든 페이지에 **Canonical 태그**를 적용해 원본 URL을 명확히 지정해야 합니다.
+* **URL 정규화 (Canonical & Trailing Slash):** `example.com/page`와 `example.com/page/`는 기술적으로 다른 URL입니다. 검색 엔진이 이를 중복 콘텐츠로 오해하여 랭킹을 분산시키는 것을 막기 위해 **Trailing Slash** 정책을 통일하고 모든 페이지에 **Canonical 태그**를 적용해 원본 URL을 명확히 지정해야 합니다.
 
 ---
 
