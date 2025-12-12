@@ -1,0 +1,125 @@
+---
+title: '🚀 2025-12 W2 #37'
+desc: React2Shell 보안 취약점, CSS Wrapped 2025 회고, GitHub npm 토큰 정책 변경 | 2025년 12월 2주차 주간 기술 뉴스레터
+date: 2025-12-13
+thumbnail: /posts/weekly/december.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 보안과 2025년을 정리하는 회고가 주요 화두입니다. React 생태계에서는 심각한 보안 취약점인 'React2Shell'이 발견되어 긴급한 대응이 요구되고 있으며, GitHub는 npm 토큰 정책을 강화했습니다. 한편, Chrome 팀은 'CSS Wrapped 2025'를 통해 한 해 동안의 웹 플랫폼 발전을 정리했고, AI가 React 컴포넌트 컨텍스트를 이해하고 수정하는 새로운 도구들도 등장했습니다.
+
+## 1. 🔍 심층 분석
+
+- **[The React2Shell (CVE-2025-55182) Vulnerability](https://react.statuscode.com/link/178186/web)** (출처: *React Status #455*)
+   - **배경**: 지난주 React 팀이 React Server Components와 관련된 치명적인 보안 취약점을 공개했습니다. 이 취약점은 현재 'React2Shell'로 명명되었으며, 생태계 전반에 걸쳐 상당한 파장을 일으키고 있습니다.
+   - **핵심 기능**: 공격자가 서버 컴포넌트를 통해 원격 코드를 실행할 수 있는 가능성이 제기되었습니다. Vercel을 포함한 주요 플랫폼들은 이에 대한 상세한 대응 가이드를 배포했습니다.
+   - **실무 적용**: Next.js 등을 사용하는 프로젝트에서는 즉시 최신 패치 버전을 확인하고 업데이트해야 합니다.
+   - **주의사항**: 클라우드플레어(Cloudflare)가 이 취약점을 방어하기 위해 적용한 완화 조치가 오히려 다른 문제를 일으켜 약 25분간의 다운타임을 유발하기도 했습니다. 보안 패치 적용 시 사이드 이펙트에 대한 모니터링이 필요합니다.
+
+- **[Did You Know Your Browser Has Two Accessibility Trees?](https://frontendfoc.us/link/178224/web)** (출처: *Frontend Focus #721*)
+   - **배경**: 웹 접근성을 이해하기 위해서는 브라우저가 콘텐츠를 보조 기술에 전달하는 방식을 알아야 합니다.
+   - **핵심 기능**: Chrome의 이중 접근성 아키텍처(dual accessibility architecture)에 대한 기술적 심층 분석입니다.
+   - **실무 적용**: 이벤트의 생명 주기, DOM 변경 사항이 처리되는 방식, 그리고 최종적으로 스크린 리더 등의 보조 기기로 출력되는 과정을 추적합니다.
+   - **주의사항**: 복잡한 웹 애플리케이션에서 접근성 문제를 디버깅할 때, 단순히 DOM을 검사하는 것을 넘어 브라우저 내부의 접근성 트리 생성 과정을 이해하는 것이 도움이 됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Making Complex Web Apps Faster](https://frontendfoc.us/link/178222/web)** (출처: *Frontend Focus #721*)
+  + 요약: iframe, 다중 윈도우 등 여러 병렬 컨텍스트로 인해 발생하는 성능 저하를 해결하기 위해 마이크로소프트가 제안한 'Delayed Message Timing API'에 대한 초기 단계의 제안입니다.
+- **[How Fast Can Browsers Process Base64 Data?](https://frontendfoc.us/link/178231/web)** (출처: *Frontend Focus #721*)
+  + 요약: 최신 하드웨어에서 브라우저들이 초당 기가바이트 단위로 Base64 데이터를 처리할 수 있다는 분석입니다. (Firefox와 Servo는 제외)
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[React Grab: A React-Focused Tool for Agentic Development](https://react.statuscode.com/link/178181/web)** (출처: *React Status #455*)
+  ![React Grab 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xd7j43y1ryn8gssncb13.jpg)
+  + **개요**: React 성능 진단 도구인 React Scan의 제작자가 만든 새로운 도구로, 코딩 에이전트에게 React 앱의 "컨텍스트"를 제공하는 기능을 합니다.
+  + **사용법**: 앱의 컴포넌트로부터 컨텍스트를 "grab(수집)"하여 AI 에이전트에게 전달함으로써, 에이전트가 더 정확하고 상세한 코드 변경을 수행할 수 있도록 돕습니다.
+  + **실전 팁**: AI를 활용한 개발 흐름에서 React 컴포넌트 구조를 AI가 더 잘 이해하게 만들고 싶을 때 유용합니다.
+
+- **[Sonda: A Universal Bundle Visualizer and Analyzer](https://frontendfoc.us/link/178244/web)** (출처: *Frontend Focus #721*)
+  ![Sonda 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1765373475/pouvlcrjur4xxxfoplid.png)
+  + **개요**: 다양한 번들러와 프레임워크를 지원하는 범용 번들 시각화 및 분석 도구입니다.
+  + **사용법**: 소스 맵(Source map) 분석을 통해 정확한 대화형 HTML 보고서를 생성합니다.
+  + **실전 팁**: 웹팩(Webpack), Vite, Rollup 등 다양한 환경에서 번들 크기를 최적화하고 불필요한 의존성을 찾아내는 데 활용할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[React Grid Layout 2.0: A Flexible Grid Layout System](https://react.statuscode.com/link/178194/web)** (출처: *React Status #455*)
+  + 요약: CSS Grid만으로는 해결하기 어려운 복잡한 반응형 그리드 레이아웃(Packery나 Gridster 스타일)을 구현할 수 있는 시스템입니다.
+- **[Useful Patterns for Building HTML Tools](https://javascriptweekly.com/link/178407/web)** (출처: *JavaScript Weekly #765*)
+  + 요약: 복잡한 프레임워크 없이 HTML, JavaScript, CSS 파일 하나만으로 유용한 도구를 만드는 패턴과 프로세스를 공유합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[CSS Wrapped 2025](https://frontendfoc.us/link/178220/web)** (출처: *Frontend Focus #721*)
+  ![CSS Wrapped 2025 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1765366713/tr6l0nkx816htrcbasfr.png)
+  + **핵심 인사이트**: Chrome DevRel 팀이 올해 웹 플랫폼에 추가된 새로운 CSS 기능들을 정리했습니다. CSS Carousels, 커스터마이징 가능한 select 요소, 스크롤 상태 쿼리 등 흥미로운 기능들이 포함되어 있으며, 주요 하이라이트를 다룬 영상도 함께 제공됩니다.
+
+- **[The Rhythm Of Your Screen](https://www.chrbutler.com/the-rhythm-of-your-screen)** (출처: *Smashing Newsletter #537*)
+  ![The Rhythm Of Your Screen 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/b8e2354a-c1da-e156-6eaf-a70c955f2f5c.png)
+  + **핵심 인사이트**: 화면의 길이가 문제가 아니라 "리듬의 부재"가 문제라는 관점을 제시합니다. 사용자가 페이지를 스크롤하고 훑어볼 때 주의를 유지할 수 있도록 정보 구조와 리듬을 만드는 4가지 팁을 공유합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Icon Design Principles](https://uxdesign.cc/7-principles-of-icon-design-e7187539e4a2?sk=v2%2F6dc7300d-5dde-42e5-a2df-a2fcf096f30a)** (출처: *Smashing Newsletter #537*)
+  + 요약: 훌륭한 아이콘 디자인을 위한 7가지 원칙을 실제 사례와 함께 설명합니다. 적은 획으로 의미를 전달하는 비결을 다룹니다.
+- **[Building a Tiny 2D Physics Engine in JavaScript](https://javascriptweekly.com/link/178429/web)** (출처: *JavaScript Weekly #765*)
+  + 요약: JavaScript로 간단한 물리 엔진을 밑바닥부터 구현하고, 이를 2KB 크기로 줄이는 과정을 다룬 고전적인 스타일의 개발기입니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[Semantic Art Gallery](https://www.semantic.art/)** (출처: *Smashing Newsletter #537*)
+  ![Semantic Art Gallery 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/ffcd24a1-c916-eb8a-da7d-2665fa776802.png)
+  + **특징**: 단순히 키워드로 검색하는 것이 아니라, 사용자의 기분이나 상상력을 입력하면 AI가 그에 맞는 역사 속 실제 예술 작품을 찾아주는 검색 엔진입니다. LLM을 활용한 검색의 좋은 사례를 보여줍니다.
+
+- **[TypeSlayer](https://javascriptweekly.com/link/178458/web)** (출처: *JavaScript Weekly #765*)
+  + **특징**: TypeScript의 타입 시스템 안에서 Doom을 실행해 화제가 되었던 개발자가 이번에는 TypeScript 성능 문제를 진단하고 수정하는 도구를 3D 시각화와 함께 선보였습니다. (아직 공개 전)
+
+## 5. ⚡️ 짧은 소식
+
+- **[GitHub shares an update on its npm token policies](https://javascriptweekly.com/link/178413/web)** (출처: *JavaScript Weekly #765*)
+  + 요약: 모든 npm 클래식 토큰이 이번 주에 폐기되었습니다. 대신 2시간 세션 토큰이나 세분화된 액세스 토큰(granular access token)을 발급받는 새로운 프로세스가 도입되었습니다.
+- **[Chrome 144 Beta released](https://javascriptweekly.com/link/178414/web)** (출처: *JavaScript Weekly #765*)
+  + 요약: 날짜와 시간을 다루는 Temporal API를 지원하는 Chrome 144 베타 버전이 출시되었습니다.
+- **[Kagi releases v1.0 of its browser: Orion](https://frontendfoc.us/link/178227/web)** (출처: *Frontend Focus #721*)
+  + 요약: 검색 엔진 Kagi가 만든 브라우저 Orion이 1.0 버전을 출시했습니다. 흥미롭게도 Chromium이 아닌 WebKit 렌더링 엔진을 기반으로 합니다.
+- **[The AV1 video codec has won an Emmy](https://frontendfoc.us/link/178225/web)** (출처: *Frontend Focus #721*)
+  + 요약: 전 세계 비디오 콘텐츠 전송 방식에 미친 영향을 인정받아 AV1 비디오 코덱이 에미상을 수상했습니다.
+- **[Let's Encrypt has now been with us for a decade](https://frontendfoc.us/link/178226/web)** (출처: *Frontend Focus #721*)
+  + 요약: Let's Encrypt가 10주년을 맞이했습니다. 현재 약 10억 개의 웹사이트를 보호하며 성장해 온 과정을 돌아봅니다.
+
+## 6. 🎉 릴리스
+
+- **[Node.js v24.12.0 (LTS)](https://javascriptweekly.com/link/178418/web)** (*JavaScript Weekly #765*)
+  + 업데이트: 타입 제거(type stripping) 기능이 안정화(stable) 상태로 표시된 첫 번째 LTS 릴리스입니다.
+- **[Deno 2.6 Released](https://javascriptweekly.com/link/178409/web)** (*JavaScript Weekly #765*)
+  + 업데이트: npm 및 JSR 패키지 바이너리를 실행하는 `dx` 도구, 의존성 취약점 확인을 위한 `deno audit`, 더 세밀한 런타임 권한 제어 등이 추가되었습니다.
+- **[Bun v1.3.4](https://javascriptweekly.com/link/178420/web)** (*JavaScript Weekly #765*)
+  + 업데이트: `URLPattern` 지원, 테스트 러너의 타이머 제어 기능, Node와 호환되는 `console.log`의 `%j` 지정자 지원 등이 포함되었습니다.
+- **[React v19.2.3, v19.1.4, and v19.0.3](https://javascriptweekly.com/link/178421/web)** (*JavaScript Weekly #765*)
+  + 업데이트: 여러 버전의 React에 대한 패치 업데이트가 릴리스되었습니다.
+- **[React Datepicker 9.0](https://react.statuscode.com/link/178204/web)** (*React Status #455*)
+  + 업데이트: 타임존 지원, 날짜 범위 내 시간 선택 기능, 커스터마이징 및 접근성 향상을 위한 새로운 props가 추가되었습니다.
+- **[Ant Design 6.1](https://react.statuscode.com/link/178207/web)** (*React Status #455*)
+  + 업데이트: 널리 사용되는 컴포넌트 스위트 및 디자인 언어의 업데이트입니다.
+- **[Jotai 2.16](https://react.statuscode.com/link/178209/web)** (*React Status #455*)
+  + 업데이트: 원시적이고 유연한 상태 관리 라이브러리의 새 버전입니다.
+- **[pnpm 10.25](https://javascriptweekly.com/link/178454/web)** (*JavaScript Weekly #765*)
+  + 업데이트: 빠르고 공간 효율적인 패키지 매니저의 업데이트입니다.
+- **[Inertia 2.3](https://javascriptweekly.com/link/178450/web)** (*JavaScript Weekly #765*)
+  + 업데이트: Django, Rails, Laravel 같은 서버 사이드 프레임워크와 함께 React, Vue, Svelte 앱을 구축할 수 있는 라이브러리입니다.
+- **[OpenPGP.js 6.3](https://javascriptweekly.com/link/178451/web)** (*JavaScript Weekly #765*)
+  + 업데이트: JavaScript를 위한 OpenPGP 구현체입니다.
+
+## ✍️ 마치며
+이번 주는 웹 생태계의 명과 암이 동시에 드러난 한 주였습니다. 한편으로는 React Server Components의 보안 취약점과 npm 토큰 이슈처럼 개발자가 경각심을 가져야 할 보안 문제들이 대두되었지만, 다른 한편으로는 한 해를 마무리하며 CSS와 브라우저 기술이 얼마나 발전했는지 보여주는 회고와 새로운 도구들이 쏟아졌습니다. 특히 AI가 단순히 코드를 생성하는 것을 넘어 런타임 컨텍스트를 이해하고 개입하려는 시도(React Grab 등)는 앞으로의 개발 도구가 나아갈 방향을 시사하는 듯합니다. 보안 패치는 신속하게 챙기시되, 연말을 맞아 쏟아지는 기술 트렌드 회고들도 놓치지 않고 챙겨 보시면 좋겠습니다.
+
+#### 출처
+- [JavaScript Weekly #765](https://javascriptweekly.com/issues/765)
+- [Smashing Newsletter #537](https://mailchi.mp/smashingmagazine/537-designers-guides-and-tools)
+- [Frontend Focus #721](https://frontendfoc.us/issues/721)
+- [React Status #455](https://react.statuscode.com/issues/455)
