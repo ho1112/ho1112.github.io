@@ -163,6 +163,25 @@ const generateSuggestions = (isFirstMessage: boolean, isSearchFailed: boolean, t
 
 ---
 
+### 2025年12月21日追加対応
+Google AI Studioのポリシー変更により無料APIの使用が制限されました。既存の2.5-proモデルの使用が制限されたため、3.0-flashモーデルに変更しました。
+
+```typescript
+const model = new ChatGoogleGenerativeAI({
+  model: "gemini-2.5-pro",
+  apiKey: process.env.GEMINI_API_KEY!,
+  maxOutputTokens: 2048,
+})
+```
+
+```typescript
+const model = new ChatGoogleGenerativeAI({
+  model: "gemini-3-flash-preview",
+  apiKey: process.env.GEMINI_API_KEY!,
+  maxOutputTokens: 2048,
+})
+```
+
 <Callout type="info" title="個人プロジェクトポスト">
 [cha-LINE](/blog/ja/codeLab/cha-line/) - SBI証券配当金自動取得LINE Bot
 [Dead Internet Theory](/blog/ja/codeLab/dead-internet-theory/) - AIペルソナボットコメント自動化システム
