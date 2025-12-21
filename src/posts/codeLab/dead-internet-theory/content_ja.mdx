@@ -242,6 +242,47 @@ ${personas.map((p, index) => `${index + 1}. ${p.nickname}: ${p.system_prompt}`).
 
 ---
 
+### 2025年12月20日追加対応
+Google AI Studioのポリシー変更により無料APIの使用が制限されました。既存の2.5-proモデルの使用が制限され、コメント生成が失敗していました。
+APIリクエスト方式も変更されたため、併せて対応しました。
+
+既存: fetch方式、2.5-proモデル使用
+```typescript
+    // 3. Gemini API呼び出し
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API呼び出し失敗: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+```
+
+修正: @google/genai認証方式に変更、3.0 flashモデルに変更
+```typescript
+import { GoogleGenAI } from '@google/genai';
+
+   // 3. Gemini API呼び出し (新しいSDK使用)
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY
+    });
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: prompt
+    });
+
+    const generatedText = response.text;
+```
+[変更PR](https://github.com/ho1112/dead-internet-theory/pull/14/files)
+
 <Callout type="info" title="個人プロジェクトポスト">
 [cha-LINE](/blog/ja/codeLab/cha-line/) - SBI証券配当金自動取得LINE Bot
 [its-me](/blog/ja/codeLab/its-me) - AI基盤RAGインタラクティブポートフォリオチャットボット
