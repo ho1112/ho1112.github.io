@@ -1,7 +1,7 @@
 'use client'
 
-import { MessageSquareText } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { ArrowUpToLine, MessageSquareText } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '../ui/button'
 
 interface ButtonProps {
@@ -18,6 +18,11 @@ const getImagePath = (character: Character, state: State): string => {
   return `/icon/scroll/${character}_${state}.${extension}`
 }
 
+// 스크롤 위치를 가져오는 유틸 함수
+const getScrollTop = (): number => {
+  return document.documentElement.scrollTop || document.body.scrollTop || 0
+}
+
 // Fisher-Yates 셔플 알고리즘
 const shuffleArray = <T,>(array: T[]): T[] => {
   const shuffled = [...array]
@@ -29,29 +34,21 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 }
 
 export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
-  const [characterOrder, setCharacterOrder] = useState<Character[]>([])
+  const characterOrder = useMemo(() => shuffleArray([...CHARACTERS]), [])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [state, setState] = useState<State>('idle')
   const [isScrolling, setIsScrolling] = useState(false)
   const [showButton, setShowButton] = useState(false)
   const scrollCheckRef = useRef<number | null>(null)
   const scrollStartPoint = 550
-  const scrollThreshold = 1000
-
-  // 초기화: 랜덤 순서 생성
-  useEffect(() => {
-    const shuffled = shuffleArray([...CHARACTERS])
-    setCharacterOrder(shuffled)
-  }, [])
+  const scrollHiddenPoint = 1000
 
   // 스크롤 위치 추적하여 버튼 표시/숨김
-  useEffect(() => {
-    const checkScrollPosition = () => {
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop || 0
-      setShowButton(scrollTop > scrollThreshold)
-    }
+  const checkScrollPosition = useCallback(() => {
+    setShowButton(getScrollTop() > scrollHiddenPoint)
+  }, [scrollHiddenPoint])
 
+  useEffect(() => {
     // 초기 체크
     checkScrollPosition()
 
@@ -61,29 +58,23 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
     return () => {
       window.removeEventListener('scroll', checkScrollPosition)
     }
-  }, [scrollThreshold])
+  }, [checkScrollPosition])
 
   // 이미지 프리로딩
   useEffect(() => {
-    if (characterOrder.length === 0) return
-
     // 현재 캐릭터의 모든 상태 이미지 프리로딩
     const currentChar = characterOrder[currentIndex]
-    if (currentChar) {
-      const states: State[] = ['idle', 'ready', 'up']
-      states.forEach((s) => {
-        const img = new Image()
-        img.src = getImagePath(currentChar, s)
-      })
-    }
+    const states: State[] = ['idle', 'ready', 'up']
+    states.forEach((s) => {
+      const img = new Image()
+      img.src = getImagePath(currentChar, s)
+    })
 
     // 다음 캐릭터의 idle 이미지도 프리로딩
     const nextIndex = (currentIndex + 1) % CHARACTERS.length
     const nextChar = characterOrder[nextIndex]
-    if (nextChar) {
-      const img = new Image()
-      img.src = getImagePath(nextChar, 'idle')
-    }
+    const nextImg = new Image()
+    nextImg.src = getImagePath(nextChar, 'idle')
   }, [characterOrder, currentIndex])
 
   // 스크롤 완료 감지
@@ -91,18 +82,14 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
     if (!isScrolling) return
 
     const checkScrollComplete = () => {
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop || 0
+      const scrollTop = getScrollTop()
 
       if (scrollTop <= scrollStartPoint) {
         setIsScrolling(false)
         setState('idle')
         // 다음 캐릭터로 순환
         setCurrentIndex((prev) => (prev + 1) % CHARACTERS.length)
-        if (scrollCheckRef.current) {
-          cancelAnimationFrame(scrollCheckRef.current)
-          scrollCheckRef.current = null
-        }
+        scrollCheckRef.current = null
       } else {
         scrollCheckRef.current = requestAnimationFrame(checkScrollComplete)
       }
@@ -116,7 +103,7 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
         scrollCheckRef.current = null
       }
     }
-  }, [isScrolling])
+  }, [isScrolling, scrollStartPoint])
 
   const handleClick = () => {
     if (isScrolling) return
@@ -139,32 +126,28 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
     }
   }
 
-  const currentCharacter = characterOrder[currentIndex]
-  const imagePath = currentCharacter
-    ? getImagePath(currentCharacter, state)
-    : null
-
   // 스크롤이 1000px 이하일 때 버튼 숨김
   if (!showButton) {
     return null
   }
 
-  // 초기 로딩 중이거나 이미지 경로가 없을 때
-  if (!imagePath || characterOrder.length === 0) {
+  const currentCharacter = characterOrder[currentIndex]
+  const imagePath = getImagePath(currentCharacter, state)
+
+  // 공통 button 스타일
+  const buttonStyle: React.CSSProperties = {
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    display: 'inline-block',
+  }
+
+  // 이미지 경로가 없을 때 원래 화살표 아이콘 표시
+  if (!imagePath) {
     return (
-      <button
-        onClick={handleClick}
-        className={className}
-        style={{
-          width: size,
-          height: size,
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 0,
-        }}
-      >
-        <div style={{ width: size, height: size }} />
+      <button onClick={handleClick} className={className} style={buttonStyle}>
+        <ArrowUpToLine size={22} />
       </button>
     )
   }
@@ -175,13 +158,7 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={className}
-      style={{
-        background: 'transparent',
-        border: 'none',
-        cursor: 'pointer',
-        padding: 0,
-        display: 'inline-block',
-      }}
+      style={buttonStyle}
     >
       <img
         src={imagePath}
