@@ -7,7 +7,8 @@ import {
   parseToc,
 } from '@/lib/post'
 import { CommentSection } from '@/components/comments/CommentSection'
-import FloatingButton from '@/components/common/FloatingButton'
+import { ScrollTop } from '@/components/common/TocButtons'
+// import FloatingButton from '@/components/common/FloatingButton'
 // import { Giscus } from '@/components/post_detail/Giscus'
 import { PostBody } from '@/components/post_detail/PostBody'
 import { PostHeader } from '@/components/post_detail/PostHeader'
@@ -93,7 +94,12 @@ const PostDetail = async ({ params: { language, category, slug } }: Props) => {
           postId={`${language}/${category}/${slug}`}
           language={language}
         />
-        <FloatingButton />
+        {/* ~1280px에서 전개되는 메뉴 버튼 */}
+        {/* <FloatingButton /> */}
+      </div>
+      {/* 1280px 미만 화면에서 표시되는 ScrollTop 버튼 (1280px 이상에서는 TableOfContentSidebar 내부에 표시됨) */}
+      <div className="fixed bottom-8 right-8 z-50 xl:hidden">
+        <ScrollTop />
       </div>
     </>
   )

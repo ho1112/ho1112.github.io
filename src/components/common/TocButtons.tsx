@@ -8,7 +8,7 @@ interface ButtonProps {
   className?: string
 }
 
-export const ScrollTop = ({ size = 16, className }: ButtonProps) => {
+export const ScrollTop = ({ size = 22, className }: ButtonProps) => {
   const scrollTop = () => {
     window.scrollTo({ top: 0 })
   }
