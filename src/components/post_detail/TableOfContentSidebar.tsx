@@ -5,8 +5,8 @@ import { useEffect, useRef } from 'react'
 import { HeadingItem } from '@/config/types'
 import { useHeadingsObserver } from '@/hook/useHeadingsObserver'
 import { cn } from '@/lib/utils'
-import CopyLinkButton from '../common/CopyLinkButton'
-import { ScrollToComment, ScrollTop } from '../common/TocButtons'
+// import CopyLinkButton from '../common/CopyLinkButton'
+import { ScrollTop } from '../common/TocButtons'
 
 interface Props {
   toc: HeadingItem[]
@@ -57,11 +57,11 @@ const TableOfContent = ({ toc }: Props) => {
             })}
           </ul>
         </div>
-        {/* <div className="flex gap-2">
+        <div className="flex gap-2">
           <ScrollTop />
-          <ScrollToComment />
-          <CopyLinkButton />
-        </div> */}
+          {/* <ScrollToComment /> */}
+          {/* <CopyLinkButton /> */}
+        </div>
       </div>
     </aside>
   )
