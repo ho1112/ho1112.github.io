@@ -33,14 +33,35 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [state, setState] = useState<State>('idle')
   const [isScrolling, setIsScrolling] = useState(false)
+  const [showButton, setShowButton] = useState(false)
   const scrollCheckRef = useRef<number | null>(null)
   const scrollStartPoint = 550
+  const scrollThreshold = 1000
 
   // 초기화: 랜덤 순서 생성
   useEffect(() => {
     const shuffled = shuffleArray([...CHARACTERS])
     setCharacterOrder(shuffled)
   }, [])
+
+  // 스크롤 위치 추적하여 버튼 표시/숨김
+  useEffect(() => {
+    const checkScrollPosition = () => {
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop || 0
+      setShowButton(scrollTop > scrollThreshold)
+    }
+
+    // 초기 체크
+    checkScrollPosition()
+
+    // 스크롤 이벤트 리스너 추가
+    window.addEventListener('scroll', checkScrollPosition, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', checkScrollPosition)
+    }
+  }, [scrollThreshold])
 
   // 이미지 프리로딩
   useEffect(() => {
@@ -122,6 +143,11 @@ export const ScrollTop = ({ size = 64, className }: ButtonProps) => {
   const imagePath = currentCharacter
     ? getImagePath(currentCharacter, state)
     : null
+
+  // 스크롤이 1000px 이하일 때 버튼 숨김
+  if (!showButton) {
+    return null
+  }
 
   // 초기 로딩 중이거나 이미지 경로가 없을 때
   if (!imagePath || characterOrder.length === 0) {
