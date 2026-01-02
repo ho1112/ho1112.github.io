@@ -1,0 +1,95 @@
+---
+title: '🚀 2026-01 W1 #40'
+desc: 브라우저에서 실행하는 JAX(jax-js), 2025년 CSS 총결산, Waku v1.0 알파 | 2026년 1월 1주차 주간 기술 뉴스레터
+date: 2026-01-03
+thumbnail: /posts/weekly/january.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 2025년을 마무리하고 2026년을 전망하는 연말 결산과 새로운 기술의 등장이 공존하는 주간입니다. **Smashing Magazine**은 CSS, UX, AI 분야의 2025년 흐름을 총정리하며 내년을 대비하는 통찰을 제공했고, **Bytes**는 브라우저에서 Python 없이 머신러닝을 돌리는 놀라운 라이브러리(`jax-js`)와 React 프레임워크 `Waku`의 1.0 소식을 전해왔습니다. 거시적인 트렌드와 손에 잡히는 신기술을 함께 살펴보세요.
+
+## 1. 🔍 심층 분석
+
+- **[The Christmas Compiler Miracle (jax-js)](https://github.com/ekzhang/jax-js)** (출처: *Bytes #451*)
+    - **배경**: 브라우저에서 무거운 수치 연산을 수행하려면 보통 Python 백엔드나 복잡한 CUDA 설정이 필요했습니다. JavaScript만으로는 성능 한계가 명확했기 때문입니다.
+    - **핵심 기능**: `jax-js`는 Python의 JAX 라이브러리를 순수 JavaScript로 구현했습니다. `grad()`, `vmap()`, `jit()` 같은 핵심 변환 기능을 제공하며, 작성된 코드를 즉시 실행하는 대신 작은 수학 프로그램으로 추적(trace)하여 최적화된 커널로 변환한 뒤 WebAssembly(CPU)나 WebGPU(GPU)로 컴파일하여 실행합니다.
+    - **실무 적용**: 클라이언트 사이드에서 작은 모델을 훈련하거나, 추론 실행, 그라디언트 계산 등이 가능해져 인터랙티브한 ML 데모를 웹 어디서나 구동할 수 있습니다.
+- **[State, Logic, And Native Power: CSS Wrapped 2025](https://www.smashingmagazine.com/2025/12/state-logic-native-power-css-wrapped-2025/)** (출처: *Smashing Newsletter #540*)
+    ![State, Logic, And Native Power: CSS Wrapped 2025](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/6754e5ba-ce89-0371-6678-b86debae6994.png)
+    - **배경**: 2025년은 CSS에 있어 기념비적인 해였습니다. 과거에는 매우 복잡한 스크립트로만 가능했던 기능들이 CSS 네이티브 기능으로 대거 도입되었습니다.
+    - **핵심 내용**: Brecht De Ruyte가 정리한 이 글은 지난 한 해 동안 브라우저와 웹 커뮤니티가 이뤄낸 CSS의 발전 사항(상태 관리, 로직 처리 등)을 집대성했습니다. 최신 CSS 기능을 한눈에 파악하고 싶다면 필독해야 할 자료입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Static allocation with Zig](https://nickmonad.blog/2025/static-allocation-with-zig-kv/)** (출처: *Bytes #451*)
+  + 요약: Nick Miller가 자신의 키/값 저장소(kv) 프로젝트를 진행하며 경험한 Zig 언어의 정적 할당(Static allocation)에 대해 깊이 있게 분석한 글입니다.
+- **[State Of UX In 2025](https://trends.uxdesign.cc/)** (출처: *Smashing Newsletter #540*)
+  + 요약: 시장 포화와 자동화, 상업화가 심화된 '후기 UX(late-stage UX)' 시대에 디자이너가 어떻게 생존하고 진화해야 하는지를 비판적으로 고찰한 리포트입니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[Tonkotsu Desktop App](https://www.tonkotsu.ai/beyondides?utm_source=bytes&utm_campaign=1230)** (출처: *Bytes #451*)
+    - **개요**: 단순한 IDE를 넘어선, 전문가를 위한 멀티 에이전트 엔지니어링 데스크톱 앱입니다.
+    - **사용법**: 철저한 기술 계획(Technical Plan)을 먼저 수립한 뒤, 코딩 작업을 여러 AI 에이전트에게 위임하는 방식으로 작동합니다. 체계적인 엔지니어링 프로세스를 AI와 결합한 것이 특징입니다.
+- **[The Concise TypeScript book](https://github.com/gibbok/typescript-book)** (출처: *Bytes #451*)
+    - **개요**: 최근 업데이트된 무료 오픈소스 TypeScript 가이드북입니다.
+    - **특징**: 제목은 '간결한(Concise)' 책이지만, 사람마다 간결함의 정의가 다를 수 있음을 보여줄 만큼 방대하고 상세한 내용을 담고 있습니다. TS 학습자에게 유용한 리소스입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[QA Wolf](https://www.qawolf.com/platform?utm_source=bytes&utm_medium=newsletter&utm_campaign=ACQ_All_Waitlist__NewsletterAudience_-_Newsletter_AIPlatformForDeepCoverage_20251230-None_Experiment-FALSE&utm_term=headline-NowAvailableForQATeamsAIPlatformForDeepCoverageFromQAWolf&utm_content=AIPlatformForDeepCoverage_JoinTheWaitlist_None_Headline%3ANowAvailableForQATeamsAIPlatformForDeepCoverageFromQAWolf____Newsletter-PrimaryPlacement_20251230_v1_)** (출처: *Bytes #451*)
+  + 요약: 채팅만으로 로그인부터 복잡한 트랜잭션까지 제품 워크플로우의 80% 이상을 테스트할 수 있는 Playwright/Appium 코드를 생성해 주는 AI QA 플랫폼입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[The State Of Web Dev AI 2025](https://2025.stateofai.dev/en-US)** (출처: *Smashing Newsletter #540*)
+    ![The State Of Web Dev AI 2025](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/1e22becc-49fa-3074-aaf7-191cba80b041.png)
+    - **핵심 인사이트**: Sacha Greif가 진행한 설문조사로, 웹 개발자들이 실제로 AI를 어떻게 생각하고 현업에서 활용하고 있는지에 대한 데이터를 담고 있습니다.
+- **[Nobody really knows how to scale LLMs](https://blog.kierangill.xyz/oversight-and-guidance)** (출처: *Bytes #451*)
+    - **핵심 인사이트**: Kieran Gill은 현재 아무도 거대 언어 모델(LLM)을 대규모 코드베이스에 맞춰 확장하는 확실한 방법을 모른다고 지적하며, 우리가 다음에 시도해 봐야 할 몇 가지 이론적 접근을 제시합니다.
+- **[Email Design For 2026](https://designmodo.com/email-design-trends/)** (출처: *Smashing Newsletter #540*)
+    ![Email Design Trends For 2026](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/9d4c9bac-9aaf-ccf2-90d8-fa783aa1d11d.jpg)
+    - **핵심 인사이트**: 여전히 가장 강력한 도구인 이메일 디자인의 2026년 트렌드를 다룹니다. 개인화(personalization)부터 게이미피케이션(gamification)까지 변화하는 흐름을 짚어줍니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Directional CSS with the scrolled state query](https://una.im/scroll-state-scrolled)** (출처: *Bytes #451*)
+  + 요약: Una Kravets가 소개하는 CSS의 새로운 기능인 `scrolled` 상태 쿼리를 활용한 방향성(Directional) 스타일링 기법입니다.
+- **[Shipping at inference-speed](https://steipete.me/posts/2025/shipping-at-inference-speed)** (출처: *Bytes #451*)
+  + 요약: Peter Steinberger가 '추론 속도(inference-speed)'로 제품을 배포하는 경험과 올해 'vibe-coding'이 얼마나 발전했는지에 대해 쓴 글입니다.
+---
+
+## 4. ⚡️ 짧은 소식
+
+- **[Teenagers pwned Twitter, Vercel, Cursor](https://gist.github.com/hackermondev/5e2cdc32849405fff6b46957747a2d28)** (출처: *Bytes #451*)
+  + 요약: 16세 청소년 그룹이 AI 문서 플랫폼 Mintlify의 취약점을 통해 트위터, Vercel 등을 해킹하는 공급망 공격(supply-chain attack)을 수행했습니다. 다행히 매직 더 개더링 카드와 전자담배를 대가로 데이터를 유출하지 않기로 했다는 황당하고도 섬뜩한 소식입니다.
+- **[Smashing Conferences In 2026](https://smashingconf.com/amsterdam-2026)** (출처: *Smashing Newsletter #540*)
+  + 요약: 2026년 암스테르담(4월), 프라이부르크(9월), 앤트워프(10월)에서 열릴 SmashingConf 일정이 공개되었습니다.
+- **[State of CSS & JS Surveys](https://stateofcss.com/en-US)** (출처: *Smashing Newsletter #540*)
+  + 요약: 전 세계 개발자들의 기술 선택과 브라우저 벤더의 우선순위에 영향을 미치는 State of CSS 및 State of JS 2025 설문 결과가 공개되었습니다.
+- **[Giving Users A Voice Through Virtual Personas](https://www.smashingmagazine.com/2025/12/giving-users-voice-virtual-personas/)** (출처: *Smashing Newsletter #540*)
+  + 요약: 가상 페르소나를 활용해 사용자에게 목소리를 부여하는 방법에 대한 Smashing Magazine의 최근 아티클입니다.
+
+## 5. 🎉 릴리스
+
+- **[Waku v1.0 alpha](https://waku.gg/blog/waku-v1-alpha)** (*Bytes #451*)
+  + 업데이트: RSC(React Server Components)를 완벽하게 지원하는 최소한의 React 프레임워크 Waku가 v1.0 알파 버전을 출시했습니다.
+- **[CSS Grid Lanes](https://webkit.org/blog/17660/introducing-css-grid-lanes/)** (*Bytes #451*)
+  + 업데이트: WebKit 팀이 "웹 Masonry 레이아웃의 미래"라고 부르는 CSS Grid Lanes를 발표했습니다.
+- **[Accessible UX Research (eBook)](https://www.smashingmagazine.com/ebooks/accessible-ux-research-ebook/)** (*Smashing Newsletter #540*)
+  + 업데이트: Michele A. Williams의 신간 'Accessible UX Research' 전자책이 출시되었습니다. 다양한 참여자를 포용하는 리서치 가이드입니다.
+
+## ✍️ 마치며
+
+2025년의 마지막 주, 대부분의 기술 소식이 멈춘 시기임에도 불구하고 흥미로운 대조를 엿볼 수 있는 한 주였습니다.
+
+Smashing Magazine을 통해 확인한 'State of CSS'나 'UX 트렌드'가 기술의 성숙과 안정화를 보여주었다면, Bytes에서 소개한 `jax-js`는 여전히 웹 생태계가 '실험과 확장'의 단계에 있음을 증명했습니다. 특히 브라우저 환경에서 Python 생태계의 수치 연산을 네이티브 속도로 구현해 내려는 시도는, 웹이 단순한 뷰어를 넘어 얼마나 강력한 컴퓨팅 환경으로 진화하고 있는지 보여주는 상징적인 사례입니다.
+
+과거의 기술 부채를 정리하는 '결산'과, 한계를 깨뜨리는 '신기술'이 공존하는 지금, 2026년의 웹 개발은 그 어느 때보다 견고하면서도 역동적일 것으로 기대됩니다.
+
+
+#### 출처
+- [Smashing Newsletter #540](https://mailchi.mp/smashingmagazine/540-state-of-css-js-ux-in-2025)
+- [bytes #451](https://bytes.dev/archives/451)
