@@ -1,0 +1,117 @@
+---
+title: '🚀 2026-01 W4 #43'
+desc: 2025 Web Almanac 리포트, Remotion AI 에이전트, jQuery 4.0 출시, 픽셀 퍼펙트의 재해석 | 2026년 1월 4주차 주간 기술 뉴스레터
+date: 2026-01-24
+thumbnail: /posts/weekly/january.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 웹의 현주소와 디자인의 재정의가 핵심입니다. HTTP Archive가 1,700만 개의 웹사이트를 분석한 '2025 Web Almanac' 리포트가 공개되었으며, 디자인 영역에서는 'Pixel Perfect'라는 오래된 개념을 현대적인 관점에서 재해석하는 움직임이 있습니다. 또한 개발 도구 측면에서는 **Remotion**이 AI 에이전트 기능을 탑재하여 비디오 생성의 새로운 가능성을 보여주었습니다.
+
+## 1. 🔍 심층 분석
+
+- **[The 2025 Web Almanac](https://almanac.httparchive.org/en/2025/)** (출처: *Frontend Focus #725*)
+   ![The 2025 Web Almanac](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1768999538/i7n8inlis9blrucjh4tu.jpg)
+   - **배경**: HTTP Archive가 매년 발행하는 '웹 연감(Web Almanac)'은 실제 웹 생태계의 데이터를 기반으로 작성되는 가장 신뢰할 수 있는 리포트 중 하나입니다.
+   - **핵심 기능**: 1,700만 개 이상의 웹사이트와 244TB에 달하는 데이터를 분석하여 콘텐츠, 사용자 경험(UX), 접근성, 성능, 보안, AI 등 15개 챕터로 나누어 웹의 현재 상태를 진단합니다.
+   - **실무 적용**: 현재 웹 개발의 표준이 어디쯤 와있는지, 성능 최적화나 접근성 준수율의 글로벌 평균은 어떤지 파악하여 팀의 기술 목표를 설정하는 데퍼런스로 활용하기 좋습니다.
+
+- **[ASCII Characters Are Not Pixels](https://alexharri.com/blog/ascii-rendering)** (출처: *JavaScript Weekly #769*)
+   ![ASCII Rendering](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jgxwxup4zgn1lvkdjife.jpg)
+   - **배경**: 터미널이나 레트로 스타일 UI에서 ASCII 아트를 렌더링할 때, 단순히 문자를 배치하는 것만으로는 픽셀 그래픽의 밀도를 정확히 표현하기 어렵습니다.
+   - **핵심 기능**: 각 ASCII 문자가 가진 '밀도(density)'를 계산하여 이미지를 가장 잘 표현할 수 있는 문자를 매핑하는 알고리즘을 깊이 있게 다룹니다.
+   - **실무 적용**: CLI 도구를 만들거나 웹 기반의 독창적인 텍스트 효과를 구현할 때, 폰트 렌더링과 픽셀 매핑의 원리를 응용할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Rethinking “Pixel Perfect” Web Design](https://www.smashingmagazine.com/2026/01/rethinking-pixel-perfect-web-design/)** (출처: *CSS Weekly #632*)
+  + 요약: 다양한 디바이스와 유동적인 레이아웃이 존재하는 현대 웹에서 과거의 '픽셀 퍼펙트' 개념은 더 이상 유효하지 않으며, 오히려 제품에 해가 될 수 있다는 Amit Sheen의 주장입니다.
+- **[Astro is Joining Cloudflare](https://blog.cloudflare.com/astro-is-joining-cloudflare)** (출처: *Frontend Focus #725*)
+  + 요약: 인기 있는 웹 프레임워크 Astro 팀이 Cloudflare에 합류합니다. 이는 주요 웹 프레임워크들이 대형 인프라 기업의 지원을 받게 되는 최근의 흐름을 보여줍니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[Remotion Agent Skill](https://x.com/Remotion/status/2013626968386765291)** (출처: *React Status #459*)
+   ![Remotion](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/x4qpzfa8x9sjcqi2nnzt.jpg)
+   - **개요**: React로 비디오를 만드는 라이브러리인 Remotion이 Claude Code와 같은 AI 도구와 연동되는 'Agent Skill'을 출시했습니다.
+   - **사용법**: 복잡한 코드를 직접 작성하는 대신, 프롬프트(명령어)만으로 고품질의 비디오 템플릿과 애니메이션 코드를 생성할 수 있습니다.
+   - **실전 팁**: 마케팅용 숏폼 영상이나 데이터 시각화 영상을 자동화할 때, AI에게 초안 생성을 맡기고 개발자는 세부 튜닝만 수행하여 생산성을 극대화할 수 있습니다.
+
+- **[Chrome DevTools Elements Panel Tips](https://youtu.be/yBKNOfEM4jA)** (출처: *CSS Weekly #632*)
+   ![Chrome DevTools Tips](https://css-weekly.com/issues/issue-632/images/chrome-devtools-elements-panel-tips-and-tricks1.png)
+   - **개요**: 크롬 개발자 도구의 Elements 패널을 더 효율적으로 사용하는 방법을 담은 영상 튜토리얼입니다.
+   - **실전 팁**: 드롭다운 메뉴처럼 포커스를 잃으면 사라지는 요소를 검사하는 방법, 시야를 가리는 툴팁 팝업을 숨기는 방법 등 실무에서 겪는 사소하지만 귀찮은 문제들의 해결책을 제시합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Browser Score](https://browserscore.dev/)** (출처: *CSS Weekly #632*)
+  + 요약: Lea Verou가 만든 도구로, 현재 사용 중인 브라우저가 최신 웹 플랫폼 기능들을 얼마나 지원하는지 점수로 보여주고 비교해 줍니다.
+- **[jQuery 4.0 Released](https://blog.jquery.com/2026/01/20/jquery-4-0-0-released/)** (출처: *JavaScript Weekly #769*)
+  + 요약: 전설적인 라이브러리 jQuery가 4.0 버전을 출시했습니다. IE 10 이하 지원을 중단하고 ES 모듈(ESM)로 완전히 전환하여 현대적인 빌드 도구와 호환성을 갖췄습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[Building docfind: Fast Client-Side Search with Rust](https://code.visualstudio.com/blogs/2026/01/15/docfind)** (출처: *Frontend Focus #725*)
+   ![Building docfind](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1768999976/l9nbwzwkuwldvqnkhahn.png)
+   - **핵심 인사이트**: VS Code 팀이 문서 검색 기능을 Rust와 WebAssembly(Wasm)로 구현하여 클라이언트 사이드에서 초고속 검색을 구현한 사례입니다. 5만 개의 뉴스 기사를 인덱싱하고 검색하는 데모를 통해 Wasm의 성능을 입증합니다.
+
+- **[UX Research Strategies and Tools](https://mailchi.mp/smashingmagazine/542-ux-research-methods-and-tools)** (출처: *Smashing Newsletter #542*)
+   ![UX Research](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/de0657b2-6d4a-5b24-614c-40e8865cde88.png)
+   - **핵심 인사이트**: 예산이 부족하거나 사용자와 직접 만나기 어려운 상황에서도 수행할 수 있는 UX 리서치 전략을 소개합니다. 리서치는 거창한 것이 아니라 '불확실성을 줄이는 과정'임을 강조합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[View Transitions & Playing Video](https://frontendmasters.com/blog/view-transitions-playing-video/)** (출처: *CSS Weekly #632*)
+  + 요약: View Transition API를 사용할 때 페이지가 전환되어도 비디오나 오디오 재생이 끊기지 않고 지속되도록 만드는 테크닉을 다룹니다.
+- **[Inside Turbopack: Building Faster by Building Less](https://vercel.com/blog/inside-turbopack-building-faster-by-building-less)** (출처: *React Status #459*)
+  + 요약: Vercel 팀이 Turbopack의 속도 향상 비결을 공유합니다. 불필요한 작업을 건너뛰고 캐싱을 적극 활용하는 아키텍처를 설명합니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[Text Frame Border Animation](https://codepen.io/designfenix/pen/OPyapww)** (출처: *CSS Weekly #632*)
+   - ![Border Animation](https://css-weekly.com/issues/issue-632/images/text-frame-border-animation-rotation-css-svg.jpg)
+  + **특징**: CSS와 SVG를 활용하여 텍스트 주변을 감싸는 유기적인 프레임 애니메이션을 구현했습니다. 일반적인 직선 보더가 아닌 손으로 그린 듯한 느낌의 라인이 움직이는 효과가 인상적입니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **[Node.js v25.4.0 Released](https://nodejs.org/en/blog/release/v25.4.0/)** (출처: *JavaScript Weekly #769*)
+  + 요약: `require(esm)` 기능이 안정화(Stable) 단계로 승격되었습니다. 이제 CommonJS 환경에서 ESM 모듈을 더 쉽게 불러올 수 있습니다.
+- **[Electron 40.0](https://www.electronjs.org/blog/electron-40-0)** (출처: *JavaScript Weekly #769*)
+  + 요약: Chromium 144, V8 14.4, Node.js 24.11.1을 탑재한 Electron의 최신 메이저 업데이트입니다.
+- **[Wikipedia 25th Anniversary](https://wikimediafoundation.org/news/2026/01/15/wikipedia-25/)** (출처: *Frontend Focus #725*)
+  + 요약: 위키백과가 탄생 25주년을 맞이했습니다. 이를 기념하는 특별 사이트가 공개되었습니다.
+- **[The Boring JavaScript Stack v1.0](https://boringstack.com/)** (출처: *React Status #459*)
+  + 요약: Sails, Inertia, Tailwind CSS를 기반으로 한 '지루하지만 안정적인' 풀스택 스타터 키트가 1.0 버전을 달성했습니다.
+- **[Deno 2.6.5](https://github.com/denoland/deno/releases/tag/v2.6.5)** (출처: *JavaScript Weekly #769*)
+  + 요약: Deno 런타임의 마이너 업데이트로, 버그 수정과 안정성 향상이 포함되었습니다.
+
+## 6. 🎉 릴리스
+- **[jQuery 4.0](https://blog.jquery.com/2026/01/20/jquery-4-0-0-released/)** (*JavaScript Weekly #769*)
+  + 업데이트: 20년 만의 메이저 업데이트로, IE 10 이하 지원 중단 및 ESM 전환이 완료되었습니다.
+- **[Node.js v25.4.0](https://nodejs.org/en/blog/release/v25.4.0/)** (*JavaScript Weekly #769*)
+  + 업데이트: 동기식 ESM 로딩(`require(esm)`)이 안정화되었습니다.
+- **[Electron 40.0](https://www.electronjs.org/blog/electron-40-0)** (*JavaScript Weekly #769*)
+  + 업데이트: 내부 엔진(Chromium, V8, Node) 버전이 모두 최신으로 업그레이드되었습니다.
+- **[React Native Windows 0.81](https://github.com/microsoft/react-native-windows/releases/tag/v0.81.0)** (*JavaScript Weekly #769*)
+  + 업데이트: 윈도우 애플리케이션 개발을 위한 React Native의 최신 업데이트입니다.
+- **[Aurelia 2 RC](https://aurelia.io/blog/2026/01/20/aurelia-2-release-candidate/)** (*JavaScript Weekly #769*)
+  + 업데이트: 오랫동안 기다려온 Aurelia 2 프레임워크의 릴리스 후보(RC) 버전이 공개되었습니다.
+
+## ✍️ 마치며
+
+이번 주는 오래된 기술의 귀환과 새로운 도약이 공존하는 흥미로운 한 주였습니다.
+
+한편에서는 웹 개발의 시조새 격인 `jQuery`가 4.0 버전을 내놓으며 ESM 환경에 적응하는 노익장을 과시했고 다른 한편에서는 `Remotion`과 같은 최신 라이브러리가 AI 에이전트를 도입하며 생산성의 한계를 깨뜨리고 있습니다. 또한 `HTTP Archive`의 방대한 데이터 분석은 우리가 감으로만 알고 있던 웹의 변화를 수치로 증명해 주었습니다.
+
+기술은 계속 변하지만, 결국 중요한 것은 사용자에게 더 나은 경험을 개발자에게 더 나은 생산성을 제공한다는 본질임을 다시금 느낍니다.
+
+#### 출처
+- [JavaScript Weekly #769](https://javascriptweekly.com/issues/769)
+- [Frontend Focus #725](https://frontendfoc.us/issues/725)
+- [React Status #459](https://react.statuscode.com/issues/459)
+- [Smashing Newsletter #542](https://mailchi.mp/smashingmagazine/542-ux-research-methods-and-tools)
+- [CSS Weekly #632](hhttps://css-weekly.com/issue-632)
+- [bytes #456](https://bytes.dev/archives/456)
