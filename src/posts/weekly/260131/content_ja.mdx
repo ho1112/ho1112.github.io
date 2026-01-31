@@ -1,0 +1,109 @@
+---
+title: '🚀 2026-01 W5 #44'
+desc: Rolldown 1.0 RCとバンドラー市場の変化、CSS Grid Lanesと次世代ウェブ標準、Midscene.jsを活用したUI自動化 | 2026年1月第5週目 週間技術ニュースレター
+date: 2026-01-31
+thumbnail: /posts/weekly/january.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は**バンドラー市場の地殻変動**と**ウェブ標準の進化**が同時に起きた一週間でした。Viteチームの野심作である**Rolldown**が1.0 RCをリリースし、Rustベースのバンドラー時代の到来を決定づけ、Node.jsとBunもまた大規模なパフォーマンスアップデートを発表しました。一方、ウェブフロントエンド陣営では**CSS Grid Lanes**や**Text Scaling**といった次世代標準の議論が活発に行われており、古典的なゲームをウェブへ完璧に移植するなど、ウェブ技術の限界を試す興味深い試みも目立っています。
+
+## 1. 🔍 深掘り
+
+- **[Stop, Drop and Rolldown](https://bytes.dev/archives/457)** (出典: *Bytes #457*)
+	![OSS maintainers trying to resist the urge to rewrite everything in Rust](https://bytes.dev/images/content/cigarette-guy.jpg)
+	- **背景**: Viteチームが過去1年間にわたり開発してきたRustベースのバンドラー「Rolldown」が、ついに1.0 Release Candidate (RC) 段階に到達しました。
+	- **主要機能**: RolldownはRollupの柔軟なAPIと互換性を持ちながら、esbuildに匹敵する超高速ビルドパフォーマンスを提供します。これはViteエコシステム全体の速度を底上げするための核心エンジンとなる見通しです。
+	- **実務への適用**: 既存のRollupプラグインエコシステムをそのまま吸収しつつ、ビルド時間を短縮したいプロジェクトに最適な選択肢です。
+- **[Understanding the fundamentals of CSS Layout](https://polypane.app/blog/understanding-the-fundamentals-of-css-layout/?utm_source=CSS-Weekly&utm_campaign=Issue-633&utm_medium=web)** (出典: *Frontend Focus #726*)
+	![CSS Layout Fundamentals](https://css-weekly.com/issues/issue-633/images/cssweekly-issue633-css-layout-fundamentals1.png)
+	- **主要なインサイト**: FlexboxやGridのような最新技術も重要ですが、ブラウザが要素を配置する根本的な原理である「Flow Layout」と「Block/Inline Formatting Context」を理解してこそ、レイアウト崩れを根本的に解決できます。
+	- **おすすめの対象**: `z-index` や `float` の動作に戸惑いを感じるすべての年次のフロントエンドエンジニア。
+
+---
+#### 見逃せないコンテンツ
+- **[Firefox is cooking again](https://bytes.dev/archives/458)** (出典: *Bytes #458*)
+	+ **要約**: 長らくChromeの影に隠れていたFirefoxが、最近のパフォーマンス改善と開発者フレンドリーな機能アップデートを相次いで発表し、再び注目を集めています。
+- **[JavaScript Frameworks – Heading into 2026](https://javascriptweekly.com/link/179827/web)** (出典: *JavaScript Weekly #770*)
+	+ **要約**: SolidJSの創設者であるRyan Carniato氏が、2026年のJavaScriptフレームワークエコシステムがどこへ向かっているのか、サーバーコンポーネントとエッジレンダリングのトレンドを分析します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[Midscene.js: Remote Control for the Web](https://javascriptweekly.com/link/179808/web)** (出典: *JavaScript Weekly #770*)
+	- **概要**: マルチモーダルAI (Vision Model) を活用して、ウェブ、モバイル、デスクトップUIを自動化する新しいツールです。
+	- **主要機能**: 複雑なCSSセレクターの代わりに、自然言語の命令（「ログインボタンをクリックして」）でUI操作が可能です。PuppeteerやPlaywrightと統合することで、テストコードの作成を画期的に簡素化できます。
+	- **コード例**:
+		```javascript
+		await midscene.act('Click the "Sign Up" button on the top right');
+		```
+- **[Introducing LibPDF](https://javascriptweekly.com/link/179787/web)** (出典: *JavaScript Weekly #770*)
+	![LibPDF](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kk3pqoke6gl2vxmnzeud.jpg)
+	- **概要**: TypeScript環境のために一から設計された、モダンなPDF生成およびパースライブラリです。
+	- **実戦チップ**: Node.js、Bun、Deno、ブラウザなど、すべてのランタイムで同様に動作し、型安全性を保証されながらPDFドキュメントをプログラムで操作できます。
+- **[Cheerio v1.2](https://javascriptweekly.com/link/179798/web)** (出典: *JavaScript Weekly #770*)
+	- **概要**: サーバーサイドでjQueryの文法を用いてHTMLをパースする標準ライブラリ「Cheerio」がマイナーアップデートされました。
+	- **特徴**: さらに高速化されたパース速度と、最新のNode.js環境に合わせた最適化が含まれています。
+
+---
+#### 見逃せないコンテンツ
+- **[Remotion Agent Skill](https://react.statuscode.com/link/180069/web)** (出典: *React Status #460*)
+	+ **要約**: Reactで動画を作成するライブラリ「Remotion」がAIエージェント機能を追加しました。テキストプロンプトだけで動画を生成したり編集したりできるようになります。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[When Will CSS Grid Lanes Arrive?](https://frontendfoc.us/link/179846/web)** (出典: *Frontend Focus #726*)
+	![Grid Lanes](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1769597356/g49cpep9s3noid8vpg5q.png)
+	- **主要なインサイト**: WebKitチームのJen Simmons氏が、CSS Gridの次期スペックである「Named Grid Lines」（通称 Grid Lanes）の実装状況を共有しました。複雑なグリッドレイアウトをExcelのように直感的に扱える日が近づいています。
+- **[Try Text Scaling Support in Chrome Canary](https://frontendfoc.us/link/179851/web)** (出典: *Frontend Focus #726*)
+	- **主要なインサイト**: ユーザーがOSの設定で文字サイズを大きくした際、ウェブページが単にズームインされるのではなく、レイアウトを維持したままテキストだけをエレガントに拡大させる `text-scale` メタタグが導入されます。アクセシビリティにおける大きな飛躍です。
+- **[Unstacking CSS Stacking Contexts](https://www.smashingmagazine.com/2026/01/unstacking-css-stacking-contexts/?utm_source=CSS-Weekly&utm_campaign=Issue-633&utm_medium=web)** (出典: *CSS Weekly #633*)
+	- **主要なインサイト**: `z-index` を9999に設定しても解決しない問題の主犯、「重なりコンテキスト (Stacking Context)」がいつ生成されるかをまとめた完全ガイドです。`opacity`、`transform`、`filter` プロパティが重なり順に与える影響を解説しています。
+
+## 4. ✨ アイデア
+
+- **[Super Monkey Ball on the Web](https://javascriptweekly.com/link/179815/web)** (出典: *JavaScript Weekly #770*)
+	- **特徴**: セガの古典的名作『スーパーモンキーボール』をウェブ技術（WebGPU, WASM）で完璧にポーティングしました。インストールなしでブラウザ上で60fpsで動作する3Dゲームを通じて、ウェブの可能性を確認してみてください。
+- **[The Engineering Behind GitHub Copilot CLI’s Banner](https://react.statuscode.com/link/180068/web)** (出典: *React Status #460*)
+	- **特徴**: ターミナルで華やかに動くASCIIアートのバナーを実装するために、ReactレンダラーであるInkと専用のアニメーションツールを開発したGitHubエンジニアリングチームの執念を垣間見ることができます。
+
+## 5. ⚡️ ミニノート
+
+- **[Mystral Native.js](https://javascriptweekly.com/link/179816/web)** (出典: *JavaScript Weekly #770*)
+	+ **要約**: 「ゲーム用Electron」を標榜する新しいランタイムです。ChromiumなしでWebGPUベースのゲームをネイティブアプリのように駆動できるようにします。
+- **[React DoS Vulnerabilities Fixed](https://react.statuscode.com/link/180072/web)** (出典: *React Status #460*)
+	+ **要約**: React Server Componentsの処理過程で発見されたサービス拒否（DoS）脆弱性をパッチしたセキュリティアップデートが緊急配布されました。
+- **[Dependency-Track Drops NVD 1.1](https://frontendfoc.us/link/179865/web)** (出典: *Frontend Focus #726*)
+	+ **要約**: ソフトウェア部品構成表（SBOM）分析ツールであるDependency-Trackが、NVD 1.1フィードのサポートを終了し、2.0へ完全に移行しました。
+
+## 6. 🎉 アップデート
+
+- **[Node.js v25.5.0](https://javascriptweekly.com/link/179783/web)** (*JavaScript Weekly #770*)
+	+ **アップデート**: 単一実行ファイル (Single Executable Apps) をより簡単に作成できる `--build-sea` フラグが追加されました。
+- **[Bun v1.3.7](https://javascriptweekly.com/link/179794/web)** (*JavaScript Weekly #770*)
+	+ **アップデート**: 内部エンジンであるJavaScriptCoreのアップデートにより、 `async/await` のパフォーマンスが35%向上し、ネイティブなJSON5パースをサポートします。
+- **[Rolldown 1.0 RC](https://javascriptweekly.com/link/179834/web)** (*JavaScript Weekly #770*)
+	+ **アップデート**: Viteの次世代バンドラーがリリース候補 (Release Candidate) 段階に入り、安定化の軌道に乗りました。
+- **[Storybook 10.2](https://javascriptweekly.com/link/179799/web)** (*JavaScript Weekly #770*)
+	+ **アップデート**: UIコンポーネント開発ツールの最新バージョンで、ストーリー作成のエクスペリエンスとパフォーマンスが大幅に改善されました。
+- **[npm v11.8.0](https://javascriptweekly.com/link/179784/web)** (*JavaScript Weekly #770*)
+	+ **アップデート**: パッケージマネージャーの安定性改善およびマイナー機能のアップデートが含まれています。
+- **[Next.js 16.2.0 Canary](https://react.statuscode.com/link/180077/web)*** (*React Status #460*)
+	+ **アップデート**: React 19との互換性強化およびサーバーアクション (Server Actions) 関連の最適化が含まれたテストビルドです。
+- **[Chrome 133 Beta](https://frontendfoc.us/link/179863/web)** (*Frontend Focus #726*)
+	+ **アップデート**: 新しいウェブプラットフォーム機能をいち早く体験できるベータ版です。 `text-scale` メタタグのサポートが含まれています。
+- **[Cheerio v1.2](https://javascriptweekly.com/link/179798/web)** (*JavaScript Weekly #770*)
+	+ **アップデート**: 高速で柔軟なサーバーサイドHTMLパースライブラリの機能改善アップデートです。
+
+## ✍️ おわりに
+今週は**Node.js、Bun、Rolldown**など、ランタイムやビルドツールの大規模なアップデートが相次ぎ、バックエンドやインフラに関心のあるフロントエンドエンジニアにとって特に興味深い一週間でした。また、**Super Monkey Ball**や**Midscene**のように、AIやWebGPUを活用してウェブの境界を広げようとする試みは、私たちに「ウェブでどこまでできるのか？」という新しいインスピレーションを与えてくれます。新しいツールの洪水の中でも、**CSS Layout**の基本を固める記事が根強く読まれていることは、技術が変わっても本質は変わらないことを再確認させてくれます。
+
+#### 出典
+- [JavaScript Weekly #770](https://javascriptweekly.com/issues/770)
+- [Frontend Focus #726](https://frontendfoc.us/issues/726)
+- [React Status #460](https://react.statuscode.com/issues/460)
+- [Smashing Newsletter #543](https://mailchi.mp/smashingmagazine/543-interface-design-patterns)
+- [CSS Weekly #633](https://css-weekly.com/issue-633)
+- [bytes #457](https://bytes.dev/archives/457)
+- [bytes #458](https://bytes.dev/archives/458)
