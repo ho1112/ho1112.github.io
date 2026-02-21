@@ -1,0 +1,140 @@
+---
+title: '🚀 2026-02 W3 #47'
+desc: Interop 2026 웹 표준 대통합, 최신 CSS 수학 함수 활용법, 서드파티 스크립트 최적화 | 2026년 2월 3주차 주간 기술 뉴스레터
+date: 2026-02-21
+thumbnail: /posts/weekly/february.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주에는 프론트엔드 생태계의 성능(Performance) 최적화와 표준화된 웹 기술 도입에 관한 논의가 활발했습니다. 주요 브라우저 벤더들이 협력하는 'Interop 2026'이 발표되어 새로운 CSS 기능과 API의 일관된 지원이 기대되는 가운데, 무거운 자바스크립트 아키텍처에 대한 반성과 서드파티 스크립트 최적화, React의 성능 진단 도구 등 실무자들이 즉시 프로젝트에 도입하고 고민해 볼 수 있는 굵직한 심층 분석과 도구들이 풍성하게 쏟아진 한 주였습니다.
+
+## 1. 🔍 심층 분석
+- **[Announcing Interop 2026](https://frontendfoc.us/link/180841/web)** (출처: *Frontend Focus #729* )
+   ![Announcing Interop 2026](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hnppf2wakpdiueogk96c.jpg)
+   - 배경: Google, Apple, Igalia, Microsoft, Mozilla 등 주요 브라우저 벤더들이 협력하여 개발자들이 가장 필요로 하는 웹 기술의 크로스 브라우저 호환성을 개선하는 Interop 프로젝트의 2026년 계획이 발표되었습니다.
+   - 핵심 기능: `attr()` 개선, 컨테이너 스타일 쿼리, `contrast-color()`, 스크롤 기반 애니메이션 등 총 15개의 새로운 주제에 대한 브라우저 간 호환성 목표가 도입되었습니다.
+   - 코드 예제:
+     ```css
+     .container {
+       color: contrast-color(var(--bg-color));
+       background-color: var(--bg-color);
+     }
+     ```
+   - 실무 적용: 다양한 브라우저 환경에서 별도의 폴백(fallback) 구현 없이 최신 CSS와 웹 API 기능들을 보다 안정적으로 사용할 수 있는 환경을 구축하는 데 필수적입니다.
+   - 주의사항: 각 벤더의 브라우저별로 실제 업데이트 일정과 세부 구현 방식에 시간차가 있을 수 있으므로 연간 진행 상황을 모니터링해야 합니다.
+- **[Building Typographic Scales in CSS with :heading(), sibling-index(), and pow()](https://www.alwaystwisted.com/articles/building-typographic-scales-with-headings-sibling-index-and-pow?utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (출처: *CSS Weekly #636* )
+   - 배경: 디자인 시스템에서 일관된 타이포그래피 스케일을 유지하기 위해 수학적 계산을 CSS만으로 구현해야 하는 요구가 커지고 있습니다.
+   - 핵심 기능: CSS의 새로운 기능인 `:heading()`, 요소의 순서를 참조하는 `sibling-index()`, 그리고 거듭제곱을 계산하는 `pow()` 함수를 결합하여 유연하고 동적인 타이포그래피 스케일을 만듭니다.
+   - 코드 예제:
+     ```css
+     :heading() {
+       font-size: calc(1rem * pow(1.2, reverse-sibling-index()));
+     }
+     ```
+   - 실무 적용: 깔끔한 CSS 디자인 시스템을 구축하고, 클래스 남용 없이 HTML 구조의 계층에 따라 자동으로 폰트 크기가 조정되도록 설계할 때 유용합니다.
+   - 주의사항: 최신 CSS 수학 함수 및 선택자를 사용하므로, 구형 브라우저에 대한 호환성 체크가 필요합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Corner Cases of Implementing CSS corner-shape in Blink](https://developer.chrome.com/blog/implementing-corner-shape?hl=en&utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (출처: *CSS Weekly #636* )
+  + 요약: 브라우저 렌더링 엔진인 Blink에서 `corner-shape` 속성을 구현할 때 직면하게 되는 복잡한 코너 케이스와 해결 과정에 대한 심층적인 이야기를 다룹니다.
+- **[Justifying `text-wrap: pretty`](https://frontendfoc.us/link/180863/web)** (출처: *Frontend Focus #729* )
+  + 요약: Safari가 `text-wrap: pretty` 속성을 제대로 지원하기 시작한 시점에서, 텍스트 정렬(`text-align`)과 함께 사용할 때 발생할 수 있는 미적인 한계와 그 이유를 분석합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[React Doctor: Give Your React Code a Quick Check-Up](https://www.react.doctor/)** (출처: *React Status #463* )
+  ![React Doctor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lvgpjb1ynirvu1tslcba.jpg)
+  + 개요: React Scan 제작자가 새롭게 선보인 도구로, 코드베이스의 보안, 성능 및 아키텍처 문제를 빠르게 스캔하여 알려주는 진단 툴입니다.
+  + 사용법:
+    ```bash
+    npx -y react-doctor@latest .
+    ```
+  + 실전 팁: 터미널에서 스캔 결과를 확인하는 것을 넘어, 코딩 에이전트(AI)와 연동하여 자동으로 버그를 수정하는 워크플로우에 통합하기 적합하게 설계되었습니다.
+- **[TanStack Hotkeys: A Type-Safe, Cross-Platform Hotkey Library](https://javascriptweekly.com/link/180785/web)** (출처: *JavaScript Weekly #773* )  
+  ![TanStack Hotkeys](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/r2fpf9tqoyfd43aqs1pc.jpg)
+  + 개요: TanStack 생태계에 새로 추가된 타입 안전(Type-Safe) 크로스 플랫폼 단축키 라이브러리입니다. 크로스 환경의 특이점을 처리하고, 다단계 시퀀스(Vim 커맨드 등)를 지원합니다.
+  + 사용법:
+    ```js
+    import { useHotkeys } from '@tanstack/react-hotkeys';
+
+    useHotkeys('ctrl+k', () => console.log('Search opened!'));
+    ```
+  + 실전 팁: 사용자의 단축키 기록 기능을 지원하며, 현재는 React를 중심으로 문서가 제공되지만 Solid, Angular, Svelte, Vue 어댑터도 확장될 예정입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Slowmo: Slow Down, Pause, or Speed Up Browser Time](https://frontendfoc.us/link/180869/web)** (출처: *Frontend Focus #729* )
+  + 요약: 브라우저 내의 CSS 애니메이션, 트랜지션 및 `requestAnimationFrame`의 실행 속도를 늦추거나 멈춰서 세밀하게 디버깅할 수 있게 돕는 유용한 유틸리티입니다.
+- **[Electrobun v1: A Bun-Based Desktop App Approach](https://javascriptweekly.com/link/180810/web)** (출처: *JavaScript Weekly #773* )
+  + 요약: OS에 내장된 기본 웹 렌더러를 활용하여 JS/TS 기반 크로스 플랫폼 데스크톱 앱을 빠르게 구축할 수 있도록 돕는 Bun 기반 런타임 환경입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Mitigating Third-Party Impact](https://www.linkedin.com/posts/erwinhofman_facebook-activity-7416456367470931968-TQ9u?utm_source=share&utm_medium=member_desktop&rcm=ACoAAACDcgQBa_vsk5breYKwZAgyIhsHtJaFbL8)** (출처: *Smashing Newsletter #546* )
+  ![Mitigating Third-Party Impact](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/20d7d619-05d3-bcf6-ac9c-a5a408017c97.png)
+  + 핵심 인사이트: 최근 Facebook이 데스크톱 환경에서 브라우저의 즉각적인 bfcache를 깨뜨리는 `unload` 이벤트를 재도입한 사례를 조명하며, 서드파티 스크립트가 유발하는 성능 및 UX 저하를 어떻게 제한하고 해결할 수 있는지에 대한 실질적인 팁을 공유합니다.
+- **[5 CSS Fouls That I See Way Too Often](https://www.youtube.com/watch?v=J_cnZa6UzVI&utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (출처: *CSS Weekly #636* )
+  ![5 CSS Fouls That I See Way Too Often](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-636%2Fimages%2F5-css-fouls-that-i-see-way-too-often.jpg&w=1200&q=75&dpl=dpl_Gr89PG4p2fv3YFgte4pDmGA5gHDi)
+  + 핵심 인사이트: 유명 CSS 강좌 제작자인 Kevin Powell이 실무 코드에서 너무나도 자주 발견되는 CSS 안티 패턴 5가지를 짚어내고, 이를 어떻게 올바르고 깔끔한 코드로 수정할 수 있는지 안내하는 튜토리얼 영상입니다.
+- **['JS-Heavy Approaches Aren't Compatible with Long-Term Performance Goals'](https://sgom.es/posts/2026-02-13-js-heavy-approaches-are-not-compatible-with-long-term-performance-goals/)** (출처: *React Status #463* )
+  + 핵심 인사이트: Automattic의 웹 성능 엔지니어가 React와 같이 "무거운" 프론트엔드 프레임워크에 지나치게 의존하는 것이 장기적인 웹 성능 목표에 왜 부합하지 않는지 분석하며, 서버 중심적 아키텍처(Server-centric approaches)로의 회귀 필요성을 강하게 주장합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[CrUX, RUM, And Synthetic Monitoring](https://www.speedcurve.com/blog/crux-rum-synthetic-web-performance-monitoring/)** (출처: *Smashing Newsletter #546* )
+  + 요약: 성능 모니터링 방식인 CrUX, RUM, 그리고 Synthetic Monitoring의 각 강점과 한계를 비교하고, 어떤 상황에서 어떤 도구를 사용해야 귀중한 인사이트를 얻을 수 있는지 요약한 가이드입니다.
+- **[Modern CSS Code Snippets](https://frontendfoc.us/link/180847/web)** (출처: *Frontend Focus #729* )
+  + 요약: 특정 UI 컴포넌트를 구현할 때 '과거(old)의 방법'과 최신 CSS 기능들을 활용한 '새로운(new) 방법'의 코드 스니펫을 직관적으로 비교하여 새로운 테크닉을 익힐 수 있는 아티클입니다.
+---
+
+## 4. ✨ 아이디어
+- **[Picket Fence Animation Using Scroll Animations](https://codepen.io/cbolson/pen/JoKBeaW?utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (출처: *CSS Weekly #636* )
+  ![Picket Fence Animation Using Scroll Animations](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-636%2Fimages%2Fpicket-fence-animation-using-scroll-animations.jpg&w=1200&q=75&dpl=dpl_Gr89PG4p2fv3YFgte4pDmGA5gHDi)
+  + 특징: 최신 CSS 스크롤 기반 애니메이션(Scroll-driven animations)의 시각적 가능성을 잘 보여주는 독창적인 울타리 데모 인터랙션입니다.
+- **[Building a Scroll-Driven 3D 'Image Tube' with React Three Fiber](https://tympanus.net/codrops/2026/02/17/reactive-depth-building-a-scroll-driven-3d-image-tube-with-react-three-fiber/)** (출처: *React Status #463* )
+  + 특징: 스크롤 동작에 반응하여 깊이감 있게 빨려 들어가는 듯한 3D '이미지 튜브' 효과를 React Three Fiber를 사용하여 구축하는 인상적인 시각적 튜토리얼입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[EU wants to tackle 'addictive UI' patterns](https://frontendfoc.us/link/180854/web)** (출처: *Frontend Focus #729* )
+  + 요약: 유럽연합(EU)이 무한 스크롤과 같이 사용자에게 중독성을 유발하는 UI 패턴들을 정책적으로 제한하려는 움직임을 보이고 있습니다.
+- **[Google shows off a preview of WebMCP](https://javascriptweekly.com/link/180792/web)** (출처: *JavaScript Weekly #773* )
+  + 요약: 구글이 웹사이트가 AI 에이전트에게 자체 기능을 제공할 수 있는 표준 규격 'WebMCP'의 프리뷰를 공개했습니다.
+- **[CSSWG publishes a first public working draft of Selectors Level 5](https://frontendfoc.us/link/180857/web)** (출처: *Frontend Focus #729* )
+  + 요약: CSS 워킹 그룹(CSSWG)이 한층 진보된 선택자 스펙을 담은 CSS Selectors Level 5의 첫 번째 공개 작업 초안을 발표했습니다.
+- **[State of React results](https://javascriptweekly.com/link/180791/web)** (출처: *JavaScript Weekly #773* )
+  + 요약: 최근 발표된 State of JS 결과에 이어, React 생태계의 트렌드와 사용 현황을 파악할 수 있는 'State of React' 설문조사 결과가 공개되었습니다.
+- **[Data from over 100,000 sites was boiled down into this useful report on modern CSS usage.](https://javascriptweekly.com/link/180830/web)** (출처: *JavaScript Weekly #773* )
+  + 요약: 10만 개가 넘는 웹사이트의 데이터를 분석한 현대 CSS 사용 실태 보고서가 발표되었으며, 페이지당 규칙 수 등 흥미로운 통계가 공유되었습니다.
+
+## 6. 🎉 릴리스
+- **[Chrome 145 has been released](https://frontendfoc.us/link/180848/web)** (*Frontend Focus #729* )
+  + 업데이트: `column-wrap` 및 `column-height` 속성에 대한 지원이 새롭게 추가된 크롬 145 버전이 정식 출시되었습니다.
+- **[`styled-components` Lives; Now Supports RSC (v6.3.0)](https://github.com/styled-components/styled-components/releases/tag/styled-components%406.3.0)** (*React Status #463* )
+  + 업데이트: 잠시 유지보수 모드에 들어갔던 styled-components가 6.3.0 릴리스와 함께 React Server Components(RSC)를 지원하며 기능 개발을 재개했습니다.
+- **[DayFlow 3.1](https://github.com/dayflow-js/calendar/releases/tag/v3.1.0)** (*React Status #463* )
+  + 업데이트: 완전한 플러그인 아키텍처를 도입하여 확장성을 극대화한 풀 캘린더 컴포넌트 업데이트입니다.
+- **[npm v11.10.0](https://github.blog/changelog/2026-02-18-npm-bulk-trusted-publishing-config-and-script-security-now-generally-available/)** (*React Status #463* )
+  + 업데이트: 대량의 신뢰할 수 있는 퍼블리싱 구성 및 스크립트 보안 기능이 정식(Generally Available)으로 포함된 npm의 신규 버전입니다.
+- **[Biome 2.4](https://javascriptweekly.com/link/180793/web)** (*JavaScript Weekly #773* )
+  + 업데이트: JS 파일 내장 CSS 및 GraphQL 처리 기능 향상, Vue 및 Svelte 지원 개선, 그리고 HTML 접근성 린팅 규칙이 추가되었습니다.
+- **[React Native 0.84](https://javascriptweekly.com/link/180794/web)** (*JavaScript Weekly #773* )
+  + 업데이트: Hermes V1이 iOS 및 안드로이드에서 기본 JS 엔진으로 적용되었으며 React 19.2.3 지원이 포함되었습니다.
+- **[Node.js 25.6.1 (Current) and Node.js 24.13.1 (LTS)](https://javascriptweekly.com/link/180795/web)** (*JavaScript Weekly #773* )
+  + 업데이트: 최신 기능과 안정성을 제공하는 Node.js의 Current 버전 및 장기 지원(LTS) 버전 정기 업데이트가 배포되었습니다.
+- **[sql.js v1.14.0](https://javascriptweekly.com/link/180797/web)** (*JavaScript Weekly #773* )
+  + 업데이트: 브라우저 환경에서 동작하도록 JavaScript로 컴파일된 SQLite 라이브러리가 1.14.0으로 업데이트되었습니다.
+- **[Stockfish.js 18](https://javascriptweekly.com/link/180823/web)** (*JavaScript Weekly #773* )
+  + 업데이트: 유명한 Stockfish 체스 엔진을 JavaScript 환경에서 구동할 수 있게 포팅한 WASM 라이브러리의 최신 18 버전이 출시되었습니다.
+- **[Announcing TypeScript 6.0 Beta](https://javascriptweekly.com/link/180788/web)** (*JavaScript Weekly #773* )
+  + 업데이트: 향후 Go 기반의 네이티브 구현체로 출시될 TypeScript 7을 준비하기 위해 설정의 기본값을 변경하고 정리 작업을 수행한 베타 버전이 발표되었습니다.
+
+## ✍️ 마치며
+이번 주 뉴스레터들을 정리하며, 프론트엔드 환경이 복잡성을 덜어내고 '기본기'와 '성능'으로 회귀하려는 강한 흐름을 읽을 수 있었습니다. Interop 2026을 통한 브라우저 표준의 대통합 예고, CSS의 고도화된 함수(`pow`, `:heading`) 도입은 더 이상 자바스크립트에 UI의 책임을 모두 떠넘기지 않아도 됨을 시사합니다. 또한 React 성능 측정, JS-Heavy 아키텍처에 대한 반성, 그리고 서드파티 스크립트 최적화(unload 이슈) 등 실무적 고충을 해결하려는 움직임은 프론트엔드 개발자들이 "기능 구현"을 넘어 "사용자 경험의 최적화"라는 본질에 더욱 집중해야 하는 시기가 왔음을 보여줍니다.
+
+#### 출처
+- [JavaScript Weekly #773](https://javascriptweekly.com/issues/773)
+- [Frontend Focus #729](https://frontendfoc.us/issues/729)
+- [React Status #463](https://react.statuscode.com/issues/463)
+- [Smashing Newsletter #546](https://mailchi.mp/smashingmagazine/546-web-performance-2026)
+- [CSS Weekly #636](https://css-weekly.com/issue-636)

@@ -1,0 +1,140 @@
+---
+title: '🚀 2026-02 W3 #47'
+desc: Interop 2026 Web標準の大統合、最新CSS数学関数の活用法、サードパーティスクリプトの最適化 | 2026年2月第3週目 週間技術ニュースレター
+date: 2026-02-21
+thumbnail: /posts/weekly/february.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、フロントエンドエコシステムのパフォーマンス(Performance)最適化と標準化されたウェブ技術の導入に関する議論が活発に行われました。主要ブラウザベンダーが協力する「Interop 2026」が発表され、新しいCSS機能とAPIの一貫したサポートが期待される中、重いJavaScriptアーキテクチャに対する反省やサードパーティスクリプトの最適化、Reactのパフォーマンス診断ツールなど、実務者がすぐにプロジェクトに導入して検討できる重要な深掘り記事やツールが豊富に公開された一週間でした。
+
+## 1. 🔍 深掘り
+- **[Announcing Interop 2026](https://frontendfoc.us/link/180841/web)** (出典: *Frontend Focus #729* )
+	![Announcing Interop 2026](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hnppf2wakpdiueogk96c.jpg)
+	- 背景: Google、Apple、Igalia、Microsoft、Mozillaなどの主要ブラウザベンダーが協力し、開発者が最も必要とするウェブ技術のクロスブラウザ互換性を改善するInteropプロジェクトの2026年計画が発表されました。
+	- 核心機能: `attr()`の改善、コンテナスタイルクエリ、`contrast-color()`、スクロール駆動アニメーションなど、計15の新しいテーマに対するブラウザ間の互換性目標が導入されました。
+	- コード例:
+	```css
+	.container {
+		color: contrast-color(var(--bg-color));
+		background-color: var(--bg-color);
+	}
+	```
+	- 実務適用: 多様なブラウザ環境において、個別のフォールバック(fallback)を実装することなく、最新のCSSとウェブAPI機能をより安定して使用できる環境を構築するために不可欠です。
+	- 注意事項: 各ベンダーのブラウザごとに実際のアップデート日程や詳細な実装方式に時間差が生じる可能性があるため、年間の進捗状況をモニタリングする必要があります。
+- **[Building Typographic Scales in CSS with :heading(), sibling-index(), and pow()](https://www.alwaystwisted.com/articles/building-typographic-scales-with-headings-sibling-index-and-pow?utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (出典: *CSS Weekly #636* )
+	- 背景: デザインシステムで一貫したタイポグラフィスケールを維持するために、数学的な計算をCSSのみで実装する要求が高まっています。
+	- 核心機能: CSSの新しい機能である`:heading()`、要素の順序を参照する`sibling-index()`、そしてべき乗を計算する`pow()`関数を組み合わせて、柔軟で動的なタイポグラフィスケールを作成します。
+	- コード例:
+	```css
+	:heading() {
+		font-size: calc(1rem * pow(1.2, reverse-sibling-index()));
+	}
+	```
+	- 実務適用: すっきりとしたCSSデザインシステムを構築し、クラスを乱用することなく、HTML構造の階層に応じて自動的にフォントサイズが調整されるように設計する際に役立ちます。
+	- 注意事項: 最新のCSS数学関数およびセレクタを使用するため、古いブラウザに対する互換性チェックが必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[The Corner Cases of Implementing CSS corner-shape in Blink](https://developer.chrome.com/blog/implementing-corner-shape?hl=en&utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (出典: *CSS Weekly #636* )
+	+ 要約: ブラウザのレンダリングエンジンであるBlinkで`corner-shape`プロパティを実装する際に直面する複雑なコーナーケースと解決プロセスについての深い話を扱っています。
+- **[Justifying `text-wrap: pretty`](https://frontendfoc.us/link/180863/web)** (出典: *Frontend Focus #729* )
+	+ 要約: Safariが`text-wrap: pretty`プロパティを適切にサポートし始めた時点で、テキストの配置(`text-align`)と一緒に使用する際に発生しうる美的な限界とその理由を分析します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[React Doctor: Give Your React Code a Quick Check-Up](https://www.react.doctor/)** (出典: *React Status #463* )
+	![React Doctor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lvgpjb1ynirvu1tslcba.jpg)
+	+ 概要: React Scanの制作者が新たに披露したツールで、コードベースのセキュリティ、パフォーマンス、およびアーキテクチャの問題を素早くスキャンして知らせる診断ツールです。
+	+ 使用法:
+	```bash
+	npx -y react-doctor@latest .
+	```
+	+ 実践チップ: ターミナルでスキャン結果を確認するだけでなく、コーディングエージェント(AI)と連動して自動的にバグを修正するワークフローに統合するのに適した設計になっています。
+- **[TanStack Hotkeys: A Type-Safe, Cross-Platform Hotkey Library](https://javascriptweekly.com/link/180785/web)** (出典: *JavaScript Weekly #773* )  
+	![TanStack Hotkeys](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/r2fpf9tqoyfd43aqs1pc.jpg)
+	+ 概要: TanStackエコシステムに新たに追加された型安全(Type-Safe)なクロスプラットフォームショートカットライブラリです。クロス環境の特異点を処理し、マルチステップシーケンス(Vimコマンドなど)をサポートします。
+	+ 使用法:
+	```js
+	import { useHotkeys } from '@tanstack/react-hotkeys';
+
+	useHotkeys('ctrl+k', () => console.log('Search opened!'));
+	```
+	+ 実践チップ: ユーザーのショートカット履歴機能をサポートし、現在はReactを中心にドキュメントが提供されていますが、Solid、Angular、Svelte、Vueアダプターも拡張される予定です。
+
+---
+#### 見逃せないコンテンツ
+- **[Slowmo: Slow Down, Pause, or Speed Up Browser Time](https://frontendfoc.us/link/180869/web)** (出典: *Frontend Focus #729* )
+	+ 要約: ブラウザ内のCSSアニメーション、トランジション、および`requestAnimationFrame`の実行速度を遅らせたり、一時停止したりして、詳細にデバッグできるように支援する便利なユーティリティです。
+- **[Electrobun v1: A Bun-Based Desktop App Approach](https://javascriptweekly.com/link/180810/web)** (出典: *JavaScript Weekly #773* )
+	+ 要約: OSに内蔵されたデフォルトのWebレンダラーを活用して、JS/TSベースのクロスプラットフォームデスクトップアプリを迅速に構築できるように支援するBunベースのランタイム環境です。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Mitigating Third-Party Impact](https://www.linkedin.com/posts/erwinhofman_facebook-activity-7416456367470931968-TQ9u?utm_source=share&utm_medium=member_desktop&rcm=ACoAAACDcgQBa_vsk5breYKwZAgyIhsHtJaFbL8)** (出典: *Smashing Newsletter #546* )
+	![Mitigating Third-Party Impact](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/20d7d619-05d3-bcf6-ac9c-a5a408017c97.png)
+	+ 主要なインサイト: 最近Facebookがデスクトップ環境でブラウザの即時bfcacheを壊す`unload`イベントを再導入した事例に焦点を当て、サードパーティスクリプトが引き起こすパフォーマンスおよびUXの低下をどのように制限し、解決できるかについての実質的なヒントを共有しています。
+- **[5 CSS Fouls That I See Way Too Often](https://www.youtube.com/watch?v=J_cnZa6UzVI&utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (出典: *CSS Weekly #636* )
+	![5 CSS Fouls That I See Way Too Often](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-636%2Fimages%2F5-css-fouls-that-i-see-way-too-often.jpg&w=1200&q=75&dpl=dpl_Gr89PG4p2fv3YFgte4pDmGA5gHDi)
+	+ 主要なインサイト: 有名なCSS講座の制作者であるKevin Powellが、実務コードであまりにも頻繁に発見されるCSSアンチパターン5つを指摘し、これをどのように正しくクリーンなコードに修正できるかを案内するチュートリアル動画です。
+- **['JS-Heavy Approaches Aren't Compatible with Long-Term Performance Goals'](https://sgom.es/posts/2026-02-13-js-heavy-approaches-are-not-compatible-with-long-term-performance-goals/)** (出典: *React Status #463* )
+	+ 主要なインサイト: Automatticのウェブパフォーマンスエンジニアが、Reactのような「重い」フロントエンドフレームワークに過度に依存することが、長期的なウェブパフォーマンスの目標になぜ合致しないのかを分析し、サーバー中心のアーキテクチャ(Server-centric approaches)への回帰の必要性を強く主張しています。
+
+---
+#### 見逃せないコンテンツ
+- **[CrUX, RUM, And Synthetic Monitoring](https://www.speedcurve.com/blog/crux-rum-synthetic-web-performance-monitoring/)** (出典: *Smashing Newsletter #546* )
+	+ 要約: パフォーマンスモニタリング方式であるCrUX、RUM、およびSynthetic Monitoringのそれぞれの強みと限界を比較し、どのような状況でどのツールを使用すれば貴重なインサイトを得ることができるのかを要約したガイドです。
+- **[Modern CSS Code Snippets](https://frontendfoc.us/link/180847/web)** (出典: *Frontend Focus #729* )
+	+ 要約: 特定のUIコンポーネントを実装する際に、「過去(old)の方法」と最新のCSS機能を活用した「新しい(new)方法」のコードスニペットを直感的に比較して、新しいテクニックを学ぶことができる記事です。
+---
+
+## 4. ✨ アイデア
+- **[Picket Fence Animation Using Scroll Animations](https://codepen.io/cbolson/pen/JoKBeaW?utm_source=CSS-Weekly&utm_campaign=Issue-636&utm_medium=web)** (出典: *CSS Weekly #636* )
+	![Picket Fence Animation Using Scroll Animations](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-636%2Fimages%2Fpicket-fence-animation-using-scroll-animations.jpg&w=1200&q=75&dpl=dpl_Gr89PG4p2fv3YFgte4pDmGA5gHDi)
+	+ 特徴: 最新のCSSスクロール駆動アニメーション(Scroll-driven animations)の視覚的な可能性をよく示している、独創的なフェンスのデモインタラクションです。
+- **[Building a Scroll-Driven 3D 'Image Tube' with React Three Fiber](https://tympanus.net/codrops/2026/02/17/reactive-depth-building-a-scroll-driven-3d-image-tube-with-react-three-fiber/)** (出典: *React Status #463* )
+	+ 特徴: スクロール動作に反応して奥行き感を持って吸い込まれるような3D「イメージチューブ」効果を、React Three Fiberを使用して構築する印象的な視覚的チュートリアルです。
+
+## 5. ⚡️ ミニノート
+- **[EU wants to tackle 'addictive UI' patterns](https://frontendfoc.us/link/180854/web)** (出典: *Frontend Focus #729* )
+	+ 要約: 欧州連合(EU)が、無限スクロールのようにユーザーに中毒性を引き起こすUIパターンを政策的に制限しようとする動きを見せています。
+- **[Google shows off a preview of WebMCP](https://javascriptweekly.com/link/180792/web)** (出典: *JavaScript Weekly #773* )
+	+ 要約: Googleが、ウェブサイトがAIエージェントに独自の機能を提供できる標準規格「WebMCP」のプレビューを公開しました。
+- **[CSSWG publishes a first public working draft of Selectors Level 5](https://frontendfoc.us/link/180857/web)** (出典: *Frontend Focus #729* )
+	+ 要約: CSSワーキンググループ(CSSWG)が、さらに進化したセレクタの仕様を盛り込んだCSS Selectors Level 5の最初の公開作業草案を発表しました。
+- **[State of React results](https://javascriptweekly.com/link/180791/web)** (出典: *JavaScript Weekly #773* )
+	+ 要約: 最近発表されたState of JSの結果に続き、Reactエコシステムのトレンドと使用状況を把握できる「State of React」アンケート調査の結果が公開されました。
+- **[Data from over 100,000 sites was boiled down into this useful report on modern CSS usage.](https://javascriptweekly.com/link/180830/web)** (出典: *JavaScript Weekly #773* )
+	+ 要約: 10万を超えるウェブサイトのデータを分析した現代のCSS使用実態レポートが発表され、ページあたりのルール数など興味深い統計が共有されました。
+
+## 6. 🎉 リリース
+- **[Chrome 145 has been released](https://frontendfoc.us/link/180848/web)** (*Frontend Focus #729* )
+	+ アップデート: `column-wrap`および`column-height`プロパティのサポートが新たに追加されたChrome 145バージョンが正式にリリースされました。
+- **[`styled-components` Lives; Now Supports RSC (v6.3.0)](https://github.com/styled-components/styled-components/releases/tag/styled-components%406.3.0)** (*React Status #463* )
+	+ アップデート: しばらくメンテナンスモードに入っていたstyled-componentsが、6.3.0リリースとともにReact Server Components(RSC)をサポートし、機能開発を再開しました。
+- **[DayFlow 3.1](https://github.com/dayflow-js/calendar/releases/tag/v3.1.0)** (*React Status #463* )
+	+ アップデート: 完全なプラグインアーキテクチャを導入し、拡張性を極大化したフルカレンダーコンポーネントのアップデートです。
+- **[npm v11.10.0](https://github.blog/changelog/2026-02-18-npm-bulk-trusted-publishing-config-and-script-security-now-generally-available/)** (*React Status #463* )
+	+ アップデート: 大量の信頼できるパブリッシング構成およびスクリプトセキュリティ機能が正式(Generally Available)に含まれたnpmの新バージョンです。
+- **[Biome 2.4](https://javascriptweekly.com/link/180793/web)** (*JavaScript Weekly #773* )
+	+ アップデート: JSファイル内蔵のCSSおよびGraphQL処理機能の向上、VueおよびSvelteサポートの改善、そしてHTMLアクセシビリティリンティングルールが追加されました。
+- **[React Native 0.84](https://javascriptweekly.com/link/180794/web)** (*JavaScript Weekly #773* )
+	+ アップデート: Hermes V1がiOSおよびAndroidでデフォルトのJSエンジンとして適用され、React 19.2.3のサポートが含まれました。
+- **[Node.js 25.6.1 (Current) and Node.js 24.13.1 (LTS)](https://javascriptweekly.com/link/180795/web)** (*JavaScript Weekly #773* )
+	+ アップデート: 最新機能と安定性を提供するNode.jsのCurrentバージョンおよび長期サポート(LTS)バージョンの定期アップデートが配布されました。
+- **[sql.js v1.14.0](https://javascriptweekly.com/link/180797/web)** (*JavaScript Weekly #773* )
+	+ アップデート: ブラウザ環境で動作するようにJavaScriptにコンパイルされたSQLiteライブラリが1.14.0にアップデートされました。
+- **[Stockfish.js 18](https://javascriptweekly.com/link/180823/web)** (*JavaScript Weekly #773* )
+	+ アップデート: 有名なStockfishチェスエンジンをJavaScript環境で駆動できるように移植したWASMライブラリの最新18バージョンがリリースされました。
+- **[Announcing TypeScript 6.0 Beta](https://javascriptweekly.com/link/180788/web)** (*JavaScript Weekly #773* )
+	+ アップデート: 今後Goベースのネイティブ実装としてリリースされるTypeScript 7を準備するために、設定のデフォルト値を変更してクリーンアップ作業を実行したベータ版が発表されました。
+
+## ✍️ おわりに
+今週のニュースレターをまとめると、フロントエンド環境が複雑さを減らし、「基本」と「パフォーマンス」へ回帰しようとする強い流れを読み取ることができました。Interop 2026を通じたブラウザ標準の大統合の予告、CSSの高度化された関数(`pow`、`:heading`)の導入は、もはやJavaScriptにUIの責任をすべて押し付ける必要がないことを示唆しています。また、Reactのパフォーマンス測定、JS-Heavyアーキテクチャに対する反省、そしてサードパーティスクリプトの最適化(unloadの問題)など、実務的な苦労を解決しようとする動きは、フロントエンド開発者が「機能の実装」を超えて「ユーザー体験の最適化」という本質により集中すべき時期が来たことを示しています。
+
+#### 出典
+- [JavaScript Weekly #773](https://javascriptweekly.com/issues/773)
+- [Frontend Focus #729](https://frontendfoc.us/issues/729)
+- [React Status #463](https://react.statuscode.com/issues/463)
+- [Smashing Newsletter #546](https://mailchi.mp/smashingmagazine/546-web-performance-2026)
+- [CSS Weekly #636](https://css-weekly.com/issue-636)
