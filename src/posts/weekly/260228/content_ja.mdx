@@ -1,0 +1,149 @@
+---
+title: '🚀 2026-02 W4 #48'
+desc: react | 2026年2月第4週目 週間技術ニュースレター
+date: 2026-02-28
+thumbnail: /posts/weekly/february.avif
+---
+
+## 🔥 今週の主要テーマ
+今週のウェブエコシステムは、次世代ツールの発展とパフォーマンス最適化が主役となりました。CloudflareがAIを活用し、1週間でNext.jsをViteベースで再実装した実験的なプロジェクトが話題を集めたほか、Rustベースの超高速フォーマッターOxfmtが登場し、ツールチェーンのパフォーマンス基準を一段階引き上げました。また、Reactエコシステムの独立を知らせるReact Foundationの設立のニュースとともに、V8ポインター圧縮によるNode.jsの画期的なメモリ削減手法など、大規模なアーキテクチャ改善のニュースが溢れた1週間でした。
+
+## 1. 🔍 深掘り
+
+- **[How Cloudflare Rebuilt Next.js with AI in a Week](https://blog.cloudflare.com/vinext/)** (出典: *React Status #464* )
+	![Cloudflare Vinext](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dctlwzphfd736ecuvk1q.jpg)
+	- 背景: Vercelに依存するNext.jsアプリを、Cloudflare Workersのような代替環境でスムーズに実行するための方法を探るために開始された実験的なプロジェクトです。
+	- 主要機能: `vinext`はViteをベースにNext.jsのAPIサーフェス(API surface)を再実装したフレームワークです。AIコーディングエージェントを積極的に活用し、1週間で開発されました。
+	- コード例:
+		```bash
+		# Cloudflare環境でNext.js互換プロジェクトを開始
+		npm create cloudflare@latest --framework=vinext
+		```
+	- 実務適用: 既存のNext.jsプロジェクトをエッジランタイムに最適化されたCloudflareインフラへマイグレーションしたり、より軽量なViteベースの代替案をテストする際に役立ちます。
+	- 注意事項: まだ意味のある規模のトラフィックで検証されていない実験的な段階であり、一部のNext.js機能はサポートされない可能性があるというトレードオフが存在します。
+
+- **[Halving Node.js Memory Usage with Pointer Compression](https://javascriptweekly.com/link/181121/web)** (出典: *JavaScript Weekly #774* )
+	- 背景: メモリ制約のある環境(コンテナなど)でNode.jsプロセスのメモリ占有率を大幅に下げるため、V8エンジンのポインター圧縮機能を導入しました。
+	- 主要機能: Cloudflare、Igalia、Node.jsプロジェクトの協業によって誕生した`node-caged`は、64ビットポインターを32ビットに圧縮し、ヒープ(Heap)メモリ使用量を最大50%まで削減します。
+	- コード例:
+		```dockerfile
+		# ポインター圧縮が有効化されたNode.js 25ベースのイメージを使用
+		FROM node:25-caged
+		CMD ["node", "app.js"]
+		```
+	- 実務適用: 数多くのマイクロサービスを運用したり、クラウド環境でコンテナの集積度を高めてコストを削減する必要がある場合に大きな効果を得られます。
+	- 注意事項: 最大ヒープサイズが4GBに制限されるため、単一プロセスで大容量データをメモリにキャッシングする必要があるアプリケーションには適していない場合があります。
+
+---
+#### 見逃せないコンテンツ
+- **[Building Design Components with Action Props using Async React](https://aurorascharff.no/posts/building-design-components-with-action-props-using-async-react/)** (出典: *React Status #464* )
+	+ 要約: 非同期Reactを活用して、アクションプロパティを備えたデザインシステムコンポーネントを設計し、構築する方法を扱います。
+- **[A Designer’s Guide To Eco-Friendly Interfaces](https://www.smashingmagazine.com/2026/02/designer-guide-eco-friendly-interfaces/)** (出典: *Smashing Newsletter #547* )
+	+ 要約: エネルギー消費を減らし、持続可能なウェブエコシステムを作るための環境に優しいUIデザインのガイドラインと実践方法を紹介します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[Oxfmt Beta: A Fast, Rust-Powered JavaScript Code Formatter](https://javascriptweekly.com/link/181088/web)** (出典: *JavaScript Weekly #774* )
+	![Oxfmt Beta](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jceavinnztxzgohscekg.jpg)
+	+ 概要: VoidZeroで開発されたRustベースのJavaScriptコードフォーマッターで、Prettierと100%互換でありながら、Prettier比で30倍、Biome比で3倍速い速度を誇ります。
+	+ 使用法:
+		```bash
+		npx oxfmt . --write
+		```
+	+ 実践チップ: 埋め込み言語(JSX、YAML、HTMLなど)、Tailwind CSSクラスの並べ替え、Import文の並べ替えなどをサポートしているため、既存のPrettier環境を簡単に置き換えて、CI/CDパイプラインの速度を劇的に改善できます。
+
+- **[Yoopta Editor 6.0: A Headless Rich Text Editor for React](https://yoopta.dev/)** (出典: *React Status #464* )
+	![Yoopta Editor](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/nt1kzohy2tnt94oxt0zh.jpg)
+	+ 概要: Notionスタイルのブロックベースのリッチテキストエディタを構築できるReact用のヘッドレス(Headless)エディタライブラリです。
+	+ 使用法:
+		```jsx
+		import { YooptaEditor } from '@yoopta/editor';
+
+		function App() {
+			return <YooptaEditor plugins={[/* 必要なプラグインを追加 */]} />;
+		}
+		```
+	+ 実践チップ: コアはヘッドレス形態ですが、様々なプラグインや事前ビルドされたUIコンポーネントを提供し、素早くプロトタイプを作成してカスタマイズするのに非常に適しています。
+
+---
+#### 見逃せないコンテンツ
+- **[React Doctor: Give Your React Code a Quick Check-Up](https://javascriptweekly.com/link/181132/web)** (出典: *JavaScript Weekly #774* )
+	+ 要約: Reactコードベースをスキャンして0〜100点の間のスコアを付与し、潜在的な問題点を診断してくれる手軽な分析ツールです。
+- **[Slowmo: Slow Down, Pause, or Speed Up Time](https://javascriptweekly.com/link/181130/web)** (出典: *JavaScript Weekly #774* )
+	+ 要約: CSSアニメーション、トランジション、`requestAnimationFrame`など、ブラウザ内の「時間」を強制的に遅くしたり止めたりして、詳細なUIデバッグを支援する便利なツールです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[`border-shape`: The Future of the Non-Rectangular Web]([https://frontendfoc.us/link/181213/web](https://frontendfoc.us/link/181213/web))** (出典: *Frontend Focus #730* )
+	![border-shape experiments](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1772040087/nmquu2z ক্ষমতায়xpjmmpq.jpg)
+	+ 主要なインサイト: ウェブプラットフォームの幾何学的な表現を革新する新しいCSSプロパティである`border-shape`に関する実験と可能性を探求します。現在Chromiumフラグの背後でサポートされており、長方形から脱却した独創的なUIデザインを可能にします。
+	+ なぜこの記事が有益なのか: CSSの未来のスペックを事前に確認し、来るべき非定型ウェブデザイントレンドを先制的に把握するのに大きなインスピレーションを与えます。
+
+- **[Goodbye `innerHTML`, Hello `setHTML` for Stronger XSS Protection]([https://javascriptweekly.com/link/181115/web](https://javascriptweekly.com/link/181115/web))** (出典: *JavaScript Weekly #774* )
+	+ 主要なインサイト: DOMに直接HTMLを注入する際に発生しうるXSS脆弱性を防御するために設計された新しいSanitizer APIの`setHTML`メソッドを紹介します。
+	+ なぜこの記事が有益なのか: Firefox 148からサポートされ始めた安全なDOM操作の新しい標準を学ぶことができ、DOMPurifyのような外部ライブラリなしでもネイティブレベルでセキュリティを強化する方法を提示します。
+
+---
+#### 見逃せないコンテンツ
+- **[Accessibility For Everyone](https://accessibilityforeveryone.site/)** (出典: *Smashing Newsletter #547* )
+	+ 要約: 障害に対する理解からアクセシビリティの計画、評価、テストに至るまで、ウェブアクセシビリティのベストプラクティスを無料で学習できるオンライン書籍です。
+- **[Design Token Naming Guide](https://www.namedesigntokens.guide/)** (出典: *Smashing Newsletter #547* )
+	+ 要約: デザインシステムの核心である「デザイントークン」の正しいネーミング規則と一貫した命名法を、6つの双方向レッスンを通じてマスターできるガイドです。
+---
+
+## 4. ✨ アイデア
+
+- **[Searching For Birds](https://searchingforbirds.visualcinnamon.com/)** (出典: *Smashing Newsletter #547* )
+	![Searching For Birds](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/574b9905-b9d0-4ee1-1268-5171f18bf2f4.png)
+	+ 特徴: 人間が鳥を探す方法に関連するデータを基に、美しいイラストレーションとデータ視覚化を組み合わせたインタラクティブなストーリーテリングプロジェクトです。
+
+- **[VoxJong: 3D CSS Mahjong Solitaire](https://frontendfoc.us/link/181193/web)** (出典: *Frontend Focus #730* )
+	![VoxJong 3D CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1772026087/nfhaoor3lns6offmwmb0.png)
+	+ 特徴: VoxCSSというCSSボクセルエンジンを活用し、JavaScriptベースのレンダラーなしにCSSだけで美しい3D等角投影(Isometric)の麻雀ソリティアゲームを実装した驚くべき事例です。
+
+## 5. ⚡️ ミニノート
+
+- **[The React Foundation Has Launched](https://react.dev/blog/2026/02/24/the-react-foundation)** (出典: *React Status #464* )
+	+ 要約: React、React Native、およびJSXがMetaの所有を離れ、Linux Foundation傘下の独立した財団として設立されました。
+- **[React Native Comes to Meta Quest](https://reactnative.dev/blog/2026/02/24/react-native-comes-to-meta-quest)** (出典: *React Status #464* )
+	+ 要約: Meta Questデバイスが公式にReact Nativeをサポートするようになり、Apple Vision Proの代替として安価にMRアプリを開発できる道が開かれました。
+- **[The Navigation API is now Baseline Newly Available](https://web.dev/blog/baseline-navigation-api?hl=en)** (出典: *Frontend Focus #730* )
+	+ 要約: SPAルーティングを画期的に改善するNavigation APIが、すべての主要ブラウザで使用できるBaselineに組み込まれました。
+- **[Oracle vs Deno JavaScript trademark case extension](https://javascriptweekly.com/link/181157/web)** (出典: *JavaScript Weekly #774* )
+	+ 要約: OracleとDeno間の「JavaScript」商標権紛争が、双方の合意の下で訴訟期限を2ヶ月延長することを決定しました。
+- **[Angular has just passed 100K GitHub stars!](https://javascriptweekly.com/link/181153/web)** (出典: *JavaScript Weekly #774* )
+	+ 要約: AngularフレームワークがGitHubで10万個のスター(Star)を突破する記念碑的な成果を達成しました。
+
+## 6. 🎉 リリース
+
+- **[The first beta of WordPress 7.0 is now available](https://frontendfoc.us/link/181164/web)** (*Frontend Focus #730* )
+	+ アップデート: リアルタイムコラボレーション(Real-time collaboration)機能の追加に重点を置いたWordPress 7.0の最初のベータ版が公開されました。
+- **[Expo SDK 55 Released: The React Native Framework](https://expo.dev/changelog/sdk-55)** (*React Status #464* )
+	+ アップデート: React Native 0.83およびReact 19.2にアップデートされ、レガシーアーキテクチャのサポートが終了し、Hermes v1オプトインサポートが追加されました。
+- **[Bun v1.3.10](https://bun.com/blog/bun-v1.3.10)** (*React Status #464* )
+	+ アップデート: クライアント側のReactアプリを含め、すべてのアセットがインライン化されたスタンドアロンのHTMLファイルを生成する`--compile --target=browser`機能が新たに導入されました。
+- **[Deno 2.7](https://deno.com/blog/v2.7)** (*React Status #464* )
+	+ アップデート: Temporal APIサポートが安定化され、ARMアーキテクチャ上のWindowsをサポートし、サブプロセスの実行方式とNode.jsの互換性が改善されました。
+- **[Tailwind CSS 4.2](https://superhighway.dev/tailwind-v4-2-new-palettes)** (*Frontend Focus #730* )
+	+ アップデート: デフォルトのテーマパレットに4つの新しい色(Mauve, Olive, Mist, Taupe)が追加されました。
+- **[Node.js v25.7.0 (Current) & v24.14.0 (LTS)](https://javascriptweekly.com/link/181105/web)** (*JavaScript Weekly #774* )
+	+ アップデート: ポインター圧縮の実験機能などが含まれた新しいランタイムの最新バージョンと安定化されたLTSバージョンがリリースされました。
+- **[npm v11.10.0](https://javascriptweekly.com/link/181104/web)** (*JavaScript Weekly #774* )
+	+ アップデート: メンテナーが複数のパッケージにわたって信頼できるパブリッシング(Trusted Publishing)設定を同時に更新できるようになり、`--min-release-age`オプションが追加されました。
+- **[Vuetify 4.0](https://javascriptweekly.com/link/181102/web)** (*JavaScript Weekly #774* )
+	+ アップデート: レスポンシブUI構築のための人気Vueフレームワークのメジャーリリースが行われました。
+- **[OpenSeadragon 6.0](https://javascriptweekly.com/link/181219/web)** (*Frontend Focus #730* )
+	+ アップデート: 高解像度画像をレンダリングするウェブビューアツールで、新しい非同期式キャッシュ管理パイプラインが導入され、大規模レンダリングの効率が飛躍的に向上しました。
+- **[bignumber.js 10.0](https://javascriptweekly.com/link/181129/web)** (*JavaScript Weekly #774* )
+	+ アップデート: 基本のNumberとBigIntの限界を克服し、任意精度演算を提供するライブラリの10.0メジャーバージョンが配布されました。
+
+## ✍️ おわりに
+今週のニュースを振り返ると、ウェブ開発エコシステムが次第に単一ベンダーの依存性から脱却し、より独立的で多彩な方向へと拡張していることを体感できました。React Foundationの設立は、特定の企業を越えてオープンソースコミュニティ主導の持続可能なエコシステムを構築しようとする意味のある一歩です。加えて、Rustベースのツールチェーンの驚くべきパフォーマンス向上(Oxfmt)やV8エンジンのメモリ最適化(Node.jsのポインター圧縮)、そしてAIを活用した迅速なフレームワークの再実装(Cloudflare Vinext)の事例は、開発環境のパラダイムが「安定性と互換性」重視から「極限の効率とパフォーマンス」中心へと急速に再編されていることを示唆しています。今後、新たな技術的挑戦がどのように開発者体験(DX)を革新していくのか、深く考えさせられます。
+
+#### 出典
+- [JavaScript Weekly #774](https://javascriptweekly.com/issues/774)
+- [Frontend Focus #730](https://frontendfoc.us/issues/730)
+- [React Status #464](https://react.statuscode.com/issues/464)
+- [Smashing Newsletter #547](https://mailchi.mp/smashingmagazine/547-hidden-gems-of-the-web)
