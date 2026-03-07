@@ -1,0 +1,130 @@
+---
+title: '🚀 2026-03 W1 #49'
+desc: PatreonのTypeScript移行、CSS border-shapeの提案、React Activityの活用法およびフロントエンドエコシステム最新リリース情報 | 2026年3月第1週目 週間技術ニュースレター
+date: 2026-03-07
+thumbnail: /posts/weekly/march.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、フロントエンドエコシステム全体で技術的な複雑さを管理し、改善しようとする多様な取り組みが目立ちました。Patreonの巨大なレガシーコードベースをTypeScriptに移行した7年間の道のりや、Doctolibの巨大なデザインシステム管理のノウハウが共有され、非定型レイアウトを描画するCSSの`border-shape`の提案、複雑なデータを視覚化するダッシュボードデザインパターンなど、ユーザー体験を一段階引き上げる深い情報が満載です。また、「The React Foundation」の設立やChromeの迅速なリリースサイクルの変更など、Web標準とツールのガバナンスがさらに成熟していることを示しています。
+
+## 1. 🔍 深掘り
+- **[Seven Years to TypeScript: Migrating 11,000 Files at Patreon](https://www.patreon.com/posts/seven-years-to-typescript-152144830)** (出典: *React Status #465* )
+	![Seven Years to TypeScript](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/b3ja8qoff7o5p8saohzz.jpg)
+	- 背景: 巨大なレガシーReactコードベース（100万行以上）を保有するクリエイタープラットフォームPatreonが、システムの安定性と開発生産性を高めるために段階的にTypeScriptを導入しなければならなかった7年間の道のりを盛り込んでいます。
+	- 核心機能: 既存のレガシーな慣行で作成された膨大なコードをアップグレードするために、コード変換自動化ツールを積極的に活用し、型カバレッジを段階的に増やしていったタイピング戦略および移行ノウハウです。
+	- コード例:
+		```typescript
+		// レガシーReactプロジェクトの漸進的なTS移行（概念的な例）
+		interface LegacyComponentProps {
+			id: string;
+			data: any; // 初期段階ではanyを許容し、後に高度化を進行
+		}
+		```
+	- 実務適用: 長期的な観点で大規模なレガシープロジェクトを安定してTypeScriptに移植する必要があるアーキテクトやチームリーダーに、現実的な移行ロードマップを提供します。
+	- 注意事項: 短期的なコード変換に執着するよりも、長期的なチームコンベンションの合意と静的解析ツールのチューニング、チームメンバー間の継続的なコードレビューが不可欠です。
+- **[border-shape: The Future of the Non-rectangular Web](https://una.im/border-shape/?utm_source=CSS-Weekly&utm_campaign=Issue-637&utm_medium=web)** (出典: *CSS Weekly #637* )
+	![border-shape: The Future of the Non-rectangular Web](https://una.im/posts/border-shape/thumb.jpg)
+	- 背景: 長方形主体の古典的なWebレイアウトから脱却し、より有機的で多様な形態のDOM境界線を設計しようとするデザイン的要求が大きく増加しました。
+	- 核心機能: CSSの新しい提案(Primitive)である`border-shape`を使用して、DOM要素の境界線をユーザーが望む自由な多角形としてレンダリングします。
+	- コード例:
+		```css
+		.custom-shape {
+			border-shape: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+		}
+		```
+	- 実務適用: ランディングページのダイナミックなUIや独特な形のバッジ、カードデザインを開発する際、重いSVGリソースや背景画像に依存することなく、CSSだけで軽く実装できます。
+	- 注意事項: まだ初期段階の仕様(Spec)であるため、ブラウザの互換性を必ず確認する必要があり、未対応ブラウザに対するフォールバック(Fallback)の備えが必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[Organizing Complex Design Systems](https://medium.com/doctolib/how-we-organise-our-design-system-libraries-to-help-doctolib-designers-use-more-than-70-000-c15237c81f6c)** (出典: *Smashing Newsletter #548* )
+	+ 要約: 900を超えるコンポーネントと40名以上のチームメンバーが参加する巨大なFigmaライブラリを、Doctolibデザインチームが摩擦なくきれいでアクセスしやすいように管理する体系的な方法を共有しています。
+- **[Dashboard Design Patterns](https://dashboarddesignpatterns.github.io/)** (出典: *Smashing Newsletter #548* )
+	+ 要約: 複雑なデータにユーザーが圧倒されないように効果的に提供するため、英国エディンバラ大学の研究ラボ(VisHub)がまとめたメタデータ、視覚的表現、インタラクション、およびページレイアウトに関する完璧なダッシュボードデザインパターンのガイドです。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Hotkeys](https://github.com/tanstack/hotkeys?utm_source=CSS-Weekly&utm_campaign=Issue-637&utm_medium=web)** (出典: *CSS Weekly #637* )
+	+ 概要: 複雑なWeb環境においてショートカットキーの衝突を防ぎ、一貫して管理するために設計された型安全(Type-safe)なクロスプラットフォームショートカットキーライブラリです。
+	+ 使い方:
+		```javascript
+		import { useHotkeys } from '@tanstack/react-hotkeys';
+		// シーケンスおよびキー状態の追跡をサポート
+		useHotkeys('cmd+k', () => openSearch(), { preventDefault: true });
+		```
+	+ 実践チップ: キー状態の追跡、ショートカットキーシーケンスの検知機能を標準内蔵しており、Reactフレームワークアダプターを公式サポートしているため、管理ダッシュボードやエディター開発時に積極的に導入してみることができます。
+- **[Masonry Grid](https://github.com/TrigenSoftware/masonry-grid?utm_source=CSS-Weekly&utm_campaign=Issue-637&utm_medium=web)** (出典: *CSS Weekly #637* )
+	+ 概要: 重い外部フレームワークの依存関係なしに、極めて軽く高速に動作するVanilla JavaScriptベースのレスポンシブなピンタレスト(Masonry)レイアウトツールです。
+	+ 使い方:
+		```javascript
+		import MasonryGrid from 'masonry-grid';
+		new MasonryGrid('.grid-container', { gap: 16, columns: 3 });
+		```
+	+ 実践チップ: 純粋なJS環境で画像ギャラリーやブログのカードビューをスムーズに再配置し、パフォーマンスのオーバーヘッドを減らしたい場合に優れた代替案となります。
+
+---
+#### 見逃せないコンテンツ
+- **[Open Visualization Academy](https://openvisualizationacademy.org/)** (出典: *Smashing Newsletter #548* )
+	+ 要約: 世界中の情報デザインやデータ視覚化の権威たちが参加し、最高レベルのビデオマスタークラスとソフトウェアチュートリアルを誰もが無料で学習できるように構築された強力なオンライン教育プラットフォームです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[An In-Depth Guide to Customising Lists With CSS](https://piccalil.li/blog/an-in-depth-guide-to-customising-lists-with-css/?utm_source=CSS-Weekly&utm_campaign=Issue-637&utm_medium=web)** (出典: *CSS Weekly #637* )
+	![An In-Depth Guide to Customising Lists With CSS](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-637%2Fimages%2Fan-in-depth-guide-to-customising-lists-with-css.jpg&w=1200&q=75&dpl=dpl_GCRFWCXq64k5Vb4GqCiavFK87NvP)
+	+ 主要なインサイト: 単にマージンやパディングを修正するだけでなく、`::marker`、`counter()`、`@counter-style`、`symbols()`などCSSの高度なリスト制御プロパティを総動員して、味気ない基本のHTMLリストを美しいカスタムUIへと完全に変貌させるチュートリアルを提供します。
+- **[How Activity Can Keep Your Video Where You Left It](https://www.mux.com/blog/react-is-changing-the-game-for-streaming-apps-with-the-activity-component)** (出典: *React Status #465* )
+	+ 主要なインサイト: React 19.2の新しい`<Activity>`コンポーネントを活用する実践事例です。ユーザーが画面を切り替えたりタブを移動させたりする際、ビデオプレーヤーの再生状態や重いコンポーネントのレンダリングツリーをアンマウント(Unmount)せずに安全に保存して隠しておく、現代的な状態管理アーキテクチャパターンを提示します。
+- **[Journey Map Vs. Service Blueprint](https://medium.com/practical-service-design/the-difference-between-a-journey-map-and-a-service-blueprint-31a6e24c4a6c)** (出典: *Smashing Newsletter #548* )
+	![Journey Map Vs. Service Blueprint](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/6ca3c952-a7fc-8070-a0d9-9da61cc596ee.png)
+	+ 主要なインサイト: ユーザーが経験する「カスタマージャーニーマップ(Journey Map)」と、これを実装するためにバックグラウンドで起こるシステム/プロセスをマッピングした「サービスブループリント(Service Blueprint)」の違いを明確に指摘し、状況に合わせて正しく実務に適用するためのガイドを提供します。
+
+---
+#### 見逃せないコンテンツ
+- **[Mapping Unintended Impact](https://www.linkedin.com/posts/vitalyfriedman_ux-design-activity-7410712786319835137-1qtT)** (出典: *Smashing Newsletter #548* )
+	+ 要約: 短期的なユーザー維持(Retention)のための機能追加が長期的には離脱(Churn)を誘発する可能性があるように、UXデザインの決定が引き起こす予期せぬ直接的・間接的な影響を探索し、対応する実用的なチップを扱います。
+- **[Dealing With Conflicting Data](https://www.linkedin.com/posts/vitalyfriedman_how-to-resolve-conflicting-data-and-ux-share-7340729861457534979-enqH)** (出典: *Smashing Newsletter #548* )
+	+ 要約: UXリサーチの過程で定量的データと定性的データが互いに相反する場合、それがエラーではなく、より大きなストーリーの別の部分を示していることを理解し、これを混合研究方法論で調整する分析手法を共有します。
+---
+
+## 4. ✨ アイデア
+- **[Virtual Scroll-Driven 3D Scenes](https://frontendmasters.com/blog/virtual-scroll-driven-3d-scenes/?utm_source=CSS-Weekly&utm_campaign=Issue-637&utm_medium=web)** (出典: *CSS Weekly #637* )
+	+ 特徴: 従来のDOMベースのスクロールジャック(Scroll-jacking)が持つパフォーマンスおよびWebアクセシビリティの限界を克服するため、仮想スクロール(Virtual Scrolling)を活用して3Dグラフィックシーンのインタラクションを完璧かつ責任を持って制御する方法を提案し、インスピレーションを与えます。
+- **[Potentially Coming to a Browser :near() You](https://css-tricks.com/potentially-coming-to-a-browser-near-you/?utm_source=CSS-Weekly&utm_campaign=Issue-637&utm_medium=web)** (出典: *CSS Weekly #637* )
+	+ 特徴: ユーザーのマウスポインターがDOM要素の周辺の特定半径内に近づいた際に即座に反応する、新しいCSS疑似クラス`:near()`を探求します。これにより、未来のマイクロインタラクションデザインがJavaScriptなしでどのように進化するか、創造的なアイデアを提供します。
+
+## 5. ⚡️ ミニノート
+- **[The React Foundation has officially launched](https://javascriptweekly.com/link/181404/web)** (出典: *JavaScript Weekly #775* )
+	+ 要約: React、React Native、およびJSXの知的財産権とプロジェクトロードマップを独立して管理する「The React Foundation」が公式に設立されました。Metaを含む8つの創設メンバーが参加します。
+- **[Chrome is Moving to a Two-Week Release Cycle](https://frontendfoc.us/link/181514/web)** (出典: *Frontend Focus #731* )
+	+ 要約: 爆発的に増加するモダンWeb標準の要求に対応するため、Google Chromeが安定版(Stable)のリリースサイクルを従来の4週間から2週間単位に大幅に短縮すると発表しました。
+- **[Node.js release schedule changing](https://javascriptweekly.com/link/181405/web)** (出典: *JavaScript Weekly #775* )
+	+ 要約: Node.jsが従来の奇数/偶数リリースの区分方式を廃止し、今後は毎年1つのメジャーバージョンをリリースし、すべてのメジャーバージョンを長期サポート(LTS)する方向でデプロイスケジュールを全面的に改編する予定です。
+- **[Navigation API is now Baseline Newly Available](https://javascriptweekly.com/link/181410/web)** (出典: *JavaScript Weekly #775* )
+	+ 要約: シングルページアプリケーション(SPA)のブラウザルーティング制御を根本的に革新するNavigation APIが、ついにすべての主要なモダンブラウザで「Baseline」状態に昇格しました。
+
+## 6. 🎉 リリース
+- **[Bun v1.3.10 Released: A Surprisingly Big Update](https://javascriptweekly.com/link/181455/web)** (*JavaScript Weekly #775* )
+	+ アップデート: 完全に新しく書き直されたREPL、HTMLにすべてのリソース(JS/CSS)を含めるブラウザターゲットコンパイル(`--compile --target=browser`)、TC39 ESデコレーターの公式サポートを含む大規模なアップデートです。
+- **[Deno 2.7](https://javascriptweekly.com/link/181460/web)** (*JavaScript Weekly #775* )
+	+ アップデート: 次世代の日付/時間標準であるTemporal APIのサポートを安定化し、Windows ARMアーキテクチャの公式サポートと`package.json`の`overrides`フィールドプロパティを追加しました。
+- **[Safari Technology Preview 238](https://frontendfoc.us/link/181516/web)** (*Frontend Focus #731* )
+	+ アップデート: 開発者たちが長年求めてきた、カスタムCSSスタイリングが完全に可能な新しいネイティブ`<select>`エレメントのレンダリングサポートを導入しました。
+- **[React Native 0.85.0 RC](https://github.com/facebook/react-native/releases/tag/v0.85.0-rc.0)** (*React Status #465* )
+	+ アップデート: ネイティブモジュールのパフォーマンス改善および内部アーキテクチャの高度化が適用されたフレームワークの0.85.0の最初のRelease Candidateが公開されました。
+- **[Expo SDK 55](https://javascriptweekly.com/link/181411/web)** (*JavaScript Weekly #775* )
+	+ アップデート: クロスプラットフォームアプリ開発の標準として定着したReact NativeベースのExpoの最新メジャーSDKバージョンです。
+- **[Shiki 4.0](https://javascriptweekly.com/link/181412/web)** (*JavaScript Weekly #775* )
+	+ アップデート: VS Codeと同レベルのTextMate構文レンダリングを提供する人気のコードシンタックスハイライターの4.0バージョンのアップデートです。
+- **[Angular 21.2](https://javascriptweekly.com/link/181413/web)** (*JavaScript Weekly #775* )
+	+ アップデート: フレームワーク内部のレンダリング最適化を含むAngularの最新マイナーリリースがデプロイされました。
+
+## ✍️ おわりに
+フロントエンドエコシステムは、常に新しい構文やフレームワークの華やかさに注目が集まりがちですが、今週はPatreonのTypeScript移行期、Doctolibのデザインシステム管理、データ視覚化のダッシュボードパターンなど、「規模が大きくなったシステムをどのようにうまく管理し設計するか」に対する実務的で深い考察が目立ちました。React Foundationの設立やブラウザの攻撃的なリリースサイクルも、私たちが扱う技術基盤が次第に堅固で巨大なインフラとして定着しつつあることを示しています。
+
+#### 出典
+- [JavaScript Weekly #775](https://javascriptweekly.com/issues/775)
+- [Frontend Focus #731](https://frontendfoc.us/issues/731)
+- [React Status #465](https://react.statuscode.com/issues/465)
+- [Smashing Newsletter #548](https://mailchi.mp/smashingmagazine/548-designing-for-complex-uis)
+- [CSS Weekly #637](https://css-weekly.com/issue-637)
