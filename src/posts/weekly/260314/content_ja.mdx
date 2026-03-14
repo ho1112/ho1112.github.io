@@ -1,0 +1,148 @@
+---
+title: '🚀 2026-03 W2 #50'
+desc: CSSの圧縮ロードとz-indexトークン化、Vite 8.0リリース、React内部フッキングと18ヶ月間のコード移行の経験談 | 2026年3月第2週目 週間技術ニュースレター
+date: 2026-03-14
+thumbnail: /posts/weekly/march.avif
+---
+
+## 🔥 今週の主要テーマ
+今週のWebエコシステムは革新的な変化の波を迎えました。**Vite 8.0**や**Solid 2.0 Beta**など、大規模なメジャーリリースが相次ぎ、パフォーマンスと開発者体験（DX）を一段階引き上げました。さらに、CSSの限界を打ち破り、スクロール状態や弾力性のあるアニメーションをJavaScriptなしで実装できる最新のCSS技術が注目を集めており、フレームワーク間の限界を超えるアーキテクチャ移行の経験談が共有され、開発者に深いインサイトを与えています。
+
+## 1. 🔍 深掘り
+
+- **[How To Load CSS Fast](https://calendar.perfplanet.com/2025/how-to-load-css-fast/)** (出典: *Smashing Newsletter #549*)
+  ![How To Load CSS Fast](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/3030de62-8ba1-7211-0c74-8323906aa7b9.png)
+  - 背景: 従来は重要なCSSをインラインで挿入するか、スタイルシート全体をロードする方式の間で、パフォーマンスとペイロードサイズのトレードオフが存在していました。
+  - コア機能: 圧縮辞書（Compression dictionaries）を活用してCSSをロードすることで、伝統的な方式の欠点を回避し、ロードコストを画期的に削減します。
+  - コード例:
+    ```html
+    <link rel="stylesheet" href="styles.css" />
+    ```
+  - 実務への適用: グローバルスタイルシートの容量が膨大な大規模Webアプリケーションの初期レンダリングパフォーマンスを最適化する際に非常に有用です。
+  - 注意事項: 現在は主にChromiumベースのブラウザでサポートされているため、後方互換性およびプログレッシブエンハンスメント（Progressive Enhancement）戦略を併せて考慮する必要があります。
+
+- **[The Value of z-index](https://frontendfoc.us/link/181892/web)** (出典: *Frontend Focus #732*)
+  ![The Value of z-index](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1773229274/vu8lnumvo79p2m8fgdut.png)
+  - 背景: 多くのプロジェクトにおいて、UI要素の重なりや隠れを防ぐために`z-index`に任意の大きな数字を乱用し、メンテナンスが困難になる問題が発生しています。
+  - コア機能: 「z-index値のトークン化（tokenization）」という体系的なアプローチにより、レイヤーの階層構造を明確な変数として管理します。
+  - コード例:
+    ```css
+    :root {
+      --z-index-dropdown: 100;
+      --z-index-sticky: 200;
+      --z-index-modal: 1000;
+    }
+    ```
+  - 実務への適用: デザインシステムを構築したり、複数のコンポーネントが結合される複雑なサービス画面において、レイヤー間の重なり現象を予測可能に制御できます。
+  - 注意事項: 単に値を変数化するだけでなく、ブラウザの「スタッキングコンテキスト（Stacking Context）」が形成される原理を正確に理解し、適用してこそ意図した通りに動作します。
+
+---
+#### 見逃せないコンテンツ
+- **[An Empirical Study of Frontend Memory Leaks](https://stackinsight.dev/blog/memory-leak-empirical-study/)** (出典: *React Status #466*)
+  + 要約: 500以上のリポジトリ（Reactアプリ210個を含む）を分析し、メモリリークを引き起こす最も一般的なパターン（タイマーのクリーンアップ漏れ、イベントリスナーの削除失敗など）を深掘りした研究です。
+- **[A Tale of Stealing npm Publish Tokens by Opening a GitHub Issue](https://javascriptweekly.com/link/181833/web)** (出典: *JavaScript Weekly #776*)
+  + 要約: AIベースのイシュートリアージシステムのプロンプトインジェクション脆弱性を通じて、どのようにnpmパブリッシュトークンを奪取できるのかを、3段階の攻撃方式を通して詳細に解説します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[RevoGrid: High-Performance Data Grid Component](https://javascriptweekly.com/link/181838/web)** (出典: *JavaScript Weekly #776*)
+  ![RevoGrid: High-Performance Data Grid Component](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/zwpikapn5kjjerntvqwg.jpg)
+  + 概要: 膨大なデータセット処理のために特別に設計された高性能データグリッドコンポーネントです。Vue、Angular、React、Svelteをはじめ、Vanilla JS環境でも動作します。
+  + 使い方:
+    ```javascript
+    import RevoGrid from '@revolist/vue3-datagrid';
+    // 使用するフレームワークに合わせてコンポーネントを登録し、カラムとデータソースをバインドします。
+    ```
+  + 実践チップ: エンタープライズ環境のダッシュボードや複雑な統計表など、DOMレンダリングのボトルネックが発生しやすい画面で、仮想化（Virtualization）処理を簡単に適用できます。
+
+- **[All SVG Icons: Browse and Download 250,000+ Free SVG Icons From 200+ Curated Icon Libraries](https://frontendfoc.us/link/181909/web)** (出典: *Frontend Focus #732*)
+  ![All SVG Icons: Browse and Download 250,000+ Free SVG Icons From 200+ Curated Icon Libraries](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1773225591/aghvirthh57r3plqe6hh.png)
+  + 概要: 200を超えるアイコンライブラリから収集した25万個以上の無料SVGアイコンを1箇所で探索し、カスタマイズできる巨大なアイコンディレクトリです。
+  + 使い方:
+    ```html
+    <svg width="24" height="24" viewBox="0 0 24 24">...</svg>
+    ```
+  + 実践チップ: 特定のアイコンパックに依存せず、必要なアイコンだけを即座にReactコンポーネントや純粋なSVGタグとして取り込めるため、バンドルサイズの最適化に有利です。
+
+---
+#### 見逃せないコンテンツ
+- **[Bippy: A Toolkit for Hacking into React Internals](https://www.bippy.dev/)** (出典: *React Status #466*)
+  + 要約: コードを修正することなく、React DevToolsを装ってReactの内部動作にアクセスし、フッキングできるようにする実験的なツールキットです。
+- **[Inspira UI: Open Source Components to Build Animated Interfaces with Vue & Nuxt](https://frontendfoc.us/link/181906/web)** (出典: *Frontend Focus #732*)
+  + 要約: Tailwind CSSでスタイリング可能な美しいアニメーションインターフェースコンポーネントを、VueおよびNuxt環境ですぐに使用できるように提供するオープンソースUIライブラリです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[Linear Timing Function](https://www.joshwcomeau.com/animation/linear-timing-function/)** (出典: *Smashing Newsletter #549*)
+  ![Linear Timing Function](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/b58413a9-1817-3ee0-2451-35a8faaf7ce3.png)
+  + 主要なインサイト: 従来のベジェ曲線（Bézier curves）では表現不可能だったリアルなスプリングとバウンス効果を、CSSの新しい`linear()`タイミング関数を使用して詳細に実装する方法を紹介します。
+
+- **[18 Months of Code, Gone: Here's What We Learned](https://tompiagg.io/posts/we-threw-away-1-5-years-of-code)** (出典: *React Status #466*)
+  + 主要なインサイト: ある開発チームがNext.jsとServer Actionsを基盤に作成した18ヶ月分のコードを全面廃棄し、TanStack StartとHonoにスタックを切り替えることを決定した、生々しい意思決定のプロセスと教訓を取り上げています。
+
+- **[Customizing Bullet Points](https://piccalil.li/blog/an-in-depth-guide-to-customising-lists-with-css/)** (出典: *Smashing Newsletter #549*)
+  ![Customizing Bullet Points](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/13c306a0-72ae-7711-2e8b-16c66fc2108b.png)
+  + 主要なインサイト: 最新のCSS機能を使用して、単に`list-style-type`を変更するだけでなく、`::marker`などを活用して絵文字を入れたり、ユーザー独自の連番シーケンスを定義するリストカスタマイズのガイドです。
+
+---
+#### 見逃せないコンテンツ
+- **[Accessible Faux-Nested Controls](https://piccalil.li/blog/accessible-faux-nested-interactive-controls/)** (出典: *Smashing Newsletter #549*)
+  + 要約: インタラクティブな要素をDOM内部にネストする（ボタンの中のボタンなど）アクセシビリティのアンチパターンを避けつつ、視覚的にはネストされたコントロールのように見せるCSS/HTMLテクニックを紹介します。
+- **[Building Async Page Transitions in Vanilla JavaScript](https://frontendfoc.us/link/181897/web)** (出典: *Frontend Focus #732*)
+  + 要約: 重いフレームワークを使用せず、Vanilla JavaScript、GSAP、Viteのみを使用して、真の非同期クロスフェード（crossfade）ページ遷移を処理する軽量SPAルーターの構築方法を説明します。
+---
+
+## 4. ✨ アイデア
+
+- **[CSS Scroll State](https://www.linkedin.com/posts/theosoti_let-css-know-when-you-scroll-no-javascript-activity-7428724834907484160-SHm1)** (出典: *Smashing Newsletter #549*)
+  ![CSS Scroll State](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/e500c146-699d-e573-7488-fb849764a211.png)
+  + 特徴: コンテナがスクロールされている状態や特定のスクロール位置に到達したかを純粋なCSSのみで観察し、それに応じてヘッダーのフェードアウトやスライディングなどのスタイル変更を自動トリガーする革新的かつ実験的な機能です。
+
+- **[Perfect Pie Chart](https://css-tricks.com/trying-to-make-the-perfect-pie-chart-in-css/)** (出典: *Smashing Newsletter #549*)
+  ![Perfect Pie Chart](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/07486125-1417-1968-cb07-3ba2735266de.png)
+  + 特徴: チャートレンダリングのために重いJSライブラリを丸ごと読み込む代わりに、スクリーンリーダーのアクセシビリティを完全にサポートし、わずかなJSとCSSのみで完璧な円形パイチャートをデザインする創造的なアプローチを提案します。
+
+## 5. ⚡️ ミニノート
+
+- **[Mozilla is working on a redesign for Firefox, codenamed 'Nova'](https://frontendfoc.us/link/181887/web)** (出典: *Frontend Focus #732*)
+  + 要約: Mozillaが「Nova」というコードネームで準備中のFirefoxブラウザの新しいUIデザインのスクリーンショットが公開されました。
+- **[Chrome 146](https://frontendfoc.us/link/181889/web)** (出典: *Frontend Focus #732*)
+  + 要約: Chrome 146バージョンから、スクロールベースの新しいアニメーション機能と、さらに強力になったSanitizer APIのサポートが追加されました。
+- **[Temporal: The 9-Year Journey to Fix Time in JavaScript](https://bloomberg.github.io/js-blog/post/temporal/)** (出典: *React Status #466*)
+  + 要約: JavaScriptの慢性的な日付と時間の処理問題を解決するためのTemporal提案が、9年の旅を経てついにTC39 Stage 4に昇格しました。
+- **[Wikipedia Hit by Self-Propagating JavaScript Worm](https://javascriptweekly.com/link/181834/web)** (出典: *JavaScript Weekly #776*)
+  + 要約: 共有されるグローバルスクリプトの脆弱性を利用したJavaScriptワームがWikipediaを直撃し、約4,000のMeta-Wikiページが改ざんされる事件が発生しました。
+
+## 6. 🎉 リリース
+
+- **[Vite 8.0 Released](https://vite.dev/blog/announcing-vite8)** (*React Status #466*)
+  + アップデート: Rollupとesbuildの代わりとなるRolldownの導入、Babelが不要になった`@vitejs/plugin-react` v6、Wasm SSRのサポートなど、大々的なパフォーマンス向上とアーキテクチャ改善を含むメジャーリリースです。
+- **[Solid v2.0.0 Beta: The `<Suspense>` is Over](https://javascriptweekly.com/link/181868/web)** (*JavaScript Weekly #776*)
+  + アップデート: 非同期（Async）に対するファーストクラスのサポート、Promise返却時のネイティブ処理、従来の`<Suspense>`を`<Loading>`に置き換え、楽観的アップデートをサポートする`action()`プリミティブを導入した2.0ベータ版がリリースされました。
+- **[TypeScript 6.0 Release Candidate](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0-rc/)** (*React Status #466*)
+  + アップデート: 今後Go言語ベースで書き直されるTypeScript 7.0に備えるための重要な足がかりとなる6.0リリース候補（RC）版が公開されました。
+- **[Astro 6.0](https://astro.build/blog/astro-6/)** (*JavaScript Weekly #776*)
+  + アップデート: Viteの新しいEnvironment APIを活用し、本番環境と同じランタイムを開発時に提供する`astro dev`の再設計、組み込みのFonts APIおよびContent Security Policy APIなどが追加されました。
+- **[RedwoodSDK 1.0 Released: The Cloudflare-Native React Framework](https://rwsdk.com/blog/redwood-v1-getting-out-of-the-weeds)** (*React Status #466*)
+  + アップデート: 従来のRedwoodJSを事実上完全にリブートし、Cloudflareプラットフォーム（D1、R2、Workersなど）と深く統合されたサーバーファースト（Server-first）のReactフレームワークとして1.0バージョンをリリースしました。
+- **[Expo Router v55 Makes React Devs at Home in React Native](https://expo.dev/blog/expo-router-v55-more-native-navigation-more-powerful-web?utm_source=reactstatus&utm_medium=newsletter&utm_campaign=35663643-SDK%2055&utm_content=expo_router)** (*React Status #466*)
+  + アップデート: WebViewなしで単一ファイルベースのルーティングツリーにより、iOS、Android、Web環境を同時にデプロイできる強力なネイティブナビゲーションをサポートするExpo Router v55が含まれたSDK 55がリリースされました。
+- **[shadcn/cli v4 Released](https://ui.shadcn.com/docs/changelog/2026-03-cli-v4)** (*React Status #466*)
+  + アップデート: AIエージェントのユーザビリティを改善した「Skills」、デザインシステム構成を一つのIDでまとめる「Presets」、実際の適用の前に結果を確認する「Dry run」機能を新たに搭載したCLI v4が配布されました。
+- **[Reveal.js 6.0: The HTML Presentation Framework Adds React](https://revealjs.com/)** (*Frontend Focus #732*)
+  + アップデート: ブラウザベースのプレゼンテーションフレームワークであるReveal.jsが、ビルドシステムをViteに置き換え、Reactコンポーネントの形でスライドを作成できる公式React Wrapperを追加した6.0をリリースしました。
+- **[TinyBase 8.0: A Reactive Data Store for Local-First Apps](https://javascriptweekly.com/link/181843/web)** (*JavaScript Weekly #776*)
+  + アップデート: ローカルファーストアプリのためのリアクティブデータストアであるTinyBaseが、ミドルウェア機能と「セル（cell）」内部にオブジェクトや配列を直接保存できる機能を追加し、8.0にアップデートされました。
+- **[Node.js 25.8.0 (Current)](https://javascriptweekly.com/link/181816/web)** (*JavaScript Weekly #776*)
+  + アップデート: Nodeの権限（Permission）モデルを警告専用モードで実行できる`--permission-audit`オプションが新たに追加されたマイナーアップデートバージョンです。
+
+## ✍️ おわりに
+今週のニュースは、フロントエンドエコシステムがかつてないほど成熟していると同時に、根本的な効率性が問い直されていることを示唆しています。Vite 8.0やSolid 2.0のような主要ツールの変化は、より速く直感的なレンダリングに焦点が当てられており、18ヶ月間作成したコードを未練なく移行した事例は、アーキテクチャの選択の重要性を深く悟らせてくれます。CSSがJavaScriptの領域を次々と代替していく様子とともに、私たちは重いライブラリに依存するよりも、ブラウザのネイティブ機能をどれだけ効果的に活用できるかを常に考える必要があるでしょう。
+
+#### 出典
+- [JavaScript Weekly #776](https://javascriptweekly.com/issues/776)
+- [Frontend Focus #732](https://frontendfoc.us/issues/732)
+- [React Status #466](https://react.statuscode.com/issues/466)
+- [Smashing Newsletter #549](https://mailchi.mp/smashingmagazine/549-new-css-features-and-techniques)
