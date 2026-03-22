@@ -1,0 +1,253 @@
+---
+title: 'SEOの過去、現在、そして未来 | パフォーマンスの時代：テクニカルSEOとユーザー体験 #2'
+desc: 戦争は終わりましたが、戦場はモバイルへと移りました。モバイルゲドンからCore Web Vitalsまで。キーワードを超え、技術的な完成度とユーザー体験(UX)が重要になった「テクニカルSEO」の時代を、フロントエンドエンジニアの視点で整理します。
+date: 2026-03-22
+thumbnail: /posts/deepDive/seo-chronicle-2-core-web-vitals/thumbnail.avif
+---
+
+## プラットフォームの変化、そして新たな基準
+
+第1部で扱った「Googleとブラックハットの攻防」が検索結果の信頼性を回復する過程だったとすれば、2010年代半ばからは検索環境自体のパラダイムが変わり始めました。スマートフォンが普及し、ユーザーの主な活動舞台がPCから**モバイル**へと急激に移動したためです。
+
+現在Googleは単にコンテンツの質を超え、「どれほど快適なモバイル体験を提供するか」を核心的な評価基準とし始めました。また、機械学習技術の導入により、検索エンジンは単なるキーワードマッチングを超え、人間の言語と意図を文脈的に理解するようになりました。
+
+このような変化の中で、SEOの核心はマーケティング的な手法から技術的な完成度へと拡張されました。今回の第2部では、モバイルとAIがもたらした検索環境の変化、そしてこれに対応するためにフロントエンドエンジニアが知っておくべきテクニカルSEO(Technical SEO)の核心戦略について取り上げます。
+
+---
+
+## チャプター1. 時代の変化：キーワードから体験へ
+
+本格的な技術対応に先立ち、Googleが過去10年間に開発者たちへどのようなシグナルを送ってきたのかを理解する必要があります。Googleのメッセージは一貫していました。「ユーザーを不便にさせるな」。
+
+### 1. モバイルゲドン(Mobilegeddon)とレスポンシブWebの浮上
+![2015/04/21 Rolling out the mobile-friendly update](/posts/deepDive/seo-chronicle-2-core-web-vitals/mobilegeddon.avif)
+
+2015年4月、Googleは「モバイルフレンドリーでないサイトは検索順位を下げる」と宣言します。業界ではこれを聖書のハルマゲドンに例えて「モバイルゲドン(Mobilegeddon)」と呼びました。
+
+この時、開発者たちは重要な岐路に立たされました。モバイルに対応する方法は大きく2つあったからです。
+* **別URL(Separate URLs)：** `m.youtube.com`のようにモバイル専用サイトを別途作成する方式です。モバイルに最適化された軽量なソースを提供できるというメリットがあり、大規模サービスでは依然として使用されていますが、PCとモバイルページ間の関係(`rel="canonical"`と`rel="alternate"`)を正確に明示しなければならないSEO的な難易度があり、メンテナンスコストが2倍になるという致命的なデメリットがありました。
+<img src="/posts/deepDive/seo-chronicle-2-core-web-vitals/separate.avif" alt="m.youtube.com image" width='300' style={{margin: 'auto'}} />
+
+* **レスポンシブWeb(Responsive Web Design)：** 1つのURLで画面サイズに応じてレイアウトが流動的に変化する方式です。単一のURLを使用するためクロール効率が高く、リンクの権威(Link Equity)が分散されません。
+
+結局GoogleはSEOの効率性を理由に**レスポンシブWeb**を公式に推奨し、これはフロントエンドエンジニアが単一のコードベースでマルチデバイスに対応する技術を必須で身につけるべき決定的な契機となりました。
+
+### 2. ランクブレイン(RankBrain)：意図を読み取るAI
+2015年10月、Googleは機械学習ベースのアルゴリズムである**ランクブレイン(RankBrain)** の導入を[公式発表しました。](https://searchengineland.com/meet-rankbrain-google-search-results-234386) これは単なるキーワードマッチングの時代を終わらせるシグナルでした。
+
+>  For example, if you search for “what’s the title of the consumer at the highest level of a food chain,” our systems learn from seeing those words on various pages that the concept of a food chain may have to do with animals, and not human consumers. By understanding and matching these words to their related concepts, RankBrain understands that you’re looking for what’s commonly referred to as an “apex predator.”
+出典：[RankBrain — a smarter ranking system](https://blog.google/products/search/how-ai-powers-great-search-results/)
+
+Googleはこれを単語(Words)と概念(Concepts)を繋ぐ技術だと説明しています。例えば「ユーザーが食物連鎖の最上位段階にいる消費者を何と呼ぶか？」と長く検索しても、ランクブレインはこの文脈が購買者(Consumer)ではなく動物の生態系の話であることを把握し、頂点捕食者(Apex Predator)という正確な概念と結びつけてくれます。
+
+この変化は開発者に新たな課題を投げかけました。これがGooglebotがWebサイトのコンテンツが何を意味するのかを明確に把握できるよう支援する**セマンティック構造(Semantic Structure)** と**構造化データ(Structured Data)** が必須要素として位置づけられるようになった背景です。
+
+### 3. Core Web Vitals：ユーザー体験の定量化
+そして2020年、Googleは**Core Web Vitals**を公式なランキング要素として反映すると発表します。
+
+これは単に「サイトが速ければ良い」という勧告を超え、読み込み速度(LCP)、応答性(FID/INP)、視覚的な安定性(CLS)を具体的な数値で測定し、これを検索順位に反映するという決定でした。つまり、漠然としていた「ユーザー体験」が測定可能な「技術的指標」に変わったのです。
+これによりSEOは単に検索上位表示を狙うことを超え、**SXO(Search Experience Optimization、検索体験最適化)** というより広い概念へと拡張されました。
+
+### 4. 市場の変化：マーケティングからエンジニアリングへ
+アルゴリズムの高度化は、SEO市場の風景も変えました。過去には単にキーワード施策や被リンクを通じて短期間で上位表示を保証するという業者が多く存在しましたが、パンダアップデートやペンギンアップデート以降、このような方式は効率性を失うことになりました。
+
+現在では、サイトの技術的な欠陥(読み込み速度、クロールエラー、セキュリティなど)を診断し、構造的な解決策を提示するテクニカルSEOが必須要素となりました。企業もまた、SEOを単なるマーケティング活動ではなく、開発チームが主導すべきエンジニアリングの課題として認識するようになったのです。
+
+---
+
+## チャプター2. [Performance] 0.1秒の勝負：Core Web Vitals 対応戦略
+
+Core Web Vitalsの導入により、SEOは今やフロントエンドエンジニアの核心的な重要業績評価指標(KPI)となりました。しかし、目分量で「速くなったようだ」と判断することはできません。Googleは開発者がこれを客観的に測定できるよう、**Lighthouse**というツールを提供しています。
+
+![lighthouse](/posts/deepDive/seo-chronicle-2-core-web-vitals/lighthouse-report_1920.avif)
+
+Chrome DevToolsに内蔵されているLighthouseは、Webページのパフォーマンス、アクセシビリティ、SEOなどを0点から100点まで数値化して表示します。開発者にとってLighthouseのパフォーマンススコアは単なる数字ではなく、現在の技術的な最適化レベルを客観的なデータで検証し判断するための重要な基準となります。
+
+Lighthouseのスコアを90点以上(緑色)に引き上げるためには、Googleが提示した次の3つの核心指標を集中的に攻略する必要があります。
+
+![core web vitals](/posts/deepDive/seo-chronicle-2-core-web-vitals/vitals.avif)
+
+### 1. LCP (Largest Contentful Paint)：読み込み速度
+LCPはユーザーがページにアクセスした時、**最も大きなコンテンツ(通常はメインのヒーロー画像やテキスト)**がレンダリングされるまでの時間を測定します。Googleはこれを**2.5秒以内**に維持することを推奨しています。
+
+* **画像の最適化：** Webページの容量の大部分を占めるのは画像です。単に容量を減らすだけでなく、システム的な最適化が必要です。
+    * **次世代フォーマット：** 重いJPG/PNGの代わりに圧縮効率が格段に高い`webp`や`avif`フォーマットをブラウザのサポート状況に応じて分岐処理して提供します。
+    * **優先順位のヒント：** ブラウザが重要な画像を先にダウンロードするように`<img fetchpriority="high">`属性を使用したり、Next.jsの`next/image`コンポーネントを活用してLCP要素の読み込み順位を前倒しします。
+* **CDNリサイジング戦略：** 元画像をそのまま送信するのは多大なリソースの無駄です。AkamaiやCloudFrontのような画像CDNを活用し、クライアントが`image.jpg?w=640`のようにリクエストすると、サーバーレス関数がリアルタイムで該当デバイスの幅にぴったりの画像を生成して返すようにパイプラインを構築する必要があります。
+* **サーバー応答時間(TTFB)の短縮：** いくらフロントエンドを最適化しても、HTMLドキュメント自体の到着が遅ければ意味がありません。動的なデータが必要な部分と静的な部分を区別し、共通のレイアウトとコンテンツはCDNにキャッシュして即座に返し、パーソナライズされた情報はクライアントサイドから非同期(Fetch)で読み込んだり、ストリーミング方式で埋め込んだりする戦略を通じて、初期応答速度を画期的に短縮する必要があります。
+
+### 2. CLS (Cumulative Layout Shift)：視覚的な安定性
+記事を読んでいる途中で突然上部の広告が遅れて読み込まれ、テキストがガクッと押し出されて意図しない場所をクリックしてしまった経験、皆さんもお持ちだと思います。CLSはこのような予期せぬレイアウトのズレを測定します。0.1以下を維持する必要があります。
+
+* **スペースの事前確保(Aspect Ratio)：** 画像が読み込まれる前でも、ブラウザがそのスペースを空けておくようにする必要があります。CSSの`aspect-ratio`プロパティを使用するか、画像タグに明示的に`width`と`height`値を入れてレイアウトが崩れるのを防ぎます。
+* **フォントの読み込み戦略：** Webフォントが読み込まれる前後での文字サイズの違いにより改行が変わり、レイアウトが揺れることがあります。`font-display: swap`や`optional`オプションを使用し、CSSの`size-adjust`プロパティを通じてシステムフォントとWebフォントのサイズ差を微細に補正することで、視覚的な安定性を確保します。
+
+### 3. INP (Interaction to Next Paint)：インタラクション
+過去の**FID(First Input Delay)** がユーザーの「最初のクリック」に対してどれだけ早く反応するかだけを測定していたのに対し、2024年3月から正式導入されたINPは、ページに滞在している間に発生するすべてのインタラクション(クリック、タップ、キーボード入力)の応答速度を測定します。はるかに厳しい指標です。
+
+* **メインスレッド(Main Thread)のブロック防止：** 重いJavaScriptの演算がメインスレッドを占有していると、ユーザーがボタンを押してもブラウザは反応できません。Chrome DevToolsのPerformanceタブを分析し、実行時間が長いタスク(Long Tasks)を細かく分割したり、急ぎではないロジックは`requestIdleCallback`などを活用してアイドル時間に先送りする最適化が必要です。
+* **ハイドレーション(Hydration)の最適化：** Reactベースのアプリの場合、初期HTMLがロードされた後にJavaScriptのイベントが紐付けられるハイドレーションの過程で反応性が落ちることがあります。画面に見えないコンポーネントの読み込みを遅延(Lazy Loading)させたり、インタラクションが必要な部分だけを選択的にハイドレーションするアイランドアーキテクチャ(Island Architecture)の概念が導入されています。
+
+### 4. FCP (First Contentful Paint)
+Core Web Vitalsの3大指標には含まれていませんが、フロントエンドエンジニアなら**FCP(First Contentful Paint)** を絶対に見過ごしてはなりません。ユーザーが「あ、アクセスできたな」と感じる最初の瞬間だからです。
+
+ユーザーが画面上で「何か」を初めて見る時点です。真っ白な画面(White Screen)を見る時間を減らしてこそ離脱率を下げることができます。レンダリングをブロックするリソース(Render-Blocking Resources)を取り除くことが核心です。重要なCSSをインラインで処理したり、ページの読み込みに必須ではないサードパーティスクリプト(広告、分析ツールなど)は`defer`や`async`属性を使用して読み込み順序を後ろに遅らせる最適化が必要です。
+<small>もちろん、本当に急いでいる時は setTimeout(..., 0) でこっそり遅らせる「古典的な奥義」もあったりします🧙🏼‍♂️</small>
+
+---
+
+## チャプター3. [Architecture] フレームワークとアーキテクチャ：Next.jsを活用した技術的対応
+
+パフォーマンスの最適化(チャプター2)がユーザーの快適な体験のためのものだとすれば、レンダリング戦略とメタデータの管理は私たちのサイトを分析しに来た検索ボット(Bot)のための配慮です。
+過去にはこの両方を満たすために多くの工数が必要でしたが、モダンWebフレームワークであるNext.jsを活用すれば、ボットフレンドリーなアーキテクチャを効率的に構築できます。
+
+### 1. レンダリング戦略の多様化(SSR/SSG)
+過去のSPA(Single Page Application)で主に使用されていたCSR(Client Side Rendering)方式は、初期読み込み時に真っ白な画面だけを見せるため、検索ボットがコンテンツを収集する上で致命的な限界がありました。
+この問題を解決するために、**Next.js**のようなフレームワークを導入し、ページの目的に合わせたレンダリング戦略を立てるのが一般的です。
+
+* **SSR(Server Side Rendering)：** 検索結果ページやマイページなど、リアルタイムデータが重要なページは、リクエスト時にサーバーでHTMLを完成させて返すことで、ボットが即座に意味のあるテキストを読み取れるようにします。
+* **SSG(Static Site Generation)：** 会社紹介、利用規約など変更が少ないページは、ビルド時にあらかじめHTMLを生成しておくことで最高の読み込み速度を確保します。
+* **ISR(Incremental Static Regeneration)：** ブログや商品詳細のように適度な更新が必要な場合、静的ページの速い速度を維持しつつ、設定した周期ごとにバックグラウンドで最新データを反映するISRが非常に効果的です。
+
+### 2. 組み込みコンポーネントによるパフォーマンスの自動化
+LCPやCLSのようなCore Web Vitals指標をいちいちコードで制御するのは非常に手間のかかる作業です。Next.jsはこれに特化したコンポーネントを提供し、最適化を自動化します。
+
+* **画像の最適化(`next/image`)：** 従来の`<img>`タグの代わりに使用します。ブラウザ環境に合わせてwebp/avifフォーマットに自動変換し、デバイスサイズに合わせてリサイズすることでLCPパフォーマンスを極大化します。また、`width/height`に基づいてスペースをあらかじめ確保し、CLSを防ぎます。
+* **フォントの最適化(`next/font`)：** Googleフォントなどをビルド時にダウンロードしてホスティングします。フォントの読み込み時にテキストがちらついたり揺れたりする現象(FOUT/FOIT)を`size-adjust`属性の自動調節で解決し、視覚的な安定性を確保します。
+
+### 3. メタデータのプログラマティックな管理
+数千のページにそれぞれ異なるメタタグ(`title`、`description`、`og:image`)を付与するのは手動で管理するのが困難です。
+Next.jsのMetadata APIを活用すれば、ページのデータを基にSEOタグを動的に生成することができます。
+
+```javascript
+// app/hotels/[id]/page.js の例
+export async function generateMetadata({ params }) {
+  const hotel = await getHotelInfo(params.id);
+
+  return {
+    title: `${hotel.name} - 大阪のおすすめホテル`,
+    description: hotel.summary,
+    openGraph: {
+      images: [hotel.thumbnailUrl],
+    },
+  }
+}
+```
+
+### 2. クロールバジェット(Crawl Budget)とインデックス登録
+最後に、ボットがサイトを効率的に探索できるように道を開く作業です。サービスの規模が大きくなるほど、ボットが1日にクロールできるページ数、つまりクロールバジェットが不足するという問題が発生します。ボットが重要なページを見逃さず、効率的に探索するよう誘導しなければなりません。
+
+* **HTMLサイトマップの構築：** `sitemap.xml`ファイルは基本です。これに加え、ボットがリンクをたどってサイトの奥深く(Deep Link)まで到達できるように、サービス内のすべての重要なカテゴリとリンクを集めたHTMLサイトマップページを別途構築します。これはユーザーにとってはサイトマップの役割を、ボットにとっては優れたナビゲーションの役割を果たします。
+<img src="/posts/deepDive/seo-chronicle-2-core-web-vitals/onsen.avif" alt="skyticket onsen" width='300' style={{margin: 'auto'}} />
+<small>2023年当時、私がSEOチームで働いていた時に作成したHTMLサイトマップページです。下位ページに繋がるリンクを集めておき、検索ボットが隅々までクロールできるように誘導しました。</small>
+
+* **URLの正規化(Canonical & Trailing Slash)：** `example.com/page`と`example.com/page/`は技術的に異なるURLです。検索エンジンがこれを重複コンテンツと誤解してランキングを分散させるのを防ぐために、**Trailing Slash**のポリシーを統一し、すべてのページに**Canonicalタグ**を適用して元のURLを明確に指定しなければなりません。
+
+---
+
+## チャプター4. [Semantic] 意味の伝達：機械が理解する言語
+
+最後に、コンテンツの構造と意味を機械へ明確に伝達する作業です。これは検索結果において私たちのサイトをより魅力的に見せるための核心戦略です。
+
+### 1. セマンティックマークアップ(Semantic Markup)
+デザインのために`div`と`span`を乱用する習慣を捨て、意味論的なタグを積極的に使用しなければなりません。
+* ヘッダーは`header`、ナビゲーションは`nav`、本文は`article`、サイドバーは`aside`、フッターは`footer`を使用し、ドキュメントの区画を明確にします。
+* 特に`h1`から`h6`までの見出しタグの階層を論理的な目次の順序通りに整理し、機械がドキュメントの核心テーマと下位内容を簡単に把握できるようにしなければなりません。
+<img src="/posts/deepDive/seo-chronicle-2-core-web-vitals/semantic.avif" alt="ikyu.com Semantic Markup" width='300' style={{margin: 'auto'}} />
+<div style={{textAlign: 'center'}}><small>HeadingsMapのような拡張機能でhタグの構造を簡単に把握できます。</small></div>
+
+### 2. 構造化データ(JSON-LD)とリッチスニペット
+検索結果に単に青いリンクと説明だけが出るのではなく、星の評価、価格、レビュー数、FAQなどが露出するのを見たことがあるでしょう。これを**リッチスニペット(Rich Snippets)** と呼びます。
+`JSON-LD`形式を使用してページに構造化データを埋め込むことは必須です。「この数字は価格であり、このテキストはレビューです」とGooglebotに直接的に教えるのです。これは検索結果で視線を引きつけ、クリック率(CTR)を高める決定的な役割を果たします。
+![https://smartranking.nl/en/rich-snippets/](/posts/deepDive/seo-chronicle-2-core-web-vitals/rich-snippets-seo.webp)
+
+### 3. 共有体験の最適化(OGタグ)
+検索エンジンではありませんが、トラフィック流入の大きな軸であるSNSでの共有のために、**OG(Open Graph)タグ**をページごとに動的に生成します。SNSやSlackにリンクを投稿した際に、ページの内容を要約した魅力的なサムネイルとタイトルが表示されるようにして、潜在ユーザーの流入を誘導する方法です。
+
+![https://whitep4nth3r.com/blog/level-up-your-link-previews-in-slack/](/posts/deepDive/seo-chronicle-2-core-web-vitals/slack_preview.avif)
+
+---
+
+## チャプター5. [Infra & Data] テクニカルSEOの完成：測定と加速
+
+SEOはコードレベルの最適化では終わりません。開発者が作成したサイトが世界中のユーザーにどれだけ速く配信されるか(加速)、そしてユーザーがアクセスしてどのように行動するか(測定)を管理するインフラ領域までが、テクニカルSEOの完成です。
+
+### 1. CDN(Content Delivery Network)：物理的な限界を超える速度
+東京にあるサーバーのデータをニューヨークのユーザーがリクエストすれば、物理的な距離により遅延(Latency)が発生せざるを得ません。このような物理的限界を克服するために、**CDN(Content Delivery Network)**の導入は必須です。**Cloudflare**や**AWS CloudFront**、**Akamai**などが代表的なサービスです。
+
+CDNはテクニカルSEOの核心である「速度」と「セキュリティ」を物理的なネットワークレベルで解決してくれる強力なインフラです。
+
+* **エッジキャッシング(Edge Caching)：** 世界中の数百のエッジサーバー(Edge Server)にサイトの静的リソースをあらかじめキャッシュしておきます。ユーザーがアクセスすると最も近いサーバーからデータを即座に送信するため、TTFB(サーバー応答時間)とLCPを画期的に短縮させることができます。
+* **画像の自動最適化：** サーバーで画像を一つひとつ加工しなくても、CDNレベルでアクセス者のブラウザ環境に合わせて`webp/avif`変換やリサイジングを自動化できます。(例：Cloudflare Images、CloudFront Lambda@Edge)
+* **セキュリティと信頼性(HTTPS)：** GoogleはHTTPSを公式なランキング要素として反映します。CDNを使用すれば複雑な証明書管理なしでも簡単にHTTPSを適用でき、DDoS攻撃や悪意のあるボットのトラフィックを一次的にフィルタリングして、検索ボットがオリジンサーバーのリソースを完全に利用できるように支援します。
+
+### 2. Google Analytics 4(GA4)& GTM：データに基づく検証
+過去のSEOが「直感」だったとすれば、現代のSEOは「データ」です。実施したパフォーマンス改善作業が、実際にビジネスの成果に繋がったのかを検証する過程が必ず必要です。
+
+* **滞在時間と直帰率：** Core Web Vitalsを改善した後、実際のユーザーの滞在時間は延びたのか？これを検証するために、GA4のような分析ツールを活用したデータ追跡が必須です。
+* **GTMを通じたパフォーマンス防御：** マーケティングチームから様々なトラッキングコードを埋め込んでほしいと要請された時、これをソースコードに直接挿入するとサイトのパフォーマンス(LCP、TBT)が低下する可能性があります。開発者はGoogle Tag Manager(GTM)を導入してスクリプトの読み込みタイミングを制御し、パフォーマンスの低下を防がなければなりません。
+
+---
+
+## チャプター6. 信頼のアルゴリズム：E-E-A-Tと開発者
+
+速度と構造が完璧であっても、含まれているコンテンツが「偽物」であれば、検索エンジンはそのサイトを上位に引き上げません。Googleは**E-E-A-T(経験、専門性、権威性、信頼性)** という基準を通じてコンテンツの品質を評価します。
+一見すると「文章を上手く書け」というマーケティング領域の話のようですが、ここでも開発者が技術的にサポートすべき核心的な役割があります。
+
+### 1. 著者情報の構造化(Author Schema)
+Googleは「誰がこの記事を書いたのか？」を重要視します。匿名の記事よりも、実名の専門家の記事をより信頼するからです。
+ブログポストの下部に単にテキストで名前を書くことを超え、**`Person`スキーママークアップ**を適用して、著者の名前、所属、SNSリンクなどの情報をGooglebotへ明確に伝える作業が必要です。これはサイトの**専門性(Expertise)** と**権威性(Authoritativeness)** を機械が認識するのに大きく役立ちます。
+
+```json
+{
+  "@context": "[https://schema.org](https://schema.org)",
+  "@type": "Person",
+  "name": "mintora",
+  "jobTitle": "Frontend Engineer",
+  "sameAs": ["[https://github.com/mintora](https://github.com/mintora)", "[https://linkedin.com/in/mintora](https://linkedin.com/in/mintora)"]
+}
+```
+
+### 2. セキュリティと信頼性(HTTPS & Security)
+E-E-A-Tの中心である**信頼性(Trustworthiness)** は、サイトのセキュリティと直結しています。
+* **HTTPSの必須適用：** 先ほどのCDNチャプターで言及したように、SSL証明書がないサイトはブラウザで「保護されていない通信」として表示され、検索順位でも不利益を受けます。
+* **運営主体の明示：** サイトの下部(Footer)に運営者情報、連絡先、プライバシーポリシーなどを明確に配置し、これを`Organization`スキーマで結びつけてサイトの透明性を技術的に保証しなければなりません。
+
+### 3. 実践経験のコンテンツ
+最近追加された**Experience(経験)** 指標は、「実際に経験して書いたか？」を問います。開発ブログであれば、単に理論を羅列するよりも、直接作成したコードスニペットやトラブルシューティングのログを添付する方がスコアに有利です。コードブロックの可読性を高めるために、Syntax Highlightingライブラリを最適化して適用するのも良い戦略です。
+
+> **💡 GoogleはE-E-A-Tをどのように定義しているか**
+> *"Googleの自動化システムは、優れたコンテンツの順位をランク付けする際に様々な要素を考慮するように設計されています。Googleシステムは関連コンテンツを識別した後、最も役立ちそうなコンテンツに優先順位を提供しようとします。このため、Googleシステムでは、あるコンテンツが経験、専門性、権威、信頼性という4つの美徳、すなわちE-E-A-Tを備えているかを判断するために様々な要素を使用します。"*
+>
+> *出典：[Google Search Central: Creating helpful, reliable, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)*
+
+---
+
+## おわりに：開発者のコードがマーケティングになる瞬間
+
+ここまで、1990年代の初期検索エンジンから現代のテクニカルSEOが確立されるまでの過程を見てきました。
+この長い流れの中で確認できる事実は明確です。SEOの中心軸が単なる「検索順位」から、Webサイトが提供する**ユーザー体験(User Experience)** と技術的な完成度へと移動したという点です。モバイル環境と機械学習の導入は、SEOの領域をマーケティングからエンジニアリングへと拡張させる契機となりました。
+
+SSRの導入、画像の最適化、セマンティックタグの作成。フロントエンドエンジニアにとって当たり前の「基本」のように見えるこれらの作業が、今や実際のビジネスの成長を牽引する核心的な競争力となっています。
+これまでは速度を高め、構造を改善し、検索エンジンとユーザーの両方を満足させるために努力してきました。しかし、もしユーザーがもはや検索結果をクリックしなくなったらどうなるでしょうか？
+
+ユーザーが青いリンクを探し回る代わりに、AIが要約された回答を直接提示する世界。SEO(検索エンジン最適化)のパラダイムが暮れゆき、これからは**AIO(AI最適化)** と**GEO(生成AIエンジン最適化)** について悩むべき時です。次の第3部では、変化する環境の中でフロントエンドエンジニアが準備すべき「AI時代のコード標準」について調べてみます。
+
+---
+
+<Callout type="info" title="SEOの過去、現在、そして未来">
+[SEOの過去、現在、そして未来 | アルゴリズム戦争：Google vs ブラックハット #1](/blog/ko/deepDive/seo-chronicle-1-history/)
+</Callout>
+
+---
+
+#### 参考文献およびおすすめの資料
+* [Rolling out the mobile-friendly update (Google Search Central Blog, 2015)](https://developers.google.com/search/blog/2015/04/rolling-out-mobile-friendly-update)
+* [Mobile-first indexing best practices (Google Search Central)](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing)
+* [Meet RankBrain: The Artificial Intelligence That’s Now Processing Google Search Results](https://searchengineland.com/meet-rankbrain-google-search-results-234386)
+* [How Google uses artificial intelligence In Google Search](https://searchengineland.com/how-google-uses-artificial-intelligence-in-google-search-379746)
+* [Web Vitals (web.dev)](https://web.dev/articles/vitals)
+* [Interaction to Next Paint (INP)](https://web.dev/articles/inp)
+* [Image Optimization (Next.js Docs)](https://nextjs.org/docs/app/building-your-application/optimizing/images)
+* [Understand how structured data works (Google Search Central)](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data)
+* [Creating helpful, reliable, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
