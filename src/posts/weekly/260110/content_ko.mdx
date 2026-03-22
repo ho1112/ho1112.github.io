@@ -1,0 +1,150 @@
+---
+title: '🚀 2026-01 W2 #41'
+desc: React와 tRPC의 결합 Fate, 초경량 JS 엔진 MicroQuickJS, 스타일 없는 Base UI 1.0, 2025 JS 라이징 스타 | 2026년 1월 2주차 주간 기술 뉴스레터
+date: 2026-01-10
+thumbnail: /posts/weekly/january.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 2025년을 돌아보는 결산과 2026년을 여는 새로운 도구들이 조화를 이루고 있습니다. **JavaScript Rising Stars 2025**와 **State of HTML 2025** 결과가 발표되며 지난 해의 트렌드를 정리했고, React 생태계에서는 Relay와 GraphQL의 장점을 tRPC와 결합하려는 **fate**, 임베디드 시스템을 위한 초경량 엔진 **MicroQuickJS** 등 흥미로운 신규 프로젝트들이 등장했습니다. 또한 **CSS Grid Lanes**와 같은 새로운 레이아웃 스펙의 등장은 프론트엔드 개발의 미래를 기대하게 만듭니다.
+
+## 1. 🔍 심층 분석
+
+- **[The fate™️ of React](https://bytes.dev/archives/452)** (출처: *Bytes #452*)
+  ![What do you mean you don’t want to implement a new query language from scratch?](https://bytes.dev/images/content/steves.jpg)
+    - **배경**: Facebook 출신의 Christoph Nakazawa가 개발한 새로운 React 및 tRPC용 데이터 클라이언트입니다. 2010년대 중반 Relay와 GraphQL이 약속했던 강력한 데이터 계층의 이점을 제공하면서도, 백엔드에 GraphQL을 도입해야 하는 부담을 없애기 위해 등장했습니다.
+    - **핵심 기능**:
+        - **뷰 컴포지션(View Composition)**: 데이터 요구사항을 컴포넌트별로 배치(co-located)하여 화면당 하나의 배치 요청으로 처리, 워터폴 현상 제거.
+        - **엄격한 선택 및 데이터 마스킹**: 각 뷰에 필요한 데이터만 엄격하게 선택하고, 요청하지 않은 데이터는 숨겨 우발적인 결합 방지.
+        - **Async React**: Suspense, `use`, Actions 등 최신 React 프리미티브를 기반으로 구축되었으며 낙관적 업데이트 등을 내장 지원.
+    - **실무 적용**: tRPC를 이미 사용 중이거나 GraphQL의 복잡성 없이 그 이점(타입 안전성, 데이터 페칭 최적화)을 누리고 싶은 프로젝트에 적합합니다.
+
+- **[MicroQuickJS: A New JavaScript Engine from Fabrice Bellard](https://javascriptweekly.com/link/178797/web)** (출처: *JavaScript Weekly #767*)
+    - **배경**: FFmpeg, QEMU, QuickJS의 창시자인 천재 개발자 Fabrice Bellard가 돌아왔습니다. 이번에는 임베디드 시스템을 타깃으로 하는 새로운 JavaScript 엔진입니다.
+    - **핵심 기능**:
+        - **초경량**: 단 10KB의 RAM으로도 구동 가능하여 리소스가 극도로 제한된 환경에서도 최신 JS 문법을 활용할 수 있게 합니다.
+        - **호환성**: QuickJS의 경량화 버전으로 보이며, 임베디드 기기 제어에 최적화되어 있습니다.
+    - **주의사항**: 매우 작은 메모리 풋프린트를 목표로 하므로, 일반적인 웹 브라우저 엔진이나 Node.js와 같은 런타임과는 사용 목적과 성능 특성이 다릅니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Introducing CSS Grid Lanes](https://frontendfoc.us/link/178860/web)** (출처: *Frontend Focus #723*)
+  + **요약**: CSS Masonry 레이아웃(벽돌 쌓기 스타일)을 구현하기 위한 표준 접근 방식으로 `display: grid-lanes`가 합의되었습니다. Safari Technology Preview에서 테스트 가능하며, 복잡한 JavaScript 라이브러리 없이 순수 CSS로 Masonry 레이아웃을 구현할 수 있는 길이 열렸습니다.
+- **[How to Compile JavaScript to C with Static Hermes](https://javascriptweekly.com/link/178809/web)** (출처: *JavaScript Weekly #767*)
+  + **요약**: Parcel의 창시자가 JavaScript 플러그인 생태계를 유지하면서도 Rust 기반 툴링과 상호작용하기 위해, Static Hermes를 사용하여 JavaScript를 C 라이브러리로 컴파일하는 방법을 탐구한 기술 아티클입니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[Base UI 1.0: Unstyled UI Components for React](https://react.statuscode.com/link/179048/web)** (출처: *React Status #457*)
+    - **개요**: Radix, Floating UI, Material UI 제작진이 만든 새로운 '스타일 없는(Unstyled)' UI 컴포넌트 라이브러리입니다.
+    - **특징**: 접근성과 기능은 완벽하게 구현되어 있지만, 스타일은 개발자가 자유롭게 입힐 수 있도록 설계되었습니다. Radix UI의 정신적 후속작으로 볼 수 있으며, Tailwind CSS 등과 결합하여 디자인 시스템을 구축하기에 최적화되어 있습니다.
+    - **사용법**:
+      ```jsx
+      // 스타일 없이 기능만 제공되는 컴포넌트 예시
+      import { Switch } from '@base-ui-components/react/switch';
+      
+      export default function App() {
+        return <Switch.Root>...</Switch.Root>;
+      }
+      ```
+
+- **[Bruno 3.0: An Open-Source HTTP API Client App](https://javascriptweekly.com/link/178830/web)** (출처: *JavaScript Weekly #767*)
+  ![Bruno 3.0 image](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/udfxu239yekuwhj7a4sj.jpg)
+    - **개요**: Postman이나 Insomnia의 대안으로 떠오르는 오픈소스 API 클라이언트입니다. 100% JavaScript로 구축되었습니다.
+    - **업데이트**: 버전 3.0에서는 UI가 완전히 개편되었으며, API 요청을 그룹화할 수 있는 워크스페이스 기능이 추가되었습니다.
+    - **실전 팁**: 클라우드 동기화 강제 없이 로컬 파일 시스템에 컬렉션을 저장하므로, Git을 통한 버전 관리가 용이하다는 점이 가장 큰 장점입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Schedule-X 3.6: A Material Design Calendar and Date Picker](https://react.statuscode.com/link/179046/web)** (출처: *React Status #457*)
+  + **요약**: React, Vue, Svelte, Angular 및 바닐라 JS를 모두 지원하는 머티리얼 디자인 기반의 캘린더 및 날짜 선택기 라이브러리입니다. 오픈소스이며 프리미엄 기능도 제공합니다.
+- **[jsPDF 4.0: Client-Side JavaScript PDF Generation](https://javascriptweekly.com/link/178826/web)** (출처: *JavaScript Weekly #767*)
+  + **요약**: 클라이언트 사이드에서 PDF를 생성하는 유서 깊은 라이브러리의 메이저 업데이트입니다. 티켓, 인증서, 문서 등을 서버 없이 브라우저에서 즉시 생성할 때 유용합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[The 2025 JavaScript Rising Stars](https://javascriptweekly.com/link/178794/web)** (출처: *JavaScript Weekly #767*)
+  ![Rising Stars 2025](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ct6eoto8abwvodmz5riu.jpg)
+    - **핵심 인사이트**: 2024년 한 해 동안 GitHub에서 가장 많은 스타를 받은 프로젝트를 결산했습니다. 2년 연속 1위를 차지했던 `shadcn/ui`가 3위로 내려가고, 워크플로우 자동화 도구인 `n8n`과 새로운 애니메이션 라이브러리 `React Bits`가 최상위권을 차지했습니다. 이는 개발자들의 관심사가 단순 UI 컴포넌트에서 자동화 및 인터랙티브 경험으로 확장되고 있음을 시사합니다.
+
+- **[Chrome DevTools Features I Use All The Time ($ shortcuts)](https://bytes.dev/archives/452)** (출처: *Bytes #452*)
+    - **핵심 인사이트**: 크롬 개발자 도구 콘솔에서 사용할 수 있는 유용한 `$` 단축키들을 정리했습니다.
+    - **주요 단축키**:
+        - `$(selector)`: `document.querySelector()`와 동일.
+        - `$$(selector)`: `document.querySelectorAll()`과 동일 (배열 반환).
+        - `$0` ~ `$4`: Elements 패널에서 최근 선택한 요소들을 순서대로 참조.
+        - `$_`: 콘솔에서 가장 최근에 평가된 표현식의 결과값.
+    - **활용**: 디버깅 시 DOM 요소를 빠르게 선택하거나 이전 계산 값을 재사용할 때 생산성을 크게 높여줍니다.
+
+- **[Fixing TypeScript Performance Problems: A Case Study](https://javascriptweekly.com/link/178817/web)** (출처: *JavaScript Weekly #767*)
+    - **핵심 인사이트**: 대규모 모노레포 환경에서 발생하는 느린 인텔리센스, 긴 타입 체크 시간, 빌드 속도 저하 문제를 해결한 사례를 공유합니다. TypeScript 프로젝트의 규모가 커질수록 겪게 되는 성능 병목을 해결할 수 있는 실질적인 최적화 팁을 제공합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[React Has Changed, Your Hooks Should Too](https://react.statuscode.com/link/179038/web)** (출처: *React Status #457*)
+  + **요약**: 2020년 스타일의 Hook 작성 방식에서 벗어나, React 18+의 새로운 기능들을 활용한 더 나은 패턴을 제안합니다.
+- **[4 CSS Features Every Frontend Developer Should Know In 2026](https://frontendfoc.us/link/178861/web)** (출처: *Frontend Focus #723*)
+  + **요약**: Adam Argyle이 2026년에 주목해야 할 CSS 기능으로 스크롤 상태 쿼리, 타이포그래피 공백 트리밍 등을 꼽았습니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[How to Create a Pixel-to-Voxel Video Drop Effect with Three.js and Rapier](https://javascriptweekly.com/link/178823/web)** (출처: *JavaScript Weekly #767*)
+    - **특징**: 영상을 픽셀 단위의 3D 복셀(Voxel)로 변환하고 물리 엔진(Rapier)을 적용하여 떨어지는 효과를 구현하는 튜토리얼입니다. 시각적으로 매우 인상적인 웹 경험을 만드는 방법을 보여줍니다.
+- **[Build a Dinosaur Runner Game with Deno](https://javascriptweekly.com/link/178811/web)** (출처: *JavaScript Weekly #767*)
+    - **특징**: 크롬 브라우저의 오프라인 공룡 게임을 Deno 런타임을 사용하여 직접 구현해보는 튜토리얼 시리즈입니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **[The Results: State of HTML 2025](https://frontendfoc.us/link/178862/web)** (출처: *Frontend Focus #723*)
+  + 요약: HTML 생태계에 대한 연례 설문조사 결과가 발표되었습니다. 개발자들은 화려한 기능보다 실용적이고 기능적인 기능을 선호하는 것으로 나타났습니다.
+- **[Long-time Googler Addy Osmani has shared 21 lessons](https://frontendfoc.us/link/178863/web)** (출처: *Frontend Focus #723*)
+  + 요약: 구글에서 14년 이상 근무한 Addy Osmani가 엔지니어로서 성장하고 오랫동안 기여하기 위해 배운 21가지 교훈을 공유했습니다.
+- **[GitHub plans to implement 'staged publishing' for npm packages](https://react.statuscode.com/link/179064/web)** (출처: *React Status #457*)
+  + 요약: npm 생태계의 보안 강화를 위해 GitHub가 npm 패키지에 대해 '단계적 게시(staged publishing)' 기능을 도입할 계획입니다.
+- **[React Router team has just published six CVEs](https://react.statuscode.com/link/179035/web)** (출처: *React Status #457*)
+  + 요약: React Router 및 Remix v2에서 보안 취약점(CVE) 6건이 발견되어 사용자의 주의와 업그레이드가 권장됩니다.
+- **[WebF: A new WHATWG-compliant web runtime for Flutter](https://javascriptweekly.com/link/178802/web)** (출처: *JavaScript Weekly #767*)
+  + 요약: Flutter 앱 내에서 React나 Vue 같은 웹 스택을 사용하여 UI를 구축할 수 있게 해주는 WHATWG 호환 웹 런타임입니다.
+
+## 6. 🎉 릴리스
+
+- **[Next.js 16.1](https://react.statuscode.com/link/179060/web)** (*React Status #457*)
+  + 업데이트: 최신 마이너 버전 업데이트가 출시되었습니다.
+- **[pnpm 10.27](https://javascriptweekly.com/link/178803/web)** (*JavaScript Weekly #767*)
+  + 업데이트: 지정된 시간보다 오래된 패키지에 대해 신뢰 정책 확인을 무시하는 설정을 포함한 업데이트입니다.
+- **[Ink 6.6](https://react.statuscode.com/link/179050/web)** (*React Status #457*)
+  + 업데이트: React로 CLI 앱을 만들 수 있는 라이브러리의 업데이트입니다. Claude Code, Gemini CLI 등에서 사용됩니다.
+- **[React Three Fiber 9.5](https://react.statuscode.com/link/179052/web)** (*React Status #457*)
+  + 업데이트: Three.js용 React 렌더러로, React 19.2 호환성 및 `Activity` 지원이 추가되었습니다.
+- **[Prisma 7.2](https://javascriptweekly.com/link/178807/web)** (*JavaScript Weekly #767*)
+  + 업데이트: 인기 있는 ORM Prisma의 마이너 업데이트입니다.
+- **[Deno 2.6.4](https://javascriptweekly.com/link/178808/web)** (*JavaScript Weekly #767*)
+  + 업데이트: Deno 런타임의 최신 패치 버전입니다.
+- **[Recharts 3.6](https://react.statuscode.com/link/179054/web)** (*React Status #457*)
+  + 업데이트: D3 기반의 인기 React 차트 라이브러리 업데이트입니다.
+- **[color.js v0.6.0](https://frontendfoc.us/link/178882/web)** (*Frontend Focus #723*)
+  + 업데이트: 표준을 준수하는 색상 변환 및 조작 라이브러리로, 1.0 릴리스를 향해 가고 있습니다.
+- **[Middy 7.0](https://javascriptweekly.com/link/178836/web)** (*JavaScript Weekly #767*)
+  + 업데이트: AWS Lambda용 Node.js 미들웨어 엔진으로, Durable Functions 지원이 추가되었습니다.
+- **[JoltPhysics.js 1.0](https://javascriptweekly.com/link/178832/web)** (*JavaScript Weekly #767*)
+  + 업데이트: 유명한 C++ 물리 엔진 JoltPhysics를 Emscripten을 통해 JavaScript에서 사용할 수 있게 된 첫 번째 버전입니다.
+- **[PlayCanvas glTF Viewer 5.8](https://javascriptweekly.com/link/178837/web)** (*JavaScript Weekly #767*)
+  + 업데이트: glTF 2.0 및 PLY를 지원하는 3D 모델 뷰어 업데이트입니다.
+- **[k6 1.5](https://javascriptweekly.com/link/178838/web)** (*JavaScript Weekly #767*)
+  + 업데이트: Go와 JS 기반의 모던 부하 테스트 도구 업데이트입니다.
+
+## ✍️ 마치며
+이번 주는 지난 2025년을 회고하는 내용들이 많았습니다. 'Rising Stars'나 'State of HTML' 같은 리포트들은 현재 개발 생태계가 어디에 와 있는지, 그리고 어디로 향하고 있는지(예: 자동화, 상호운용성, 성능)를 잘 보여줍니다.
+
+특히 흥미로운 점은 React 생태계의 끊임없는 진화입니다. 단순히 새로운 기능을 추가하는 것을 넘어, Christoph Nakazawa의 'fate'처럼 기존의 복잡성(GraphQL)을 해결하려는 시도나, 'Base UI'처럼 스타일링의 자유도를 극대화하는 방향으로 도구들이 성숙해지고 있습니다. 또한 Fabrice Bellard의 새로운 JS 엔진 소식은 웹 기술이 임베디드 영역까지 얼마나 깊숙이 침투할 수 있는지를 보여주는 즐거운 자극제였습니다.
+
+새해에도 기술은 멈추지 않고 발전하고 있습니다. 이번 주 소식들이 여러분의 2026년 기술 로드맵을 구상하는 데 작은 힌트가 되기를 바랍니다.
+
+#### 출처
+- [JavaScript Weekly #767](https://javascriptweekly.com/issues/767)
+- [Frontend Focus #723](https://frontendfoc.us/issues/723)
+- [React Status #457](https://react.statuscode.com/issues/457)
+- [bytes #452](https://bytes.dev/archives/452)

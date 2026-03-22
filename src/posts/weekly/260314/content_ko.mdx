@@ -1,0 +1,148 @@
+---
+title: '🚀 2026-03 W2 #50'
+desc: CSS 압축 로딩과 z-index 토큰화, Vite 8.0 릴리스, 리액트 내부 후킹과 18개월 코드 전환 경험기 | 2026년 3월 2주차 주간 기술 뉴스레터
+date: 2026-03-14
+thumbnail: /posts/weekly/march.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주 웹 생태계는 혁신적인 변화의 물결을 맞이했습니다. **Vite 8.0**과 **Solid 2.0 Beta** 등 굵직한 메이저 릴리스가 쏟아지며 성능과 개발자 경험(DX)을 한 단계 끌어올렸습니다. 더불어 CSS의 한계를 깨고 스크롤 상태나 탄성 있는 애니메이션을 자바스크립트 없이 구현할 수 있는 최신 CSS 기술들이 주목받고 있으며, 프레임워크 간의 한계를 넘나드는 아키텍처 전환 경험기들이 공유되어 개발자들에게 깊은 인사이트를 주고 있습니다.
+
+## 1. 🔍 심층 분석
+
+- **[How To Load CSS Fast](https://calendar.perfplanet.com/2025/how-to-load-css-fast/)** (출처: *Smashing Newsletter #549*)
+  ![How To Load CSS Fast](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/3030de62-8ba1-7211-0c74-8323906aa7b9.png)
+  - 배경: 기존에는 중요 CSS를 인라인으로 삽입하거나 전체 스타일시트를 로드하는 방식 사이에서 성능과 페이로드 크기라는 트레이드오프가 존재했습니다.
+  - 핵심 기능: 압축 딕셔너리(Compression dictionaries)를 활용하여 CSS를 로드함으로써, 전통적인 방식의 단점을 피하고 로딩 비용을 획기적으로 낮춥니다.
+  - 코드 예제:
+    ```html
+    <link rel="stylesheet" href="styles.css" />
+    ```
+  - 실무 적용: 글로벌 스타일시트 용량이 방대한 대규모 웹 애플리케이션의 초기 렌더링 성능을 최적화할 때 매우 유용합니다.
+  - 주의사항: 현재 주로 크로미움 기반 브라우저에서 지원되므로 하위 호환성 및 점진적 향상(Progressive Enhancement) 전략을 함께 고려해야 합니다.
+
+- **[The Value of z-index](https://frontendfoc.us/link/181892/web)** (출처: *Frontend Focus #732*)
+  ![The Value of z-index](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1773229274/vu8lnumvo79p2m8fgdut.png)
+  - 배경: 많은 프로젝트에서 UI 요소가 겹치거나 가려지는 것을 막기 위해 `z-index`에 임의의 높은 숫자를 남용하여 유지보수가 어려워지는 문제가 발생합니다.
+  - 핵심 기능: 'z-index 값의 토큰화(tokenization)'라는 체계적인 접근법을 통해 레이어 계층 구조를 명확한 변수로 관리합니다.
+  - 코드 예제:
+    ```css
+    :root {
+      --z-index-dropdown: 100;
+      --z-index-sticky: 200;
+      --z-index-modal: 1000;
+    }
+    ```
+  - 실무 적용: 디자인 시스템을 구축하거나 여러 컴포넌트가 결합되는 복잡한 서비스 화면에서 레이어 간의 겹침 현상을 예측 가능하게 제어할 수 있습니다.
+  - 주의사항: 단순히 값을 변수화하는 것 외에도 브라우저의 '쌓임 문맥(Stacking Context)'이 형성되는 원리를 정확히 이해하고 적용해야 의도한 대로 동작합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[An Empirical Study of Frontend Memory Leaks](https://stackinsight.dev/blog/memory-leak-empirical-study/)** (출처: *React Status #466*)
+  + 요약: 500개 이상의 저장소(React 앱 210개 포함)를 분석하여 메모리 누수를 일으키는 가장 흔한 패턴(타이머 정리 누락, 이벤트 리스너 제거 실패 등)을 심층 분석한 연구입니다.
+- **[A Tale of Stealing npm Publish Tokens by Opening a GitHub Issue](https://javascriptweekly.com/link/181833/web)** (출처: *JavaScript Weekly #776*)
+  + 요약: AI 기반 이슈 트리아지 시스템의 프롬프트 인젝션 취약점을 통해 어떻게 npm 퍼블리시 토큰을 탈취할 수 있는지 3단계 공격 방식을 통해 상세히 해설합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[RevoGrid: High-Performance Data Grid Component](https://javascriptweekly.com/link/181838/web)** (출처: *JavaScript Weekly #776*)
+  ![RevoGrid: High-Performance Data Grid Component](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/zwpikapn5kjjerntvqwg.jpg)
+  + 개요: 방대한 데이터셋 처리를 위해 특별히 설계된 고성능 데이터 그리드 컴포넌트입니다. Vue, Angular, React, Svelte를 비롯해 바닐라 JS 환경에서도 동작합니다.
+  + 사용법:
+    ```javascript
+    import RevoGrid from '@revolist/vue3-datagrid';
+    // 사용할 프레임워크에 맞춰 컴포넌트를 등록하고 컬럼과 데이터 소스를 바인딩합니다.
+    ```
+  + 실전 팁: 엔터프라이즈 환경의 대시보드나 복잡한 통계표 등 DOM 렌더링 병목이 발생하기 쉬운 화면에서 가상화(Virtualization) 처리를 쉽게 적용할 수 있습니다.
+
+- **[All SVG Icons: Browse and Download 250,000+ Free SVG Icons From 200+ Curated Icon Libraries](https://frontendfoc.us/link/181909/web)** (출처: *Frontend Focus #732*)
+  ![All SVG Icons: Browse and Download 250,000+ Free SVG Icons From 200+ Curated Icon Libraries](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1773225591/aghvirthh57r3plqe6hh.png)
+  + 개요: 200개가 넘는 아이콘 라이브러리에서 수집한 25만 개 이상의 무료 SVG 아이콘을 한곳에서 탐색하고 커스터마이징할 수 있는 거대 아이콘 디렉터리입니다.
+  + 사용법:
+    ```html
+    <svg width="24" height="24" viewBox="0 0 24 24">...</svg>
+    ```
+  + 실전 팁: 특정 아이콘 팩에 종속되지 않고 필요한 아이콘만 즉석에서 React 컴포넌트나 순수 SVG 태그로 가져올 수 있어, 번들 사이즈 최적화에 유리합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Bippy: A Toolkit for Hacking into React Internals](https://www.bippy.dev/)** (출처: *React Status #466*)
+  + 요약: 코드 수정 없이 React DevTools인 것처럼 위장하여 React의 내부 동작에 접근하고 후킹할 수 있게 해주는 실험적인 툴킷입니다.
+- **[Inspira UI: Open Source Components to Build Animated Interfaces with Vue & Nuxt](https://frontendfoc.us/link/181906/web)** (출처: *Frontend Focus #732*)
+  + 요약: Tailwind CSS로 스타일링이 가능한 아름다운 애니메이션 인터페이스 컴포넌트들을 Vue와 Nuxt 환경에서 바로 사용할 수 있도록 제공하는 오픈소스 UI 라이브러리입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[Linear Timing Function](https://www.joshwcomeau.com/animation/linear-timing-function/)** (출처: *Smashing Newsletter #549*)
+  ![Linear Timing Function](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/b58413a9-1817-3ee0-2451-35a8faaf7ce3.png)
+  + 핵심 인사이트: 기존의 베지에 곡선(Bézier curves)으로는 표현하기 불가능했던 사실적인 스프링과 바운스 효과를, CSS의 새로운 `linear()` 타이밍 함수를 이용해 세밀하게 구현하는 방법을 소개합니다.
+
+- **[18 Months of Code, Gone: Here's What We Learned](https://tompiagg.io/posts/we-threw-away-1-5-years-of-code)** (출처: *React Status #466*)
+  + 핵심 인사이트: 한 개발 팀이 Next.js와 Server Actions를 기반으로 작성한 18개월 분량의 코드를 전면 폐기하고, TanStack Start와 Hono로 스택을 교체하기로 한 생생한 의사결정 과정과 교훈을 다룹니다.
+
+- **[Customizing Bullet Points](https://piccalil.li/blog/an-in-depth-guide-to-customising-lists-with-css/)** (출처: *Smashing Newsletter #549*)
+  ![Customizing Bullet Points](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/13c306a0-72ae-7711-2e8b-16c66fc2108b.png)
+  + 핵심 인사이트: 최신 CSS 기능을 사용하여 단순히 `list-style-type`을 바꾸는 것을 넘어, `::marker` 등을 활용해 이모지를 넣거나 사용자만의 고유한 순번 시퀀스를 정의하는 리스트 커스터마이징 가이드입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Accessible Faux-Nested Controls](https://piccalil.li/blog/accessible-faux-nested-interactive-controls/)** (출처: *Smashing Newsletter #549*)
+  + 요약: 상호작용 가능한 요소를 DOM 내부에 중첩하는(버튼 안의 버튼 등) 접근성 안티 패턴을 피하면서도, 시각적으로는 중첩된 컨트롤처럼 보이게 만드는 CSS/HTML 테크닉을 소개합니다.
+- **[Building Async Page Transitions in Vanilla JavaScript](https://frontendfoc.us/link/181897/web)** (출처: *Frontend Focus #732*)
+  + 요약: 무거운 프레임워크 없이 바닐라 자바스크립트, GSAP, Vite만을 사용하여 진정한 비동기 크로스페이드(crossfade) 페이지 전환을 처리하는 경량 SPA 라우터 구축 방법을 설명합니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[CSS Scroll State](https://www.linkedin.com/posts/theosoti_let-css-know-when-you-scroll-no-javascript-activity-7428724834907484160-SHm1)** (출처: *Smashing Newsletter #549*)
+  ![CSS Scroll State](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/e500c146-699d-e573-7488-fb849764a211.png)
+  + 특징: 컨테이너가 스크롤되는 상태나 특정 스크롤 위치에 도달했는지를 순수 CSS만으로 관찰하고, 그에 따라 헤더 페이드아웃이나 슬라이딩 같은 스타일 변경을 자동 트리거하는 혁신적이고 실험적인 기능입니다.
+
+- **[Perfect Pie Chart](https://css-tricks.com/trying-to-make-the-perfect-pie-chart-in-css/)** (출처: *Smashing Newsletter #549*)
+  ![Perfect Pie Chart](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/07486125-1417-1968-cb07-3ba2735266de.png)
+  + 특징: 차트 렌더링을 위해 무거운 JS 라이브러리를 통째로 불러오는 대신, 스크린 리더 접근성을 완벽히 지원하며 약간의 JS와 CSS만으로 완벽한 원형 파이 차트를 디자인하는 창의적인 접근을 제안합니다.
+
+## 5. ⚡️ 짧은 소식
+
+- **[Mozilla is working on a redesign for Firefox, codenamed 'Nova'](https://frontendfoc.us/link/181887/web)** (출처: *Frontend Focus #732*)
+  + 요약: 모질라가 'Nova'라는 코드명으로 준비 중인 파이어폭스 브라우저의 새로운 UI 디자인 스크린샷이 공개되었습니다.
+- **[Chrome 146](https://frontendfoc.us/link/181889/web)** (출처: *Frontend Focus #732*)
+  + 요약: Chrome 146 버전부터 스크롤 기반의 새로운 애니메이션 기능과 더욱 강력해진 Sanitizer API 지원이 추가되었습니다.
+- **[Temporal: The 9-Year Journey to Fix Time in JavaScript](https://bloomberg.github.io/js-blog/post/temporal/)** (출처: *React Status #466*)
+  + 요약: JavaScript의 고질적인 날짜와 시간 처리 문제를 해결하기 위한 Temporal 제안이 9년의 여정 끝에 마침내 TC39 Stage 4로 승격되었습니다.
+- **[Wikipedia Hit by Self-Propagating JavaScript Worm](https://javascriptweekly.com/link/181834/web)** (출처: *JavaScript Weekly #776*)
+  + 요약: 공유되는 전역 스크립트의 허점을 이용한 자바스크립트 웜이 위키백과를 강타하여 약 4,000여 개의 Meta-Wiki 페이지가 훼손되는 사건이 발생했습니다.
+
+## 6. 🎉 릴리스
+
+- **[Vite 8.0 Released](https://vite.dev/blog/announcing-vite8)** (*React Status #466*)
+  + 업데이트: Rollup과 esbuild를 대체하는 Rolldown의 도입, Babel이 필요 없어진 `@vitejs/plugin-react` v6, Wasm SSR 지원 등 대대적인 성능 향상과 아키텍처 개선을 포함한 메이저 릴리스입니다.
+- **[Solid v2.0.0 Beta: The `<Suspense>` is Over](https://javascriptweekly.com/link/181868/web)** (*JavaScript Weekly #776*)
+  + 업데이트: 비동기(Async)에 대한 1급 지원, Promise 반환 시 네이티브 처리, 기존 `<Suspense>`를 `<Loading>`으로 대체하고 낙관적 업데이트를 지원하는 `action()` 원시값을 도입한 2.0 베타 버전이 출시되었습니다.
+- **[TypeScript 6.0 Release Candidate](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0-rc/)** (*React Status #466*)
+  + 업데이트: 향후 Go 언어 기반으로 재작성될 TypeScript 7.0을 대비하기 위한 중요한 디딤돌 역할을 하는 6.0 릴리스 후보(RC) 버전이 공개되었습니다.
+- **[Astro 6.0](https://astro.build/blog/astro-6/)** (*JavaScript Weekly #776*)
+  + 업데이트: Vite의 새로운 Environment API를 활용해 프로덕션과 동일한 런타임을 개발 시에 제공하는 `astro dev`의 재설계, 내장 Fonts API 및 Content Security Policy API 등이 추가되었습니다.
+- **[RedwoodSDK 1.0 Released: The Cloudflare-Native React Framework](https://rwsdk.com/blog/redwood-v1-getting-out-of-the-weeds)** (*React Status #466*)
+  + 업데이트: 기존 RedwoodJS를 사실상 완전히 리부트하여, Cloudflare 플랫폼(D1, R2, Workers 등)과 깊이 통합된 서버 우선(Server-first) React 프레임워크로 1.0 버전을 출시했습니다.
+- **[Expo Router v55 Makes React Devs at Home in React Native](https://expo.dev/blog/expo-router-v55-more-native-navigation-more-powerful-web?utm_source=reactstatus&utm_medium=newsletter&utm_campaign=35663643-SDK%2055&utm_content=expo_router)** (*React Status #466*)
+  + 업데이트: WebView 없이 단일 파일 기반 라우팅 트리로 iOS, Android, 웹 환경을 동시에 배포할 수 있는 강력한 네이티브 네비게이션을 지원하는 Expo Router v55가 포함된 SDK 55가 출시되었습니다.
+- **[shadcn/cli v4 Released](https://ui.shadcn.com/docs/changelog/2026-03-cli-v4)** (*React Status #466*)
+  + 업데이트: AI 에이전트의 사용성을 개선한 'Skills', 디자인 시스템 구성을 ID 하나로 묶는 'Presets', 실제 적용 전 결과를 확인하는 'Dry run' 기능을 새롭게 탑재한 CLI v4가 배포되었습니다.
+- **[Reveal.js 6.0: The HTML Presentation Framework Adds React](https://revealjs.com/)** (*Frontend Focus #732*)
+  + 업데이트: 브라우저 기반 프레젠테이션 프레임워크인 Reveal.js가 Vite로 빌드 시스템을 교체하고, React 컴포넌트 형태로 슬라이드를 작성할 수 있는 공식 React Wrapper를 추가한 6.0을 출시했습니다.
+- **[TinyBase 8.0: A Reactive Data Store for Local-First Apps](https://javascriptweekly.com/link/181843/web)** (*JavaScript Weekly #776*)
+  + 업데이트: 로컬 퍼스트 앱을 위한 리액티브 데이터 스토어인 TinyBase가 미들웨어 기능과 '셀(cell)' 내부에 객체 및 배열을 직접 저장할 수 있는 기능을 추가하여 8.0으로 업데이트되었습니다.
+- **[Node.js 25.8.0 (Current)](https://javascriptweekly.com/link/181816/web)** (*JavaScript Weekly #776*)
+  + 업데이트: Node의 권한(Permission) 모델을 경고 전용 모드로 실행할 수 있는 `--permission-audit` 옵션이 새롭게 추가된 마이너 업데이트 버전입니다.
+
+## ✍️ 마치며
+이번 주의 뉴스들은 프론트엔드 생태계가 어느 때보다 성숙해지는 동시에 근본적인 효율성을 되묻고 있음을 시사합니다. Vite 8.0과 Solid 2.0 같은 핵심 도구들의 변화는 더 빠르고 직관적인 렌더링에 초점이 맞춰져 있으며, 18개월간 작성한 코드를 미련 없이 전환한 사례는 아키텍처 선택의 중요성을 깊이 일깨워줍니다. CSS가 자바스크립트의 영역을 속속들이 대체해 나가는 모습과 함께 우리는 무거운 라이브러리에 의존하기보다 브라우저의 네이티브 기능을 얼마나 효과적으로 활용할 수 있는지 항상 고민해야 할 것입니다.
+
+#### 출처
+- [JavaScript Weekly #776](https://javascriptweekly.com/issues/776)
+- [Frontend Focus #732](https://frontendfoc.us/issues/732)
+- [React Status #466](https://react.statuscode.com/issues/466)
+- [Smashing Newsletter #549](https://mailchi.mp/smashingmagazine/549-new-css-features-and-techniques)

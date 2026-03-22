@@ -13,7 +13,7 @@ export const PostHeader = ({ language, post }: Props) => {
   const t = getLanguageText(language, 'postHeader')
 
   return (
-    <header className="mt-14">
+    <header className="mt-3">
       <div className="mb-3 text-base">
         <Link
           href={`/blog/${language}/${post.categoryPath}`}

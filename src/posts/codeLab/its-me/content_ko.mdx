@@ -165,6 +165,25 @@ const generateSuggestions = (isFirstMessage: boolean, isSearchFailed: boolean, t
 
 ---
 
+### 2025년 12월 21일 추가대응
+Google AI Studio의 정책 변경으로 무료 api 사용이 제한되었습니다. 기존의 2.5-pro 모델사용이 제한되었기 때문에 3.0-flash모델로 변경하였습니다.
+
+```typescript
+const model = new ChatGoogleGenerativeAI({
+  model: "gemini-2.5-pro",
+  apiKey: process.env.GEMINI_API_KEY!,
+  maxOutputTokens: 2048,
+})
+```
+
+```typescript
+const model = new ChatGoogleGenerativeAI({
+  model: "gemini-3-flash-preview",
+  apiKey: process.env.GEMINI_API_KEY!,
+  maxOutputTokens: 2048,
+})
+```
+
 <Callout type="info" title="개인 프로젝트 포스트">
 [cha-LINE](/blog/ko/codeLab/cha-line/) - SBI 증권 배당금 자동 수집 및 LINE 알림 봇
 [Dead Internet Theory](/blog/ko/codeLab/dead-internet-theory/) - AI 페르소나 봇 댓글 자동화 시스템

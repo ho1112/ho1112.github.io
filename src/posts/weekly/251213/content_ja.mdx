@@ -1,0 +1,125 @@
+---
+title: '🚀 2025-12 W2 #37'
+desc: React2Shellセキュリティ脆弱性、CSS Wrapped 2025、GitHub npmトークンポリシー変更 | 2025年12月第2週目 週間技術ニュースレター
+date: 2025-12-13
+thumbnail: /posts/weekly/december.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はセキュリティと2025年を総括する振り返りが主要な話題です。Reactエコシステムでは、深刻なセキュリティ脆弱性である「React2Shell」が発見され、緊急の対応が求められており、GitHubはnpmトークンポリシーを強化しました。一方、Chromeチームは「CSS Wrapped 2025」を通じて、この1年間のウェブプラットフォームの発展をまとめ、AIがReactコンポーネントのコンテキストを理解し修正する新しいツールも登場しました。
+
+## 1. 🔍 深掘り
+
+- **[The React2Shell (CVE-2025-55182) Vulnerability](https://react.statuscode.com/link/178186/web)** (出典: *React Status #455*)
+	- **背景**: 先週、ReactチームがReact Server Componentsに関連する致命的なセキュリティ脆弱性を公開しました。この脆弱性は現在「React2Shell」と名付けられ、エコシステム全体にわたり相当な波紋を呼んでいます。
+	- **主要機能**: 攻撃者がサーバーコンポーネントを通じてリモートコードを実行できる可能性が提起されました。Vercelを含む主要プラットフォームは、これに対する詳細な対応ガイドを配布しました。
+	- **実務への適用**: Next.jsなどを使用しているプロジェクトでは、直ちに最新のパッチバージョンを確認し、アップデートする必要があります。
+	- **注意事項**: Cloudflareがこの脆弱性を防御するために適用した緩和措置が、むしろ別の問題を引き起こし、約25分間のダウンタイムを誘発することもありました。セキュリティパッチ適用時のサイドエフェクトに対するモニタリングが必要です。
+
+- **[Did You Know Your Browser Has Two Accessibility Trees?](https://frontendfoc.us/link/178224/web)** (出典: *Frontend Focus #721*)
+	- **背景**: ウェブアクセシビリティを理解するためには、ブラウザがコンテンツを支援技術に伝達する方式を知る必要があります。
+	- **主要機能**: Chromeの二重アクセシビリティアーキテクチャ（dual accessibility architecture）に関する技術的な深掘り分析です。
+	- **実務への適用**: イベントのライフサイクル、DOMの変更事項が処理される方式、そして最終的にスクリーンリーダーなどの支援機器に出力される過程を追跡します。
+	- **注意事項**: 複雑なウェブアプリケーションでアクセシビリティの問題をデバッグする際、単にDOMを検査することを超えて、ブラウザ内部のアクセシビリティツリー生成過程を理解することが役立ちます。
+
+---
+#### 見逃せないコンテンツ
+- **[Making Complex Web Apps Faster](https://frontendfoc.us/link/178222/web)** (出典: *Frontend Focus #721*)
+  + 要約: iframe、マルチウィンドウなど、複数の並列コンテキストによって発生するパフォーマンス低下を解決するために、Microsoftが提案した「Delayed Message Timing API」に関する初期段階の提案です。
+- **[How Fast Can Browsers Process Base64 Data?](https://frontendfoc.us/link/178231/web)** (出典: *Frontend Focus #721*)
+  + 要約: 最新のハードウェアにおいて、ブラウザが毎秒ギガバイト単位でBase64データを処理できるという分析です。（FirefoxとServoは除く）
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[React Grab: A React-Focused Tool for Agentic Development](https://react.statuscode.com/link/178181/web)** (出典: *React Status #455*)
+  ![React Grab 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xd7j43y1ryn8gssncb13.jpg)
+  + **概要**: Reactパフォーマンス診断ツールであるReact Scanの作者が作成した新しいツールで、コーディングエージェントにReactアプリの「コンテキスト」を提供する機能を持ちます。
+  + **使用法**: アプリのコンポーネントからコンテキストを「grab（収集）」してAIエージェントに伝達することで、エージェントがより正確で詳細なコード変更を実行できるように支援します。
+  + **実戦チップ**: AIを活用した開発フローにおいて、Reactコンポーネント構造をAIにより深く理解させたい場合に有用です。
+
+- **[Sonda: A Universal Bundle Visualizer and Analyzer](https://frontendfoc.us/link/178244/web)** (出典: *Frontend Focus #721*)
+  ![Sonda 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1765373475/pouvlcrjur4xxxfoplid.png)
+  + **概要**: 様々なバンドラやフレームワークをサポートする汎用バンドル可視化および分析ツールです。
+  + **使用法**: ソースマップ（Source map）分析を通じて、正確なインタラクティブHTMLレポートを生成します。
+  + **実戦チップ**: Webpack、Vite、Rollupなど様々な環境でバンドルサイズを最適化し、不要な依存関係を見つけるのに活用できます。
+
+---
+#### 見逃せないコンテンツ
+- **[React Grid Layout 2.0: A Flexible Grid Layout System](https://react.statuscode.com/link/178194/web)** (出典: *React Status #455*)
+  + 要約: CSS Gridだけでは解決が難しい複雑なレスポンシブグリッドレイアウト（PackeryやGridsterスタイル）を実装できるシステムです。
+- **[Useful Patterns for Building HTML Tools](https://javascriptweekly.com/link/178407/web)** (出典: *JavaScript Weekly #765*)
+  + 要約: 複雑なフレームワークなしで、HTML、JavaScript、CSSファイル一つだけで有用なツールを作るパターンとプロセスを共有します。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[CSS Wrapped 2025](https://frontendfoc.us/link/178220/web)** (出典: *Frontend Focus #721*)
+  ![CSS Wrapped 2025 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1765366713/tr6l0nkx816htrcbasfr.png)
+  + **主要なインサイト**: Chrome DevRelチームが、今年ウェブプラットフォームに追加された新しいCSS機能をまとめました。CSS Carousels、カスタマイズ可能なselect要素、スクロール状態クエリなど興味深い機能が含まれており、主要なハイライトを扱った映像も併せて提供されます。
+
+- **[The Rhythm Of Your Screen](https://www.chrbutler.com/the-rhythm-of-your-screen)** (出典: *Smashing Newsletter #537*)
+  ![The Rhythm Of Your Screen 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/b8e2354a-c1da-e156-6eaf-a70c955f2f5c.png)
+  + **主要なインサイト**: 画面の長さが問題なのではなく、「リズムの不在」が問題だという観点を提示します。ユーザーがページをスクロールし流し読みする際に注意を維持できるよう、情報構造とリズムを作る4つのチップを共有します。
+
+---
+#### 見逃せないコンテンツ
+- **[Icon Design Principles](https://uxdesign.cc/7-principles-of-icon-design-e7187539e4a2?sk=v2%2F6dc7300d-5dde-42e5-a2df-a2fcf096f30a)** (出典: *Smashing Newsletter #537*)
+  + 要約: 優れたアイコンデザインのための7つの原則を実際の事例と共に説明します。少ないストロークで意味を伝える秘訣を扱っています。
+- **[Building a Tiny 2D Physics Engine in JavaScript](https://javascriptweekly.com/link/178429/web)** (出典: *JavaScript Weekly #765*)
+  + 要約: JavaScriptでシンプルな物理エンジンをゼロから実装し、これを2KBサイズにまで縮小する過程を扱った、クラシックなスタイルの開発記です。
+---
+
+## 4. ✨ アイデア
+
+- **[Semantic Art Gallery](https://www.semantic.art/)** (出典: *Smashing Newsletter #537*)
+  ![Semantic Art Gallery 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/ffcd24a1-c916-eb8a-da7d-2665fa776802.png)
+  + **特徴**: 単にキーワードで検索するのではなく、ユーザーの気分や想像力を入力すれば、AIがそれに合った歴史上の実際の芸術作品を探してくれる検索エンジンです。LLMを活用した検索の良い事例を示しています。
+
+- **[TypeSlayer](https://javascriptweekly.com/link/178458/web)** (出典: *JavaScript Weekly #765*)
+  + **特徴**: TypeScriptの型システム内でDoomを実行し話題となった開発者が、今回はTypeScriptのパフォーマンス問題を診断し修正するツールを3Dビジュアライゼーションと共に披露しました。（まだ公開前）
+
+## 5. ⚡️ ミニノート
+
+- **[GitHub shares an update on its npm token policies](https://javascriptweekly.com/link/178413/web)** (出典: *JavaScript Weekly #765*)
+  + 要約: すべてのnpmクラシックトークンが今週廃棄されました。代わりに2時間セッショントークンや、きめ細かいアクセストークン（granular access token）を発行する新しいプロセスが導入されました。
+- **[Chrome 144 Beta released](https://javascriptweekly.com/link/178414/web)** (出典: *JavaScript Weekly #765*)
+  + 要約: 日付と時間を扱うTemporal APIをサポートするChrome 144ベータ版がリリースされました。
+- **[Kagi releases v1.0 of its browser: Orion](https://frontendfoc.us/link/178227/web)** (出典: *Frontend Focus #721*)
+  + 要約: 検索エンジンKagiが作成したブラウザOrionが1.0バージョンをリリースしました。興味深いことに、ChromiumではなくWebKitレンダリングエンジンを基盤としています。
+- **[The AV1 video codec has won an Emmy](https://frontendfoc.us/link/178225/web)** (出典: *Frontend Focus #721*)
+  + 要約: 全世界のビデオコンテンツ伝送方式に与えた影響が認められ、AV1ビデオコーデックがエミー賞を受賞しました。
+- **[Let's Encrypt has now been with us for a decade](https://frontendfoc.us/link/178226/web)** (出典: *Frontend Focus #721*)
+  + 要約: Let's Encryptが10周年を迎えました。現在約10億個のウェブサイトを保護し成長してきた過程を振り返ります。
+
+## 6. 🎉 リリース
+
+- **[Node.js v24.12.0 (LTS)](https://javascriptweekly.com/link/178418/web)** (*JavaScript Weekly #765*)
+  + アップデート: 型削除（type stripping）機能が安定（stable）状態として表示された最初のLTSリリースです。
+- **[Deno 2.6 Released](https://javascriptweekly.com/link/178409/web)** (*JavaScript Weekly #765*)
+  + アップデート: npmおよびJSRパッケージバイナリを実行する`dx`ツール、依存関係の脆弱性確認のための`deno audit`、より詳細なランタイム権限制御などが追加されました。
+- **[Bun v1.3.4](https://javascriptweekly.com/link/178420/web)** (*JavaScript Weekly #765*)
+  + アップデート: `URLPattern`サポート、テストランナーのタイマー制御機能、Nodeと互換性のある`console.log`の`%j`指定子サポートなどが含まれました。
+- **[React v19.2.3, v19.1.4, and v19.0.3](https://javascriptweekly.com/link/178421/web)** (*JavaScript Weekly #765*)
+  + アップデート: 複数のバージョンのReactに対するパッチアップデートがリリースされました。
+- **[React Datepicker 9.0](https://react.statuscode.com/link/178204/web)** (*React Status #455*)
+  + アップデート: タイムゾーンサポート、日付範囲内の時間選択機能、カスタマイズおよびアクセシビリティ向上のための新しいpropsが追加されました。
+- **[Ant Design 6.1](https://react.statuscode.com/link/178207/web)** (*React Status #455*)
+  + アップデート: 広く使用されているコンポーネントスイートおよびデザイン言語のアップデートです。
+- **[Jotai 2.16](https://react.statuscode.com/link/178209/web)** (*React Status #455*)
+  + アップデート: 原子的で柔軟な状態管理ライブラリの新しいバージョンです。
+- **[pnpm 10.25](https://javascriptweekly.com/link/178454/web)** (*JavaScript Weekly #765*)
+  + アップデート: 高速で空間効率の良いパッケージマネージャーのアップデートです。
+- **[Inertia 2.3](https://javascriptweekly.com/link/178450/web)** (*JavaScript Weekly #765*)
+  + アップデート: Django、Rails、Laravelのようなサーバーサイドフレームワークと共にReact、Vue、Svelteアプリを構築できるライブラリです。
+- **[OpenPGP.js 6.3](https://javascriptweekly.com/link/178451/web)** (*JavaScript Weekly #765*)
+  + アップデート: JavaScriptのためのOpenPGP実装です。
+
+## ✍️ おわりに
+今週はウェブエコシステムの光と影が同時に現れた一週間でした。一方ではReact Server Componentsのセキュリティ脆弱性とnpmトークンの問題のように開発者が警戒心を持つべきセキュリティ問題が台頭しましたが、他方では一年を締めくくりつつ、CSSとブラウザ技術がどれほど発展したかを示す振り返りと新しいツールが溢れました。特にAIが単にコードを生成することを超えて、ランタイムコンテキストを理解し介入しようとする試み（React Grabなど）は、今後の開発ツールが進むべき方向を示唆しているようです。セキュリティパッチは迅速に対応しつつ、年末を迎えて溢れる技術トレンドの振り返りも見逃さずにチェックしてみてください。
+
+#### 出典
+- [JavaScript Weekly #765](https://javascriptweekly.com/issues/765)
+- [Smashing Newsletter #537](https://mailchi.mp/smashingmagazine/537-designers-guides-and-tools)
+- [Frontend Focus #721](https://frontendfoc.us/issues/721)
+- [React Status #455](https://react.statuscode.com/issues/455)

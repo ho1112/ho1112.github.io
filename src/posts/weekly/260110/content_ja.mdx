@@ -1,0 +1,150 @@
+---
+title: '🚀 2026-01 W2 #41'
+desc: ReactとtRPCの結合「Fate」、超軽量JSエンジンMicroQuickJS、スタイルなしBase UI 1.0、2025 JSライジングスター | 2026年1月第2週目 週間技術ニュースレター
+date: 2026-01-10
+thumbnail: /posts/weekly/january.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、2025年を振り返る決算と、2026年を切り開く新しいツールが調和しています。**JavaScript Rising Stars 2025**と**State of HTML 2025**の結果が発表され、昨年のトレンドが整理されました。一方、Reactエコシステムでは、RelayとGraphQLの利点をtRPCと組み合わせようとする**fate**、組み込みシステム向けの超軽量エンジン**MicroQuickJS**など、興味深い新規プロジェクトが登場しました。また、**CSS Grid Lanes**のような新しいレイアウト仕様の登場は、フロントエンド開発の未来を期待させてくれます。
+
+## 1. 🔍 深掘り
+
+- **[The fate™️ of React](https://bytes.dev/archives/452)** (出典: *Bytes #452*)
+  ![What do you mean you don’t want to implement a new query language from scratch?](https://bytes.dev/images/content/steves.jpg)
+    - **背景**: Facebook出身のChristoph Nakazawaが開発した、新しいReactおよびtRPC用データクライアントです。2010年代半ばにRelayとGraphQLが約束した強力なデータ階層の利点を提供しつつ、バックエンドにGraphQLを導入しなければならない負担をなくすために登場しました。
+    - **主な機能**:
+        - **ビューコンポジション (View Composition)**: データ要件をコンポーネントごとに配置（co-located）し、画面ごとに1つのバッチリクエストとして処理することで、ウォーターフォール現象を排除。
+        - **厳格な選択とデータマスキング**: 各ビューに必要なデータのみを厳格に選択し、リクエストしていないデータは隠すことで、偶発的な結合を防止。
+        - **Async React**: Suspense、`use`、Actionsなど、最新のReactプリミティブを基盤に構築されており、楽観的更新などを標準でサポート。
+    - **実務への適用**: すでにtRPCを使用している場合や、GraphQLの複雑さなしにその利点（型安全性、データフェッチの最適化）を享受したいプロジェクトに適しています。
+
+- **[MicroQuickJS: A New JavaScript Engine from Fabrice Bellard](https://javascriptweekly.com/link/178797/web)** (出典: *JavaScript Weekly #767*)
+    - **背景**: FFmpeg、QEMU、QuickJSの創始者である天才開発者Fabrice Bellardが帰ってきました。今回は、組み込みシステムをターゲットにした新しいJavaScriptエンジンです。
+    - **主な機能**:
+        - **超軽量**: わずか10KBのRAMでも動作可能で、リソースが極端に制限された環境でも最新のJS構文を活用できるようにします。
+        - **互換性**: QuickJSの軽量化バージョンと見られ、組み込み機器の制御に最適化されています。
+    - **注意事項**: 非常に小さなメモリフットプリントを目標としているため、一般的なウェブブラウザエンジンやNode.jsのようなランタイムとは使用目的と性能特性が異なります。
+
+---
+#### 見逃せないコンテンツ
+- **[Introducing CSS Grid Lanes](https://frontendfoc.us/link/178860/web)** (出典: *Frontend Focus #723*)
+  + **要約**: CSS Masonryレイアウト（レンガ積みスタイル）を実装するための標準アプローチとして、`display: grid-lanes`が合意されました。Safari Technology Previewでテスト可能であり、複雑なJavaScriptライブラリなしで純粋なCSSのみでMasonryレイアウトを実装できる道が開かれました。
+- **[How to Compile JavaScript to C with Static Hermes](https://javascriptweekly.com/link/178809/web)** (出典: *JavaScript Weekly #767*)
+  + **要約**: Parcelの創始者がJavaScriptプラグインエコシステムを維持しながら、Rustベースのツーリングと相互作用するために、Static Hermesを使用してJavaScriptをCライブラリにコンパイルする方法を探求した技術記事です。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[Base UI 1.0: Unstyled UI Components for React](https://react.statuscode.com/link/179048/web)** (出典: *React Status #457*)
+    - **概要**: Radix、Floating UI、Material UIの制作陣が作った新しい「スタイルなし（Unstyled）」UIコンポーネントライブラリです。
+    - **特徴**: アクセシビリティと機能は完璧に実装されていますが、スタイルは開発者が自由に適用できるように設計されています。Radix UIの精神的後継作と見ることができ、Tailwind CSSなどと組み合わせてデザインシステムを構築するのに最適化されています。
+    - **使用法**:
+      ```jsx
+      // スタイルなしで機能のみ提供されるコンポーネントの例
+      import { Switch } from '@base-ui-components/react/switch';
+      
+      export default function App() {
+        return <Switch.Root>...</Switch.Root>;
+      }
+      ```
+
+- **[Bruno 3.0: An Open-Source HTTP API Client App](https://javascriptweekly.com/link/178830/web)** (出典: *JavaScript Weekly #767*)
+  ![Bruno 3.0 image](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/udfxu239yekuwhj7a4sj.jpg)
+    - **概要**: PostmanやInsomniaの代替として浮上しているオープンソースAPIクライアントです。100% JavaScriptで構築されました。
+    - **アップデート**: バージョン3.0ではUIが完全に刷新され、APIリクエストをグループ化できるワークスペース機能が追加されました。
+    - **実践チップ**: クラウド同期の強制なしにローカルファイルシステムにコレクションを保存するため、Gitを通じたバージョン管理が容易である点が最大のメリットです。
+
+---
+#### 見逃せないコンテンツ
+- **[Schedule-X 3.6: A Material Design Calendar and Date Picker](https://react.statuscode.com/link/179046/web)** (出典: *React Status #457*)
+  + **要約**: React、Vue、Svelte、AngularおよびバニラJSをすべてサポートする、マテリアルデザインベースのカレンダーおよび日付選択ライブラリです。オープンソースであり、プレミアム機能も提供しています。
+- **[jsPDF 4.0: Client-Side JavaScript PDF Generation](https://javascriptweekly.com/link/178826/web)** (出典: *JavaScript Weekly #767*)
+  + **要約**: クライアントサイドでPDFを生成する由緒あるライブラリのメジャーアップデートです。チケット、証明書、文書などをサーバーなしでブラウザにて即座に生成する際に有用です。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[The 2025 JavaScript Rising Stars](https://javascriptweekly.com/link/178794/web)** (出典: *JavaScript Weekly #767*)
+  ![Rising Stars 2025](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ct6eoto8abwvodmz5riu.jpg)
+    - **主要なインサイト**: 2024年の1年間、GitHubで最も多くのスターを獲得したプロジェクトを決算しました。2年連続1位を占めた`shadcn/ui`が3位に下がり、ワークフロー自動化ツールの`n8n`と新しいアニメーションライブラリ`React Bits`が最上位圏を占めました。これは開発者の関心事が単純なUIコンポーネントから自動化およびインタラクティブな体験へと拡張していることを示唆しています。
+
+- **[Chrome DevTools Features I Use All The Time ($ shortcuts)](https://bytes.dev/archives/452)** (出典: *Bytes #452*)
+    - **主要なインサイト**: Chrome開発者ツールのコンソールで使用できる便利な`$`ショートカットをまとめました。
+    - **主なショートカット**:
+        - `$(selector)`: `document.querySelector()`と同一。
+        - `$$(selector)`: `document.querySelectorAll()`と同一（配列を返却）。
+        - `$0` ~ `$4`: Elementsパネルで最近選択した要素を順番に参照。
+        - `$_`: コンソールで最も最近評価された式のその結果値。
+    - **活用**: デバッグ時にDOM要素を素早く選択したり、以前の計算値を再利用したりする際に生産性を大きく高めてくれます。
+
+- **[Fixing TypeScript Performance Problems: A Case Study](https://javascriptweekly.com/link/178817/web)** (出典: *JavaScript Weekly #767*)
+    - **主要なインサイト**: 大規模なモノレポ環境で発生する遅いインテリセンス、長い型チェック時間、ビルド速度低下の問題を解決した事例を共有しています。TypeScriptプロジェクトの規模が大きくなるにつれて直面するパフォーマンスのボトルネックを解決できる実質的な最適化のヒントを提供します。
+
+---
+#### 見逃せないコンテンツ
+- **[React Has Changed, Your Hooks Should Too](https://react.statuscode.com/link/179038/web)** (出典: *React Status #457*)
+  + **要約**: 2020年スタイルのHook作成方式から脱却し、React 18以降の新しい機能を活用した、より良いパターンを提案しています。
+- **[4 CSS Features Every Frontend Developer Should Know In 2026](https://frontendfoc.us/link/178861/web)** (出典: *Frontend Focus #723*)
+  + **要約**: Adam Argyleが2026年に注目すべきCSS機能として、スクロール状態クエリ、タイポグラフィの空白トリミングなどを挙げました。
+---
+
+## 4. ✨ アイデア
+
+- **[How to Create a Pixel-to-Voxel Video Drop Effect with Three.js and Rapier](https://javascriptweekly.com/link/178823/web)** (出典: *JavaScript Weekly #767*)
+    - **特徴**: 映像をピクセル単位の3Dボクセル（Voxel）に変換し、物理エンジン（Rapier）を適用して落下する効果を実装するチュートリアルです。視覚的に非常に印象的なウェブ体験を作る方法を紹介しています。
+- **[Build a Dinosaur Runner Game with Deno](https://javascriptweekly.com/link/178811/web)** (出典: *JavaScript Weekly #767*)
+    - **特徴**: Chromeブラウザのオフライン恐竜ゲームを、Denoランタイムを使用して直接実装してみるチュートリアルシリーズです。
+
+## 5. ⚡️ ミニノート
+
+- **[The Results: State of HTML 2025](https://frontendfoc.us/link/178862/web)** (出典: *Frontend Focus #723*)
+  + 要約: HTMLエコシステムに関する年次調査結果が発表されました。開発者は派手な機能よりも実用的で機能的な機能を好むことが分かりました。
+- **[Long-time Googler Addy Osmani has shared 21 lessons](https://frontendfoc.us/link/178863/web)** (出典: *Frontend Focus #723*)
+  + 要約: Googleで14年以上勤務したAddy Osmaniが、エンジニアとして成長し長く貢献するために学んだ21の教訓を共有しました。
+- **[GitHub plans to implement 'staged publishing' for npm packages](https://react.statuscode.com/link/179064/web)** (出典: *React Status #457*)
+  + 要約: npmエコシステムのセキュリティ強化のため、GitHubがnpmパッケージに対して「段階的公開（staged publishing）」機能を導入する計画です。
+- **[React Router team has just published six CVEs](https://react.statuscode.com/link/179035/web)** (出典: *React Status #457*)
+  + 要約: React RouterおよびRemix v2でセキュリティ脆弱性（CVE）6件が発見され、ユーザーの注意とアップグレードが推奨されます。
+- **[WebF: A new WHATWG-compliant web runtime for Flutter](https://javascriptweekly.com/link/178802/web)** (出典: *JavaScript Weekly #767*)
+  + 要約: Flutterアプリ内でReactやVueのようなウェブスタックを使用してUIを構築できるようにする、WHATWG準拠のウェブランタイムです。
+
+## 6. 🎉 リリース
+
+- **[Next.js 16.1](https://react.statuscode.com/link/179060/web)** (*React Status #457*)
+  + アップデート: 最新のマイナーバージョンアップデートがリリースされました。
+- **[pnpm 10.27](https://javascriptweekly.com/link/178803/web)** (*JavaScript Weekly #767*)
+  + アップデート: 指定された時間より古いパッケージに対して、信頼ポリシー確認を無視する設定を含むアップデートです。
+- **[Ink 6.6](https://react.statuscode.com/link/179050/web)** (*React Status #457*)
+  + アップデート: ReactでCLIアプリを作成できるライブラリのアップデートです。Claude Code、Gemini CLIなどで使用されています。
+- **[React Three Fiber 9.5](https://react.statuscode.com/link/179052/web)** (*React Status #457*)
+  + アップデート: Three.js用Reactレンダラーで、React 19.2互換性および`Activity`サポートが追加されました。
+- **[Prisma 7.2](https://javascriptweekly.com/link/178807/web)** (*JavaScript Weekly #767*)
+  + アップデート: 人気のあるORM Prismaのマイナーアップデートです。
+- **[Deno 2.6.4](https://javascriptweekly.com/link/178808/web)** (*JavaScript Weekly #767*)
+  + アップデート: Denoランタイムの最新パッチバージョンです。
+- **[Recharts 3.6](https://react.statuscode.com/link/179054/web)** (*React Status #457*)
+  + アップデート: D3ベースの人気Reactチャートライブラリアップデートです。
+- **[color.js v0.6.0](https://frontendfoc.us/link/178882/web)** (*Frontend Focus #723*)
+  + アップデート: 標準に準拠した色変換および操作ライブラリで、1.0リリースに向かっています。
+- **[Middy 7.0](https://javascriptweekly.com/link/178836/web)** (*JavaScript Weekly #767*)
+  + アップデート: AWS Lambda用Node.jsミドルウェアエンジンで、Durable Functionsサポートが追加されました。
+- **[JoltPhysics.js 1.0](https://javascriptweekly.com/link/178832/web)** (*JavaScript Weekly #767*)
+  + アップデート: 有名なC++物理エンジンJoltPhysicsをEmscriptenを通じてJavaScriptで使用できるようになった最初のバージョンです。
+- **[PlayCanvas glTF Viewer 5.8](https://javascriptweekly.com/link/178837/web)** (*JavaScript Weekly #767*)
+  + アップデート: glTF 2.0およびPLYをサポートする3Dモデルビューアのアップデートです。
+- **[k6 1.5](https://javascriptweekly.com/link/178838/web)** (*JavaScript Weekly #767*)
+  + アップデート: GoとJSベースのモダン負荷テストツールのアップデートです。
+
+## ✍️ おわりに
+今週は、去る2025年を回顧する内容が多かったです。「Rising Stars」や「State of HTML」のようなレポートは、現在の開発エコシステムがどこにあるのか、そしてどこへ向かっているのか（例: 自動化、相互運用性、パフォーマンス）をよく示しています。
+
+特に興味深い点は、Reactエコシステムの絶え間ない進化です。単に新しい機能を追加することを超えて、Christoph Nakazawaの「fate」のように既存の複雑さ（GraphQL）を解決しようとする試みや、「Base UI」のようにスタイリングの自由度を最大化する方向へとツールが成熟しています。また、Fabrice Bellardの新しいJSエンジンのニュースは、ウェブ技術が組み込み領域までどれほど深く浸透できるかを示す楽しい刺激剤でした。
+
+新年も技術は止まることなく発展しています。今週のニュースが、皆さんの2026年の技術ロードマップを構想する上での小さなヒントになることを願っています。
+
+#### 出典
+- [JavaScript Weekly #767](https://javascriptweekly.com/issues/767)
+- [Frontend Focus #723](https://frontendfoc.us/issues/723)
+- [React Status #457](https://react.statuscode.com/issues/457)
+- [bytes #452](https://bytes.dev/archives/452)

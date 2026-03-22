@@ -139,7 +139,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         {allDeepDivePosts.length > 3 && (
           <div className="mt-6 flex justify-center">
             <Link
-              href={`/blog/${language}/inspiration`}
+              href={`/blog/${language}/deepDive`}
               className="px-4 py-2 bg-chomin text-white rounded-full text-sm font-semibold hover:bg-chomin-dark"
             >
               deepDive {t.more}

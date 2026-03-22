@@ -1,0 +1,142 @@
+---
+title: '🚀 2026-01 W3 #42'
+desc: React Nativeの対抗馬Lynxの浮上、Denoの安全なパッケージ実行ツールdx、Temporal APIのブラウザ導入 | 2026年1月第3週目 週間技術ニュースレター
+date: 2026-01-17
+thumbnail: /posts/weekly/january.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、クロスプラットフォームモバイル開発とJavaScriptランタイムの安全性強化が主要な話題でした。React Nativeの対抗馬として浮上しているLynxの技術的飛躍、Denoが提示する安全なパッケージ実行方式、そして長く待ち望まれていたTemporal APIのブラウザ導入のニュースが目を引きました。また、Node.jsとFirefoxの大規模なアップデートと共に、Webの依存関係管理に関する深みのある議論が開発者エコシステムを豊かに彩りました。
+
+## 1. 🔍 深掘り
+
+- **[More React-y than React Native](https://bytes.dev/archives/453)** (出典: *Bytes #453*)
+  ![Donkey + Shrek baby](https://bytes.dev/images/content/donkey-baby.jpg)
+  - **背景**: モバイルフレームワーク市場ではReact NativeとExpoが長く支配的な位置を占めてきましたが、最近SnapchatのValdiとByteDanceのLynxが新たな対抗馬として注目されています。特にLynxはv3.5リリースと共にデスクトップサポート計画を明らかにし、拡張性を広げています。
+  - **コア機能**:
+    - **Dual-threading**: メインスレッド（UI担当）とバックグラウンドスレッド（ロジック担当）を分離し、パフォーマンスを極大化しました。
+    - **Primjsエンジン**: メインスレッドには軽量なカスタムJSエンジンであるPrimjsを使用し、UIレンダリング速度を高めました。
+    - **Instant first frame rendering**: モバイル環境でもWebのSSR（サーバーサイドレンダリング）と同様に、最初の画面を即座に描画する技術を導入しました。
+  - **実務適用**: FlutterやReact Nativeの代案として、Webの表現力を維持しながらネイティブレベルの極限のパフォーマンスが必要なクロスプラットフォームアプリ開発に適しています。
+  - **注意事項**: 既存のReact構文を使用しますが、アーキテクチャが完全に異なるため、既存のReact Nativeエコシステムのライブラリとの互換性を必ず確認する必要があります。
+
+- **[Introducing: React Best Practices](https://react.statuscode.com/link/179398/web)** (出典: *React Status #458*)
+  ![Link Image](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/vrh2wh7lpi34vxpwotvb.jpg)
+  - **背景**: Vercelチームが10年以上のReactおよびNext.js最適化のノウハウを集大成しました。これは単に開発者が読むためのドキュメントを超え、Claude CodeやOpenCodeのようなコーディングエージェントが活用できるように設計されています。
+  - **コア機能**: AIエージェントが過度なガイドなしでも、より良いReactコードを作成できるように支援するMarkdownファイル集です。コンポーネント構造、パフォーマンス最適化、状態管理など、核心的なベストプラクティスを盛り込んでいます。
+  - **実務適用**: チーム内部のコーディング規約を策定したり、AIベースのコーディングツールを設定したりする際、このドキュメントをナレッジベースとして活用し、コード品質を一貫して維持できます。
+
+---
+#### 見逃せないコンテンツ
+- **[Introducing CSS Grid Lanes](https://webkit.org/blog/17660/introducing-css-grid-lanes/?utm_source=CSS-Weekly&utm_campaign=Issue-631&utm_medium=web)** (出典: *CSS Weekly #631*)
+  + 要約: Jen SimmonsとWebKitチームが提案するWeb Masonryレイアウトの未来であるCSS Grid Lanesに関する紹介です。
+- **[How to 'Steal' Any React Component](https://react.statuscode.com/link/179401/web)** (出典: *React Status #458*)
+  + 要約: ソースコードのないプロダクションReactアプリで、React内部データ構造（Fiber）とLLMを活用してコンポーネントをリバースエンジニアリングし、復元する方法を扱います。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[Practice safe npx with Deno](https://bytes.dev/archives/454)** (出典: *Bytes #454*)
+  ![Guy with sunface saying, it was revealed to me by the microplastics in my brain](https://bytes.dev/images/content/microplastics-brain.jpg)
+  - **概要**: npmエコシステムの`npx`はセキュリティ上脆弱である可能性があるという懸念がありました。Deno 2.6はこれを解決するために`dx`という新しいツールを導入しました。
+  - **使用法**:
+    ```bash
+    dx cowsay "Hello Bytes"
+    # パッケージダウンロード前の確認要請 -> 実行前スクリプト確認 -> Deno権限システム内での実行
+    ```
+  - **実践チップ**: `dx`はパッケージをグローバルにインストールせず、npmおよびJSRレジストリのバイナリを実行します。実行前にダウンロードおよびライフサイクルスクリプトの実行について明示的に同意を求め、Denoの権限システム（Permission system）内でコードを隔離して実行することで、任意のサードパーティコード実行のリスクを低減します。
+
+- **[memlab 2.0: A Framework for Finding JavaScript Memory Leaks](https://javascriptweekly.com/link/179142/web)** (出典: *JavaScript Weekly #768*)
+  ![Link Image](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dawzithphi5rmj0kbxjf.jpg)
+  - **概要**: Facebookで開発したJavaScriptメモリリーク検知フレームワークが2.0にアップデートされました。Facebookアプリの最適化過程で誕生したツールです。
+  - **使用法**: シナリオを作成して実行すると、ヒープスナップショット（heap snapshots）を比較し、メモリリークをフィルタリングして結果を集計してくれます。
+  - **実践チップ**: 複雑なSPA（Single Page Application）で発生する微細なメモリリークを追跡したり、大規模アプリのパフォーマンス最適化の機会を特定したりするのに非常に有用です。
+
+---
+#### 見逃せないコンテンツ
+- **[PamPam](https://www.pampam.city/)** (出典: *Smashing Newsletter #541*)
+  + 要約: コーディングなしで数分のうちにユーザー・カスタマイズされた地図を生成できるAIマップメーカーです。
+- **[FontSniff: AI-Powered Tool to Detect Fonts from Images](https://frontendfoc.us/link/179192/web)** (出典: *Frontend Focus #724*)
+  + 要約: 画像をアップロードするとAIを通じて使用されたフォントを識別してくれるツールです。テキスト抽出機能も含まれています。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[Web Dependencies are Broken; Can We Fix Them?](https://javascriptweekly.com/link/179113/web)** (出典: *JavaScript Weekly #768*)
+  ![Link Image](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/egzkb3skvvasipbl0ijy.jpg)
+  - **主要なインサイト**: Web標準の専門家Lea Verouが、現在のWeb依存関係管理システムがいかに不必要に複雑であるか指摘します。依存関係をコードに導入し管理する過程の問題点を分析し、これを解決するためにどのような変化が必要か、教育的な観点から説得力を持って提示しています。
+
+- **[Date is Out, Temporal is In](https://javascriptweekly.com/link/179125/web)** (出典: *JavaScript Weekly #768*)
+  - **主要なインサイト**: 長年JavaScriptの`Date`オブジェクトは多くの弱点を持っていました。これを解決するための`Temporal` APIがついにブラウザに導入され始めました（Chrome 144など）。`Date`の問題点と比較して、`Temporal`が提供する強力な日付/時間処理機能とその利点を、例とともに説明します。
+
+---
+#### 見逃せないコンテンツ
+- **[CSS Wrapped 2025](https://chrome.dev/css-wrapped-2025/?utm_source=CSS-Weekly&utm_campaign=Issue-631&utm_medium=web)** (出典: *CSS Weekly #631*)
+  + 要約: 2025年の一年間にChromeに導入された22種類の強力な最新CSS機能を総まとめしました。
+- **[Not All Browser APIs are "Web" APIs](https://frontendfoc.us/link/179171/web)** (出典: *Frontend Focus #724*)
+  + 要約: 私たちが使用している人気のあるブラウザAPIの一部は、実際には他社の依存関係を持っていたり、ベンダーサービスを標準インターフェースとしてラップしたものである可能性があるという点を指摘しており、これはプライバシーと移植性の側面で重要に考慮すべき事項です。
+---
+
+## 4. ✨ アイデア
+
+- **[World Map Of Human Ideas](https://ideas.zudiay.me/)** (出典: *Smashing Newsletter #541*)
+  - ![World Map Of Human Ideas](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/25b0835e-3e7a-8722-9b7c-ead8a4335571.png)
+  + 特徴: 火の発見から一般相対性理論まで、人類文明を形成したアイデアがどこで誕生したのかを探検できる地図です。科学、技術、芸術、哲学など、多様な分野の発見と発明の発祥地を視覚的に見せてくれます。
+
+- **[PostHog](https://posthog.com/)** (出典: *Smashing Newsletter #541*)
+  - ![PostHog](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/080d8cfe-3322-bc0d-8177-7b9830645b9a.png)
+  + 特徴: 一般的なWebサイト構成から脱却し、親しみやすいデスクトップOS（オペレーティングシステム）スタイルのインターフェースを適用しました。随所に配置されたハリネズミのイラストと共に、好奇心を刺激する独創的なデザインが際立ちます。
+
+## 5. ⚡️ ミニノート
+
+- **[The full set of React Conf 2025 videos](https://javascriptweekly.com/link/179114/web)** (出典: *JavaScript Weekly #768*)
+  + 要約: 25の発表と23のインタビューを含むReact Conf 2025のすべての映像が公開されました。コアチームメンバー4名とのインタビューも含まれています。
+- **[Tailwind has had to let go 75% of their engineering team](https://frontendfoc.us/link/179177/web)** (出典: *Frontend Focus #724*)
+  + 要約: Tailwind CSSチームがAIがビジネスに及ぼした「残酷な影響（brutal impact）」を理由に、エンジニアリングチームの75%を削減しました。
+- **[Firefox 147 Release Notes for Developers](https://frontendfoc.us/link/179174/web)** (出典: *Frontend Focus #724*)
+  + 要約: CSSアンカーポジショニング（Anchor Positioning）、Navigation API、CSSモジュールスクリプトなど、大規模な機能が追加されました。これにより、すべての主要ブラウザがCSSアンカーポジショニングをサポートするようになりました。
+- **[JPEG XL support has been merged into Chromium](https://frontendfoc.us/link/179175/web)** (出典: *Frontend Focus #724*)
+  + 要約: ChromiumにJPEG XLサポートがマージされ、Canaryバージョンにてフラグを通じて有効化できます。
+- **[Even Linus Torvalds is 'vibe coding' now](https://javascriptweekly.com/link/179157/web)** (出典: *JavaScript Weekly #768*)
+  + 要約: リーナス・トーバルズもGoogleのAntigravityツールを使用してデジタルサウンド効果を作るなど、「vibe coding」を経験しています。
+
+## 6. 🎉 リリース
+
+- **[Node.js January 13 2026 Security Releases](https://javascriptweekly.com/link/179118/web)** (*JavaScript Weekly #768*)
+  + アップデート: Node.js v20.x、22.x、24.x、25.xバージョンに対するセキュリティアップデートがリリースされ、5つの脆弱性を解決しました。`AsyncLocalStorage`関連のクラッシュバグ修正も含まれています。
+- **[Bun v1.3.6](https://javascriptweekly.com/link/179119/web)** (*JavaScript Weekly #768*)
+  + アップデート: `Bun.Archive`を通じたtarアーカイブ作業のサポート、コメント付きJSONパースをサポートする`Bun.JSONC`の追加および多数のパフォーマンス最適化が行われました。
+- **[pnpm 10.28](https://javascriptweekly.com/link/179120/web)** (*JavaScript Weekly #768*)
+  + アップデート: パッケージ配布時点で`package.json`の内容をカスタマイズできる`beforePacking`フックが追加されました。
+- **[Angular 21.1 rc0](https://javascriptweekly.com/link/179121/web)** (*JavaScript Weekly #768*)
+  + アップデート: Angular 21.1正式リリースを控え、RCバージョンが公開され、アップデート事項をあらかじめ確認できます。
+- **[Ember 6.9](https://javascriptweekly.com/link/179122/web)** (*JavaScript Weekly #768*)
+  + アップデート: Emberフレームワークの最新マイナーアップデートです。
+- **[ESLint v10.0.0 RC0](https://javascriptweekly.com/link/179123/web)** (*JavaScript Weekly #768*)
+  + アップデート: 主要なリンティングツールであるESLintのメジャーバージョン10.0.0のリリース候補（RC）バージョンが公開されました。
+- **[Rspack 1.7](https://javascriptweekly.com/link/179124/web)** (*JavaScript Weekly #768*)
+  + アップデート: 高性能WebバンドラーRspackの最新アップデートです。
+- **[Astro 6 beta](https://react.statuscode.com/link/179408/web)** (*React Status #458*)
+  + アップデート: Astroフレームワークのメジャーバージョン6ベータがリリースされました。開発サーバーが再設計され、2025年の一年間の多くの変更事項が反映されました。
+- **[Fabric.js 7.1](https://javascriptweekly.com/link/179145/web)** (*JavaScript Weekly #768*)
+  + アップデート: HTML5キャンバスのための強力なSVG抽象化ライブラリのアップデートで、ブラウザとNode.js環境をすべてサポートします。
+- **[Zustand 5.0.10](https://react.statuscode.com/link/179426/web)** (*React Status #458*)
+  + アップデート: 小さく高速で拡張可能な状態管理ソリューションのパッチアップデートです。
+- **[jsPDF 4.0](https://frontendfoc.us/link/179198/web)** (*Frontend Focus #724*)
+  + アップデート: クライアントサイドJavaScript PDF生成ライブラリのメジャーアップデートです。
+- **[Schedule-X 4.0](https://react.statuscode.com/link/179427/web)** (*React Status #458*)
+  + アップデート: モダンJavaScriptイベントカレンダーコントロールライブラリのメジャーバージョンです。
+- **[shadcn/ui 3.7.0](https://react.statuscode.com/link/179429/web)** (*React Status #458*)
+  + アップデート: 広く使用されているUIコンポーネント集の最新アップデートです。
+
+## ✍️ おわりに
+今週は、Web開発の境界線がさらに曖昧になっていることを感じさせます。DenoとBunはNode.jsの牙城に挑戦し、セキュリティとパフォーマンスを武器にエコシステムを拡張しており、LynxはWeb技術でネイティブパフォーマンスに挑み、React Nativeを脅かしています。また、Temporal APIやCSSアンカーポジショニングのような最新標準がブラウザに定着しながら、サードパーティライブラリに依存していた機能がWebプラットフォーム自体の機能として吸収されています。特にAIがエンジニアリングチーム構造（Tailwindの事例）とコーディング方式（Vercelのベストプラクティスドキュメント）に直接的な影響を及ぼし始めたという点は、示唆するところが大きいです。変化するツールを単に追うだけでなく、技術の根本的な移動方向を注視すべき時点です。
+
+#### 出典
+- [JavaScript Weekly #768](https://javascriptweekly.com/issues/768)
+- [Frontend Focus #724](https://frontendfoc.us/issues/724)
+- [React Status #458](https://react.statuscode.com/issues/458)
+- [Smashing Newsletter #541](https://mailchi.mp/smashingmagazine/541-inspiring-little-websites-to-kick-off-2026)
+- [CSS Weekly #631](hhttps://css-weekly.com/issue-631)
+- [bytes #453](https://bytes.dev/archives/453)
+- [bytes #454](https://bytes.dev/archives/454)
