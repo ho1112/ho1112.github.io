@@ -1,0 +1,146 @@
+---
+title: '🚀 2026-03 W4 #52'
+desc: Next.js 16.2 Adapter API導入、JavaScript依存関係のダイエット、モダンCSSの機能拡張および最新フレームワークのアップデート | 2026年3月第4週目 週間技術ニュースレター
+date: 2026-03-28
+thumbnail: /posts/weekly/march.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はTypeScript 6.0の発表とともに、今後の7.0バージョンに備えるための大々的なエコシステムの変更が予告されました。また、モダンCSSの機能拡張により、JavaScriptへの依存度を下げ、ネイティブCSSだけでより豊かなUI（例：`corner-shape`、カスタム`select`など）を実装できる方法が深く取り上げられました。さらに、Next.jsやStorybookなどの主要フレームワークの迅速なアップデートのニュースが続きました。
+
+## 1. 🔍 深掘り
+- **[Taking Next.js to More Platforms with Next.js 16.2's Adapter API](https://nextjs.org/blog/nextjs-across-platforms)** (出典: *React Status #468* )
+	- 背景: 従来は、複数のホスティングプラットフォーム（Cloudflare、Firebase、Netlifyなど）がNext.jsを独自のインフラで稼働させるために、フレームワークを非公式に迂回（hack）したり、リバースエンジニアリングする必要がありました。
+	- コア機能: Next.js 16.2はOpenNextなどと協力し、公式かつ安定した「Deployment Adapter API」を導入しました。これにより、プラットフォームプロバイダーはフレームワークの内部動作に公式に接続できるようになります。
+	- コード例:
+		```js
+		// Adapter APIの概念的な活用構造
+		import { createAdapter } from 'next/adapter';
+
+		export default createAdapter({
+			name: 'my-custom-platform-adapter',
+			// プラットフォーム環境に合わせたルーティングおよびキャッシング制御ロジックの実装
+		});
+		```
+	- 実務適用: 特定のクラウドベンダー（Vercelなど）に依存せず、組織のインフラ（AWS、Google Cloudなど）に合わせてNext.jsのパフォーマンスとセキュリティを最適化してデプロイする際に必須となります。
+	- 注意事項: アダプターを公式サポート組織（Next.js GitHub）に登録するには、必ずオープンソースでなければならず、フレームワークの互換性テストスイートに合格する必要があります。
+- **[The Three Pillars of JavaScript Bloat](https://43081j.com/2026/03/three-pillars-of-javascript-bloat)** (出典: *JavaScript Weekly #778* )
+	![The Three Pillars of JavaScript Bloat](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kajshdtprmih95p8dxgb.jpg)
+	- 背景: `node_modules`のサイズが幾何級数的に増加する主な原因として、不要なES3互換パッケージ、単一の用途しか持たないマイクロライブラリ、そしてすでにリリースされて久しいAPIのためのポリフィル（ponyfill）の乱用が指摘されています。
+	- コア機能: これらのマイクロパッケージの依存関係を減らし、ブラウザにすでに組み込まれているネイティブAPIやバニラパターンを積極的に活用して、エコシステム全体のビルドサイズを最小限に抑えるアプローチを説明しています。
+	- コード例:
+		```js
+		// 不要なマイクロパッケージ（arrifyなど）の代わりにネイティブJavaScriptを活用
+		// ❌ const arrify = require('arrify'); return arrify(val);
+		// ✅ 
+		const toArray = (val) => Array.isArray(val) ? val : [val];
+		```
+	- 実務適用: 大規模なプロジェクトやライブラリ開発時に依存関係ツリーをダイエットし、悪意のあるサードパーティのマイクロパッケージによるサプライチェーン攻撃（Supply Chain Attack）のリスクを軽減する際に有用です。
+	- 注意事項: 開発の利便性のために何気なくインストールする数多くのユーティリティパッケージがセキュリティ脆弱性の経路になる可能性があるため、定期的な監査が必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[Beyond border-radius: What The CSS corner-shape Property Unlocks For Everyday UI](https://www.smashingmagazine.com/2026/03/beyond-border-radius-css-corner-shape-property-ui/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	+ 要約: 新しい`corner-shape`プロパティが、従来の`border-radius`を超えて、ベベル、スクープ、squircleの角など、さまざまなデザインをどのように可能にするかを深く示しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ 
+- **[BaseWatch](https://basewatch.dev/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	+ 概要: 特定のCSSプロパティやWebプラットフォーム機能が、すべての主要なブラウザで安全に使用できる基準である「ベースライン(Baseline)」サポートを達成した際に通知するモニタリングアプリケーションです。
+	+ 使い方: 
+		```css
+		/* BaseWatchで追跡し、安全にプロダクションに導入できる最新プロパティの例 */
+		.card {
+			corner-shape: squircle; /* Baseline到達確認後に適用 */
+			anchor-name: --tooltip-anchor;
+		}
+		```
+	+ 実践チップ: 新しいCSSプロパティ（例：`anchor-positioning`、`popover`など）を実際のプロダクション環境に適用してもバグや互換性の問題がないかを追跡する際に有用に活用できます。
+- **[Chibivue](https://ubugeeei.github.io/chibivue/)** (出典: *JavaScript Weekly #778* )
+	+ 概要: 開発者が1行の「Hello, World」から始め、最小限のVue.js実装体を自分で作りながらフレームワークのコアロジックを学習できるオンラインチュートリアルブック兼プロジェクトです。
+	+ 使い方:
+		```ts
+		// Chibivueを通じて内部的に実装してみるReactivity Systemの基礎形態
+		export function track(target: object, key: unknown) {
+			// コンポーネントのレンダリング時に画面更新(Update)処理を登録
+		}
+		export function trigger(target: object, key: unknown) {
+			// 値が変更されたときに登録された画面更新処理を実行
+		}
+		```
+	+ 実践チップ: 単にVue APIを使用するだけでなく、Virtual DOMとコンパイラがどのように動作するのか、内部原理を深く理解したい開発者にとって素晴らしい学習ツールになります。
+
+---
+#### 見逃せないコンテンツ
+- **[Stunning Customizable Selects](https://css-tricks.com/abusing-customizable-selects/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	+ 要約: 新しく導入されたカスタマイズ可能な`<select>`機能を活用して何を作ることができるのか、いくつかのデモを通じて視覚的に紹介します。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[The Great CSS Expansion](https://blog.gitbutler.com/the-great-css-expansion/)** (出典: *Frontend Focus #734* )
+	![The Great CSS Expansion](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ncwbegnlpy8micnadqc5.jpg)
+	+ 主要なインサイト: 過去にFloating UIやFramer Motionのような重いJavaScriptライブラリに依存しなければならなかった数多くのポップオーバー、ツールチップ、アンカーポジショニング機能を、モダンCSSがどのようにファーストクラス（first-class）のプラットフォーム機能に置き換えているかをうまくまとめています。
+- **[Easier Light-Dark Mode Switching: light-dark() is About to Support Images](https://www.bram.us/2026/03/19/more-easy-light-dark-mode-switching-light-dark-is-about-to-support-images/)** (出典: *Frontend Focus #734* )
+	+ 主要なインサイト: 従来は色の切り替えにのみ限定されていた`light-dark()`仕様が画像サポートに拡張されました。Firefox 150およびChrome 148でこの機能を使用し、背景画像やマスク、ロゴ画像をテーマに合わせて非常に簡単に切り替える方法を案内しています。
+- **[Dropdowns Inside Scrollable Containers: Why They Break And How To Fix Them Properly](https://www.smashingmagazine.com/2026/03/dropdowns-scrollable-containers-why-break-how-fix/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	+ 主要なインサイト: スクロール可能なテーブルやパネルの内部でドロップダウンメニューが途切れたり消えたりする理由が、「overflow clipping、stacking contexts、containing blocks」の3つのブラウザシステムの衝突によるものであると分析し、DOM Portalや固定ポジショニングなど、状況に応じた最適な解決策を4つ提示します。
+
+---
+#### 見逃せないコンテンツ
+- **[Automated accessible text with contrast-color()](https://una.im/contrast-color?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	+ 要約: 新しい`contrast-color()`により、ブラウザがすべての背景色に対して最も読みやすいテキストの色を自動的に選択させるアクセシビリティ改善方法を紹介します。
+- **[Folded Corner with CSS](https://kittygiraudel.com/2026/03/05/folded-corner-with-css/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	+ 要約: CSSの`clip-path`とカスタムプロパティを活用して、すっきりとリアルな折り返された角（folding corner）のアニメーション効果を実装する過程を順を追って案内します。
+---
+
+## 4. ✨ アイデア
+- **[Web Rewind: A Journey Through 30 Years of the Web](https://www.web-rewind.com/)** (出典: *Frontend Focus #734* )
+	- ![Web Rewind](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1774445321/nqy3orjxhfkj3y07yekk.png)
+	+ 特徴: ヘッドフォンをつけてスペースバーを押しながら、過去30年間のWebの歴史を視覚的なハイライト映像で振り返ることができる、非常に面白くノスタルジックな体験を提供します。
+- **[CSS Art: Cat Looking at the Stars](https://codepen.io/alvaromontoro/pen/MYeVvgr?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (出典: *CSS Weekly #638* )
+	- ![アルヴァロ・モントロはHTMLとCSSで星を眺める猫の美しいイラストレーションを作成しました。](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-638%2Fimages%2Fcss-art-cat-looking-at-the-stars.jpg&w=1200&q=75&dpl=dpl_CT1ptvCnLKYUUxJL9NDqRvF8vGSz)
+	+ 特徴: Alvaro MontoroがHTMLとCSSだけを使用して、星を眺める猫を感性豊かに描き出したCSSアートワークです。
+
+## 5. ⚡️ ミニノート
+- **[Awesome Mac](https://github.com/jaywcjlove/awesome-mac)** (出典: *Frontend Focus #734* )
+	+ 要約: 膨大な開発者ツールセクションを含む、macOSソフトウェアを素晴らしくキュレーションしたディレクトリです。
+- **[WordPress.com AI Agent](https://wordpress.com/blog/2026/03/19/ai-agent/)** (出典: *Frontend Focus #734* )
+	+ 要約: WordPress.comにホストされているサイトで、対話型AIエージェントを通じて投稿を作成し、ページを管理できるようになりました。
+- **[Node.js community petition](https://github.com/nodejs/node/pull/57000)** (出典: *JavaScript Weekly #778* )
+	+ 要約: Node.jsコミュニティにおいて、LLMが生成したコードがコアプロジェクトにコントリビュートされる方法に反対する署名活動がGitHubで進行中です。
+- **[Dan Abramov's Claude fix for React](https://github.com/facebook/react/pull/36134)** (出典: *React Status #468* )
+	+ 要約: Dan AbramovがClaudeを有効に活用してReactのバグに対する修正プログラムを作成し、このアプローチを公開的に説明しました。
+- **[Deno employees departing](https://x.com/lcasdev/status/1894451000000000000)** (出典: *JavaScript Weekly #778* )
+	+ 要約: 多数のDenoの従業員が退社を知らせましたが、会社がなくなるわけではなく、単に困難な時期を経験しているだけだと伝えられました。
+
+## 6. 🎉 リリース
+- **[WebKit Features for Safari 26.4](https://webkit.org/blog/16500/webkit-features-in-safari-26-4/)** (*Frontend Focus #734* )
+	+ アップデート: CSS Grid Lanes（以前のMasonry）、さまざまなCSS `zoom`の修正、Anchor Positioningの改善、および`img`要素内のmath関数サポートが追加されました。
+- **[Firefox 149](https://mozilla.org/)** (*Frontend Focus #734* )
+	+ アップデート: 2つのタブを並べて一度に簡単に確認できる新しい画面分割（split-view）機能が追加されました。
+- **[Announcing TypeScript 6.0](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0/)** (*JavaScript Weekly #778* )
+	+ アップデート: 今後の7.0のネイティブコンパイラ導入に備えるため、デフォルト設定（`strict` true、`module` esnextなど）の変更や、非推奨機能の整理などが大規模に適用されました。
+- **[Next.js 16.2](https://nextjs.org/blog/next-16-2)** (*JavaScript Weekly #778* )
+	+ アップデート: 安定化されたAdapter APIが含まれており、`next dev`の起動速度とレンダリング速度が約50%向上しました。
+- **[Storybook 10.3.0](https://storybook.js.org/blog/storybook-10-3/)** (*JavaScript Weekly #778* )
+	+ アップデート: Vite 8、Next.js 16.2、ESLint 10をサポートし、React開発のためのMCPサーバープレビューが導入されました。
+- **[Deno 2.7.6](https://deno.com/blog/v2.7.6)** (*JavaScript Weekly #778* )
+	+ アップデート: `deno eval`コマンドでCJSとESMを自動的に検出し、インタラクティブなSVGフレームグラフを生成できる機能が追加されました。
+- **[Bun 1.3.11](https://bun.sh/)** (*JavaScript Weekly #778* )
+	+ アップデート: 新しいアップデートバージョンがリリースされました。
+- **[Valibot 1.3](https://valibot.dev/)** (*JavaScript Weekly #778* )
+	+ アップデート: スキーマ検証ライブラリの最新リリースが公開されました。
+- **[ESLint 10.1](https://eslint.org/blog/2026/03/eslint-v10.1.0-released/)** (*JavaScript Weekly #778* )
+	+ アップデート: JavaScriptリンティングツールの最新パッチバージョンがリリースされました。
+- **[React Joyride 3.0: Create Guided Tours in Your Apps](https://react-joyride.com/)** (*React Status #468* )
+	+ アップデート: ガイドツアーライブラリが最新のReactバージョンをターゲットにして完全に書き直され、便利なフックの追加とレンダリングの改善が行われました。
+
+## ✍️ おわりに
+新しく登場するCSS仕様が、かつてはJavaScriptの専有物と考えられていた領域を着実に置き換えていく流れが非常に印象的です。特にアンカーポジショニングやカスタム`<select>`コンポーネントの発展は、フロントエンド開発者が重いライブラリや複雑なDOM操作ロジックを取り除き、プラットフォームネイティブのパフォーマンスを完全に活用できるよう支援します。さらに、「JavaScriptの肥大化（Bloat）」を警戒しようというコミュニティの声や、Next.jsのAdapter API安定化のようなインフラ整備のニュースは、成熟したエコシステムにふさわしく、私たちのコードの依存関係もより軽く、標準に近く維持すべきであることを示唆しています。
+
+#### 出典
+- [JavaScript Weekly #778](https://javascriptweekly.com/issues/778)
+- [Frontend Focus #734](https://frontendfoc.us/issues/734)
+- [React Status #468](https://react.statuscode.com/issues/468)
+- [Smashing Newsletter #551](https://mailchi.mp/smashingmagazine/551-ux-mapping-and-service-blueprints)
+- [CSS Weekly #638](https://css-weekly.com/issue-638)
