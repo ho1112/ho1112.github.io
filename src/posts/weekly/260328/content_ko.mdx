@@ -1,0 +1,146 @@
+---
+title: '🚀 2026-03 W4 #52'
+desc: Next.js 16.2 Adapter API 도입, JavaScript 의존성 다이어트, 모던 CSS의 기능 확장 및 최신 프레임워크 업데이트 | 2026년 3월 4주차 주간 기술 뉴스레터
+date: 2026-03-28
+thumbnail: /posts/weekly/march.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주에는 TypeScript 6.0의 발표와 함께 향후 7.0 버전을 대비하기 위한 대대적인 생태계의 변화가 예고되었습니다. 또한, 모던 CSS의 기능 확장으로 인해 JavaScript의 의존도를 낮추고 네이티브 CSS만으로 더욱 풍부한 UI(예: `corner-shape`, 커스텀 `select` 등)를 구현할 수 있는 방법들이 깊이 있게 다뤄졌습니다. 더불어 Next.js 및 Storybook과 같은 주요 프레임워크들의 발 빠른 업데이트 소식이 이어졌습니다.
+
+## 1. 🔍 심층 분석
+- **[Taking Next.js to More Platforms with Next.js 16.2's Adapter API](https://nextjs.org/blog/nextjs-across-platforms)** (출처: *React Status #468* )
+   - 배경: 기존에는 여러 호스팅 플랫폼(Cloudflare, Firebase, Netlify 등)이 Next.js를 자체 인프라에서 구동하기 위해 프레임워크를 비공식적으로 우회하거나(hack) 리버스 엔지니어링해야 했습니다.
+   - 핵심 기능: Next.js 16.2는 OpenNext 등과 협력하여 공식적이고 안정적인 'Deployment Adapter API'를 도입했습니다. 이를 통해 플랫폼 제공자들은 프레임워크 내부 동작에 공식적으로 연결할 수 있습니다.
+   - 코드 예제:
+     ```js
+     // Adapter API의 개념적 활용 구조
+     import { createAdapter } from 'next/adapter';
+
+     export default createAdapter({
+       name: 'my-custom-platform-adapter',
+       // 플랫폼 환경에 맞춘 라우팅 및 캐싱 제어 로직 구현
+     });
+     ```
+   - 실무 적용: 특정 클라우드 벤더(Vercel 등)에 종속되지 않고, 조직의 인프라(AWS, Google Cloud 등)에 맞춰 Next.js의 성능과 보안을 최적화하여 배포할 때 필수적으로 활용됩니다.
+   - 주의사항: 어댑터를 공식 지원 조직(Next.js GitHub)에 등록하려면 반드시 오픈 소스여야 하며, 프레임워크의 호환성 테스트 스위트를 통과해야 합니다.
+- **[The Three Pillars of JavaScript Bloat](https://43081j.com/2026/03/three-pillars-of-javascript-bloat)** (출처: *JavaScript Weekly #778* )
+   ![The Three Pillars of JavaScript Bloat](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/kajshdtprmih95p8dxgb.jpg)
+   - 배경: `node_modules`의 크기가 기하급수적으로 증가하는 주요 원인으로 불필요한 ES3 호환 패키지, 단일 사용처를 가진 마이크로 라이브러리, 그리고 이미 출시된 지 오래된 API를 위한 폴리필(ponyfill)의 남용이 지목되고 있습니다.
+   - 핵심 기능: 이러한 마이크로 패키지 의존성을 덜어내고, 브라우저에 이미 내장된 네이티브 API와 바닐라 패턴을 적극 활용하여 생태계 전반의 빌드 크기를 최소화하는 접근법을 설명합니다.
+   - 코드 예제:
+     ```js
+     // 불필요한 마이크로 패키지(arrify 등) 대신 네이티브 자바스크립트 활용
+     // ❌ const arrify = require('arrify'); return arrify(val);
+     // ✅ 
+     const toArray = (val) => Array.isArray(val) ? val : [val];
+     ```
+   - 실무 적용: 대규모 프로젝트나 라이브러리 개발 시 의존성 트리를 다이어트하고, 악의적인 서드파티 마이크로 패키지로 인한 공급망 공격(Supply Chain Attack) 위험을 줄일 때 유용합니다.
+   - 주의사항: 개발 편의성을 위해 무심코 설치하는 수많은 유틸리티 패키지들이 보안 취약점의 통로가 될 수 있으므로 주기적인 감사가 필요합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Beyond border-radius: What The CSS corner-shape Property Unlocks For Everyday UI](https://www.smashingmagazine.com/2026/03/beyond-border-radius-css-corner-shape-property-ui/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+  + 요약: 새로운 `corner-shape` 속성이 기존 `border-radius`를 넘어 베벨, 스쿱, squircle 모서리와 같은 다양한 디자인을 어떻게 가능하게 하는지 심도 있게 보여줍니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리 
+- **[BaseWatch](https://basewatch.dev/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+  + 개요: 특정 CSS 속성이나 웹 플랫폼 기능이 모든 주요 브라우저에서 안전하게 사용할 수 있는 기준인 '베이즈라인(Baseline)' 지원을 달성했을 때 알려주는 모니터링 애플리케이션입니다.
+  + 사용법: 
+    ```css
+    /* BaseWatch로 추적하여 안전하게 프로덕션에 도입할 수 있는 최신 속성 예시 */
+    .card {
+      corner-shape: squircle; /* Baseline 도달 확인 후 적용 */
+      anchor-name: --tooltip-anchor;
+    }
+    ```
+  + 실전 팁: 새로운 CSS 속성(예: `anchor-positioning`, `popover` 등)을 실제 프로덕션 환경에 적용해도 버그나 호환성 문제가 없을지 추적할 때 유용하게 활용할 수 있습니다.
+- **[Chibivue](https://ubugeeei.github.io/chibivue/)** (출처: *JavaScript Weekly #778* )
+  + 개요: 개발자가 1줄의 "Hello, World"부터 시작해 최소한의 Vue.js 구현체를 직접 만들어보면서 프레임워크의 코어 로직을 학습할 수 있는 온라인 튜토리얼 북이자 프로젝트입니다.
+  + 사용법:
+    ```ts
+    // Chibivue를 통해 내부적으로 구현해보는 Reactivity System의 기초 형태
+    export function track(target: object, key: unknown) {
+      // 컴포넌트 렌더링 시 화면 갱신(Update) 처리 등록
+    }
+    export function trigger(target: object, key: unknown) {
+      // 값이 변경되었을 때 등록된 화면 갱신 처리 실행
+    }
+    ```
+  + 실전 팁: 단순히 Vue API를 사용하는 것을 넘어, Virtual DOM과 컴파일러가 어떻게 동작하는지 내부 원리를 깊이 이해하고자 하는 개발자에게 훌륭한 학습 도구가 됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Stunning Customizable Selects](https://css-tricks.com/abusing-customizable-selects/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+  + 요약: 새롭게 도입된 커스터마이징 가능한 `<select>` 기능을 활용하여 무엇을 만들 수 있는지 여러 데모를 통해 시각적으로 소개합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[The Great CSS Expansion](https://blog.gitbutler.com/the-great-css-expansion/)** (출처: *Frontend Focus #734* )
+  ![The Great CSS Expansion](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ncwbegnlpy8micnadqc5.jpg)
+  + 핵심 인사이트: 과거 Floating UI나 Framer Motion 같은 무거운 JavaScript 라이브러리에 의존해야 했던 수많은 팝오버, 툴팁, 앵커 포지셔닝 기능들을 모던 CSS가 어떻게 퍼스트 클래스(first-class) 플랫폼 기능으로 대체하고 있는지 잘 정리해 놓았습니다.
+- **[Easier Light-Dark Mode Switching: light-dark() is About to Support Images](https://www.bram.us/2026/03/19/more-easy-light-dark-mode-switching-light-dark-is-about-to-support-images/)** (출처: *Frontend Focus #734* )
+  + 핵심 인사이트: 기존에 색상 전환에만 국한되었던 `light-dark()` 스펙이 이미지 지원으로 확장되었습니다. Firefox 150 및 Chrome 148에서 이 기능을 사용해 배경 이미지나 마스크, 로고 이미지를 테마에 맞게 아주 쉽게 스위칭하는 방법을 안내합니다.
+- **[Dropdowns Inside Scrollable Containers: Why They Break And How To Fix Them Properly](https://www.smashingmagazine.com/2026/03/dropdowns-scrollable-containers-why-break-how-fix/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+  + 핵심 인사이트: 스크롤 가능한 테이블이나 패널 내부에서 드롭다운 메뉴가 잘리거나 사라지는 이유가 'overflow clipping, stacking contexts, containing blocks' 세 가지 브라우저 시스템의 충돌 때문임을 분석하고, DOM Portal이나 고정 포지셔닝 등 상황에 맞는 최적의 해결책 4가지를 제시합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Automated accessible text with contrast-color()](https://una.im/contrast-color?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+  + 요약: 새로운 `contrast-color()`를 통해 브라우저가 모든 배경색에 대해 가장 읽기 쉬운 텍스트 색상을 자동으로 선택하게 만드는 접근성 개선 방법을 소개합니다.
+- **[Folded Corner with CSS](https://kittygiraudel.com/2026/03/05/folded-corner-with-css/?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+  + 요약: CSS의 `clip-path`와 커스텀 속성을 활용하여 깔끔하고 현실적인 접힌 모서리(folding corner) 애니메이션 효과를 구현하는 과정을 차근차근 안내합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Web Rewind: A Journey Through 30 Years of the Web](https://www.web-rewind.com/)** (출처: *Frontend Focus #734* )
+   - ![Web Rewind](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1774445321/nqy3orjxhfkj3y07yekk.png)
+  + 특징: 헤드폰을 끼고 스페이스바를 누르며 지난 30년간의 웹 역사를 시각적인 하이라이트 영상으로 되돌아볼 수 있는 매우 재미있고 향수 어린 경험을 제공합니다.
+- **[CSS Art: Cat Looking at the Stars](https://codepen.io/alvaromontoro/pen/MYeVvgr?utm_source=CSS-Weekly&utm_campaign=Issue-638&utm_medium=web)** (출처: *CSS Weekly #638* )
+   - ![알바로 몬토로는 HTML과 CSS로 별을 바라보는 고양이의 아름다운 일러스트레이션을 만들었습니다.](https://css-weekly.com/_next/image?url=%2Fissues%2Fissue-638%2Fimages%2Fcss-art-cat-looking-at-the-stars.jpg&w=1200&q=75&dpl=dpl_CT1ptvCnLKYUUxJL9NDqRvF8vGSz)
+  + 특징: Alvaro Montoro가 HTML과 CSS만을 사용하여 별을 바라보는 고양이를 감성적으로 그려낸 CSS 아트 워크입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Awesome Mac](https://github.com/jaywcjlove/awesome-mac)** (출처: *Frontend Focus #734* )
+  + 요약: 방대한 개발자 도구 섹션을 포함하여 macOS 소프트웨어를 훌륭하게 큐레이션한 디렉토리입니다.
+- **[WordPress.com AI Agent](https://wordpress.com/blog/2026/03/19/ai-agent/)** (출처: *Frontend Focus #734* )
+  + 요약: 워드프레스닷컴에 호스팅된 사이트에서 이제 대화형 AI 에이전트를 통해 포스트를 작성하고 페이지를 관리할 수 있게 되었습니다.
+- **[Node.js community petition](https://github.com/nodejs/node/pull/57000)** (출처: *JavaScript Weekly #778* )
+  + 요약: Node.js 커뮤니티에서 LLM이 생성한 코드가 코어 프로젝트에 기여되는 방식에 반대하는 청원이 깃허브에서 진행되고 있습니다.
+- **[Dan Abramov's Claude fix for React](https://github.com/facebook/react/pull/36134)** (출처: *React Status #468* )
+  + 요약: Dan Abramov가 Claude를 유용하게 활용하여 React 버그에 대한 수정 사항을 작성했으며, 이 접근 방식을 공개적으로 설명했습니다.
+- **[Deno employees departing](https://x.com/lcasdev/status/1894451000000000000)** (출처: *JavaScript Weekly #778* )
+  + 요약: 다수의 Deno 직원들이 퇴사 소식을 알렸으나, 회사가 사라지는 것은 아니며 단지 어려운 시기를 겪고 있을 뿐이라고 전해졌습니다.
+
+## 6. 🎉 릴리스
+- **[WebKit Features for Safari 26.4](https://webkit.org/blog/16500/webkit-features-in-safari-26-4/)** (*Frontend Focus #734* )
+  + 업데이트: CSS Grid Lanes(이전 Masonry), 다양한 CSS `zoom` 수정, Anchor Positioning 개선 및 `img` 요소 내 math 함수 지원이 추가되었습니다.
+- **[Firefox 149](https://mozilla.org/)** (*Frontend Focus #734* )
+  + 업데이트: 두 개의 탭을 나란히 한 번에 쉽게 볼 수 있는 새로운 화면 분할(split-view) 기능이 추가되었습니다.
+- **[Announcing TypeScript 6.0](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0/)** (*JavaScript Weekly #778* )
+  + 업데이트: 향후 7.0의 네이티브 컴파일러 도입을 준비하기 위해 기본 설정(`strict` true, `module` esnext 등)의 변경과 사용 중단 기능 정리 등이 대거 적용되었습니다.
+- **[Next.js 16.2](https://nextjs.org/blog/next-16-2)** (*JavaScript Weekly #778* )
+  + 업데이트: 안정화된 Adapter API가 포함되었으며, `next dev` 구동 속도와 렌더링 속도가 약 50% 향상되었습니다.
+- **[Storybook 10.3.0](https://storybook.js.org/blog/storybook-10-3/)** (*JavaScript Weekly #778* )
+  + 업데이트: Vite 8, Next.js 16.2, ESLint 10을 지원하며, React 개발을 위한 MCP 서버 프리뷰가 도입되었습니다.
+- **[Deno 2.7.6](https://deno.com/blog/v2.7.6)** (*JavaScript Weekly #778* )
+  + 업데이트: `deno eval` 명령에서 CJS와 ESM을 자동으로 감지하며, 인터랙티브한 SVG 플레임그래프를 생성할 수 있는 기능이 추가되었습니다.
+- **[Bun 1.3.11](https://bun.sh/)** (*JavaScript Weekly #778* )
+  + 업데이트: 새로운 업데이트 버전이 릴리스되었습니다.
+- **[Valibot 1.3](https://valibot.dev/)** (*JavaScript Weekly #778* )
+  + 업데이트: 스키마 검증 라이브러리의 최신 릴리스가 공개되었습니다.
+- **[ESLint 10.1](https://eslint.org/blog/2026/03/eslint-v10.1.0-released/)** (*JavaScript Weekly #778* )
+  + 업데이트: JavaScript 린팅 도구의 최신 패치 버전이 릴리스되었습니다.
+- **[React Joyride 3.0: Create Guided Tours in Your Apps](https://react-joyride.com/)** (*React Status #468* )
+  + 업데이트: 가이드 투어 라이브러리가 최신 React 버전을 타겟팅하여 완전히 재작성되었으며, 유용한 훅 추가 및 렌더링 개선이 이루어졌습니다.
+
+## ✍️ 마치며
+새롭게 등장하는 CSS 스펙들이 과거 JavaScript의 전유물이라 여겨졌던 영역을 꾸준히 대체해 나가는 흐름이 매우 인상적입니다. 특히 앵커 포지셔닝이나 커스텀 `<select>` 컴포넌트의 발전은 프론트엔드 개발자들이 무거운 라이브러리와 복잡한 DOM 조작 로직을 걷어내고 플랫폼 네이티브의 성능을 온전히 활용할 수 있도록 돕습니다. 아울러 '자바스크립트 비만(Bloat)'을 경계하자는 커뮤니티의 목소리와 Next.js의 Adapter API 안정화 같은 인프라 정비 소식은 성숙해진 생태계에 걸맞게 우리 코드의 의존성 역시 더욱 가볍고 표준에 가깝게 유지해야 함을 시사합니다.
+
+#### 출처
+- [JavaScript Weekly #778](https://javascriptweekly.com/issues/778)
+- [Frontend Focus #734](https://frontendfoc.us/issues/734)
+- [React Status #468](https://react.statuscode.com/issues/468)
+- [Smashing Newsletter #551](https://mailchi.mp/smashingmagazine/551-ux-mapping-and-service-blueprints)
+- [CSS Weekly #638](https://css-weekly.com/issue-638)
