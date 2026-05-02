@@ -1,0 +1,142 @@
+---
+title: '🚀 2026-05 W1 #57'
+desc: React Out-of-Order 스트리밍, CSS 합성(Compositing) 원리, pnpm 11 및 주요 프론트엔드 도구 릴리스 | 2026년 5월 1주차 주간 기술 뉴스레터
+date: 2026-05-02
+thumbnail: /posts/weekly/may.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주에는 React의 비동기 스트리밍 원리에 대한 심층 분석과 CSS Compositing 기술 등 깊이 있는 기술 아티클이 돋보입니다. 또한, 새로운 프론트엔드 환경을 지원하는 다양한 도구(portless, Nano Stores)와 pnpm 11, Rspack 2.0 등 주요 라이브러리 및 프레임워크의 메이저 릴리스 소식도 풍성합니다. 더 나은 UX를 위한 텍스트 작성 팁 등 다채로운 소식들을 확인해 보세요.
+
+## 1. 🔍 심층 분석
+- **[Inside React's Out-of-Order Streaming](https://inside-react.vercel.app/blog/how-react-streams-ui-out-of-order)** (출처: *React Status #472*)
+   - 배경: Suspense와 Server Components는 마법처럼 보일 수 있지만, 실제로 네트워크를 통해 HTML 청크가 어떻게 전달되는지 이해할 필요가 있습니다.
+   - 핵심 기능: React가 경계 마커, 템플릿 자리 표시자, 스테이징 노드 및 콘텐츠를 제자리로 이동시키는 작은 스크립트를 사용하여 UI를 순서 없이(Out-of-Order) 스트리밍하는 방식을 보여줍니다.
+   - 코드 예제:
+     ```jsx
+     import { Suspense } from 'react';
+
+     export default function Page() {
+       return (
+         <>
+           <Navbar />
+           {/* 느린 컴포넌트를 Suspense로 감싸면, Navbar와 Footer가 먼저 전송됩니다. */}
+           <Suspense fallback={<Loading />}>
+             <SlowRecommendations />
+           </Suspense>
+           <Footer />
+         </>
+       );
+     }
+     ```
+   - 실무 적용: Next.js 등 SSR 기반 프레임워크에서 Suspense가 렌더링 블로킹을 방지하고 성능을 최적화하는 방식을 파악하고 디버깅할 때 유용합니다.
+   - 주의사항: 클라이언트 측에서 순서에 의존하는 기존의 동기적 렌더링 로직과 충돌할 수 있으므로 주의해야 합니다.
+- **[Compositing & Blending](https://frontendfoc.us/link/184499/web)** (출처: *Frontend Focus #739*)
+   ![Compositing & Blending](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1777458861/fgxjaflufucvl8yybr4i.png)
+   - 배경: CSS의 blend mode를 사용할 때 내부적으로 어떤 일이 일어나는지 명확히 이해하기 위함입니다.
+   - 핵심 기능: 합성과 블렌딩의 개념, CSS에서 blend mode를 적용할 때 브라우저 내부에서 작동하는 원리를 다룹니다.
+   - 코드 예제:
+     ```css
+     .element {
+       mix-blend-mode: multiply;
+       isolation: isolate; /* 새로운 블렌딩 컨텍스트 생성 */
+     }
+     ```
+   - 실무 적용: 복잡한 시각 효과나 오버레이 UI를 디자인할 때 브라우저 렌더링 특성을 고려하여 성능과 품질을 최적화할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The Real Cost of React Native Animations: Benchmarking Every Approach](https://expo.dev/blog/the-real-cost-of-react-native-animations-benchmarking-every-approach)** (출처: *React Status #472* )
+  + 요약: Reanimated, RN Animated 등 다양한 React Native 애니메이션 라이브러리의 프레임당 비용을 실제 기기에서 측정한 벤치마크 결과입니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[portless: Replace Port Numbers with Stable, Named Local URLs](https://github.com/vercel-labs/portless)** (출처: *React Status #472*)
+  ![portless](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/pc9gmzsjqny3yqdpe3dd.jpg)
+  + 개요: 로컬 개발 환경에서 `localhost:3000`과 같은 포트 번호 대신 `https://myapp.localhost`와 같이 안정적이고 명명된 로컬 URL을 사용할 수 있게 해주는 도구입니다. Node 기반이며 Tailscale 사용자들을 위한 기능도 포함되어 있습니다.
+  + 사용법:
+    ```bash
+    npm install -g @vercel/portless
+    portless add myapp 3000
+    ```
+  + 실전 팁: 개발자와 AI 모두에게 개발 환경의 접근성을 높이고 직관적인 주소를 제공합니다.
+
+- **[Nano Stores 1.3: A Tiny (286 Bytes) State Manager](https://github.com/nanostores/nanostores)** (출처: *JavaScript Weekly #783*)
+  + 개요: 286바이트의 매우 작은 용량을 자랑하는 상태 관리 라이브러리로, React를 포함한 모든 주요 프레임워크 및 바닐라 JS에서 사용할 수 있는 아토믹(Atomic) 및 파생(Derived) 스토어를 제공합니다.
+  + 사용법:
+    ```ts
+    import { atom } from 'nanostores'
+    export const $counter = atom(0)
+
+    // 상태 업데이트
+    $counter.set(1)
+    ```
+  + 실전 팁: 프레임워크에 종속되지 않는 설계와 작은 풋프린트가 필요한 프로젝트에 적합합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[TSRX: A TypeScript Language Extension for Declarative UIs](https://javascriptweekly.com/link/184428/web)** (출처: *JavaScript Weekly #783* )
+  + 요약: JSX를 개선하기 위한 새로운 시도로 제어 흐름, 스코프 스타일 등을 포함하며 React, Preact, Solid 등으로 컴파일되는 TypeScript 언어 확장입니다.
+- **[useHotkeys 5.3: A Hook for Keyboard Shortcuts in Components](https://react-hotkeys-hook.vercel.app/)** (출처: *React Status #472* )
+  + 요약: 컴포넌트에 선언적인 방식으로 키보드 단축키를 적용할 수 있는 훅입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[What’s Actually New in JavaScript (And What’s Coming Next)](https://javascriptweekly.com/link/184421/web)** (출처: *JavaScript Weekly #783*)
+  + 핵심 인사이트: ES2025 및 ES2026의 새로운 언어 추가 사항(예: `Promise.try`, 새로운 `Set` 메서드, `using`, Temporal API 등)을 한 곳에서 파악할 수 있도록 정리한 글입니다.
+- **[Your Vs. My](https://smart-interface-design-patterns.com/articles/your-vs-my/)** (출처: *Smashing Newsletter #556*)
+  ![Your Vs. My](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/b4aa3fdb-1dba-f1dd-7d56-038acca92401.png)
+  + 핵심 인사이트: 인터페이스 디자인 시 "My account"와 "Your account" 중 어떤 대명사를 써야 할지, 각 대명사가 지니는 의미와 제품 성격에 맞는 대명사 선택 방법에 대한 가이드입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The End of Responsive Images](https://frontendfoc.us/link/184489/web)** (출처: *Frontend Focus #739* )
+  + 요약: 14년간의 `srcset`/`sizes` 속성의 고충을 돌아보고, 크로스 브라우저에서 지원되는 `sizes="auto"`를 통해 레이지 로딩된 이미지의 크기를 자동으로 조절하는 새로운 해결책을 소개합니다.
+- **[Designing Content For Impact](https://lapope.com/2024/11/16/information-patterns-and-narrative-structures-in-content/)** (출처: *Smashing Newsletter #556* )
+  + 요약: 복잡성과 범위를 고려하여 콘텐츠에 적합한 내러티브 구조를 선택할 수 있도록 돕는 매트릭스 가이드입니다.
+---
+
+## 4. ✨ 아이디어
+- **[Wiretext](https://wiretext.app/)** (출처: *Smashing Newsletter #556*)
+  ![Wiretext](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/eb3fbdd8-c021-b739-e022-aaa138521d61.png)
+  + 특징: 유니코드 박스 그리기 문자를 사용하여 와이어프레임, 다이어그램, 목업을 만들고 텍스트로 내보낼 수 있는 도구입니다.
+
+- **[Datatype: A Variable Font That Turns Text Into Charts](https://frontendfoc.us/link/184508/web)** (출처: *Frontend Focus #739*)
+  ![Datatype](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1777469154/e8dzh9d9mwr3mbogkpti.png)
+  + 특징: JavaScript나 이미지 없이 일반 텍스트(예: `{l:10,50,30,80,20}`)를 입력하면 인라인 차트(바, 파이, 스파크라인 등)로 렌더링하는 OpenType 가변 폰트입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[U.S. Department of Justice has pushed back the Title II Web Accessibility deadline into 2027](https://frontendfoc.us/link/184497/web)** (출처: *Frontend Focus #739*)
+  + 요약: 미국 법무부가 Title II 웹 접근성 마감일을 2027년으로 연기했습니다.
+
+- **[GitHub's reliability update](https://javascriptweekly.com/link/184404/web)** (출처: *JavaScript Weekly #783*)
+  + 요약: 최근 빈번해진 GitHub의 장애(merge queue 인시던트 등)와 관련하여 공식적인 안정성 업데이트 공지가 발표되었습니다.
+
+## 6. 🎉 릴리스
+- **[pnpm 11.0 Released](https://javascriptweekly.com/link/184391/web)** (*JavaScript Weekly #783*)
+  + 업데이트: `minimumReleaseAge` 기본값 변경, SQLite 기반 스토어 인덱스 지원(설치 속도 향상), 네이티브 패키지 퍼블리싱 등 다양한 기능이 추가되었습니다.
+- **[Rspack 2.0](https://javascriptweekly.com/link/184408/web)** (*JavaScript Weekly #783*)
+  + 업데이트: v1.7 대비 10% 속도 향상, 정적 분석 개선 및 실험적인 RSC(React Server Components) 지원을 추가했습니다.
+- **[Nuxt UI 4.7](https://javascriptweekly.com/link/184412/web)** (*JavaScript Weekly #783*)
+  + 업데이트: 125개 이상의 컴포넌트를 제공하는 Vue UI 라이브러리로, Listbox와 AI 프롬프트를 위한 Prompt 컴포넌트가 추가되었습니다.
+- **[Lingui 6.0](https://javascriptweekly.com/link/184416/web)** (*JavaScript Weekly #783*)
+  + 업데이트: 인기 있는 프레임워크 및 런타임에 구애받지 않는 JS i18n 및 l10n 라이브러리 메이저 업데이트입니다.
+- **[Transformers.js 4.2.0](https://javascriptweekly.com/link/184418/web)** (*JavaScript Weekly #783*)
+  + 업데이트: 브라우저 및 Node.js에서 실행되는 머신러닝 라이브러리의 신규 릴리스입니다.
+- **[Electron 41.3.0](https://javascriptweekly.com/link/184419/web)** (*JavaScript Weekly #783*)
+  + 업데이트: 데스크탑 앱 개발 프레임워크인 Electron의 최신 마이너/패치 릴리스입니다.
+- **[Etherpad v2.7.0](https://javascriptweekly.com/link/184420/web)** (*JavaScript Weekly #783*)
+  + 업데이트: 실시간 협업 텍스트 편집기의 새로운 릴리스입니다.
+- **[Fresh 2.3](https://javascriptweekly.com/link/184439/web)** (*JavaScript Weekly #783*)
+  + 업데이트: Deno 풀스택 웹 프레임워크로, WebSocket 지원이 추가되고 기본적으로 JS를 전송하지 않는 기능과 View Transitions API 지원이 강화되었습니다.
+- **[TypeScript 7.0 Beta](https://javascriptweekly.com/link/184399/web)** (*JavaScript Weekly #783*)
+  + 업데이트: Go 기반 포트로 컴파일러 성능이 약 10배 향상되었습니다. 안정적인 프로그래밍 API는 7.1에서 제공될 예정입니다.
+
+## ✍️ 마치며
+이번 주 소식들을 살펴보면 프론트엔드 생태계가 성능 최적화와 개발자 경험(DX) 향상이라는 두 가지 목표를 향해 빠르게 나아가고 있음을 알 수 있습니다. 특히 pnpm, Rspack, TypeScript 등 핵심 인프라 도구들의 메이저 업데이트는 빌드 속도 개선에 중점을 두고 있어, 대규모 프로젝트를 운영하는 개발팀에 큰 도움이 될 것으로 보입니다. 아울러 UI 스트리밍 기술이나 CSS 합성 원리와 같은 심층적인 주제는 우리가 매일 사용하는 기술의 기반을 단단하게 이해하는 데 필수적인 통찰을 제공합니다. 개발 도구의 진화와 함께 사용자 경험을 설계하는 세밀한 텍스트 작성 가이드까지, 기술과 사용자 인터페이스 양측의 발전을 엿볼 수 있는 한 주였습니다.
+
+#### 출처
+- [JavaScript Weekly #783](https://javascriptweekly.com/issues/783)
+- [Frontend Focus #739](https://frontendfoc.us/issues/739)
+- [React Status #472](https://react.statuscode.com/issues/472)
+- [Smashing Newsletter #556](https://mailchi.mp/smashingmagazine/556-ux-writing)
