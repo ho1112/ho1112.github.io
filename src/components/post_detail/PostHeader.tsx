@@ -22,7 +22,7 @@ export const PostHeader = ({ language, post }: Props) => {
           {post.categoryPublicName}
         </Link>
       </div>
-      <h1 className="mb-5 text-4xl md:text-5xl">{post.title}</h1>
+      <h1 className="mb-5 text-3xl md:text-4xl">{post.title}</h1>
       <div className="flex gap-3 text-sm text-gray-500 dark:text-gray-400">
         <div className="flex items-center gap-1">
           <CalendarDays className="w-3.5" />
