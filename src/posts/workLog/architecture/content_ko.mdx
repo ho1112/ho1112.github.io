@@ -1,16 +1,218 @@
 ---
 title: '아키텍쳐'
-desc: 
-date: 2026-05-10
+desc: 아키텍쳐
+date: 2026-05-17
 thumbnail: /posts/workLog/reactLibrarySelectionGuide/thumbnail.avif
 ---
 
-## 
+## 아키텍쳐 회고
+지금까지 프론트엔드로 참여했던 세가지 프로젝트의 구조를 회고
+호텔, 픽코마, 레바레지스
+아키텍쳐 정리. 당시 팀이 실제로 맞닥뜨린 제약과 선택을 기록
+
+---
+## OTA서비스 - 검색·예약·SEO가 한 repo에 공존할 때 폴더 규칙을 어떻게 잡았나
+
+### 이 프로젝트는?
+
+| 항목 | 내용 |
+|------|------|
+| **서비스** | OTA(Online Travel Agency)플랫폼 — 국내·해외 호텔 검색·예약 |
+| **스택** | Next.js 12 (Pages Router), React 17, Redux + thunk + redux-form, styled-components, Express 커스텀 서버 |
+| **역할** | 기능 개발·구조 개선·**SEO 리포 통합 제안·주도**에 참여. `uiParts`·`*.page.tsx` 등 폴더 규칙은 **팀 상의**로 정함 |
+
+### 디렉토리 구조
+
+프로덕션은 `***/hotel/` 아래에 올라가며 코드·빌드·정적 자산도 `/hotel` 네임스페이스를 전제로 짜여 있습니다.
+
+```text title="Directory Structure & Architecture"
+. (Project Root)
+├── server.js                 # Express 서버 ("/hotel" 네임스페이스 서빙, 에러 라우팅 제어)
+├── next.config.js            # pageExtensions, redirects/rewrites, Cache-Control, polyfill
+├── typings/                  # 전역 타입 정의 + 외부 API 스키마(계약) 저장소
+├── src/                      # 애플리케이션 메인 로직
+│   ├── pages/                # Next Pages Router 엔트리 (*.page.tsx만 페이지로 취급)
+│   ├── actions/              # Redux Action/Thunk (비동기, 폴링, API 호출 등)
+│   ├── reducers/             # Redux Reducer (상태 + 도메인 규칙이 두껍게 내장되는 경향)
+│   ├── store/                # Redux store + redux-persist(session) 구성
+│   ├── containers/           # 예약/결제 같은 큰 플로우를 묶는 연결 계층
+│   ├── components/           # Atomic Design 기반 UI 레이어
+│   │   ├── atoms/            # 최소 UI 단위
+│   │   ├── molecules/        # 조합 UI 단위
+│   │   ├── organisms/        # 도메인 맥락을 가진 큰 UI 덩어리
+│   │   └── uiParts/          # 콘텐츠·URL 기반 UI
+│   ├── features/             # 특정 도메인(캠페인 등) 단위로 묶인 기능 패키지
+│   ├── hooks/                # 커스텀 훅(상태/DOM/네비게이션 보조)
+│   ├── utils/                # env 플래그(getEnvInfo), query/날짜/이미지 등 공통 유틸
+│   ├── constants/            # 상수(환경/SEO/이미지 경로/기본값 등)
+│   └── styles/               # 전역 스타일/테마
+```
+
+**주요 레이어별 책임과 역할**
+
+| 영역 | 하는 일 |
+|------|---------|
+| `*.page.tsx` | URL·`getServerSideProps`·`envInfo` — **라우팅·데이터 입구** |
+| `atoms` ~ `organisms` | 검색·상세·예약·결제 — **Redux·API와 많이 엮인 앱 본체** |
+| `uiParts` | TOP·initial·review·SEO 에리어 — **props·URL 중심 섹션 UI** |
+| `utils/seo` | 에리어/온천/initial 등 **SEO URL용 서버 데이터 조립** |
+
+### Story 1. uiParts와 *.page.tsx - 왜 레이어를 하나 더 뒀나
+
+#### 배경: repo 안에 “여러 종류의 화면”이 이미 공존하고 있었다
+
+호텔 repo는 처음부터 **검색·예약 앱 하나**만 담고 있던 형태가 아니었습니다.
+
+- **TOP** (`/hotel/`) — 에리어 링크, 캠페인, 리뷰 요약
+- **검색 결과·상세·예약·결제** — Redux·API중심
+- **SEO·콘텐츠 URL** — 한때 별도 리포지토리에서 개발·배포, 같은 `/hotel` 도메인으로 배포
+- **initial·review·온천·도도부현** — SEO전용 페이지(URL 패턴아 제각각)
+
+한 코드베이스 안에 **「앱 플로우」** 와 **「읽고 링크를 타는 페이지」** 가 이미 섞여 있었고 이후 SEO를 **완전히 한 repo로 합치는 작업**이 이어졌습니다.
+
+#### 그때 팀이 실제로 불편했던 것
+
+##### 1) Atomic 폴더만으로는 “어디에 넣지?”가 자주 안 맞았다
+
+`atoms` / `molecules` / `organisms`는 **크기** 기준에 가깝습니다. 그런데 실무에서는 이런 질문이 반복됐습니다.
+
+- `HotelListLink` — 버튼 atom인가, TOP용 링크 블록인가?
+- `HotelPaging` — molecule인가, SEO·initial용 URL 페이지 네비인가?
+- FAQ + 제목 + 여백 — organism인가, “페이지 섹션”인가?
+
+크기로는 나눌 수 있어도, “검색·예약에 속하는지 / 콘텐츠 페이지에 속하는지”는 폴더만 봐서 구분이 안 됐습니다.
+`uiParts`를 **팀이 상의해서** 둔 것도 이 **배치의 애매함**을 줄이려는 쪽에 가깝습니다.
+
+##### 2) `organisms`가 “앱 본체 + α”로 비대해지고 있었다
+
+`Template`, `SearchBox`, `HotelDetail` 같은 **진짜 organism** 옆에, TOP 에리어·리뷰 페이징·(이관 중인) SEO FAQ·Swiper처럼 **Redux 플로우와 무관한 UI**도 같은 층에 섞이기 쉬웠습니다.
+리뷰할 때마다 “connect 필요해?” “검색 API 타입 써야 해?” 같은 **인지 부하**가 커졌고 **organisms = 검색·예약 도메인** 이라는 감이 흐려지는 게 구조를 손보게 된 직접적인 불편이었습니다.
+
+##### 3) SEO 이관을 앞두고 “같은 역할 UI가 두 벌”이 드러났다
+
+별도의 SEO repo·과거 복사본 때문에 **비슷한 UI가 이미 두 갈래**였습니다.
+
+| 역할 | 기존 호텔 앱 | SEO·콘텐츠 쪽 |
+|------|-------------|---------------|
+| 호텔 카드 | `atoms/HotelItem` (Redux, API v3) | 이관 시 `HotelItem` (다른 타입) |
+| 페이징 | `HotelPaging` (URL 이동) | SEO 리스트도 URL 페이지 단위 |
+| 링크 | `HotelListLink` | 에리어·목록 링크 |
+
+organisms/atoms에 **그대로 붙이면** 이름 충돌·import 혼선·리뷰 범위가 한꺼번에 커집니다. 이관 직후 `HotelItem` → `SwiperHotelItem` 이름 변경도, Atomic 재분류가 아니라 겹치는 UI를 한 경계 안에서 정리한 선택에 가깝습니다.
+
+##### 4) 페이지 파일이 늘면서 “라우트냐, 화면이냐” 구분이 어려워졌다
+
+`pages/hotel/` 아래에 `getServerSideProps`만 있는 파일과 수백 줄 UI 조립 파일이 **같은 디렉터리·비슷한 이름**으로 섞였습니다. **라우팅·데이터 입구**와 **화면 구현**을 파일명만으로 구분하려는 필요가 `pageExtensions` + `*.page.tsx`로 이어졌습니다.
+
+#### 팀이 택한 방향
+
+**Atomic을 교과서대로 다시 정의하자** — 이관·스프린트 일정상 현실적이지 않았습니다.
+
+대신 **역할이 다른 UI는 폴더로 한 번 더 구분**하자는 쪽이었습니다.
+
+| 레이어 | 둘 곳의 기준 |
+|--------|----------------|
+| `atoms` ~ `organisms` | 검색·상세·예약·결제 — **Redux·API·앱 플로우** |
+| `uiParts` | TOP·initial·review·SEO 에리어 — **props·URL·세로 섹션** (atoms/organisms **크기와 무관**) |
+| `*.page.tsx` | **라우트·SSR·envInfo** |
+| 같은 폴더 `index.tsx` 등 | **화면 조립** |
+
+##### `uiParts`에 두기로 한 이유
+1. **Redux·검색 상태에 묶이지 않는다** — `HotelListLink`, `HotelPaging` 등
+2. **TOP / initial / review / SEO 에리어에서 공통**으로 쓴다
+3. **페이지 섹션 단위** — `LargeTitle` + FAQ, Swiper 호텔 목록 등
+4. **이관·중복 시 경계** — SEO UI와 기존 UI가 겹칠 때 한쪽에 모은다
+
+#### `pageExtensions` — 왜 `*.page.tsx`인가
+
+```js title="next.config.js"
+pageExtensions: ['page.tsx', 'page.ts'],
+```
+- **`index.page.tsx`**: URL, `getServerSideProps`, `envInfo`, 에러 처리
+- **`index.tsx`**: `Template` + `uiParts` + `organisms` 조립
+
+예: `src/pages/hotel/index.page.tsx`는 SSR·리뷰 API를 붙이고 `HotelTop`은 같은 폴더 `.`에서 import합니다.
+
+SEO·initial 라우트가 늘어난 뒤에도 **“이 파일을 열면 SSR부터 볼까, UI부터 볼까”** 를 팀 전체가 같은 패턴으로 읽게 하려는 선택입니다.
+
+#### `containers`는?
+
+`containers/`에는 예약 입력·결제 등 **소수의 Redux connect**만 있습니다. container 패턴 전면 도입이라기보다 **예약·결제 도메인에 남은 React-Redux 스타일**에 가깝습니다.
+
+#### Story 1 요약
+
+> **배경:** 검색·예약·TOP·SEO URL이 한 repo에 공존하는데 Atomic **크기**만으로는 배치 기준이 애매하고, organisms에 콘텐츠 UI까지 섞이며, SEO 이관으로 **같은 역할 UI 중복**이 드러났다.
+> **선택:** Atomic을 갈아엎지 않고, **플로우 기준 `uiParts`** 와 **`*.page.tsx`로 입구·구현 분리**.
+> **의미:** 완벽한 디자인 시스템이 아니라 **이관·성장기에 팀이 맞춘 “둘 곳의 규칙”**.
+
+### Story 2. SEO 리포지토리 통합
+
+#### 상황
+
+- SEO 페이지는 **별도 리포지토리**에서 개발·배포되었지만 실제 URL은 모두 `https://***/hotel/...` 로 운영되었습니다.
+- `assetPrefix: '/hotel'`, Express·`_app`의 `/_next/data` → `/hotel/_next/data` 패치 등으로 **같은 prefix** 전제.
+- 인프라에서는 path별 upstream 분기로 처리하고 있었습니다.
+
+#### 문제
+
+- 호텔 API·리스트·가격·FAQ 등 **로직이 두 repo에 중복**.
+- URL 패턴 폭발: `/hotel/initial/`, `/hotel/japan/onsen/.../`, `/hotel/tokyo/bl_***/`, `/hotel/review/2/` …
+- SEO/호텔 2개의 리포지토리 병행 작업이 생겨났다.
+
+#### 해결
+
+**하나의 repo로 합치자** — 제가 처음 제안했고, 이관 작업도 주도했습니다.
+
+| 영역 | 역할 |
+|------|------|
+| `src/pages/hotel/...` | SEO·에리어·initial·review 라우트 |
+| `src/utils/seo/*` | 리스트·FAQ·페이징·메타 등 데이터 조립 |
+| `src/constants/SEO/` | 리다이렉트·에리어 상수 |
+| `src/components/uiParts/` | FAQ·에리어 설명·Swiper·URL 페이징 등 |
+| `next.config.js` | SEO redirects / rewrites, Cache-Control |
+
+**렌더링:** 대부분 `getServerSideProps`(SSR). ISR(`revalidate`)은 `pages/hotel/japan/[area]/` 등
+
+#### 한 페이지 조립 예 (도도부현 에리어)
+
+- **organisms:** `Template`, `Breadcrumbs`, `SearchBoxHotelSeo` — 골격·검색
+- **uiParts:** `AreaDescriptionSection`, `FaqList`, `ItemList`, `HotelPaging` — 세로로 쌓는 콘텐츠 블록
+
+#### “Atomic으로 나누면 되지 않았나?”
+이관 1순위는 **URL·SSR·API 중복 제거**였습니다. SEO `HotelItem`과 검색 `HotelItem`은 타입·Redux 연동이 달라 organisms에 바로 넣기 어렵고 이미 `uiPart`에 모아 두던 URL·props UI와 같은 성격이라 같은 레이어로 합쳤습니다.
+
+### 인프라·DX
+
+#### `next.config.js`
+- `trailingSlash`, SEO redirects / rewrites
+- HTML vs static Cache-Control
+- `pageExtensions`로 라우트 파일 규칙 고정
+
+#### 품질 도구
+- ESLint `import/order` — `actions` → `components` → … 레이어 순
+- Stylelint + styled-components, Husky + lint-staged
+- cypress
+
+### OTA 프로젝트 요약
+- 한 repo 안에 검색·예약 앱과 TOP·SEO·initial·review 같은 콘텐츠 URL이 공존했다.
+- atoms~organisms는 Redux·API 중심의 앱 본체, uiParts는 props·URL 중심의 섹션 UI — Atomic 크기가 아니라 플로우로 나눴다.
+- SEO 통합은 단순 코드 merge가 아니라 URL·SSR·중복 API·컴포넌트 경계를 맞추는 작업이었다.
+- *.page.tsx는 라우트·데이터 입구와 화면 구현을 파일명으로 구분하려는 선택이었다.
+
+호텔 repo를 한 장으로 그리면 Next Pages와 Redux로 검색·예약을 돌리는 앱 위에 같은 /hotel 아래의 여러 URL이 계속 붙어 간 형태입니다. server.js와 next.config.js는 네임스페이스·redirect·캐시 같은 운영 전제를 맞추고 src/에서는 앱 본체와 콘텐츠·URL 페이지용 UI를 폴더로 나눴습니다.
+SEO를 한 repo로 모을 때 그 경계가 특히 필요해졌고 라우트가 늘어나면서 pageExtensions로 입구와 구현을 나눴습니다.
+이건 Atomic Design을 정석대로 완성한 사례라기보다 화면 종류가 늘어날 때 현재 팀 상황에 맞춘 실무적인 대응에 가깝습니다. 폴더 이름만으로는 “전역 상태가 필요한지”, “URL과 props만으로 그리면 되는지”가 보이지 않았고 그걸 import 경로와 페이지 파일 규칙으로 드러나게 하려 했습니다.
 
 ---
 
+## 픽코마
 
+---
 
-### finish
+## 레바레지스
+
+---
+
+## finish
 
 
