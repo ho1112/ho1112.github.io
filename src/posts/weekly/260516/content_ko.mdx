@@ -1,0 +1,139 @@
+---
+title: '🚀 2026-05 W3 #59'
+desc: GitHub 이슈 탐색 성능 최적화, JavaScript 격리를 위한 ShadowRealm 제안, 네이티브 앱 도구 zero-native | 2026년 5월 3주차 주간 기술 뉴스레터
+date: 2026-05-16
+thumbnail: /posts/weekly/may.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주에는 GitHub의 이슈 탐색 성능 최적화 사례부터 JavaScript를 격리하는 새로운 제안까지, 프런트엔드 아키텍처와 성능 개선에 대한 깊이 있는 논의가 있었습니다. 또한, 네이티브 앱을 구축하기 위한 흥미로운 도구들과 Figma 파일 구성 팁, TanStack의 npm 패키지 타협 이슈 등 보안과 협업을 아우르는 다양한 소식이 쏟아졌습니다. 새로운 `<install>` HTML 요소와 다양한 라이브러리의 메이저 릴리스들도 주목할 만합니다.
+
+## 1. 🔍 심층 분석
+- **[From Latency to Instant: Improving GitHub Issues Navigation Performance](https://github.blog/engineering/architecture-optimization/from-latency-to-instant-modernizing-github-issues-navigation-performance/)** (출처: *React Status #474* )
+  ![GitHub Issues Navigation Performance](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/izessnsy7oyohprp3lh0.jpg)
+   - 배경: 사용자의 상호작용 지연 시간을 줄이고 원활한 경험을 제공하기 위해 GitHub가 이슈 탐색 기능을 전면 개편했습니다.
+   - 핵심 기능: IndexedDB 캐시에서 렌더링하고 백그라운드에서 재검증하는 로컬 퍼스트, Stale-while-revalidate 모델을 도입했습니다.
+   - 코드 예제:
+     ```javascript
+     // 로컬 캐시를 활용한 stale-while-revalidate 패턴 예시
+     async function fetchIssue(id) {
+       const cached = await db.issues.get(id);
+       if (cached) render(cached);
+       const fresh = await api.getIssue(id);
+       db.issues.put(fresh);
+       render(fresh);
+     }
+     ```
+   - 실무 적용: 지연 시간이 중요한 애플리케이션에서 즉각적인 UI 업데이트를 구현할 때 참고할 수 있는 훌륭한 아키텍처입니다.
+   - 주의사항: React와 Rails가 혼합된 스택에서의 복잡한 캐싱 전략이므로, 자체 시스템에 도입 시 상태 불일치 문제를 주의 깊게 관리해야 합니다.
+
+- **[Soon We Can Finally Banish JavaScript to the ShadowRealm](https://css-tricks.com/soon-we-can-finally-banish-javascript-to-the-shadowrealm/)** (출처: *Frontend Focus #741* )
+   - 배경: 서드파티 스크립트나 격리가 필요한 코드를 글로벌 스코프로부터 안전하게 분리할 수 있는 방법이 요구되고 있습니다.
+   - 핵심 기능: 자체 글로벌과 내장 객체를 가지는 분리된 '의사-영역(pseudo-realm)'에서 JavaScript를 실행할 수 있게 해주는 진행 중인 TC39 제안입니다.
+   - 코드 예제:
+     ```javascript
+     const realm = new ShadowRealm();
+     const myIsolatedFunction = await realm.importValue('./my-module.js', 'myFunction');
+     myIsolatedFunction();
+     ```
+   - 실무 적용: 플러그인 시스템, 서드파티 광고 스크립트 실행 등 글로벌 환경을 오염시키지 않아야 하는 코드 실행 환경 구축에 매우 유용합니다.
+   - 주의사항: 아직 TC39 제안 단계이므로 브라우저 호환성을 확인해야 하며, 메인 영역과의 객체 공유에 제약이 있을 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[A Technical Deep Dive Into the New Raycast](https://www.raycast.com/blog/a-technical-deep-dive-into-the-new-raycast)** (출처: *React Status #474* )
+  + 요약: React 기반 확장 생태계를 가진 macOS 런처 앱 Raycast가 v2.0에서 프런트엔드까지 React로 전환하며 얻은 기술적 깊이와 아키텍처 변화를 다룹니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[zero-native: Build Desktop Apps with Zig + WebView](https://zero-native.dev/)** (출처: *JavaScript Weekly #785* )
+  ![zero-native](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/aspuyiohodby5rhpai86.jpg)
+  + 개요: Vercel Labs에서 선보인 데스크톱 앱 구축 프레임워크입니다. Zig 코어 위에서 시스템 WebView나 Chromium을 선택하여 HTML과 JS로 네이티브 앱을 만들 수 있습니다.
+  + 사용법:
+    ```bash
+    # 프로젝트 초기화 및 실행 (예시)
+    npm create zero-native-app my-app
+    cd my-app
+    npm start
+    ```
+  + 실전 팁: Electron이나 Tauri의 대안을 찾고 있다면, React, Svelte, Vue를 모두 지원하는 이 가벼운 프레임워크의 예제들을 먼저 살펴보는 것을 추천합니다.
+
+- **[wf: A CLI Tool for Looking Up Web Platform Features](https://www.npmjs.com/package/web-features-cli)** (출처: *Frontend Focus #741* )
+  ![wf CLI](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/lbvqiow0m1v28khqndxx.jpg)
+  + 개요: 웹 플랫폼 기능의 지원 여부, 버그, 문서를 터미널에서 바로 찾아볼 수 있게 해주는 Microsoft Edge 팀(Patrick Brosset)의 CLI 도구입니다.
+  + 사용법:
+    ```bash
+    npx web-features-cli "fetch"
+    ```
+  + 실전 팁: 브라우저 지원 데이터를 실시간으로 가져오기 때문에, MDN이나 CanIUse를 브라우저에서 켜지 않고도 터미널에서 빠르게 호환성을 체크할 때 유용합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Wakaru: Pull Apart Minified JavaScript Bundles](https://github.com/pionxzh/wakaru)** (출처: *JavaScript Weekly #785* )
+  + 요약: 난독화되고 압축된 JavaScript 번들을 다시 읽을 수 있는 모듈로 분리해 주는 도구로, 코드 복구 및 보안 감사를 수행할 때 매우 유용합니다.
+- **[FigmaLint](https://www.figma.com/de-de/community/plugin/1521241390290871981/figmalint)** (출처: *Smashing Newsletter #558* )
+  + 요약: 디자인 시스템 구성 요소가 접근성을 갖추고 개발자 친화적인지 감사(Audit)하여 AI와 엔지니어링의 요구 사항을 충족하도록 돕는 Figma 플러그인입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Install Web Apps with the New `<install>` Element](https://developer.chrome.com/blog/install-element-ot)** (출처: *Frontend Focus #741* )
+  + 핵심 인사이트: JavaScript 없이도 웹 앱을 설치할 수 있는 신뢰할 수 있는 설치 버튼을 렌더링하는 새로운 HTML `<install>` 요소에 대해 알아봅니다. 현재 Edge와 Chrome에서 플래그를 통해 테스트할 수 있으며, Web Install API와의 차이점도 잘 설명되어 있습니다.
+- **[From React to Web Components: A Migration That Saved 100 KB](https://evilmartians.com/chronicles/from-react-to-web-components-a-migration-that-saved-100-kb)** (출처: *JavaScript Weekly #785* )
+  + 핵심 인사이트: 무거운 React 대신 네이티브 Web Components로 마이그레이션하여 번들 크기를 100KB나 줄인 생생한 경험담입니다. 이 과정에서 얻은 패턴이 어떻게 `nanotags`라는 작은 라이브러리로 발전했는지 보여주며, 성능 최적화를 고민하는 개발자에게 영감을 줍니다.
+- **[How To Organize Figma Files](https://leemunroe.medium.com/how-we-organize-design-files-and-cover-pages-in-figma-6316e3503220?sk=v2%2Fa6cc40ad-e114-4dd0-8c4e-446ec28701c6)** (출처: *Smashing Newsletter #558* )
+  ![Figma Organization](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/21de2bd9-3382-c97c-27b7-ae9908702e18.png)
+  + 핵심 인사이트: 다른 디자이너, 엔지니어, PM 등 프로젝트에 참여하는 모든 사람이 쉽게 탐색할 수 있도록 Figma 파일과 커버 페이지를 체계적으로 정리하는 템플릿과 노하우를 공유합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[33 JavaScript Concepts](https://33jsconcepts.com/)** (출처: *JavaScript Weekly #785* )
+  + 요약: 널리 알려진 GitHub 저장소에서 시작된 프로젝트로, JavaScript 개발자라면 반드시 알아야 할 33가지(그 이상)의 핵심 개념을 상세히 다루는 웹사이트입니다.
+- **[How To Become A Senior Designer](https://medium.com/design-bootcamp/how-to-become-a-senior-designer-from-an-ex-google-meta-designer-6092866bd2aa)** (출처: *Smashing Newsletter #558* )
+  + 요약: 구글과 메타 출신의 디자이너가 주니어에서 시니어로 성장하기 위해 가져야 할 '능동적인 성장 마인드셋'과 구체적인 경력 개발 팁을 공유합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Spider Map](https://spidermap.steinberg.nu/)** (출처: *Smashing Newsletter #558* )
+   - ![Spider Map](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/c588df6f-ffdb-9c41-8ee4-abab704cbd0f.png)
+  + 특징: 거미줄처럼 다리를 뻗어 현재 위치에서 가장 가까운 지하철역들을 직관적으로 보여주는 인터랙티브 지도입니다. 직선거리(Euclidean)와 실제 도보 거리를 전환할 수 있어 사용자 경험 디자인의 훌륭한 사례를 보여줍니다.
+- **[Cascade: A Set of SVG & React Icons for CSS Properties](https://designsurface.dev/cascade)** (출처: *Frontend Focus #741* )
+  + 특징: `display: block`은 사각형으로, `display: flex`는 두 개의 기둥 박스로 표현하는 등 CSS 속성을 시각적으로 나타낸 97개의 아이콘 세트입니다. 디자인 도구를 개발하거나 CSS를 시각화할 때 훌륭한 영감을 줍니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Firefox's DevTools has a $$$ function](https://remysharp.com/2026/05/01/devtools-how-to-query-through-the-shadow-dom)** (출처: *Frontend Focus #741* )
+  + 요약: Firefox 개발자 도구에 Shadow DOM 내부를 통과하여 요소를 쿼리할 수 있는 강력한 `$$$` 함수가 있다는 사실을 아시나요?
+- **[Hardening TanStack After the npm Compromise](https://tanstack.com/blog/incident-followup)** (출처: *React Status #474* )
+  + 요약: 최근 공격자가 42개의 TanStack 패키지(및 기타 170개 이상의 패키지)에 악성 버전을 게시한 사건 이후, TanStack 팀이 취약점을 파악하고 보안을 강화하기 위해 취한 조치를 설명합니다.
+- **[The Cognitive Bias Gap](https://www.aimforbehavior.com/the-bias-gap)** (출처: *Smashing Newsletter #558* )
+  + 요약: 조직 내에서 편향(Bias)으로 보이는 것이 사실 인센티브와 제약에 대한 합리적인 반응일 수 있음을 설명하며, 문제를 해결할 수 있는 생각의 도구를 제공합니다.
+
+## 6. 🎉 릴리스
+- **[Announcing Rolldown 1.0](https://voidzero.dev/blog/announcing-rolldown-1-0)** (*JavaScript Weekly #785* )
+  + 업데이트: Vite 8의 중추 역할을 할 Rust 기반의 고성능 번들러 Rolldown이 안정적인 1.0 버전에 도달했습니다. Rollup 플러그인 API와 호환되며 10~30배 빠른 속도를 제공합니다.
+- **[Safari 26.5 Released: Here's the WebKit Features](https://webkit.org/blog/17938/webkit-features-for-safari-26-5/)** (*Frontend Focus #741* )
+  + 업데이트: `:open` 가상 클래스, CSS `random()` 함수 개선, 앵커 포지셔닝 수정 및 SVG 그라디언트의 `color-interpolation` 지원이 추가되었습니다.
+- **[Tailwind CSS v4.3 is out](https://tailwindcss.com/blog/tailwindcss-v4-3)** (*Frontend Focus #741* )
+  + 업데이트: 새로운 스크롤바 유틸리티, `@container-size` 유틸리티, `zoom-*` 유틸리티 등이 새롭게 추가되었습니다.
+- **[Node 26.1 (Current)](https://nodejs.org/en/blog/release/v26.1.0)** (*JavaScript Weekly #785* )
+  + 업데이트: Temporal API가 포함되었던 26.0에 이어, 이번 릴리스에서는 실험적으로 공식 FFI(Foreign Function Interface) 지원이 추가되었습니다.
+- **[Anime.js 4.4](https://animejs.com/)** (*Frontend Focus #741* )
+  + 업데이트: 10년 된 애니메이션 라이브러리가 `scrambleText` 효과와 자동 그리드 레이아웃 모드를 추가하며 지속적으로 개선되고 있습니다.
+- **[Jest 30.4.0](https://github.com/jestjs/jest/releases/tag/v30.4.0)** (*JavaScript Weekly #785* )
+  + 업데이트: ESM, Temporal API, 그리고 React 19에 대한 지원이 향상된 강력한 릴리스입니다.
+- **[Mantine 9.2](https://github.com/mantinedev/mantine/releases/tag/9.2.0)** (*React Status #474* )
+  + 업데이트: TreeSelect 컴포넌트, InlineDateTimePicker, 값을 애니메이션으로 보여주는 RollingNumber 및 새로운 `use-drag` 훅이 추가되었습니다.
+- **[Waku 1.0 Beta](https://waku.gg/blog/waku-v1-beta)** (*React Status #474* )
+  + 업데이트: Vite와 Hono를 기반으로 구축된 미니멀한 React Server Components 프레임워크가 1.0 베타 버전으로 진입했습니다.
+- **[Astro 6.3](https://astro.build/blog/astro-630/)** (*JavaScript Weekly #785* )
+  + 업데이트: 앱을 통과하는 요청의 흐름을 제어할 수 있는 고급 라우팅 지원(실험적 기능)이 추가되었으며, Hono와 같은 프레임워크를 완벽하게 지원합니다.
+- **[pnpm 11.1](https://github.com/pnpm/pnpm/releases/tag/v11.1.0)** (*JavaScript Weekly #785* )
+  + 업데이트: GitHub 패키지에 대한 `gh:` 접두사 지원, 브라우저에서 버그 트래커를 여는 `pnpm bugs` 명령어 추가, 패키지의 ECDSA 서명 검증 기능이 포함되었습니다.
+
+## ✍️ 마치며
+이번 주의 소식들을 살펴보면, 웹 생태계가 성능과 사용자 경험을 향상시키기 위해 끊임없이 아키텍처를 재고하고 있음을 알 수 있습니다. GitHub가 이슈 탐색에서 도입한 로컬 퍼스트 전략이나, 네이티브 앱 개발을 웹 기술로 끌어안으려는 Vercel의 zero-native 시도는 결국 프런트엔드 엔지니어가 책임져야 할 영역이 점차 확장되고 고도화되고 있음을 시사합니다. 또한, ShadowRealm과 같은 제안은 서드파티 코드로부터 애플리케이션을 안전하게 지키는 방향을 제시하여, 기능 구현을 넘어 보안과 격리에 대한 고민도 우리 프런트엔드 개발자들의 중요한 과제임을 다시금 일깨워 줍니다. 쏟아지는 새로운 도구들을 맹목적으로 받아들이기보다는, 현재 해결하고자 하는 병목이 무엇인지 명확히 진단하고 적절한 도구를 취사선택하는 안목을 기르는 것이 그 어느 때보다 중요해 보입니다.
+
+#### 출처
+- [JavaScript Weekly #785](https://javascriptweekly.com/issues/785)
+- [Frontend Focus #741](https://frontendfoc.us/issues/741)
+- [React Status #474](https://react.statuscode.com/issues/474)
+- [Smashing Newsletter #558](https://mailchi.mp/smashingmagazine/558-ux-and-design)

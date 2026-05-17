@@ -1,0 +1,253 @@
+---
+title: '🚀 2026-05 W2 #58'
+desc: ReactパブリックAPIランタイムの再生成実験、Remixのフルスタックフレームワークへの進化、メディアクエリのRange構文 | 2026年5月第2週目 週間技術ニュースレター
+date: 2026-05-09
+thumbnail: /posts/weekly/may.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はReactエコシステムの分岐と、パフォーマンス最適化のためのツールの発展が目立ちました。RemixがReactから脱却し、独立したフルスタックフレームワークへと進化するというニュースや、TanStackの創設者がAIを活用してわずか7KBの軽量化されたReactクローンを実験した内容が大きな話題を集めました。また、CSSメディアクエリの範囲（Range）構文、SVGアクセシビリティの最適化など、実務に即座に適用してUI/UXを向上させることができる手法も豊富に共有されました。
+
+## 1. 🔍 深掘り
+- **[Projecting React](https://tannerlinsley.com/posts/projecting-react)** (出典: *React Status #473* )
+  ![Projecting React](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/tepcqb9rqsjymbgvkat4.jpg)
+   - 背景: TanStackのTanner LinsleyがAIエージェントにプロンプトを出し、TanStack Start環境に合わせて容量がわずか9KBの軽量なReactパブリックAPIランタイムを再生成する実験を行いました。
+   - 主要機能: 元のReactと比べて2〜3倍速いレンダリング速度を示し、スケジューラとファイバーワークループを削除してレンダリングパスを簡素化しました。
+   - コード例:
+     ```javascript
+     import { redact } from '@tanstack/redact/vite'
+
+     // 9.39 KB: 既存のReactをそのまま代替可能な設定
+     redact({ preset: 'full' })
+
+     // 7.08 KB: 必須機能のみを含む最小コア設定
+     redact({ preset: 'nano' })
+    ```
+   - 実務への適用: 極端に最適化された軽量ランタイムが、ブログやパフォーマンスに敏感な静的サイトにおいて、初期ロード速度とSSRの効率を最大化するためにどのように活用できるかを示しています。
+   - 注意事項: このプロジェクトは正式にメンテナンスされる本番用ライブラリとしてリリースされる予定はなく、フレームワーク設計に関する技術的な実験に近いものです。
+
+- **[Remix 3 Enters Beta — It's No Longer a React Framework](https://javascriptweekly.com/link/184764/web)** (出典: *JavaScript Weekly #784* )
+  ![Remix 3](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/vwduhmrqbq1j2ypwelyc.jpg)
+   - 背景: React Routerの制作陣によって作られたRemixは、Shopifyに買収された後、コア機能がReact Router v7に統合されました。現在、RemixはReactを超える新たな方向性を模索しています。
+   - 主要機能: 内部的にReactを使用せず、Web標準API（Web Animations API、HTML popoverなど）の上に軽量なランタイムを乗せて動作する、独立したフルスタックフレームワークとして生まれ変わりました。
+   - コード例:
+     ```javascript
+      import { type Handle, on } from "remix/ui";
+      import { Glyph } from "remix/ui/glyph";
+      import * as btn from "remix/ui/button";
+
+      function CopyToClipboard(handle: Handle<{ url: string }>) {
+        let state: "idle" | "copied" | "error" = "idle";
+
+        return () => {
+          let label =
+            state === "idle"
+              ? "Copy to clipboard"
+              : state === "copied"
+                ? "Copied"
+                : "Error";
+
+          return (
+            <button
+              aria-label={label}
+              aria-live="polite"
+              mix={[
+                btn.secondaryStyle,
+                on("click", async (_, signal) => {
+                  try {
+                    await navigator.clipboard.writeText(handle.props.url);
+                    if (signal.aborted) return;
+                  } catch (error) {
+                    state = "error";
+                    handle.update();
+                    return;
+                  }
+
+                  state = "copied";
+                  handle.update();
+                  setTimeout(() => {
+                    if (signal.aborted) return;
+                    state = "idle";
+                    handle.update();
+                  }, 2000);
+                }),
+              ]}
+            >
+              {state === "copied" ? (
+                <Glyph name="check"/>
+              ) : (
+                <Glyph name="clipboard"/>
+              )}
+            </button>
+          );
+        };
+      }
+  ```
+   - 実務への適用: Reactエコシステムに縛られず、ブラウザのネイティブ機能を積極的に活用しようとするアーキテクチャ設計に適しており、コンポーネントのマウントとレンダリングを明確に分離することができます。
+   - 注意事項: まだベータ段階であり、既存のReactベースのRemixアプリをマイグレーションする際、イベント処理方式やコンポーネントの宣言方式において大きな変更が求められます。
+
+---
+#### 見逃せないコンテンツ
+- **[Who Owns the Tree? RSC as a Protocol, Not an Architecture](https://tanstack.com/blog/who-owns-the-tree)** (出典: *React Status #473* )
+  + 要約: React Server Components (RSC) を従属的なアーキテクチャとしてではなく、汎用的なプロトコルという観点から捉えるべき理由を考察した分析記事です。
+- **[9 Times the Web Platform Was Influenced by Libraries](https://frontendfoc.us/link/184786/web)** (出典: *Frontend Focus #740* )
+  + 要約: 過去のWebライブラリが、本番環境においてどのようにR&Dの役割を果たし、ネイティブWeb API発展の土台となったのかを回顧します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Anime.js 4.4: The Flexible JavaScript Animation Engine](https://javascriptweekly.com/link/184723/web)** (出典: *JavaScript Weekly #784* )
+  ![Anime.js 4.4](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jtuzetnfsmbiv0owbcam.jpg)
+  + 概要: 10年の歴史を誇る柔軟なJSアニメーションエンジンです。新しくテキストをランダムにシャッフルする `scrambleText` 効果と、スタッガー（Stagger）グリッドのための `auto-grid` レイアウトモードが追加されました。
+  + 使い方:
+    ```javascript
+    createScope({
+      mediaQueries: {
+        portrait: '(orientation: portrait)',
+      }
+    })
+    .add(({ matches }) =&gt; {
+      const isPortrait = matches.portrait;
+      createTimeline().add('.circle', {
+        y: isPortrait ? 0 : [-50, 50, -50],
+        x: isPortrait ? [-50, 50, -50] : 0,
+      }, stagger(100));
+    });
+  ```
+  + 実践チップ: 複雑なDOM要素だけでなく、SVG属性やJavaScriptオブジェクトのアニメーションを制御する際に非常に有用であり、公式ドキュメントの多様なインタラクティブな例を参考にして、華やかな効果を簡単に実装することができます。
+
+- **[Introducing TanStack Form](https://frontendmasters.com/blog/introducing-tanstack-form/)** (出典: *React Status #473* )
+  + 概要: フォームの状態管理およびバリデーションはTanStackが担当し、UIのレンダリングは全面的に開発者がコントロールするヘッドレス（Headless）フォームライブラリです。
+  + 使い方:
+    ```javascript
+    const form = useForm({
+      defaultValues: { name: "", price: 0 },
+      onSubmit: async ({ value }) => { console.log(value); },
+    });
+
+    return (
+      <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit(); }}>
+        <form.Field name="name" children={(field) => <input {...field} />} />
+        <button type="submit">Submit</button>
+      </form>
+    );
+    ```
+  + 実践チップ: 強力な型推論を提供するため、TypeScript環境で安全に複雑なフォームを構築することができ、UIフレームワーク（Shadcn UIなど）と競合することなくすっきりと統合できます。
+
+---
+#### 見逃せないコンテンツ
+- **[shadcn CLI 4.7: Package Imports and Registry Target Aliases](https://ui.shadcn.com/docs/changelog/2026-05-package-imports-target-aliases)** (出典: *React Status #473* )
+  + 要約: コンポーネントのインストールおよびインポートの書き換えのための `package.json#imports` のサポートと、レジストリアイテムのターゲットフォルダ指定のためのエイリアス機能が追加されました。
+- **[MapLibre React Native: Render Interactive Vector Tile Maps](https://maplibre.org/maplibre-react-native/)** (出典: *React Status #473* )
+  + 要約: AndroidおよびiOS用のMapLibre Nativeを使用して、インタラクティブなベクタータイルマップをレンダリングするためのライブラリです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[How to Use the Media Queries Range Syntax for Better Breakpoints](https://frontendfoc.us/link/184776/web)** (出典: *Frontend Focus #740* )
+  ![Media Queries Range Syntax](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hgysom9pnrtl4dvtu2ds.jpg)
+  + 背景: 従来の `min-width` と `max-width` を同時に300pxに設定すると、2つのルールが重なって競合する問題が発生します。
+  + 主要なインサイト: 広くサポートされている範囲（Range）メディアクエリ構文を使用してブレイクポイントのコードをより直感的に記述することで、可読性が高まり、デバッグが容易になります。
+  + コード例:
+    ```css
+    /* 従来: 299pxと300pxに分けて重複を防止 */
+    .nav { @media (max-width: 299px) { display: none; } }
+    .toggle { @media (min-width: 300px) { display: none; } }
+
+    /* 改善: Range構文を活用して直感的に記述 */
+    .nav { @media (width <= 300px) { display: none; } }
+    .toggle { @media (width > 300px) { display: none; } }
+    ```
+- **[SVG Favicons That Respect Theme Preference](https://pawelgrzybek.com/svg-favicons-that-respect-theme-preference/)** (出典: *Smashing Newsletter #557* )
+  ![SVG Favicons](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/489c3b11-5a3f-d886-dec0-3c575fe42991.png)
+  + 背景: ブラウザやOS環境が多様化するにつれ、サイズ別に数十個のファビコン画像を作成しなければならないという煩わしさが大きかったです。
+  + 主要なインサイト: モダンブラウザのSVGファビコンサポートとメディアクエリを組み合わせることで、たった1つのファイルで解像度の問題とダーク/ライトテーマの切り替えを同時に解決することができます。
+  + コード例:
+    ```html
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+
+    <!-- icon.svg -->
+    <svg viewBox="0 0 100 100" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
+      <style>
+        .bg {
+          fill: #ffffff;
+
+          @media (prefers-color-scheme: dark) {
+            fill: #000000;
+          }
+        }
+      </style>
+
+      <rect x="0" y="0" width="100" height="100" class="bg" />
+    </svg>
+    ```
+- **[SVG Optimization And Accessibility Basics](https://dbushell.com/2025/06/25/svg-optimization-and-accessibility-basics/)** (出典: *Smashing Newsletter #557* )
+  ![SVG Optimization And Accessibility Basics](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/170735a9-d32f-1763-cb3d-0b3289ff2943.png)
+  + 背景: SVG最適化のために広く使われているSVGOがv4にアップデートされ、デフォルトの動作方式が大きく変更されました。また、インラインSVGには `alt` 属性がないため、スクリーンリーダーなどの補助デバイスのための適切なマークアップ処理が必要です。
+  + 主要なインサイト:
+    - SVGO v4は以前のバージョンとは異なり、レスポンシブなサイズ調整に不可欠な `viewBox` と、アクセシビリティのための `<title>` 要素をデフォルトで削除しないため、Web標準を守るのがはるかに容易になりました。
+    - SVG内部に `<text>` を入れ、 `aria-labelledby` で紐付けると、スクリーンリーダーが内容を重複して読み上げる可能性があります。 
+    - 意味を持つSVGには `role="img"` と `aria-label` を使用し、純粋な装飾用アイコンは `aria-hidden="true"` で完全に隠す方式を推奨します。
+  + コード例:
+    ```xml
+    <svg role="img" aria-label="An extremely abstract illustration of a black cat">
+      <circle cx="50" cy="50" r="50" />
+    </svg>
+
+    <svg aria-hidden="true" width="50" height="50" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="50" />
+    </svg>
+  ```
+---
+#### 見逃せないコンテンツ
+- **[Trustworthy JavaScript for the Open Web](https://javascriptweekly.com/link/184771/web)** (出典: *JavaScript Weekly #784* )
+  + 要約: サイトが配信したJavaScriptと、実際のブラウザで実行されるコードが一致するかどうかを暗号学的に検証するWAICT仕様の導入状況について説明します。
+- **[Making Dark Mode Play Nicely with the Back/Forward Cache](https://frontendfoc.us/link/184793/web)** (出典: *Frontend Focus #740* )
+  + 要約: ブラウザのパフォーマンスを向上させるbfcache機能が、ダークモードテーマ適用時に引き起こす可能性のある視覚的な問題と、その解決方法を取り上げています。
+---
+
+## 4. ✨ アイデア
+- **[Fancy Frames: A Pure CSS Generator for Squiggly/Wavy Frames](https://frontendfoc.us/link/184798/web)** (出典: *Frontend Focus #740* )
+  - ![Fancy Frames](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/qrhtlsnyevw4hwpfuwtk.jpg)
+  + 特徴: `clip-path` 構文をベースに、波模様やうねるボーダーフレームのサイズ、半径、細かさをブラウザ上で視覚的かつ詳細にカスタマイズし、コードを抽出できる純粋なCSSジェネレーターです。
+
+- **[SVG Doodles](https://svgdoodles.com/)** (出典: *Smashing Newsletter #557* )
+  - ![SVG Doodles](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/fe527cfe-b308-199a-a338-ca227cc79add.png)
+  + 特徴: 幾何学的かつ有機的な抽象形態を持つ190以上の手作業によるSVGコレクションで、Web上で色をカスタマイズした後、コードやFigmaなどのデザインツールに簡単にコピー＆ペーストすることができます。
+
+## 5. ⚡️ ミニノート
+- **[Here's what's new in Chrome 148](https://frontendfoc.us/link/184835/web)** (出典: *Frontend Focus #740* )
+  + 要約: 名前だけを明示する `@container` クエリ、メディア要素の遅延読み込み、組み込みAIのためのPrompt APIサポートが追加されました。
+- **[Vercel has open sourced deepsec](https://vercel.com/blog/introducing-deepsec-find-and-fix-vulnerabilities-in-your-code-base)** (出典: *React Status #473* )
+  + 要約: Vercelが大規模なコードベースから脆弱性をスキャンするために使用しているLLMベースのセキュリティチェックツール `deepsec` をオープンソースとして公開しました。
+- **[Deno is getting experimental support for import defer](https://javascriptweekly.com/link/184759/web)** (出典: *JavaScript Weekly #784* )
+  + 要約: DenoがTC39の新たな提案である `import defer` モジュールの遅延読み込みに対する実験的なサポートをランタイムとして初めて開始します。
+
+## 6. 🎉 リリース
+- **[Node.js 26.0.0 (Current) Released](https://javascriptweekly.com/link/184754/web)** (*JavaScript Weekly #784* )
+  + アップデート: Temporal APIがデフォルトで有効化され、V8 14.6エンジンを搭載することで最新のJavaScript機能をサポートします。
+- **[React 19.2.6, 19.1.7, and 19.0.6](https://github.com/facebook/react/releases/tag/v19.2.6)** (*React Status #473* )
+  + アップデート: React Server Components (RSC) 関連のサービス拒否（DoS）脆弱性を解決するためのセキュリティパッチがリリースされました。
+- **[Next.js May 2026 Security Releases](https://vercel.com/changelog/next-js-may-2026-security-release)** (*React Status #473* )
+  + アップデート: 発見されたセキュリティ脆弱性に対応するため、Next.js 15.5.18および16.2.6バージョンが配信されました。
+- **[Expo SDK 56 Beta](https://expo.dev/changelog/sdk-56-beta)** (*React Status #473* )
+  + アップデート: iOSのビルド速度改善とAndroidアプリの起動時間短縮を実現し、Jetpack ComposeおよびSwiftUI APIが安定化しました。
+- **[React Router v7.15.0](https://reactrouter.com/changelog#v7150)** (*React Status #473* )
+  + アップデート: 今後1〜2ヶ月以内にリリースされるReact Router v8に向けて、さまざまなAPI調整が含まれたバージョンです。
+- **[html-react-parser 6.1](https://github.com/remarkablemark/html-react-parser)** (*React Status #473* )
+  + アップデート: コンテンツセキュリティポリシー（CSP）のサポートが追加されたHTML-to-Reactパーサーのアップデートです。
+- **[Jotai 2.20.0](https://github.com/pmndrs/jotai/releases/tag/v2.20.0)** (*React Status #473* )
+  + アップデート: 大量の状態変更が発生する（high-throughput）シナリオにおいて、パフォーマンスが大幅に改善されました。
+- **[Astro 6.2](https://frontendfoc.us/link/184783/web)** (*Frontend Focus #740* )
+  + アップデート: SVGの最適化とロギングに関する詳細な制御機能が追加されました。
+- **[PM2 7.0](https://javascriptweekly.com/link/184709/web)** (*JavaScript Weekly #784* )
+  + アップデート: 依存関係を大幅に削減したリファクタリングが適用され、Bunアプリに対するクラスターモードおよび監視エージェントのサポートが追加されました。
+- **[Electron 41.5](https://javascriptweekly.com/link/184712/web)** (*JavaScript Weekly #784* )
+  + アップデート: macOS環境において、WebAuthnのためのTouch ID認証サポートが追加されました。
+
+## ✍️ おわりに
+今週のニュースを振り返ると、フレームワークのエコシステムが停滞することなく、絶え間なく断片化と統合を繰り返しながら成熟していることがわかります。RemixがReactから脱却して独自のWeb標準ベースのレンダリングモデルを構築しようとする試みや、TanStackのTanner Linsleyが極端に軽量な独自のReactランタイムを実験する姿は、標準とパフォーマンスの間で最適点を見出そうとするフロントエンドコミュニティの熾烈な悩みをよく反映しています。また、CSS Range構文やSVGファビコンの積極的な導入事例に見られるように、ブラウザネイティブ技術の発展が加速しています。華やかな新しいツールに振り回されるよりも、これらの技術が解決しようとしている根本的な問題やWeb標準の流れに集中する、揺るぎない基礎力がこれまで以上に重要になっているように思われます。
+
+#### 出典
+- [JavaScript Weekly #784](https://javascriptweekly.com/issues/784)
+- [Frontend Focus #740](https://frontendfoc.us/issues/740)
+- [React Status #473](https://react.statuscode.com/issues/473)
+- [Smashing Newsletter #557](https://mailchi.mp/smashingmagazine/557-svg-freebies-techniques-and-tools)
