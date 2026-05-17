@@ -10,8 +10,11 @@ thumbnail: /posts/workLog/reactLibrarySelectionGuide/thumbnail.avif
 호텔, 픽코마, 레바레지스
 아키텍쳐 정리. 당시 팀이 실제로 맞닥뜨린 제약과 선택을 기록
 
+당시의 개인적인 고민, 개발 메모, 기억을 더듬어가며 썼기 때문에 당시의 실제 구조와 내용이 다소 틀릴 수 있습니다.
+자세히 기억 안나는 부분은 이랬던 것 같다라고 추측하며 예시를 작성했습니다.
+
 ---
-## OTA서비스 - 검색·예약·SEO가 한 repo에 공존할 때 폴더 규칙을 어떻게 잡았나
+## OTA서비스 - 검색·예약·SEO가 한 repo에 공존할 때의 폴더 규칙
 
 ### 이 프로젝트는?
 
@@ -25,7 +28,7 @@ thumbnail: /posts/workLog/reactLibrarySelectionGuide/thumbnail.avif
 
 프로덕션은 `***/hotel/` 아래에 올라가며 코드·빌드·정적 자산도 `/hotel` 네임스페이스를 전제로 짜여 있습니다.
 
-```text title="Directory Structure & Architecture"
+```text
 . (Project Root)
 ├── server.js                 # Express 서버 ("/hotel" 네임스페이스 서빙, 에러 라우팅 제어)
 ├── next.config.js            # pageExtensions, redirects/rewrites, Cache-Control, polyfill
@@ -205,7 +208,204 @@ SEO를 한 repo로 모을 때 그 경계가 특히 필요해졌고 라우트가 
 
 ---
 
-## 픽코마
+## 웹소설 공모전 사이트 — Vue에서 Next.js로, 매년 바뀌는 비주얼
+
+### 이 프로젝트는?
+
+| 항목 | 내용 |
+|------|------|
+| **서비스** | 웹툰·웹소설 플랫폼의 웹소설 공모전 사이트 (랜딩 + 응모 폼) |
+| **스택** | Next.js 13 (App Router), React 18, Redux Toolkit, Tailwind CSS + SCSS, TypeScript |
+| **빌드·배포** | `output: 'export'` 정적 빌드 → CDN 서빙 |
+| **역할** | Vue → Next.js 마이그레이션, 신규 연도 개발, 아키텍처 설계를 담당 |
+
+### 배경
+
+이 프로젝트는 원래 Vue로 만들어져 있었습니다. 담당 개발자가 퇴사한 뒤 공개만 되고 있었고 회사는 Next.js를 도입하려는 방향이 있었지만 사내에 Next.js를 제대로 다루는 인원이 없었습니다. 제가 투입된 것도 그 맥락입니다.
+
+한 일은 두 가지입니다
+1. 기존 Vue 코드를 Next.js로 마이그레이션 (작년 이벤트 아카이브)
+2. 새 연도 이벤트 페이지를 Next.js로 신규 개발
+
+이벤트 페이지는 본 서비스와 독립적이고 규모가 한정적이며 매년 새로 만들기 때문에 새로운 스택 도입의 파일럿으로 적합한 조건이었습니다. 사내에 Next.js 경험자가 없는 상태에서 제가 처음 만드는 코드였기 때문에 이후 다른 프로젝트에서 이 repo를 참조하는 상황을 전제하고 있었습니다. App Router, Tailwind, 폴더 규칙 같은 선택을 **다른 멤버가 이 코드를 보고 따라 만들 때 자연스러운 구조인가**를 기준으로 판단했습니다.
+
+### 디렉터리 구조
+
+```text
+src/
+├── app/                   # App Router
+│   ├── layout.tsx         # Metadata, GTM, ReduxProvider, Main
+│   └── web/
+│       ├── 2023/          # 제1회 아카이브 (Vue 마이그레이션 해서 옮긴 것)
+│       ├── 2024/          # 제2회 (신규)
+│       ├── apply/         # 응모 폼 3step
+│       └── error/
+├── components/
+│   ├── common/
+│   │   ├── element/       # 폼 입력 컴포넌트(공통)
+│   │   └── layout/        # Header·Footer — 연도별 하위 폴더
+│   ├── contents/
+│   │   ├── 2023/          # 2023년
+│   │   ├── 2024/          # 2024년
+│   │   ├── Register.tsx   # 응모 폼 (공통)
+│   │   ├── Confirm.tsx    # 확인 (공통)
+│   │   └── Complete.tsx   # 완료 (공통)
+│   └── modal/
+├── store/                 # Redux Toolkit
+├── features/              # API 래퍼, 유틸, GTM, yearManager
+├── constants/             # 연도별 정적 데이터 + 공통 상수
+├── mocks/                 # MSW 핸들러 + mock JSON
+└── styles/                # SCSS (공통)
+```
+
+| 레이어 | 하는 일 |
+|--------|---------|
+| `app/web/*/page.tsx` | 라우트 정의, 컴포넌트 위임 |
+| `contents/{year}/` | 연도별 랜딩 섹션 UI — 매년 새로 만듦 |
+| `contents/*.tsx` | 응모 폼 3step — 연도 무관 공유 |
+| `common/element/` | 폼 입력 컴포넌트 — 재사용 단위 |
+| `common/layout/{year}/` | Header·Footer — 연도별 분기 |
+| `store/*` | RTK slices — 폼 상태, API, 에러 |
+| `constants/{year}/` | 작품 목록·테마 데이터 |
+
+### Story 1. 스택 선택 — App Router와 Tailwind
+
+#### 왜 App Router인가
+
+##### 1) page.tsx만 라우트가 된다
+Pages Router에서는 `pages/` 안의 모든 파일이 자동으로 라우트가 됩니다. 호텔 프로젝트에서는 이 때문에 `pageExtensions: ['page.tsx']`라는 우회 규칙을 만들어서 라우트 파일과 화면 조립 파일을 구분했습니다.
+App Router에서는 **`page.tsx`라는 이름의 파일만 라우트로 취급**됩니다. 같은 폴더에 다른 파일이 있어도 라우트가 되지 않습니다. 호텔에서 설정으로 해결했던 문제가 App Router에서는 기본 동작으로 해결됩니다.
+**"라우트 입구"와 "화면 구현"의 분리**가 구조적으로 보장됩니다.
+
+##### 2) Nested Layout — 페이지 전환 시 레이아웃이 유지된다
+`layout.tsx`에 ReduxProvider, GTM, 연도별 Header/Footer를 구성하면, **하위 페이지가 전환되어도 이 레이아웃은 다시 렌더링되지 않습니다.**
+
+```tsx title="예를 들어 이런 느낌"
+// layout.tsx
+export default function RootLayout({ children }) {
+  return (
+    <html lang="ja">
+      <GTM />
+      <body>
+        <ReduxProvider>
+          <Main>{children}</Main>   {/* yearManager로 header/footer 분기 */}
+        </ReduxProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+응모 폼은 register → confirm → complete 이렇게 3step입니다. 페이지 전환 시 ReduxProvider가 유지되므로 register에서 입력한 폼 데이터가 confirm에서 자연스럽게 보존됩니다. Pages Router에서도 가능하지만, `_app.tsx` 하나에 모든 래퍼를 넣거나 `getLayout` 패턴을 별도로 만들어야 합니다.
+
+##### 3) 서버 컴포넌트 — page.tsx가 클라이언트 JS를 출력하지 않는다
+
+App Router에서 `'use client'`를 선언하지 않은 컴포넌트는 서버 컴포넌트로, 클라이언트 번들에 JavaScript를 보내지 않습니다. 이 프로젝트의 page.tsx는 모두 서버 컴포넌트이고, 실제 JS는 `'use client'`가 선언된 컴포넌트부터 시작됩니다.
+`output: 'export'`(정적 빌드)에서 서버 컴포넌트는 빌드 타임에 실행됩니다. 서버 컴포넌트의 복잡한 부분(스트리밍 등)은 정적 빌드에서 사용할 수 없으니 고민할 필요가 없고 **"빌드 시 렌더링 + 클라이언트 JS 최소화"** 라는 이점만 가져갈 수 있습니다.
+
+##### 4) Metadata API
+OGP·Twitter Card 설정이 `export const metadata`로 선언적으로 처리되고 부모 layout의 metadata가 자식 page에 자동 적용됩니다. Pages Router의 `next/head` 수동 삽입보다 빠뜨리기 어렵습니다.
+
+#### 왜 Tailwind CSS인가
+1) 매년 버리는 비주얼에 클래스 이름이 필요한가
+이 사이트는 **매년 비주얼이 완전히 바뀝니다.** 올해의 `SeasonTheme`은 내년에는 아카이브가 되고 새 `SeasonTheme`을 만듭니다.
+SCSS로 작업하면 매년 1년만 쓸 클래스 이름을 정의하고 별도 파일로 관리해야 합니다. Tailwind는 마크업에 스타일이 붙어 있으니 **컴포넌트 파일 하나로 완결**되고 "작년 폴더를 참고해서 올해 폴더를 만드는" 워크플로우에서 스타일 파일을 빠뜨릴 일이 없습니다. 빠른 개발 속도도 이벤트 페이지 특성에 맞았습니다.
+
+2) 정적 빌드에서의 효율
+Tailwind는 사용한 클래스만 남기는 purge가 기본이고 런타임 JS 오버헤드가 없습니다. `output: 'export'`로 정적 파일을 CDN에 올리는 구조에서 번들 크기를 최대한 줄이는 것이 곧 퍼포먼스 향상이라고 생각했습니다.
+
+3) 기존 SCSS와의 공존
+2023 아카이브의 SCSS, 폼 컴포넌트의 SCSS는 그대로 두고 **2024 신규 컴포넌트에서만 Tailwind를 도입**했습니다.
+```text
+globals.css  → Tailwind (2024 홈 섹션, 공통 버튼)
+main.scss    → SCSS (2023 아카이브, 폼, 레이아웃)
+```
+결과적으로 SCSS는 "바뀌지 않는 것"(폼, 아카이브), Tailwind는 "매년 새로 만드는 것"(홈 섹션)에 자연스럽게 대응하게 됐습니다.
+
+### Story 2. 연도별 아키텍처 — "바뀌는 것"과 "안 바뀌는 것"
+
+#### 문제
+공모전은 매년 열립니다. 비주얼은 완전히 바뀌지만 구조는 같습니다:
+- **홈 랜딩** — 시즌 테마, 일정, 응모 요항, 참고 작품
+- **응모 폼** — 입력 → 확인 → 전송 → 완료
+
+작년 페이지를 아카이브로 남기면서 올해 페이지를 새로 만들어야 합니다.
+
+### 선택: 연도 폴더 분기
+
+| 연도별로 갈라지는 것 | 연도와 무관하게 공유되는 것 |
+|---|---|
+| `contents/2023/Home.tsx` | `contents/Register.tsx` |
+| `contents/2024/Home.tsx` | `contents/Confirm.tsx` |
+| `layout/2023/footer.tsx` | `common/element/*` |
+| `layout/2024/header.tsx` | `store/*`|
+| `constants/2023/products.ts` | `features/apiRequest.ts` |
+
+#### 새 연도를 추가할 때 하는 일
+1. `contents/{year}/` 폴더에 홈 섹션 컴포넌트를 새로 작성
+2. `layout/{year}/`에 그 해의 header/footer 추가
+3. `constants/{year}/`에 작품 데이터·테마 데이터 추가
+4. `yearManager.tsx`에 분기 추가
+
+**건드리지 않는 것:** 폼 플로우, store, API 래퍼, 공통 컴포넌트.
+
+#### `yearManager.tsx` — 연도 분기의 허브
+
+```tsx
+export const getYearlyHeaderAndFooter = (pathName: string) => {
+  const yearMatch = pathName.match(/\/web\/(\d{4})/)
+  const year = yearMatch ? Number(yearMatch[1]) : THIS_YEAR
+  // pathname에서 연도를 추출하여 header/footer 컴포넌트를 반환
+}
+```
+
+`main.tsx`에서 모든 페이지를 `{header()} {children} {footer()}`로 감싸므로 새 연도를 추가할 때 `layout.tsx`는 수정할 필요가 없습니다.
+
+---
+
+### 호텔 프로젝트와 같은 렌즈로 보면
+
+| 관점 | 호텔 | 이벤트 사이트 |
+|------|------|------------|
+| **렌더링** | SSR (Express + getServerSideProps) | 정적 빌드 → CDN |
+| **라우터** | Pages Router + `pageExtensions` 규칙 | App Router (기본 동작으로 해결) |
+| **상태 관리** | Redux + thunk + redux-form | Redux Toolkit (slice별 캡슐화) |
+| **스타일** | styled-components | Tailwind + SCSS 혼용 |
+| **UI 분류 기준** | 플로우 (앱 vs 콘텐츠 → organisms vs uiParts) | 연도 → `contents/{year}/` |
+| **page 파일** | 무거움 (SSR 로직) | 가벼움 (위임만) |
+| **프로젝트 맥락** | 기존 팀 repo에 참여 | 단독 설계·구현 |
+
+호텔에서 **"전역 상태가 필요한가?"** 가 organisms/uiParts의 경계였다면 여기서는 **"매년 바뀌는가?"** 가 경계입니다. 도메인이 다르니 분류 축도 다르지만 **역할이 다른 UI는 폴더로 구분한다**는 원칙은 같습니다.
+
+### 돌아보며 - 개선할 수 있었던 것
+
+#### contents 폴더의 이중 역할
+`components/contents/` 안에 연도별 홈(2023/, 2024/)과 공유 폼(Register.tsx, Confirm.tsx)이 같은 층에 있습니다. 생명주기가 다른 코드가 한 폴더에 공존하는 셈입니다. 폼 컴포넌트를 `contents/apply/`나 별도 경로로 분리했다면 "매년 바뀌는 것 / 안 바뀌는 것"의 경계가 폴더 구조에서 더 명확하게 보였을 것입니다.
+예를 들면 이런식으로 했었다면 더 좋은 코드가 되지 않았을까 생각합니다. 🤔
+```text
+components/contents/
+├── 2023/              ← 매년 바뀜
+│   └── ...
+├── 2024/              ← 매년 바뀜
+│   └── ...
+└── apply/             ← 안 바뀜 (공유) — 폴더로 묶음
+    ├── Register.tsx
+    ├── Confirm.tsx
+    └── Complete.tsx
+```
+#### 정적 빌드 환경에서의 트레이드오프
+App Router에서 가장 신경 쓴 부분은 'use client' 경계였습니다. 이 프로젝트는 Redux와 useState를 많이 쓰기 때문에 실제 UI 컴포넌트는 대부분 클라이언트 컴포넌트가 됩니다. 서버 컴포넌트의 번들 최소화 이점은 page.tsx 레이어에만 적용되었고, 컴포넌트 레벨에서는 크게 체감하지 못했습니다.
+다만 이건 이 프로젝트가 정적 빌드(output: 'export')라서 서버 컴포넌트의 진짜 강점인 서버 사이드 데이터 페칭이나 스트리밍을 쓸 수 없었던 것도 있습니다. SSR을 쓰는 프로젝트였다면 서버 컴포넌트의 이점이 더 컸을 것입니다.
+그래도 page.tsx 라우트 구분, nested layout, Metadata API 같은 구조적 이점은 정적 빌드에서도 유효했기 때문에 App Router 선택 자체는 맞았다고 생각합니다."
+
+### 웹소설 프로젝트 요약
+- 사내에 Next.js 경험자가 없는 상태에서 Vue 이벤트 사이트를 Next.js로 마이그레이션하고 신규 개발까지 단독으로 진행했습니다. 이후 다른 프로젝트의 참조가 될 코드라는 전제 아래 스택과 구조를 결정했습니다.
+- App Router는 page.tsx 라우트 구분, nested layout, 서버 컴포넌트에 의한 번들 최소화, Metadata API가 이 프로젝트의 구조(정적 빌드, 가벼운 page, 3step 폼)에 맞았습니다.
+- Tailwind는 매년 버리는 비주얼에 클래스 이름을 만들 필요가 없다는 점, 빠른 개발 속도, 기존 SCSS와의 무충돌 공존이 도입의 근거였습니다.
+- 디렉토리의 핵심 설계는 **"매년 바뀌는 것 vs 안 바뀌는 것"의 분리.** 홈 섹션·헤더·작품 데이터는 연도별로 나뉘고 폼 플로우·store·API는 공유됩니다.
+- 호텔 프로젝트가 "플로우 기준 분류"를 이야기했다면 이 프로젝트는 "연도 기준 분류"와 "파일럿 프로젝트에서의 스택 선택"이라고 할 수 있습니다.
+
+두 프로젝트를 나란히 보면 폴더 규칙은 정답이 있는 게 아니라 프로젝트의 핵심 목적과 유지보수 전략에 따라 결정된다는 것을 느낍니다. 호텔 프로젝트에서는 **도메인 비즈니스 로직과의 결합도(앱 플로우 vs 콘텐츠 페이지)** 가 기준이었다면 웹소설 프로젝트에서는 **코드의 생명주기(Lifecycle)와 수정 빈도(매년 바뀌는 테마 vs 고정된 기능)** 가 기준이었습니다.
 
 ---
 
