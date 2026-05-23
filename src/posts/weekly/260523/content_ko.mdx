@@ -1,0 +1,163 @@
+---
+title: '🚀 2026-05 W4 #60'
+desc: TanStack Start RSC 패러다임, Google I/O 2026 에이전트 중심의 웹, npm 설치 스크립트 옵트인 제안 | 2026년 5월 4주차 주간 기술 뉴스레터
+date: 2026-05-23
+thumbnail: /posts/weekly/may.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 개발자 생태계와 웹 플랫폼 전반에 걸쳐 거대한 패러다임의 변화를 예고하는 소식들이 집중되었습니다. Google I/O 2026을 통해 인공지능 에이전트가 웹 사이트와 유기적으로 소통하고 작업을 수행하는 '에이전트 중심의 웹(Agentic Web)' 비전이 선포되었으며, 이를 뒷받침할 WebMCP 표준과 HTML-in-Canvas 같은 혁신적인 브라우저 스펙들이 공개되었습니다. 또한, 프론트엔드 프레임워크 진영에서는 Next.js와 구별되는 TanStack 만의 명시적이고 효율적인 React Server Components(RSC) 아키텍처가 주목받았고, 패키지 관리 생태계의 고질적인 악성 스크립트 실행 문제를 해결하기 위한 npm의 옵트인(Opt-In) 아키텍처 전환 제안 등이 심도 있게 논의되며 개발 생태계의 보안과 효율성, 그리고 웹 접근성을 동시에 끌어올리는 중요한 전환점을 맞이하고 있습니다.
+
+## 1. 🔍 심층 분석
+
+* **RSCs in TanStack: A Different (and Arguably Better) Take** (출처: *React Status #475*)
+- 배경: 기존 Next.js 중심의 RSC(React Server Components) 구현이 다소 마법 같고 불투명했다면, TanStack Start는 개발자가 제어권을 완전히 쥐고 명시적으로 다룰 수 있는 새로운 RSC 패러다임을 제안하며 등장했습니다.
+- 핵심 기능: 컴포넌트를 서버에서만 100% 실행하여 무거운 서드파티 라이브러리나 아이콘 패키지 등이 클라이언트 번들에 포함되는 것을 원천 차단합니다. 클라이언트 컴포넌트로 데이터를 전달할 때는 직관적인 슬롯(Slot) 개념을 활용하며, 데이터 로딩과 컴포넌트 렌더링이 일어나는 위치를 명확히 분리해 줍니다. 실제로 대규모 아이콘 의존성이 걸린 레이아웃 UI 실험에서 클라이언트 번들 크기를 308KB에서 203KB로 무려 105KB나 대폭 절감하는 성과를 보였습니다.
+- 코드 예제:
+```typescript
+const getAppShell = createServerFn({ method: "GET" }).handler(async () => {
+  return renderServerComponent(<ApplicationShellEmptyRSC />);
+});
+```
+- 실무 적용: 조건부 렌더링 분기가 많고, 클라이언트 사이드 인터랙션은 상대적으로 적으면서 트리 구조가 거대해 번들 고통을 유발하는 대시보드 애플리케이션 쉘이나 권한별 메인 레이아웃 설계에 매우 유용합니다.
+- 주의사항: 컴포넌트 트리가 이미 가볍거나 무거운 데이터 가공 의존성이 없는 단순한 웹 프로젝트에서는 RSC 도입으로 인한 이득이 미미할 수 있으므로, 프로젝트의 복잡도를 고려해 선택적으로 도입해야 합니다.
+
+* **15 Updates from Google I/O 2026** (출처: *Frontend Focus #742*)
+![15 Updates from Google I/O 2026](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1779279824/xtxs9an1mcmewqccwqct.png)
+- 배경: AI 에이전트가 소프트웨어와 소통하는 속도가 빨라짐에 따라, 기존의 웹 문서 구조를 넘어 AI가 웹 브라우저 안에서 사람처럼 작동하고 상호작용할 수 있도록 지원하는 '에이전트 중심의 웹(agentic web)' 기술이 필요해졌습니다.
+- 핵심 기능:
+  1. **WebMCP**: 오픈 웹 표준 제안 스펙으로, 자바스크립트 함수나 HTML 폼과 같은 사이트 내부의 구조화된 도구들을 브라우저 기반 AI 에이전트에 기계 친화적인 형태로 노출하여 에이전트가 백엔드 API를 직접 호출해 복잡한 비즈니스 로직을 정확하게 완수하도록 돕습니다.
+  2. **HTML-in-Canvas**: 실제 DOM 엘리먼트를 Canvas(WebGL/WebGPU 기반) 내부로 레이어링하여 직접 통합하는 기술입니다. 이를 통해 고성능 3D 그래픽 환경 안에서도 텍스트 검색, 웹 접근성 스크린 리더 지원, 브라우저 기본 번역 기능이 완벽하게 동작하는 차세대 고해상도 UI를 구축할 수 있습니다.
+- 코드 예제:
+```html
+<meta name="webmcp-tool" content="query-itinerary" data-endpoint="/api/travel" />
+```
+- 실무 적용: 다단계 폼 입력이나 대량의 상품 비교, 복잡한 커스텀 UI 레이아웃 등 사용자가 하나하나 클릭하기 번거로웠던 디지털 도구의 조작을 사용자 권한 위임을 받은 AI가 백엔드와 통신하여 단 몇 초 만에 맞춤형 결과로 뽑아낼 때 응용됩니다.
+- 주의사항: 상당수의 기능이 현재 초기 오리진 트라이얼(Origin Trial) 및 실험적 단계에 머물러 있어 사양 변경 가능성이 존재하며, 에이전트에게 사이트 내부 API 제어권을 열어줄 때 따르는 보안 모델 설계에 주의가 필요합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+* **Build with Modern Web Guidance** (출처: *Frontend Focus #742*)
+  + 요약: 구글 I/O에서 함께 공개된 가이드라인으로, 코딩 에이전트가 현대적인 웹 환경에 맞춰 접근성, 성능 최적화, 레이아웃 모범 사례를 준수하며 코드를 빌드할 수 있도록 검증된 AI 스킬 세트와 가이드라인 리포지토리를 제공합니다.
+* **Mark Erikson's Agent Setup, Workflow, and Tools** (출처: *JavaScript Weekly #786*)
+  + 요약: Redux의 핵심 메인테이너인 Mark Erikson이 자바스크립트 기반 오픈소스 코딩 에이전트 도구인 'OpenCode'를 자신의 일일 개발 프로세스에 어떻게 내장했는지, 그리고 방대한 기술 지식 베이스와 당면 과제를 자동화하여 효율적으로 관리하는 워크플로우를 깊이 있게 공유했습니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+* **GL-React v6: Create WebGL Shaders from React** (출처: *React Status #475*)
+![GL-React v6](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dmd0wpeuxhfnkw3l4la1.jpg)
+- 개요: 개발자가 복잡하고 장황한 WebGL 명세를 직접 다루지 않고도 React 컴포넌트 구조와 익숙한 JSX 문법을 활용하여 정교한 WebGL 셰이더 효과를 선언적으로 생성할 수 있게 돕는 추상화 라이브러리입니다.
+- 사용법:
+```jsx
+import { Shaders, Node, GLSL } from "gl-react";
+
+const shaders = Shaders.create({
+  helloGL: {
+    frag: GLSL`
+      precision highp float;
+      void main() { gl_FragColor = vec4(1.0, 0.5, 0.0, 1.0); }
+    `
+  }
+});
+
+export const ShaderComponent = () => <Node shader={shaders.helloGL} />;
+```
+- 실전 팁: 저명한 제너레이티브 및 셰이더 예술가인 Gaëtan Renaudeau가 관리하고 있으며, 공식 문서 사이트에 코드가 포함된 수많은 실시간 셰이더 구현 데모 예제가 구비되어 있어 디자인 시스템에 인터랙티브 그래픽을 결합할 때 참고하기 좋습니다.
+
+* **Orval: Generate Type-Safe Clients from OpenAPI/Swagger Specs** (출처: *JavaScript Weekly #786*)
+![Orval](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wbo5vpin96clokiyeke5.jpg)
+- 개요: 백엔드에서 제공하는 OpenAPI v3 또는 Swagger v2 사양 서적(Spec JSON/YAML)을 기반으로 프론트엔드 환경(React, Vue, Svelte, Solid, Hono 등) 혹은 순수 `fetch` API에서 완벽하게 상호 호환되는 타입 안전(Type-Safe) 모델, HTTP 요청 함수, 데이터 패칭 훅, 모킹(Mocks) 데이터 코드를 자동 생성해 주는 강력한 CLI 도구입니다.
+- 사용법:
+```bash
+# 의존성 설치 및 생성 실행 CLI 예시
+npm install -D orval
+npx orval --config ./orval.config.js
+```
+- 실전 팁: 백엔드 API 명세가 수시로 바뀌는 애자일 개발 환경에서 프론트엔드 클라이언트 코드를 최신 스펙으로 자동 동기화하고, 잘못된 엔드포인트나 누락된 필드 요청을 컴파일 타임에 즉시 에러로 잡아내어 생산성을 크게 높여줍니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+* **Playwright Accessibility Testing** (출처: *Smashing Newsletter #559*)
+  + 요약: axe나 Lighthouse 같은 자동화 도구들도 구조적인 한계로 인해 실제 웹 콘텐츠 접근성 가이드라인(WCAG) 위반 사항의 약 60~70%는 발견하지 못하고 놓치기 일쑤입니다. David Mello는 자동화 툴이 메우지 못하는 접근성 버그를 잡기 위해 수동 테스트와 맥락 인식을 결합하여 스마트한 Playwright 테스트 코드를 작성하는 모범 사례 체크리스트를 공유합니다.
+* **Hot Updater: Self-Hosted Over-the-Air Updates for React Native** (출처: *React Status #475*)
+  + 요약: 앱 스토어의 지루한 승인 대기 프로세스 없이 React Native 애플리케이션의 업데이트 코드를 즉시 사용자 기기에 배포할 수 있는 자체 호스팅 기반의 OTA 도구입니다. 최근 번들 디핑(Bundle Diffing) 기술을 탑재하여 변경된 코드 차분만 가볍고 신속하게 전송할 수 있도록 개선되었습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+* **It’s Time for npm to Make Install Scripts Opt-In** (출처: *JavaScript Weekly #786*)
+- 핵심 인사이트: 현재 주요 패키지 매니저 중에서 의존성 설치 시 `postinstall` 같은 내부 스크립트를 사용자 동의 없이 기본(Default)으로 자동 실행하는 도구는 npm이 유일합니다. GitHub 소속의 npm 메인테이너 Jamie Magee는 이 아키텍처가 공급망 공격과 악성코드 배포의 심각한 취약점이 되고 있음을 경고하며, 설치 스크립트 실행을 개발자가 명시적으로 동의할 때만 수행하도록 하는 '옵트인(Opt-In)' 구조 전환 RFC를 상정했습니다. 임시 방편으로 패키지 설치 전 스크립트 유무를 먼저 검사하고 경고를 날려주는 `npq` 같은 오딧 도구를 결합하는 보안 고도화 팁이 함께 공유되었습니다.
+- 왜 이 글이 유익한지: 평소 무심코 실행하던 오픈소스 패키지 설치 스크립트가 로컬 개발 환경의 보안을 어떻게 위협할 수 있는지 생태계 관점의 심각한 약점을 짚어주고, 이를 극복하기 위해 다가올 도구의 아키텍처적 변화와 생태계 트레이드오프를 진지하게 숙고하게 만듭니다.
+
+* **Moving Away from Tailwind, and Learning to Structure My CSS** (출처: *Frontend Focus #742*)
+- 핵심 인사이트: 유틸리티 퍼스트 프레임워크인 Tailwind CSS를 과감히 걷어내고, 자신이 운영하는 주요 웹사이트 두 곳을 순수 시맨틱 HTML과 바닐라 CSS 체계로 전면 마이그레이션한 Julia Evans의 솔직한 회고록입니다. 무분별한 유틸리티 클래스의 중복 나열 대신 웹 표준 사양을 명확히 이해하고 자신만의 예측 가능한 CSS 아키텍처 단위를 설계하여 컴포넌트 스타일을 구조화하는 클래식한 기법의 유지보수성 가치를 재발견하는 과정을 담았습니다.
+- 왜 이 글이 유익한지: 기술 트렌드나 프레임워크 맹신에서 벗어나, 기본 웹 표준 스펙만으로도 확장성 있고 깨끗한 스타일 시트 구조를 설계하는 방법론에 대해 실전적인 고민과 영감을 선사합니다.
+
+* **Better Fluid Sizing with round()** (출처: *Frontend Focus #742*)
+![Better Fluid Sizing with round()](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1779195604/ujztdjxqv8vnqvnpjzlt.png)
+- 핵심 인사이트: 모던 브라우저에서 안정적으로 지원하기 시작한 CSS `round()` 수학 함수를 활용하여 반응형 타이포그래피와 UI 간격을 훨씬 매끄럽고 예측 가능하게 빌드하는 설계 팁을 소개합니다. 기존의 `clamp()` 함수만으로 유동적인 크기를 구현할 때 특정 해상도에서 소수점 픽셀 렌더링이 깨지거나 가독성이 낮아지는 현상을, `round()`의 올림(up) 혹은 내림 단위를 결합함으로써 완벽한 그리드 스케일에 맞게 조율해 줍니다.
+- 왜 이 글이 유익한지: 미디어 쿼리를 복잡하게 도배하지 않고도 단 몇 줄의 현대적 CSS 수식만으로 미려하고 일관된 반응형 타이포그래피 시스템을 견고하게 구축하는 실전 팁을 얻을 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+* **9 Accessibility Myths and Pushbacks and How to Answer Them** (출처: *Smashing Newsletter #559*)
+  + 요약: 현업에서 웹 접근성 고도화를 주장할 때 흔히 마주하는 "장애인 사용자가 없다"라거나 "개발 비용이 많이 든다"라는 식의 고정관념에 대응하여, 팀원과 의사결정권자들을 실질적인 데이터 기반으로 논리적으로 설득할 수 있는 9가지 실전 격파 전략을 제공합니다.
+* **Structural Sharing, selectAtom, and Why Your Jotai Atoms Re-Render Too Much** (출처: *React Status #475*)
+  + 요약: 원자 기반 상태 관리 라이브러리인 Jotai를 사용할 때, 파생 데이터 상태 구조가 미세하게 변경되어도 컴포넌트가 과도하게 전체 리렌더링되는 성능 저하 원인을 규명하고, `selectAtom` API와 메모이제이션된 구조적 공유 기술을 결합해 렌더링을 격리하는 최적화 팁을 다룹니다.
+---
+
+## 4. ✨ 아이디어
+
+* **webcompat.dev** (출처: *Frontend Focus #742*)
+![webcompat.dev](https://res.cloudinary.com/cpress/image/upload/v1779188948/lvat0dfyrssoiptnmice.png)
+- 특징: 수많은 웹 플랫폼 파편화와 브라우저 호환성 버그를 해결해 주는 인터넷상의 파편화된 도구, 스펙 문서, 커뮤니티 리소스들을 단 하나의 직관적인 노드 인터랙션 맵 형태로 시각화하여 엮어낸 시각적 검색 플랫폼입니다. 현재 30여 개 이상의 주요 도구가 유기적인 그래프 링크 구조로 등록되어 있어, 브라우저 상호 운용성 이슈를 맞닥뜨렸을 때 최적의 해결 도구를 탐색하는 나침반 역할을 해줍니다.
+
+* **Component Party: A Rosetta Stone of UI Libraries** (출처: *React Status #475*)
+![Component Party](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/s12cumrzkore9fvftzad.jpg)
+- 특징: React, Vue 3, Svelte, Angular 뿐만 아니라 Ember Polaris, Ripple 등 다양한 프론트엔드 프레임워크들까지 아우르며, 웹 UI를 개발할 때 빈번히 마주하는 공통 프로그래밍 작업(상태 변경, 조건부 렌더링, 컴포넌트 통신 등)의 실제 구현 코드를 스니펫 형태로 한눈에 교차 비교해 볼 수 있게 고안된 인터랙티브 코드 로제타 스톤 웹사이트입니다.
+
+## 5. ⚡️ 짧은 소식
+
+* **Storybook 10.4 Adds First-Class TanStack React Support** (출처: *React Status #475*)
+- 요약: 고립된 UI 컴포넌트 개발 워크숍 도구인 Storybook의 10.4 업그레이드가 배포되었습니다. 이번 버전에는 TanStack React 생태계에 대한 퍼스트 클래스 지원과 더불어 한층 깔끔해진 React Native 환경 설정 레이아웃이 반영되었고, 복잡하고 거대한 레거시 앱 환경에서도 AI 에이전트가 코드를 스캔하여 Storybook 개발 환경을 알아서 자동 빌드해 주는 에이전트 연동 기능이 추가되었습니다.
+
+* **Google Deprecates Gemini CLI, Transitioning to Antigravity CLI** (출처: *React Status #475*)
+- 요약: 구글 개발자 블로그 공식 발표에 따르면 기존의 터미널 기반 인공지능 도구였던 'Gemini CLI'의 지원이 중단(Deprecated)되며, 앞으로의 모든 AI 개발 환경 툴체인은 이번 구글 I/O에서 새롭게 공개된 차세대 AI 엔지니어링 도구인 'Antigravity CLI' 에코시스템으로 통합 이관됩니다.
+
+* **Dr. Axel Rauschmayer Takes Blog and Books Off the Web Due to AI Crawlers** (출처: *JavaScript Weekly #786*)
+- 요약: 자바스크립트 생태계의 교과서적인 인물이자 전 JS Weekly 에디터인 Axel Rauschmayer 박사가 무분별하게 웹 데이터를 긁어가며 서버 트래픽을 고갈시키는 AI 크롤러봇들의 무차별적인 스크래핑 행위에 피로감을 호소하며, 수년 동안 무료로 개방해 왔던 자신의 유명 자바스크립트 기술 블로그와 프론트엔드 전문 서적 콘텐츠들을 웹 저장소에서 전면 비공개 철회했습니다.
+
+* **The Rust-Based Rewrite of Bun Has Been Merged** (출처: *JavaScript Weekly #786*)
+- 요약: 고성능 자바스크립트 런타임인 Bun을 기존 Zig 언어에서 Rust 언어로 전면 재작성(Rewrite)하는 초대형 코어 아키처 브랜치가 드디어 메인 저장소에 머지되었습니다. 다만, 이 과정에서 LLM AI를 적극적으로 활용해 대량의 코드가 자동 포팅된 것으로 알려져 코드의 전반적인 세부 품질과 안정성을 놓고 해커 뉴스 등지에서 엔지니어들 사이에 치열한 논쟁이 촉발되었습니다.
+
+* **Making Emojis and Icons Screen-Reader Accessible** (출처: *Smashing Newsletter #559*)
+- 요약: 시각 및 인지 장애를 가진 사용자들에게 이모지나 아이콘은 텍스트의 맥락을 왜곡하거나 오해를 불러일으키는 주범이 되기도 합니다. Elle Smith는 웹 HTML 마크업 내부뿐만 아니라, 일반 텍스트 이메일이나 소셜 미디어 포스트에서도 스크린 리더가 이모지를 엉뚱하게 해석하지 않고 명확하게 전달할 수 있도록 돕는 속성 최적화 팁 및 무분별한 이모지 오용 방지 가이드를 요약해 제공합니다.
+
+## 6. 🎉 릴리스
+
+* **Redux Toolkit v2.12.0 & React Redux v9.3.0** (링크: `https://github.com/reduxjs/redux-toolkit/releases/tag/v2.12.0`) (출처: *React Status #475*)
+  + 업데이트: 상태 관리 도구인 툴킷과 React 바인딩 라이브러리의 신규 버전이 릴리스되었습니다.
+* **Expo SDK 56** (링크: `https://expo.dev/changelog/sdk-56`) (출처: *React Status #475*)
+  + 업데이트: 파일 기반 라우팅 및 크로스 플랫폼 고도화를 마친 신규 SDK 버전이 공개되었으며, 내장 UI 도구인 Expo UI가 정식으로 프로덕션 준비 단계(Ready for Production)에 진입했습니다.
+* **Relay v21.0** (링크: `https://github.com/facebook/relay/releases/tag/v21.0.0`) (출처: *React Status #475*)
+  + 업데이트: Meta가 페이스북 웹 서비스 등에 직접 사용하는 GraphQL 데이터 패칭 도구의 21.0 버전이 출시되었습니다. 최초로 TypeScript 완전 네이티브 지원 및 새로운 에러 관리 아키텍처가 탑재되었고, 실험적인 React Server Components(RSC) 연동 스펙이 추가되었습니다.
+* **Firefox 151** (링크: `https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/151`) (출처: *Frontend Focus #742*)
+  + 업데이트: 데스크톱 환경에 Document Picture-in-Picture API를 공식 탑재하였으며, CSS 컨테이너 쿼리 `@container` 가 구조적 스타일을 분기할 수 있는 `style()` 쿼리 명세를 마침내 완벽히 지원하기 시작했습니다.
+* **Critical v8.0** (링크: `https://github.com/addyosmani/critical`) (출처: *Frontend Focus #742*)
+  + 업데이트: Addy Osmani가 주도하는 HTML 문서 내 스크롤 전 영역(Above-the-fold) 핵심 CSS의 자동 추출 및 성능 최적화 인라인화 도구가 대규모 아키텍처 개선을 마친 8.0 메이저 버전으로 릴리스되었습니다.
+* **Angular 22 Release Candidate** (링크: `https://javascriptweekly.com/link/185322/web`) (출처: *JavaScript Weekly #786*)
+  + 업데이트: 6월 정식 릴리스를 앞둔 Angular 22의 최종 후보 버전이 공개되었습니다. 시그널 기반의 고성능 폼 컨트롤 API가 추가되었으며, 컴포넌트 변경 감지 최적화 전략인 OnPush가 프레임워크 전반의 기본값(Default)으로 완전 전환됩니다.
+* **Bun v1.3.14** (링크: `https://javascriptweekly.com/link/185325/web`) (출처: *JavaScript Weekly #786*)
+  + 업데이트: 대안 자바스크립트 런타임인 Bun의 최신 패치가 배포되었습니다. 바이너리 단에서 이미지를 직접 고성능으로 처리하는 `Bun.Image` API가 추가되었고 HTTP/2 및 HTTP/3 네트워크 명세의 수용도가 넓어졌으며 Node.js 호환 사양이 한층 정밀해졌습니다.
+* **ESLint Config Inspector v3.0** (링크: `https://javascriptweekly.com/link/185326/web`) (출처: *JavaScript Weekly #786*)
+  + 업데이트: 점차 복잡해지는 ESLint의 새로운 설정 파일인 플랫 설정(Flat Configs)의 상속 관계와 의존성을 로컬 브라우저 그래픽 UI 상에서 실시간으로 시각화하여 디버깅을 돕는 유틸리티 도구 3.0 버전이 릴리스되었습니다.
+
+## ✍️ 마치며
+이번 주 기술 소식들은 웹 생태계가 단순한 성능 경쟁을 넘어 AI 에이전트와의 공존, 공급망 보안 강화, 그리고 보편적 접근성 확보라는 다각적인 패러다임 변화를 마주하고 있음을 명확히 보여줍니다. 구글이 제시한 '에이전트 중심의 웹(Agentic Web)'은 웹 사이트가 머신 리더블(Machine-Readable)한 도구로 진화해야 함을 상기시키는 반면, npm의 설치 스크립트 옵트인 가 제안과 AI 크롤러 피로감으로 인한 블로그 폐쇄 소식은 인공지능 시대의 명과 암을 깊이 숙고하게 만듭니다. 아울러 자동화 검사의 한계를 보완하려는 접근성 진영의 노력은 기술 고도화 속에서도 여전히 사람이 중심이 되는 포용성이 지녀야 할 본질적 가치를 증명하고 있습니다. 프레임워크와 에이전트가 제공하는 폭발적인 생산성을 영리하게 수용하되, 보안과 생태계의 지속 가능성 사이에서 단단히 중심을 잡는 개발자의 균형 잡힌 시각과 엔지니어링 역량이 그 어느 때보다 중요해진 시점입니다.
+
+#### 출처
+- [JavaScript Weekly #786](https://javascriptweekly.com/issues/786)
+- [Frontend Focus #742](https://frontendfoc.us/issues/742)
+- [React Status #475](https://react.statuscode.com/issues/475)
+- [Smashing Newsletter #559](https://mailchi.mp/smashingmagazine/559-accessibility-myths-and-guidelines)
