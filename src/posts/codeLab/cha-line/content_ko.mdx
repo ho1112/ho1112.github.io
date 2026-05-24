@@ -5,8 +5,6 @@ date: 2025-10-07
 thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 ---
 
-# SBI 증권 배당금 자동 수집 및 LINE 알림 봇 개발기
-
 ## 1. 개요
 
 **楽天証券의 배당금 입금 안내 이메일**
@@ -16,6 +14,32 @@ thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 투자를 하다 보면 배당금이 들어오는 소소한 즐거움이 있습니다. 🥳
 하지만 라쿠텐 증권과 달리 SBI 증권은 정작 중요한 '어떤 종목이, 얼마나' 들어왔는지 알려주지 않았죠.
 매번 로그인해서 확인해야 하는 번거로움 때문에 이 즐거움을 놓치는 게 아쉬워서 LINE으로 편하게 배당 내역을 받아볼 수 있는 저만의 봇을 만들었습니다.
+
+<div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center', margin: '24px 0' }}>
+  <img
+    src="/posts/codeLab/cha-line/toss.avif"
+    style={{
+      maxWidth: '100%',
+      height: 'auto',
+      flex: '1',
+      minWidth: '400px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+    }}
+  />
+  <img
+    src="/posts/codeLab/cha-line/kakao.avif"
+    style={{
+      maxWidth: '100%',
+      height: 'auto',
+      flex: '1',
+      minWidth: '300px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+    }}
+  />
+</div>
+<small>※ 한국처럼 직접 푸쉬메시지로 알려주는 것을 원했습니다.</small>
 
 **해결하고자 했던 문제점:**
 - **수동 확인의 불편함**: 매번 웹사이트 접속하여 배당금 내역 확인

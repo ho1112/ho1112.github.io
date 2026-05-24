@@ -5,8 +5,6 @@ date: 2025-10-07
 thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 ---
 
-# SBI証券配当金自動取得LINE Bot開発記
-
 ## 1. 概要
 
 **楽天証券の配当金入金通知メール**
@@ -16,6 +14,32 @@ thumbnail: /posts/codeLab/cha-line/cha-line_thumbnail.avif
 投資をしていると配当金が入ってくる小さな楽しみがあります。🥳
 しかし楽天証券と違ってSBI証券は肝心の「どの銘柄が、いくら」入ってきたかを教えてくれませんでした。
 毎回ログインして確認する手間でこの楽しみを逃すのがもったいなくて、LINEで手軽に配当履歴を受け取れる自分専用のボットを作りました。
+
+<div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center', margin: '24px 0' }}>
+  <img
+    src="/posts/codeLab/cha-line/toss.avif"
+    style={{
+      maxWidth: '100%',
+      height: 'auto',
+      flex: '1',
+      minWidth: '400px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+    }}
+  />
+  <img
+    src="/posts/codeLab/cha-line/kakao.avif"
+    style={{
+      maxWidth: '100%',
+      height: 'auto',
+      flex: '1',
+      minWidth: '300px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+    }}
+  />
+</div>
+<small>※ 韓国のように直接プッシュメッセージで知らせることを望んでいました。</small>
 
 **解決しようとした問題点:**
 - **手動確認の不便さ**: 毎回ウェブサイトにアクセスして配当金履歴を確認
