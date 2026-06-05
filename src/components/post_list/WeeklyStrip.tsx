@@ -75,7 +75,9 @@ const WeeklyStrip = ({ language, weeklyPosts }: WeeklyStripProps) => {
             className="group shrink-0 w-[240px] flex flex-col rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-chomin dark:hover:border-chomin hover:shadow-md transition-all duration-200 overflow-hidden"
           >
             {/* 상단 민트 라인 */}
-            <div className="h-0.5 bg-gradient-to-r from-chomin to-chomin-dark group-hover:h-1 transition-all duration-200" />
+            <div className="relative">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-chomin to-chomin-dark group-hover:h-1 transition-all duration-200" />
+            </div>
 
             <div className="p-3.5">
               {/* 날짜 */}
