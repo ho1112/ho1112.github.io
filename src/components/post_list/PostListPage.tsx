@@ -53,7 +53,9 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
   // 메인 페이지일 경우
   const allPosts = await getSortedPostList(language)
-  const latestPostList = allPosts.slice(0, 4)
+  const latestPostList = allPosts
+    .filter((post) => post.categoryPublicName !== 'weekly')
+    .slice(0, 4)
 
   const allWorkLogPosts = allPosts.filter(
     (post) => post.categoryPublicName === 'workLog',
