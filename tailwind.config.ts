@@ -190,9 +190,14 @@ const config = {
             transform: 'scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg)',
           },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         'tada-delayed': 'tada-with-delay 4s ease-in-out infinite',
+        marquee: 'marquee 30s linear infinite',
       },
     },
   },
