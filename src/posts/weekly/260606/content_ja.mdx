@@ -1,0 +1,132 @@
+---
+title: '🚀 2026-06 W1 #61'
+desc: TBTウィンドウのトラッキング、JavaScriptエンジンの末尾再帰の限界、純粋なCSS 3Dメッシュレンダリング | 2026年6月第1週目 週間技術ニュースレター
+date: 2026-06-06
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 今週の主要テーマ
+今週のフロントエンドエコシステムは、ウェブブラウザのパフォーマンス最適化とCSSを活用した革新的なレイアウト表現に注目しました。従来のパフォーマンス指標の盲点を掘り下げたTBTウィンドウの概念から、WebGLなしにCSSの3Dマトリックス変換のみでブラウザ内に3Dメッシュをレンダリングする技術的な試みなどが目を引きました。また、人工知能（AI）ツールと開発の利便性を極大化するためのブラウザ各社の仕様の高度化およびコンパイラのパフォーマンス向上の作業も加速しています。
+
+## 1. 🔍 深掘り
+- **[Frontend’s Missing Metric: The TBT Window](https://csswizardry.com/2026/06/front-ends-missing-metric-the-tbt-window/)** (出典: *Frontend Focus #744*)
+  ![TTI is found by identifying the quiet window first, then walking back to the last long task before it.](https://res.cloudinary.com/csswizardry/image/fetch/f_auto,q_auto/https://csswizardry.com/wp-content/uploads/2026/06/tti.svg)
+   - 背景: ウェブパフォーマンス最適化において、総ブロック時間（Total Blocking Time、TBT）は非常に重要な指標とされていますが、単に数値を見るだけではページロード過程の謎をすべて解決することはできませんでした。指標が測定される区間の構造的な特徴を見落としていたためです。
+   - コア機能: FCP（First Contentful Paint）からTTI（Time to Interactive）までのインターバルである「TBTウィンドウ（TBT Window）」のトラッキングを提案しています。TBT数値自体に変化がなくても、FCPが前倒しされたりTTIが遅れたりしてこの「ウィンドウ」の総領域が拡張されると、実質的なブロッキング時間のレイテンシが歪んで記録される可能性があることを数学的に証明しています。
+   - 実務適用: 実際のメインスレッドを占有するブロッキング作業の総量が変わっていないにもかかわらず、パフォーマンススコアが急激に変動する現象に直面した際、パフォーマンス分析の基準タイムラインを明確に定義する用途として有用です。
+   - 注意事項: タイムライン内の個々のロングタスク（Long Task）の位置の変化によって指標が敏感に反応を示す可能性があるため、指標単独の信頼性よりもウィンドウの移動推移を併せてモニタリングする必要があります。
+- **[Your Recursion is Lying to You](https://javascriptweekly.com/link/185980/web)** (出典: *JavaScript Weekly #788*)
+   - 背景: ツリー構造の探索や分割統治パターンなどで、再帰（Recursion）はロジックを直感的にマッピングできるエレガントな抽象化ツールです。しかし、論理的にベースケース（Base Case）が完璧であっても、各呼び出しごとに物理的なコールスタックフレームを消費するため、大規模なデータセットや深い入力値に遭遇した場合、`RangeError: too much recursion`のような物理的な限界（スタックオーバーフロー）に直面することになります。
+   - コア機能: 解決策としてよく言及される「末尾再帰最適化（Tail Call Optimization、TCO）」が、実際のJavaScriptランタイムエコシステムでどのように無力化されているかの実態を掘り下げます。ES2015の仕様に厳格な形のTCOが含まれたにもかかわらず、V8（Chrome、Node.js、Deno）やSpiderMonkey（Firefox）、JavaScriptCore（Safari、Bun）など、現代の主要エンジンのほとんどは、デバッグの可読性低下とパフォーマンスリグレッションの制御を理由に、商用環境でTCOを完全にサポートしていなかったり撤回したりしており、依然としてスタックフレームを無条件に積み上げています。
+   - コード例:
+     ```js
+     // 戻り値が追加の演算なしに次の呼び出しへ直接転送される正しい末尾再帰構造の例
+     function sumTR(n, acc = 0) {
+       if (n === 0) return acc;
+       return sumTR(n - 1, acc + n);
+     }
+     ```
+   - 実務適用: データのサイズや呼び出しの深さを開発者が制御できない動的ユーザーデータの処理（例：複雑にネストされたカテゴリツリーの探索）アーキテクチャでは、安全性のために再帰を思い切って放棄し、明示的なループ（for/whileループ）構造に全面転換する必要があります。あるいは、ヒープ（Heap）領域で関数の実行を制御ループで管理するトランポリン（Trampoline）パターンを適用し、スタックの爆発を防ぐ設計が推奨されます。
+   - 注意事項: コードが末尾再帰の形態（Shape）をなしているという事実が、ランタイムでの安定したスタック再利用（Optimization）を保証するものではないため、環境別のポータビリティを常に疑う必要があります。また、指数時間計算量（$O(2^n)$）を持ちブラウザタブをフリーズさせる古典的なフィボナッチ式の演算過負荷と物理的なスタック枯渇エラーは、見た目の症状が似ているだけで完全に異なるアーキテクチャ上の欠陥であることを認識し、区別してトラブルシューティングする必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[Why Does tsgo Use So Much Memory?](https://zackoverflow.dev/edit_subscription/*|UID|*)** (出典: *JavaScript Weekly #788*)
+  + 要約: Go言語で書かれた超高速TypeScript 7コンパイラエンジンである`tsgo`が、大規模プロジェクトの分析プロセスでなぜギガバイト単位の膨大なメモリを消費するのか、ガベージコレクション（GC）アーキテクチャとメモリ割り当てパターンの観点から原因を追跡します。
+- **[The Conductor Rewrite: What They Changed to Make It Fast](https://performance.dev/the-conductor-rewrite)** (出典: *React Status #477*)
+  + 要約: コーディングエージェント調整用のMacアプリであるConductorが、アプリの速度を2倍以上に引き上げた全過程を扱ったティアダウン記事です。仮想化（Virtualization）作業の適用過程で発生した再レンダリングの罠の克服事例と、チャットビュー（Chat View）のルーティング選択のコツを共有します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[PolyCSS: Render 3D Meshes in the DOM with CSS](https://polycss.com/)** (出典: *Frontend Focus #744*)
+  ![PolyCSS 3D Render Screen](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/cellzi1ka9barclvytl9.jpg)
+  + 概要: 重いWebGLテクスチャパイプラインや`<canvas>`要素に依存せず、純粋なHTML要素とCSSの`matrix3d()`トランスフォーム演算のみを活用して、ブラウザのDOM上に直接3Dメッシュモデルを実装し、テクスチャをマッピングしてくれる高性能ライブラリです。
+  + 使い方:
+    ```html
+    <poly-scene>
+      <poly-perspective-camera id="main-cam" distance="6" orbit></poly-perspective-camera>
+      <poly-mesh src="assets/model.obj" mtl="assets/material.mtl" castShadow></poly-mesh>
+    </poly-scene>
+    ```
+  + 実践チップ: ライブラリにおいて個々のポリゴン一つ一つが独立したDOM要素として扱われるため、一般的なウェブ標準のCSS Hoverやクリックイベントをそのまま結合して、完全にインタラクティブで独創的なインフォグラフィック3Dデータ視覚化ツールを作成することができます。
+- **[Fontastic Space: Find Mathematically Optimal Font Pairings](https://fontastic.space/)** (出典: *Frontend Focus #744*)
+  ![Fontastic Space Pairing Tool](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1780483351/ufuphpwnnxya0rp7rzdx.png)
+  + 概要: 感覚のみに依存していた従来のタイポグラフィのマッチング方式から脱却し、フォントが持つ固有の幾何学的要素（Cap-height、AscenderおよびDescenderの差異など）を精密に分析して、数学的に最もバランスの取れた最適なフォントの組み合わせを計算し提案してくれる、無料のブラウザベースのウェブツールです。O'DonovanおよびPANOSE-1階層分析の数学的モデルを借用しています。
+  + 実践チップ: 対照的なレイアウトテーマを企画する際、書体間の幾何学的類似度を数値化されたデータ指標として明確に確認しながらマッチングを決定できるため、デザインシステム構築段階でのコミュニケーションコストを画期的に削減してくれます。
+
+---
+#### 見逃せないコンテンツ
+- **[Curlwind: A No-Build Tailwind Utility Generator](https://curlwind.com/)** (出典: *Frontend Focus #744*)
+  + 要約: ローカルのビルド環境を構築する必要なく、必要なスタイルクラス、多彩なバリアント、カスタムプレフィックスなどをクエリパラメータの形でCDNファイルに直接定義し、即座にリアルタイムで注入される革新的なTailwind CSSユーティリティ生成ツールです。
+- **[Component Party: A Rosetta Stone of UI Libraries](https://component-party.dev/)** (出典: *JavaScript Weekly #788*)
+  + 要約: React、Vue、Svelte、Angularだけでなく、Ember Polarisなど多様なフロントエンドUIフレームワークのコード実装方式を1対1のマッチングスニペット形式で一目で比較してくれる、フロントエンド版ロゼッタストーンです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Conditional Validation with nth](https://frontendmasters.com/blog/css-n-of-selectors-for-conditional-validation/)** (出典: *Smashing Newsletter #561*)
+  ![Conditional Validation Selection](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/7ad2a299-5db7-e5fc-d353-d14a7354d30a.png)
+  + 主要なインサイト: ユーザーがフォームを送信する前に、特定の必須入力欄が正しくすべて入力されているかを事前に制御する最適な方法として、JavaScriptのイベントリスナーを複雑に使用せず、CSSの最新仕様である`:nth-child(n of :valid)`のような下位セレクタパターンの組み合わせのみで、完全なバリデーションの条件付きスタイル分岐を実装するモダンなマークアップのノウハウを提示します。
+- **[New Responsive Image CSS](https://www.linkedin.com/posts/neciudan_webdev-html-frontend-activity-7455873682616336384-7eJO?utm_source=share&utm_medium=member_desktop&rcm=ACoAAACDcgQBa_vsk5breYKwZAgyIhsHtJaFbL8)** (出典: *Smashing Newsletter #561*)
+  ![Responsive Images Guide](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/7b973a5a-cfa5-2b81-de09-98e3dc21418c.png)
+  + 主要なインサイト: 過去にメディアクエリの条件ごとにいちいち複雑に手作業でマッピングしていたresponsiveマークアップの`sizes`属性地獄から完全に抜け出す革新的な変化を説明します。モダンブラウザがサポートする`loading="lazy"`属性と新しい仕様である`sizes="auto"`オプションを組み合わせることで、ブラウザがランタイムにレンダリングされる実際のサイズを計算し、自動的に最適な解像度の画像を選択してダウンロードします。ただし、最初の画面に表示されるヒーロー（Hero）画像は遅延ロードの対象ではないため、手動で固定サイズを定義する必要があります。
+- **[Accessible (I Think) Split-Cell Table Headers](https://meyerweb.com/eric/thoughts/2026/05/28/accessible-i-think-split-cell-table-headers/)** (出典: *Frontend Focus #744*)
+  ![Split-Cell Header Layout](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/pisqvualljdewbljlb2z.jpg)
+  + 主要なインサイト: 古典的なNASAの科学論文アーカイブなどで頻繁に登場する高難度マークアップ領域である「対角線で分割されたテーブルヘッダーセル」の実装レイアウトのパズルを解決します。`rowspan`属性と要素の絶対位置指定を適切に調和させ、スクリーンリーダーなどの支援技術が正しく構造を読み取れるようにウェブアクセシビリティの専門家たちと協力して導き出した、マークアップの定石シナリオを詳細に解説します。
+
+---
+#### 見逃せないコンテンツ
+- **[Intentionally Blocking Rendering with JavaScript](https://www.jayfreestone.com/writing/intentional-render-blocking-javascript/)** (出典: *Frontend Focus #744*)
+  + 要約: 無条件の非同期（async/defer）スクリプト実行が常に正解とは限らず、レイアウトコンポーネントの物理的な寸法測定がpaintの前に明確に先行されなければならない特殊なケースにおいて、最新の`blocking="render"`属性を意図的に活用して、急激なレイアウトフラッシュ（CLS）現象をきれいに制御するパラダイムを提案します。
+- **[Using AI to Write Better Code More Slowly](https://javascriptweekly.com/link/185974/web)** (出典: *JavaScript Weekly #788*)
+  + 要約: 大規模言語モデル（LLM）を、単に低品質のコードを高速で無差別に量産する機械として消耗するパターンを指摘し、複雑なビジネスロジックと設計の限界を多角的に吟味し、一段階高い水準のコードを「落ち着いて精密に」ビルドするための協業ツールとしての正しいAIの活用法を提示します。
+---
+
+## 4. ✨ アイデア
+- **[Liquid DOM: Liquid Glass for the Web](https://github.com/AndrewPrifer/liquid-dom)** (出典: *React Status #477*)
+  - ![Liquid DOM Glass Interaction](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ihrldmlx7alp5tnnoja6.jpg)
+  + 特徴: Appleスタイルの流麗でもっちりとしたリキッドグラス（Liquid Glass）のインタラクション効果をウェブ画面上にそのまま実装する、独創的なオープンソースプロジェクトです。WebGPUパイプラインのアクセラレーションと、Chromeブラウザで実験的に提供されている最新仕様の`HTML-in-Canvas API`技術仕様を積極的に組み合わせて設計されています。ブラウザ環境の進化に伴い、今後のウェブUIデザインが直面する高性能ビジュアルコンポーネントの未来の姿を集約的に示しています。
+
+## 5. ⚡️ ミニノート
+- **[The Rust Port of React Compiler is Nearly Ready to Go](https://github.com/facebook/react/pull/36173#issuecomment-4608356402)** (出典: *React Status #477*)
+  + 要約: Metaのコア開発チームの発表によると、Rust言語へ全面ポーティング中の次世代React Compilerの内部テスト結果が非常に成功しており、1〜2週間以内にmasterブランチへ公式マージされる予定です。オープンビルドを通じて即座に事前テストが可能です。
+- **[VoidZero is joining Cloudflare](https://blog.cloudflare.com/voidzero-joins-cloudflare/)** (出典: *React Status #477*)
+  + 要約: Vite、Vitest、Rolldown、Oxcなど、フロントエンドビルドツールチェーンのエコシステムをリードし急成長した革新企業VoidZeroが、グローバルクラウドネットワークインフラ企業であるCloudflareに公式に合流することになりました。
+- **[Dozens of Red Hat npm packages backdoored](https://javascriptweekly.com/link/186016/web)** (出典: *JavaScript Weekly #788*)
+  + 要約: 最近のnpmパッケージレジストリのセキュリティ監視プロセスにおいて、Red Hat名義で管理されていた数十のオープンソースパッケージに悪意のあるバックドアコードが埋め込まれ流布された状況が発見され、セキュリティコミュニティに緊急事態が宣言されました。
+- **[State of Web Dev AI 2026 survey results live](https://2026.stateofai.dev/en-US)** (出典: *Frontend Focus #744*)
+  + 要約: 世界中の7,000人以上の専門ウェブ開発者が参加し、AIツールの導入状況、体感の生産性指標、実務での満足度などをそのまま盛り込んだ「2026ウェブ開発AI実態調査」の最終統計レポート結果が公式にオープンされました。
+- **[Chrome 149's Big Upgrades to AI Dev Assistance](https://developer.chrome.com/blog/new-in-devtools-149)** (出典: *Frontend Focus #744*)
+  + 要約: 新しくリリースされたChrome 149バージョンの開発者ツール（DevTools）に、MCPサーバー機能およびCLI連携システムが正式な安定バージョンとして含まれました。これにより、外部のAIコーディングエージェントツールがプログラム的にブラウザインスタンスを直接制御し、パフォーマンス監査やデバッグ作業を自動で遂行できるようになります。
+
+## 6. 🎉 リリース
+- **[Node.js 26.3.0 (Current)](https://javascriptweekly.com/link/185967/web)** (*JavaScript Weekly #788*)
+  + アップデート: デフォルト内蔵のnpmバージョンが11.16.0へ電撃アップデートされ、QUICネットワークプロトコルのパフォーマンスが大幅に改善されました。macOS x64アーキテクチャのサポート等級はTier 2プラットフォームへ一段階調整されました。
+- **[Astro 6.4](https://javascriptweekly.com/link/185969/web)** (*JavaScript Weekly #788*)
+  + アップデート: プラグイン可能なマークダウンパイプラインと共に、Rustベースの超高速マークダウンプロセッサコアが内蔵され、Cloudflareインフラ環境に特化した高度なルーティングの内蔵ヘルパー関数が新たに追加されました。
+- **[Ember 7.0](https://javascriptweekly.com/link/185966/web)** (*JavaScript Weekly #788*)
+  + アップデート: 長期フレームワークであるEmberの最新メジャーバージョンアップデートで、以前の6.0バージョン以降蓄積されてきた古いレガシー機能およびDeprecated（非推奨）オプションを全面排除し、コアの軽量化を完了しました。
+- **[React 19.2.7, 19.1.8 and 19.0.7](https://github.com/facebook/react/releases/tag/v19.2.7)** (*React Status #477*)
+  + アップデート: サーバーアクション（Server Actions）の呼び出し構造内部で検出された致命的な機能リグレッション（Regression）のバグ現象を迅速に防ぐため、3つのマイナーラインナップのセキュリティおよびバグパッチが同時に配布されました。
+- **[React Router v7 (7.16.0), v6 (6.30.4) and Remix 2 (2.17.5)](https://github.com/remix-run/react-router/security/advisories)** (*React Status #477*)
+  + アップデート: ルーティングの解析およびセッション制御プロセスで識別された計7件のセキュリティ脆弱性のパッチ事項を反映し、クリティカルな緊急リリースが反映されました。本番システムでの即時のバージョンアップグレードが推奨されます。
+- **[npm 11.16.0](https://javascriptweekly.com/link/185962/web)** (*JavaScript Weekly #788*)
+  + アップデート: 意図しない悪意のあるスクリプトの実行をパッケージインストール段階で元から封鎖できるオプトイン方式のセキュリティポリシー制御コマンドである`allowScripts`設定構造が、advisory（勧告）の形で初めて含まれました。
+- **[React Spectrum 1.4](https://react-spectrum.adobe.com/releases/v1-4-0)** (*React Status #477*)
+  + アップデート: Adobeのウェブデザインシステムツールキットパッケージで、今回の1.4バージョンアップデートにより、コレクションコンポーネントのドラッグ＆ドロップ内蔵機能の完備、ハイライト選択コンボおよび`TableView`専用の`TableFooter`仕様が新設されました。
+- **[Handsontable 17.1.0](https://eu1.hubs.ly/H0vJ8bl0)** (*Frontend Focus #744*)
+  + アップデート: 強力なデータグリッドソリューションの大規模アップデートで、グリッドデータを完全な`.xlsx`のExcelファイルフォーマットに直接抽出する機能と、個別のアダプタなしのサーバーサイドの行（Row）ハンドリング、ビルトインのトースト通知コンポーネントが追加されました。
+- **[Mantine 9.3](https://mantine.dev/changelog/9-3-0/)** (*JavaScript Weekly #788*)
+  + アップデート: 膨大なコンポーネントライブラリスイートで、モバイルビューに対応するページネーションのレスポンシブレイアウトオプション、CSSのテキストラップ制御機能、およびドラッグ分割ウィンドウ構成のための専用リサイザーフックが追加されました。
+- **[Plotly 3.6](https://javascriptweekly.com/link/185984/web)** (*JavaScript Weekly #788*)
+  + アップデート: PythonやRエコシステムでも広く使われている宣言型視覚化ライブラリのJavaScript最新版で、高度なマッピングやヒートマップ表現を含む合計50種類以上の新規データビジュアルグラフィックモデルを搭載しました。
+
+## ✍️ おわりに
+今週伝えられたさまざまなニュースの中でも、断然際立っているのは、ウェブプラットフォームとブラウザの潜在力が予想よりもはるかに速いスピードで拡張されているという点です。ブラウザのパフォーマンス最適化は、JavaScriptコードをどのように減らして分割するかの戦いでしたが、現在ではコンパイラレイヤーのRust転換を通じた根本的なビルドの加速化に加えて、`blocking="render"`や`sizes="auto"`などの標準仕様を通じて、CLSやレスポンシブの負荷を宣言的にブラウザに委任する方向へ進化しています。
+
+特にCSSの3D演算のみを活用したメッシュレンダリングやWebGPUベースのインタラクションの実験は、今後のウェブが単なる文書や情報伝達の媒体を超えて、完全なアプリケーションプラットフォームとして完全に定着したことを想起させます。開発者として、単に固定化されたフレームワークAPIの使い方に安住するのではなく、このようにブラウザの仕様の下部で起きているレンダリングパイプラインの変化や、新しく開かれているハードウェアアクセラレーションAPIの仕様に絶えず関心を持ち、実務適用のタイミングを明確に図るべき時期です。
+
+#### 出典
+- [JavaScript Weekly #788](https://javascriptweekly.com/issues/788)
+- [Frontend Focus #744](https://frontendfoc.us/issues/744)
+- [React Status #477](https://react.statuscode.com/issues/477)
+- [Smashing Newsletter #561](https://mailchi.mp/smashingmagazine/561-new-useful-css-techniques)
