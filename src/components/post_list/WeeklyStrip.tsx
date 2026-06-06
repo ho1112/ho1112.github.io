@@ -1,6 +1,11 @@
 'use client'
 
-import { CalendarDays, ChevronLeft, ChevronRight, Newspaper } from 'lucide-react'
+import {
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Newspaper,
+} from 'lucide-react'
 import Link from 'next/link'
 import { useRef } from 'react'
 import { Post } from '@/config/types'
@@ -13,7 +18,7 @@ interface WeeklyStripProps {
 
 const WeeklyStrip = ({ language, weeklyPosts }: WeeklyStripProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const t = getLanguageText(language, 'postHeader')
+
   const tWeekly = getLanguageText(language, 'weekly')
 
   if (weeklyPosts.length === 0) return null
@@ -34,7 +39,9 @@ const WeeklyStrip = ({ language, weeklyPosts }: WeeklyStripProps) => {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-chomin/10">
             <Newspaper className="w-3.5 h-3.5 text-chomin" />
-            <span className="text-xs font-bold text-chomin tracking-wide">WEEKLY</span>
+            <span className="text-xs font-bold text-chomin tracking-wide">
+              WEEKLY
+            </span>
           </div>
           <span className="text-sm text-gray-500 dark:text-gray-400">
             {tWeekly.desc}
@@ -68,7 +75,7 @@ const WeeklyStrip = ({ language, weeklyPosts }: WeeklyStripProps) => {
         className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {weeklyPosts.map((post, index) => (
+        {weeklyPosts.map((post) => (
           <Link
             key={post.url}
             href={post.url}
