@@ -8,6 +8,7 @@ import { getLanguageText } from '@/utils/language'
 import CategoryList from './CategoryList'
 import LatestSection from './LatestSection'
 import PostCard from './PostCard'
+import WeeklyStrip from './WeeklyStrip'
 
 interface PostListProps {
   language: string
@@ -53,7 +54,13 @@ const PostListPage = async ({ language, category }: PostListProps) => {
 
   // 메인 페이지일 경우
   const allPosts = await getSortedPostList(language)
-  const latestPostList = allPosts.slice(0, 4)
+  const latestPostList = allPosts
+    .filter((post) => post.categoryPublicName !== 'weekly')
+    .slice(0, 4)
+
+  const weeklyPosts = allPosts
+    .filter((post) => post.categoryPublicName === 'weekly')
+    .slice(0, 10)
 
   const allWorkLogPosts = allPosts.filter(
     (post) => post.categoryPublicName === 'workLog',
@@ -99,6 +106,8 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         latestPosts={latestPostList}
         allPostCount={allPostCount}
       />
+      {/* Weekly 컴팩트 카드 스트립 */}
+      <WeeklyStrip language={language} weeklyPosts={weeklyPosts} />
 
       {/* workLog Posts */}
       <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">

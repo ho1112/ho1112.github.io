@@ -10,5 +10,9 @@
     "all": "모두 보기",
     "more": "더보기",
     "etc": "Other Categories"
+  },
+  "weekly": {
+    "desc": "주간 뉴스레터",
+    "viewAll": "모두 보기"
   }
 }
