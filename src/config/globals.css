@@ -188,3 +188,68 @@
     text-wrap: balance;
   }
 }
+
+/* ── Resume PDF 출력용 프린트 스타일 ── */
+@media print {
+  /* 사이트 네비게이션·푸터·챗봇·토스터·스크롤바 숨기기 */
+  nav.fixed,
+  footer,
+  [data-scroll-progress],
+  [class*='chatbot'],
+  [class*='Chatbot'],
+  [class*='Toaster'] {
+    display: none !important;
+  }
+
+  /* main의 상단 마진 제거 (헤더 높이만큼 잡혀있던 것) */
+  main {
+    margin-top: 0 !important;
+  }
+
+  /* 배경색·아이콘 색상이 PDF에도 출력되도록 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 페이지 여백 최적화 */
+  @page {
+    margin: 12mm 10mm;
+    size: A4;
+  }
+
+  /* 테이블 행이 중간에서 잘리지 않도록 (행 단위) */
+  tr {
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  /* ChallengeTable(3열)의 번호 열만 폭 고정 — colgroup으로 식별 불가하므로
+     td:first-child가 숫자 1자리인 경우만 대상. 
+     ChallengeTable에 data 속성 부여하여 정확히 타겟 */
+  table[data-challenge-table] th:first-child,
+  table[data-challenge-table] td:first-child {
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
+
+  /* max-width 제한 해제해서 A4 전체 활용 */
+  .max-w-\[720px\] {
+    max-width: 100% !important;
+  }
+
+  /* 링크 색상 유지, 밑줄 제거 */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  /* hover 스타일 제거 */
+  tr:hover {
+    background: transparent !important;
+  }
+}
