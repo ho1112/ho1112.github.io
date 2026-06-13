@@ -1,0 +1,172 @@
+---
+title: '🚀 2026-06 W2 #62'
+desc: VoidZeroのCloudflare被買収およびReact財団独立ガバナンスのニュース、代替的ウェブアーキテクチャHTML-Firstの深掘り、ネイティブCSS @function導入トレンド | 2026年6月第2週目 週間技術ニュースレター
+date: 2026-06-13
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はオープンソースおよびフロントエンドツール生態系の本格的なインフラ再編とともに、実務の開発者とデザイナーを貫く次世代AIワークフローソリューションが熱く浮上した一週間でした。Viteフレームワークを率いていたVoidZeroのCloudflare被買収のニュースと、React Foundationの完全な独立ガバナンス構築は、開発生態系の財務的自立に対するマイルストーンを打ち立てました。同時に、華やかな複雑さから脱却し、ウェブ標準の本質へと回帰しようとする「HTML-First」アーキテクチャの成果が注目を集めました。また、単なるコード生成を超えてデザインフレームワーク、企画、そしてUXライティング領域まで人工知能を完全に同僚として組み込もうとする有機的な「AIスキルセット」最適化ガイドが多数届き、一段階進化したAI協業パラダイムを示してくれました。
+
+## 1. 🔍 深掘り
+- **[VoidZero is Joining Cloudflare](https://javascriptweekly.com/link/186265/web)**（出典：*JavaScript Weekly #789*）
+	![VoidZero 画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hlyw3ywdgrgvmsgf7b8f.jpg)
+	- **背景**：Vite、Vitest、Rolldown、Oxcなど、JavaScript生態系の次世代ビルドおよび開発ツールを統合するためにEvan You氏が設立したVoidZeroが、オープンソースの持続可能性とビジネスモデルの問題を根本的に解決すべく、Cloudflareに合流することを電撃発表しました。
+	- **主要機能**：買収後も生態系内のすべてのプロジェクトはMITライセンスを維持し、独立したオープンソースとして永久に開発されます。Evan You氏と既存のチームがプロジェクトの方向性をそのままリードし、Cloudflare側はこれと同時にViteエコシステムの貢献者とメンテナーを全面的に支援するため、100万ドル規模のオープンソース専用ファンドを発足しました。
+	- **コード例**：
+		```json
+		{
+			"project": "VoidZero Tools",
+			"status": "Under Cloudflare Partnership",
+			"license": "MIT",
+			"backing_fund_usd": 1000000
+		}
+		```
+	- **実務適用**：フロントエンドのビルドレイヤーとしてViteと今後高度化されるRolldownパイプラインを検討中だった大規模なエンタープライズチームは、巨大インフラ企業の確かな財務的保証のおかげで、技術負債やツール中断のリスクなくシステムを安心して移行できます。
+	- **注意事項**：巨大プラットフォームのもとに結束しただけに、長期的には自社のエッジ（Edge）インフラやCloudflare Workers生態系側に依存したり偏向したりした機能最適化が加速しないか、コミュニティレベルでの綿密なトラッキングが伴わなければなりません。
+- **[The React Foundation's New Website and...](https://github.com/react/react)**（出典：*React Status #478*）
+	- **背景**：営利企業であるMetaの傘下を離れ、去る2月にLinux Foundationの中立的なガバナンスへと完全に所有権が移管された「React Foundation」が、組織独立後の具体的なインフラ整備を締めくくっています。
+	- **主要機能**：財団の独立的なビジョンと生態系のロードマップを透明に収拾する公式ウェブサイトが新規開設されました。また、オープンソースのマイルストーンの一環として、従来使用されていたGitHubリポジトリの公式パスである`facebook/react`が、完全に象徴的な`react/react`ネームスペースのアドレスへと自動フォワーディング処理されるように変更されました。
+	- **コード例**：
+		```bash
+		# ローカルリポジトリのリモートアドレスを財団公式ネームスペースにアップデート
+		git remote set-url origin [https://github.com/react/react](https://github.com/react/react)
+		# 従来のfacebook/reactアドレスを呼び出してもGitHub自体のリダイレクトがサポートされます。
+		```
+	- **実務適用**：単一企業の利害関係やビジネス縮小の意思決定に揺るがされない公的財団の性格を持つガバナンスが定着したことで、Reactベースの製品を営む数多くのグローバル企業の長期的な信頼度が極大化されました。
+	- **注意事項**：以前のアドレスの自動フォワーディングが安定して保証されますが、社内のCI/CDデプロイパイプラインスクリプトやコードベース内に明示されたハードコーディングされたリポジトリ参照リンクを`react/react`へと事前にリファクタリングする作業が推奨されます。
+
+---
+#### 見逃せないコンテンツ
+- **[Stripping Ads from the Kindle's React Native Homepage](https://sighery.com/posts/patching-kindle-homepage/)**（出典：*React Status #478*）
+	+ 要約：Amazon Kindle端末のホームUIスタックが最近React Nativeに移行されたというニュースをベースに、内部のHermesバイトコードレベルまでアクセスして広告追跡レイヤーを直接逆コンパイルパッチする、奇想天外なリバースエンジニアリングのプロセスを記述しています。
+- **[The Best Loading States Are No Loading States](https://jjenzz.com/best-loading-states-are-no-loading-states/)**（出典：*React Status #478*）
+	+ 要約：ユーザーエクスペリエンスを分断させるスケルトン画面の露出乱用を止めて、ブラウザが画面を切り替える前にデータを先制ローディング（Preload）したあと、準備されたインターフェースへと即座にスイッチングする遷移トレンドを提案しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+
+- **[React Libraries and Tools for 2026](https://www.robinwieruch.de/react-libraries/)**（出典：*React Status #478*）
+	![React Libraries 画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/zaju0v6agbfn2fezvpdc.jpg)
+	- **概要**：毎年フロントエンドエンジニアにとって完璧な技術セットの道標となってくれるRobin Wieruch氏が、2026年を基準にReactエコシステムで検証された最適なライブラリ推奨リストをアップデートしました。
+	- **使い方**：Robin氏のガイドラインに合わせて、最新のReact 19アーキテクチャに適合するモダンアプリケーションビルダーをはじめ、最適化された状態管理、フォーム処理、テスティングインフラレイヤーを主観的に選択して結合します。
+	- **実践チップ**：単なる流行に流されるライブラリを排除し、アクセシビリティ、パフォーマンス、互換性の検証を経たオピニオンを提示しているため、2026年の新規エンタープライズフロントエンドプロジェクトのアーキテクチャをセットアップする際の試行錯誤を大幅に短縮できる完璧なリファレンスガイドです。
+- **[visx 4.0: Airbnb's Visualization Primitives for React](https://visx.airbnb.tech/)**（出典：*React Status #478*）
+	![visx 画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/c9w5mttaisyanqcj3n5c.jpg)
+	- **概要**：「Reactに慣れている人なら誰でも完璧なカスタムチャートを直接実装できる」というモットーのAirbnb製視覚化ツールプリミティブスイートであるvisxが、ついに最新のReact 19規格を完全にサポートするv4.0へと跳躍しました。
+	- **使い方**：
+		```jsx
+		import React from 'react';
+		import { Bar } from '@visx/shape';
+		import { Group } from '@visx/group';
+
+		// React 19コンテキストで軽量なローレベルドローイングプリミティブを組み立て
+		const MiniChart = ({ x, y, w, h }) => (
+			<Group>
+				<Bar x={x} y={y} width={w} height={h} fill="#f06529" />
+			</Group>
+		);
+		```
+	- **実践チップ**：肥大化していて内部のカスタムが難解な他社の丸抱え型オールインワンチャートツールとは異なり、必要なコンポーネントの塊だけをミニマルに持ってきて組み立てることができ、既存のv3移行専用のブレイキングチェンジアップグレードドキュメントを別途詳細に収録してサポートしています。
+
+---
+#### 見逃せないコンテンツ
+- **[Claude Code For Designers](https://nervegna.substack.com/p/claude-code-for-designers-a-practical)**（出典：*Smashing Newsletter #562*）
+	+ 要約：デザイナーがClaude Codeクライアントを実務に導入して、AI特有のありきたりで定型化されたアウトプットから脱却し、デザイナー自身のディテールなビジュアルの志向性をそのまま溶かし込んだプロダクション品質のコードとアプリを導き出す、漸進的なAI実務連動ガイドです。
+- **[PDFSlick 4.0: View and Interact with PDF Documents](https://pdfslick.dev/)**（出典：*React Status #478*）
+	+ 要約：安定したPDF.jsをベースに、注釈処理、テキストハイライトおよび大容量マルチドキュメントのレンダリングハンドリングを完全に処理し、React専用のバインディングを基本的に搭載してリリースされた最新の高機能性PDFビューアソリューションです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[How Building an HTML-First Site Doubled Our Users Overnight](https://mohkohn.co.uk/writing/html-first/)**（出典：*Frontend Focus #745*）
+	- **背景**：莫大なコストを消費しながら複雑な大型React SPA（シングルページアプリケーション）で画面遷移の申請フローを設計しては失敗を繰り返していた、公共サービスの性格を持つある開発チームが、すべてのアーキテクチャを原点に戻した事例です。
+	- **主要なインサイト**：複雑なクライアントランタイムフレームワークを思い切って除去する代わりに、バックエンド保存ベースの正直なHTML標準Form要素を中心に、すべてのマークアップを「HTML-First」に再転換しました。JavaScriptは単純なUIポリフィルや必須のインタラクション補助にだけ最小限に使用したところ、複雑なスクリプト実行遅延や重いバンドルが消え去り、実際の最終申請完了率の指標が一晩のうちに正確に2倍へと急騰する快挙を成し遂げました。
+	- **コード例**：
+		```html
+		<form action="/api/v1/submit-flow" method="POST">
+			<label for="core-data">基本情報入力</label>
+			<input type="text" id="core-data" name="payload" required />
+			<button type="submit">安定的なネイティブフォーム送信</button>
+		</form>
+		```
+	- **なぜこの記事が有益なのか**：最新流行のフレームワーク盲信主義に陥った現代のフロントエンド生態系に大きな示唆を与えてくれます。ビジネスの最終的なコンバージョン目的を達成する上で最も重要なのは、複雑な状態管理ではなく、アクセシビリティが保証された最も単純で堅牢なウェブの本質的な基本技であることをデータで証明しています。
+- **[Context-Aware Headings in HTML](https://www.matuzo.at/blog/2026/content-aware-headings)**（出典：*Frontend Focus #745*）
+	- **背景**：複数のコンポーネントが階層構造でいくらでもネストされるモダンなウェブ開発環境において、ウェブアクセシビリティ規格を遵守するために内部に宣言されたヘッダータグ（`<h1>` 〜 `<h6>`）の階層の深さを手動で一つ一つ制御することは、非常に煩わしくミスが頻発する領域でした。
+	- **主要なインサイト**：ウェブ標準仕様として新たに議論および実験中である動的な`headingoffset`属性を深く掘り下げます。特定のコンポーネントルートやセクショングループにオフセットの整数値を指定すると、下位に宣言されたすべての仮想ヘッダー要素のセマンティックな深さがブラウザ側で動的に自動計算および移行処理される仕様です。
+	- **コード例**：
+		```html
+		<div headingoffset="3">
+			<h2>コンポーネントにハードコーディングされたh2仕様</h2>
+			</div>
+		```
+	- **なぜこの記事が有益なのか**：コンポーネント駆動の開発環境に合わせて進化する最新のHTMLウェブ標準の本質的な変化を読み取ることができ、人為的なJavaScriptの回避コード作成なしにセマンティックなウェブ構造を安全に設計しようとするシニア開発者にとって非常に有用です。
+- **[The Fundamentals and Dev Experience of CSS @function](https://frontendmasters.com/blog/the-fundamentals-and-dev-experience-of-css-function/)**（出典：*Frontend Focus #745*）
+	- **背景**：既存のスタイルシート内で柔軟なサイズ演算や特定の複雑なタイポグラフィ計算数式を精密に評価するには、必然的にSass、Lessのような重いプリプロセッサやコンパイラプラグインを導入しなければなりませんでした。
+	- **主要なインサイト**：ビルドタイムではなくランタイム段階でブラウザが直接カスタム関数を実行し、レイアウト値を動的に返してもらうように処理してくれる`@function`ネイティブスタイル仕様の根本的な動作原理を暴きます。現在はChromiumベースのブラウザ系列でのみ初期のベータテストが可能でバグが多少存在しますが、スタイルシートの演算ロジックの完全な独立カプセル化を成し遂げるスペックです。
+	- **コード例**：
+		```css
+		/* ネイティブCSS標準の内部で実装される仮想カスタム演算関数の構造例 */
+		@function --fluid-calc(--min-px, --max-px) {
+			result: clamp(var(--min-px), 6vw, var(--max-px));
+		}
+
+		.responsive-grid-box {
+			margin: --fluid-calc(12px, 40px);
+		}
+		```
+	- **なぜこの記事が有益なのか**：重くて付加的な前処理コンパイル環境を段階的に取り除き、ブラウザがランタイムのビューポートや可変条件に合わせてスタイル関数を高速評価するため、ネイティブ環境中心の次世代拡張型マークアップデザインシステムの構築を夢見る開発チームにとって核心的なガイドになります。
+
+---
+#### 見逃せないコンテンツ
+- **[How To Make Your Design System AI-Ready](https://www.smashingmagazine.com/2026/06/how-make-design-system-ai-ready/)**（出典：*Smashing Newsletter #562*）
+	+ 要約：社内のコアとなるデザインシステムコンポーネントユニットをAIエージェントやコーディングボットが正確に把握し、正しく呼び出しおよび自動組み立てができるように構造的な土台を整え、メタデータ化して機械学習フレンドリーなデザインアーキテクチャへと改善する戦略的な指針を盛り込んでいます。
+- **[You Probably Shouldn’t Be Annotating Focus Order](https://ericwbailey.design/published/you-probably-shouldnt-be-annotating-focus-order/)**（出典：*Frontend Focus #745*）
+	+ 要約：Figmaのようなデザイン環境でウェブスクリーンリーダーのユーザーに配慮するという名目のもと、無理にフォーカス順序（Focus Order）の注釈を強迫観念的に明示するより前に、標準のマークアップレイアウトと順次読み込みフロー（Reading Order）さえ淡々と遵守すればブラウザのエンジンがこれを完全に解決するという本質を想起させます。
+---
+
+## 4. ✨ アイデア
+- **[Design And AI Workflows](https://yummy-design-sprint.notion.site/32762791470980f79c59f4580d377f3f?v=32762791470980f495ac000c95dece67)**（出典：*Smashing Newsletter #562*）
+	![Design Workflows 画像](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/5670b53c-e701-060f-89bb-31d341cf07d3.png)
+	- **特徴**：Carmen Rincón氏が実務の現場で有用に直接使用しながらビルドアップした大規模なClaude AIプロンプトスキル、複雑なワークフローの展開方式、精巧な初期のプロジェクトセットアップガイドを惜しみなく集大成した高品格なNotionパブリックリポジトリです。このリポジトリ内には、単なるテキストプロンプティングを超えて実務のUXリサーチ設計、UIワイヤーフレーム設計ガイドライン、UXコピーライティングガイドおよびデザイントークンパイプラインの実質的な実装原則と有用なAI専門用語辞典まで体系的に整列されており、ウェブデザインクリエイターたちに創造的で実用的なインスピレーションを付与します。
+- **[performative-ui](https://vorpus.github.io/performativeUI/)**（出典：*React Status #478*）
+	![performative-ui 画像](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ik3o5cphjgwepp8vokto.jpg)
+	- **特徴**：最近シリコンバレー陣営の数多くのAI技術スタートアップウェブサイトが採用している定型化されたデザイントレンドをウィットを交えて皮肉る、興味深い風刺目的のReactコンポーネントセットです。「我が社の現在の投資ファンディングラウンドがどれほど爆発的に超過達成されたか」を対外的に誇示するための難解なASCIIアート装飾、複雑に連結されて回る仮想マシンネットワークノードマップの背景レイアウトなど、トレンディなスタートアップUIのクリシェたちを手軽に埋め込めるようにジョークの形で実装して大きな人気を集めています。
+
+## 5. ⚡️ ミニノート
+- **[Announcing Angular v22](https://blog.angular.dev/)**（出典：*JavaScript Weekly #789*）
+	+ 要約：Google開発チームの歴史あるエンタープライズフロントエンドフレームワークAngular v22の正式版が電撃発足しました。今回のメジャーリリースでは、長らく実験的な仕様に留まりフィードバックを集めていた次世代の反応型構造である「Signal Forms」、組み込み型のコンパクトなデプロイウェブアクセシビリティ規格「Angular Aria」、そして非同期環境でもデータの整合性を維持する安定的な「非同期反応性（Asynchronous Reactivity）」モデルが、ついにプロダクション安定化（Stable）グレードへと完全に格上げされました。
+- **[Accessible UX Research, Now Shipping](https://www.smashingmagazine.com/printed-books/accessible-ux-research/)**（出典：*Smashing Newsletter #562*）
+	+ 要約：Smashing単行本スーツの最新新刊であるMichele A. Williams博士の著書*Accessible UX Research*が、全世界で印刷本および電子書籍のダウンロード出荷を開始しました。この本は、身体的・認知的多様性を持つ実際の障害者および社会的弱者のテスター被験者たちをリサーチ段階で排除せず、正しく募集（Recruiting）して偏りのない深層ファシリテーションインタビューを安全に遂行し、信頼のインタラクションを形成する実務のインクルーシブリサーチ方法論を幅広く網羅しています。
+- **[Nominations for the Tiny Awards are now open](https://tinyawards.net/)**（出典：*Frontend Focus #745*）
+	+ 要約：過度に商業化され巨大化された現代のインターネットビジネスウェブ生態系に反旗を翻し、インターネット初期の感性の純粋で詩的かつユニークな価値を込めて職人精神で直接ビルドしたインディアーティストたちのミニマルなクリエイティブウェブサイトを選定・応援する「Tiny Awards」の2026年度グローバルオープン推薦受付が開始されました。
+- **[I Wish Deno Would Keep Doing What It Does Best](https://javascriptweekly.com/link/186284/web)**（出典：*JavaScript Weekly #789*）
+	+ 要約：ある熱心なDeno生態系のコアユーザーの鋭い寄稿文で、最近DenoコアチームがNode.js生態系の複雑多端なnpmレガシーモジュールとの100%完全な互換性に過度なリソースと執着を注ぎ込んでいる行歩を一針します。Deno本来の独歩的な競争力でありピュアな強みであった「ゼロ構成ベースのウェブ標準ブラウザAPIの純粋追求」、「別途の構成のない単一の完璧なバイナリランタイム体験」という本質的なエッジを失ってはならないという、重みのあるコミュニティ内部の自省の声を収録しました。
+- **[What Bun Can Tell Us About AI and Open Source](https://javascriptweekly.com/link/186286/web)**（出典：*JavaScript Weekly #789*）
+	+ 要約：公信力のあるグローバル技術分析機関RedMonkのStephen O'Grady氏が寄稿したオピニオンで、高パフォーマンスなJavaScriptランタイムの競争をリードするBunパッケージの最新のコア内部コードベースのうち、莫大な分量が人間の開発者ではなく高度化された大規模なAI自動生成ツールを経て蓄積・維持されている独特なインフラ現象を指摘します。システムの最も精密な下部構造を担当する核心エンジンコードがマシンラーニングコードに高速で置き換わる時、果たして未来のメンテナンスの持続可能性とオープンソースガバナンスの道徳的な連帯が安全に営まれるか、深遠な質問を投げかけています。
+
+## 6. 🎉 アップデート
+- **[Safari 27 Beta](https://webkit.org/blog/17967/news-from-wwdc26-webkit-in-safari-27-beta/)**（出典：*Frontend Focus #745*）
+	+ アップデート：AppleがWWDC26を通じて、iPhone、iPad、Mac製品群に搭載される次世代Safari 27ベータ版を電撃ローンチしました。ブラウザ史上初めて完全なモダンスタイルのチューニングが解放されたネイティブな`<select>`フォームコンポーネントの搭載、画面遷移の摩擦を抑制してくれる精密なスクロールアンカリング仕様、最上位レベルの`await`実行パフォーマンスを大幅に引き上げた業界標準規格「ESM Loader rewrite」およびWebAssembly環境内のJSプロミス統合技術（JSPI）のサポートを網羅し、計58個の大規模なフロントエンド仕様を搭載しました。
+- **[Electron 43 Beta](https://github.com/electron/electron/releases/tag/v43.0.0-beta.1)**（出典：*JavaScript Weekly #789*）
+	+ アップデート：デスクトップアプリビルダーであるElectron 43バージョンが正式にベータトラックに定着しました。メインプロセスの駆動速度を革新するために、組み込み型Node.jsスタートアップ内部スナップショット構造を正式連動し、全体のソースバンドルを高パフォーマンスなV8エンジンバイナリバイトコードスナップショットの形でキャッシュ処理してコンパイル最適化を全面断行し、デスクトップデーモンのローディングタイムを画期的に圧縮しました。
+- **[TanStack Table v9 Beta](https://javascriptweekly.com/link/186276/web)**（出典：*JavaScript Weekly #789*）
+	+ アップデート：大規模なデータ分析グリッドレイアウト構築の業界標準である高パフォーマンスな無状態ヘッドレス表エンジンTanStack Tableのv9ベータビルドが公開されました。既存のフレームワークサポート系列（React, Vue, Angular, Svelte, Solid）を超えて、モダンなウェブコンポーネント標準であるLitフレームワークのバインディング規格まで完全に公認受容しました。
+- **[React Native 0.86.0](https://github.com/react/react-native/releases/tag/v0.86.0)**（出典：*React Status #478*）
+	+ アップデート：クロスプラットフォームモバイルアーキテクチャであるReact Nativeのv0.86.0安定化ビルドが公式リリースされました。あわせて、Windowsデスクトップエコシステムの拡張を精密に支える**React Native Windows v0.83**最新リリースも並行して分配布されました。
+- **[Node-RED 5.0](https://javascriptweekly.com/link/186277/web)**（出典：*JavaScript Weekly #789*）
+	+ アップデート：様々なハードウェアおよび外部ウェブサービスAPIパイプラインの制御をビジュアルなドラッグ＆ドロップノードで設計するNode.jsベースの看板ローコードワークフローソリューションNode-REDが、正式にv5.0の大型メジャーの高地を踏みました。
+- **[MUI (Material UI) 9.1.0](https://github.com/mui/material-ui/releases/tag/v9.1.0)**（出典：*React Status #478*）
+	+ アップデート：Google MaterialガイドベースのUIライブラリであるMUI v9.1.0バージョンが配布されました。オペレーティングシステムおよびデバイス環境でアニメーションによる視覚疲労を訴える敏感なユーザーのシステム環境設定状態を追跡し、画面のモーションをコンポーネント単位で自ら制御・減衰してくれる標準の`prefers-reduced-motion`メディアレイアウト互換機能をコア段に内蔵しました。
+- **[Rolldown 1.1](https://javascriptweekly.com/link/186278/web)**（出典：*JavaScript Weekly #789*）
+	+ アップデート：Cloudflareの強力なコアファミリーに編入された、次世代Rustベースの超高速エコビルドエンジンRolldownのv1.1最新安定化バグパッチ仕様がアップデートされました。
+- **[pnpm 11.5](https://javascriptweekly.com/link/186279/web)**（出典：*JavaScript Weekly #789*）
+	+ アップデート：高速なコンテンツアドレス指定型のノードモジュール依存性制御でハードディスク容量を極限まで節約してくれるパッケージ管理ツールpnpmのv11.5マイナービルドが公開され、リンク分析の最適化を断行しました。
+
+## ✍️ おわりに
+今週届けられた一連のニュースは、フロントエンド生態系がついに成熟期に入り、本質的な安定性を追求していることを如実に示しています。VoidZeroのCloudflare合流とReact Foundationの独立は、オープンソースツールが商業的価値と永続性の間でどのように自立すべきかについての明確なビジョンを提示しています。また、SPAフレームワークの過度な複雑さを取り除き、HTML-First構造を選択してビジネス指標を改善した事例や、CSS内蔵関数およびセマンティックヘッダー制御のようなネイティブ仕様の発展は、私たちがツールの華やかさに埋没してウェブの本質を忘れていたのではないかと振り返らせてくれます。技術の流行を無批判に従うより、作ろうとするサービスの特徴に合致する最も単純で標準に近い設計を熾烈に悩むことが、素晴らしいソフトウェアを作る近道であることを改めて確信させてくれます。
+
+#### 出典
+- [JavaScript Weekly #789](https://javascriptweekly.com/issues/789)
+- [Frontend Focus #745](https://frontendfoc.us/issues/745)
+- [React Status #478](https://react.statuscode.com/issues/478)
+- [Smashing Newsletter #562](https://mailchi.mp/smashingmagazine/562-ai-skills-and-workflows-for-designers)

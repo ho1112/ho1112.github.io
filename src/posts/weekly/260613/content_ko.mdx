@@ -1,0 +1,172 @@
+---
+title: '🚀 2026-06 W2 #62'
+desc: VoidZero의 Cloudflare 피인수 및 React 재단 독립 거버넌스 소식, 대안적 웹 아키텍처 HTML-First 심층 분석, 네이티브 CSS @function 도입 트렌드 | 2026년 6월 2주차 주간 기술 뉴스레터
+date: 2026-06-13
+thumbnail: /posts/weekly/june.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 오픈소스 및 프론트엔드 도구 생태계의 대대적인 인프라 재편과 더불어, 실무 개발자와 디자이너를 관통하는 차세대 AI 워크플로우 솔루션이 뜨겁게 부상한 한 주였습니다. Vite 프레임워크를 이끌던 VoidZero의 Cloudflare 피인수 소식과 React Foundation의 완전한 독립 거버넌스 구축은 개발 생태계의 재정적 자립에 대한 이정표를 세웠습니다. 동시에, 화려한 복잡성에서 벗어나 웹 표준의 본질로 회귀하려는 'HTML-First' 아키텍처 성과가 주목받았습니다. 또한 단순한 코드 생성을 넘어 디자인 프레임워크, 기획, 그리고 UX 작성 영역까지 인공지능을 완벽히 동료로 임베딩하려는 유기적인 'AI 스킬셋' 최적화 가이드들이 대거 쏟아져 나와 한 단계 진화한 AI 협업 패러다임을 보여주었습니다.
+
+## 1. 🔍 심층 분석
+- **[VoidZero is Joining Cloudflare](https://javascriptweekly.com/link/186265/web)** (출처: *JavaScript Weekly #789*)
+  ![VoidZero 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hlyw3ywdgrgvmsgf7b8f.jpg)
+  - **배경**: Vite, Vitest, Rolldown, Oxc 등 자바스크립트 생태계의 차세대 빌드 및 개발 도구를 통합하기 위해 에반 유(Evan You)가 설립한 VoidZero가 오픈소스 지속 가능성과 비즈니스 모델 문제를 근본적으로 해결하고자 Cloudflare에 합류하기로 전격 발표했습니다.
+  - **핵심 기능**: 인수 이후에도 생태계 내 모든 프로젝트는 MIT 라이선스를 유지하며 독립적인 오픈소스로 영구 개발됩니다. 에반 유와 기존 팀이 프로젝트 방향성을 그대로 리드하며, Cloudflare 측은 이와 동시에 Vite 에코시스템 기여자와 유지 보수자들을 전폭 지원하기 위해 100만 달러 규모의 오픈소스 전용 펀드를 출범했습니다.
+  - **코드 예제**:
+    ```json
+    {
+      "project": "VoidZero Tools",
+      "status": "Under Cloudflare Partnership",
+      "license": "MIT",
+      "backing_fund_usd": 1000000
+    }
+    ```
+  - **실무 적용**: 프론트엔드 빌드 레이어로 Vite와 향후 고도화될 Rolldown 파이프라인을 고려 중이던 대규모 엔터프라이즈 팀은, 거대 인프라 기업의 확실한 재정적 보증 덕분에 기술 부채나 도구 중단 리스크 없이 시스템을 안심하고 마이그레이션할 수 있습니다.
+  - **주의사항**: 거대 플랫폼 하에 결속된 만큼 장기적으로 자사 엣지(Edge) 인프라나 Cloudflare Workers 생태계 쪽에 종속적이거나 편향된 기능 최적화가 가속화되지 않는지 커뮤니티 차원의 면밀한 트래킹이 동반되어야 합니다.
+- **[The React Foundation's New Website and...](https://github.com/react/react)** (출처: *React Status #478*)
+  - **배경**: 영리 기업인 Meta의 산하를 떠나 지난 2월 Linux Foundation의 중립 거버넌스로 완벽하게 소유권이 이관된 'React Foundation'이 조직 독립 후 구체적인 인프라 정비를 마무리 짓고 있습니다.
+  - **핵심 기능**: 재단의 독립적 비전과 생태계 로드맵을 투명하게 수렴하는 공식 웹사이트가 신규 개설되었습니다. 또한 오픈소스 이정표의 일환으로 기존에 사용되던 GitHub 저장소 공식 경로인 `facebook/react`가 완벽하게 상징적인 `react/react` 네임스페이스 주소로 자동 포워딩 처리되도록 변경되었습니다.
+  - **코드 예제**:
+    ```bash
+    # 로컬 저장소의 원격 주소를 재단 공식 네임스페이스로 업데이트
+    git remote set-url origin [https://github.com/react/react](https://github.com/react/react)
+    # 기존 facebook/react 주소를 호출하더라도 깃허브 자체 리다이렉션이 지원됩니다.
+    ```
+  - **실무 적용**: 단일 기업의 이해관계나 비즈니스 축소 의사결정에 흔들리지 않는 공적 재단 성격의 거버넌스가 정착됨으로써, React 기반 제품을 영위하는 수많은 글로벌 기업의 롱텀 신뢰도가 극대화되었습니다.
+  - **주의사항**: 이전 주소의 자동 포워딩이 안정적으로 보장되나 사내 CI/CD 배포 파이프라인 스크립트나 코드베이스 내에 명시된 하드코딩 저장소 참조 링크를 `react/react`로 사전에 리팩토링하는 작업이 권장됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Stripping Ads from the Kindle's React Native Homepage](https://sighery.com/posts/patching-kindle-homepage/)** (출처: *React Status #478*)
+  + 요약: 아마존 킨들 기기의 홈 UI 스택이 최근 React Native로 마이그레이션되었다는 소식을 기반으로, 내부 Hermes 바이트코드 레벨까지 접근해 광고 추적 레이어를 직접 역공학 패치하는 기상천외한 리버스 엔지니어링 과정을 기술합니다.
+- **[The Best Loading States Are No Loading States](https://jjenzz.com/best-loading-states-are-no-loading-states/)** (출처: *React Status #478*)
+  + 요약: 사용자 경험을 분절시키는 스켈레톤 화면 노출 남용을 지양하고, 브라우저가 화면을 넘어가기 전 데이터를 선제 로딩(Preload)한 다음 준비된 인터페이스를 즉각 스위칭하는 전환 트렌드를 제안합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+
+- **[React Libraries and Tools for 2026](https://www.robinwieruch.de/react-libraries/)** (출처: *React Status #478*)
+  ![React Libraries 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/zaju0v6agbfn2fezvpdc.jpg)
+  - **개요**: 매년 프론트엔드 엔지니어들에게 완벽한 기술 셋 길잡이가 되어주는 Robin Wieruch가 2026년 기준 React 에코시스템에서 검증된 최적의 라이브러리 추천 목록을 업데이트했습니다.
+  - **사용법**: 로빈의 가이드라인에 맞춰 최신 React 19 아키텍처에 맞는 모던 애플리케이션 빌더를 비롯해 최적화된 상태 관리, 폼 처리, 테스팅 인프라 레이어를 주관적으로 선택 결합합니다.
+  - **실전 팁**: 단순 유행에 휩쓸리는 라이브러리를 배제하고 접근성, 성능, 호환성 검증을 거친 오피니언을 제시하므로, 2026년 신규 엔터프라이즈 프론트엔드 프로젝트 아키텍처를 셋업할 때 시행착오를 대폭 단축할 수 있는 완벽한 레퍼런스 가이드입니다.
+- **[visx 4.0: Airbnb's Visualization Primitives for React](https://visx.airbnb.tech/)** (출처: *React Status #478*)
+  ![visx 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/c9w5mttaisyanqcj3n5c.jpg)
+  - **개요**: "React에 익숙하다면 누구나 완벽한 커스텀 차트를 직접 구현할 수 있다"는 모토의 Airbnb 시각화 도구 프리미티브 수트인 visx가 드디어 최신 React 19 규격을 완전히 지원하는 v4.0으로 도약했습니다.
+  - **사용법**:
+    ```jsx
+    import React from 'react';
+    import { Bar } from '@visx/shape';
+    import { Group } from '@visx/group';
+
+    // React 19 컨텍스트에서 가벼운 로우 레벨 드로잉 프리미티브 조립
+    const MiniChart = ({ x, y, w, h }) => (
+      <Group>
+        <Bar x={x} y={y} width={w} height={h} fill="#f06529" />
+      </Group>
+    );
+    ```
+  - **실전 팁**: 비대하고 내부 커스텀이 난해한 타사 통짜형 올인원 차트 툴과 다르게 필요한 컴포넌트 덩어리만 미니멀하게 가져와 조립할 수 있으며, 기존 v3 마이그레이션 전용 브레이킹 체인지 업그레이드 문서를 별도로 상세 수록해 지원합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Claude Code For Designers](https://nervegna.substack.com/p/claude-code-for-designers-a-practical)** (출처: *Smashing Newsletter #562*)
+  + 요약: 디자이너가 Claude Code 클라이언트를 실무에 도입해 AI 특유의 뻔하고 정형화된 결과물에서 벗어나, 디자이너 본인의 디테일한 비주얼 지향점을 그대로 녹여낸 프로덕션 품질의 코드와 앱을 도출해내는 점진적인 AI 실무 연동 가이드입니다.
+- **[PDFSlick 4.0: View and Interact with PDF Documents](https://pdfslick.dev/)** (출처: *React Status #478*)
+  + 요약: 안정적인 PDF.js 기반으로 주석 처리, 텍스트 하이라이트 및 대용량 멀티 문서 렌더링 핸들링을 완벽하게 처리하며, React 전용 바인딩을 기본적으로 탑재해 출시된 최신 고기능성 PDF 뷰어 솔루션입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[How Building an HTML-First Site Doubled Our Users Overnight](https://mohkohn.co.uk/writing/html-first/)** (출처: *Frontend Focus #745*)
+  - **배경**: 막대한 비용을 소모하며 복잡한 대형 React SPA(싱글 페이지 애플리케이션)로 화면 전환 신청 흐름을 설계하다 실패를 거듭했던 공공 서비스 성격의 한 개발팀이 모든 아키텍처를 원점으로 돌린 사례입니다.
+  - **핵심 인사이트**: 복잡한 클라이언트 런타임 프레임워크를 과감히 제거하는 대신 백엔드 저장 기반의 정직한 HTML 표준 Form 요소 중심으로 전체 마크업을 'HTML-First'로 재전환했습니다. 자바스크립트는 단순한 UI 폴리필이나 필수 인터랙션 보조에만 최소한으로 사용하자, 복잡한 스크립트 실행 지연과 무거운 번들이 사라지며 실제 최종 신청 완료율 지표가 하룻밤 사이에 정확히 2배로 급등하는 쾌거를 이루었습니다.
+  - **코드 예시**:
+    ```html
+    <form action="/api/v1/submit-flow" method="POST">
+      <label for="core-data">기본 정보 입력</label>
+      <input type="text" id="core-data" name="payload" required />
+      <button type="submit">안정적인 네이티브 폼 전송</button>
+    </form>
+    ```
+  - **왜 이 글이 유익한지**: 최신 유행 프레임워크 맹신주의에 빠진 현대 프론트엔드 생태계에 큰 시사점을 줍니다. 비즈니스의 최종 전환 목적을 달성하는 데 있어 가장 중요한 것은 복잡한 상태 관리가 아니라, 접근성이 보장된 가장 단순하고 견고한 웹의 본질적 기본기임을 데이터로 증명합니다.
+- **[Context-Aware Headings in HTML](https://www.matuzo.at/blog/2026/content-aware-headings)** (출처: *Frontend Focus #745*)
+  - **배경**: 여러 컴포넌트가 계층 구조로 마구 중첩되는 모던 웹 개발 환경에서, 웹 접근성 규격을 준수하기 위해 내부에 선언된 헤딩 태그(`<h1>` ~ `<h6>`)의 계층 심도를 수동으로 하나하나 제어하는 것은 무척 성가시고 실수가 잦은 영역이었습니다.
+  - **핵심 인사이트**: 웹 표준 명세로 새롭게 논의 및 실험 중인 동적 `headingoffset` 속성을 깊이 있게 조명합니다. 특정 컴포넌트 루트나 섹션 그룹에 오프셋 정수 값을 지정하면, 하위에 선언된 모든 가상 헤더 요소들의 의미론적 깊이가 브라우저 단에서 동적으로 자동 계산 및 마이그레이션 처리되는 명세입니다.
+  - **코드 예시**:
+    ```html
+    <div headingoffset="3">
+      <h2>컴포넌트에 하드코딩된 h2 명세</h2>
+      </div>
+    ```
+  - **왜 이 글이 유익한지**: 컴포넌트 주도 개발 환경에 발맞춰 진화하는 최신 HTML 웹 표준의 본질적인 변화를 읽을 수 있어, 인위적인 자바스크립트 우회 코드 작성 없이 시맨틱 웹 구조를 안전하게 설계하려는 시니어 개발자들에게 아주 유용합니다.
+- **[The Fundamentals and Dev Experience of CSS @function](https://frontendmasters.com/blog/the-fundamentals-and-dev-experience-of-css-function/)** (출처: *Frontend Focus #745*)
+  - **배경**: 기존 스타일시트 내에서 유연한 크기 연산이나 특정 복잡한 타이포그래피 계산 수식을 정밀하게 평가하려면 필연적으로 Sass, Less 같은 무거운 전처리기나 컴파일러 플러그인을 도입해야만 했습니다.
+  - **핵심 인사이트**: 빌드 타임이 아닌 런타임 단계에서 브라우저가 직접 커스텀 함수를 실행하고 레이아웃 값을 동적 반환받도록 처리해주는 `@function` 네이티브 스타일 명세의 근본 작동 원리를 파헤칩니다. 현재는 크로미움(Chromium) 기반 브라우저 계열에서만 초창기 베타 테스트가 가능해 버그가 다소 존재하지만, 스타일시트 연산 로직의 완전한 독립 캡슐화를 이뤄낼 스펙입니다.
+  - **코드 예시**:
+    ```css
+    /* 네이티브 CSS 표준 내부에서 구현되는 가상 커스텀 연산 함수 구조 예시 */
+    @function --fluid-calc(--min-px, --max-px) {
+      result: clamp(var(--min-px), 6vw, var(--max-px));
+    }
+
+    .responsive-grid-box {
+      margin: --fluid-calc(12px, 40px);
+    }
+    ```
+  - **왜 이 글이 유익한지**: 무겁고 부가적인 전처리 컴파일 환경을 점진적으로 걷어내고 브라우저가 런타임 뷰포트나 가변 조건에 발맞춰 스타일 함수를 고속 평가하므로, 네이티브 환경 중심의 차세대 확장형 마크업 디자인 시스템 구축을 꿈꾸는 개발팀에게 핵심 가이드가 됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How To Make Your Design System AI-Ready](https://www.smashingmagazine.com/2026/06/how-make-design-system-ai-ready/)** (출처: *Smashing Newsletter #562*)
+  + 요약: 사내의 핵심 디자인 시스템 컴포넌트 유닛들을 AI 에이전트와 코딩 봇들이 정확히 파악하고 올바르게 호출 및 자동 조립할 수 있도록 구조적 토대를 닦고, 메타데이터화하여 머신러닝 친화적인 디자인 아키텍처로 개선하는 전략적 지침을 담고 있습니다.
+- **[You Probably Shouldn’t Be Annotating Focus Order](https://ericwbailey.design/published/you-probably-shouldnt-be-annotating-focus-order/)** (출처: *Frontend Focus #745*)
+  + 요약: 피그마 같은 디자인 환경에서 웹 스크린 리더 사용자를 배려한다는 명목 하에 무리하게 초점 순서(Focus Order) 주석을 강박적으로 명시하기에 앞서, 표준 마크업 레이아웃과 순차적 읽기 흐름(Reading Order)만 담백하게 준수하면 브라우저 가 엔진이 이를 완벽하게 해결한다는 본질을 상기시킵니다.
+---
+
+## 4. ✨ 아이디어
+- **[Design And AI Workflows](https://yummy-design-sprint.notion.site/32762791470980f79c59f4580d377f3f?v=32762791470980f495ac000c95dece67)** (출처: *Smashing Newsletter #562*)
+  ![Design Workflows 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/5670b53c-e701-060f-89bb-31d341cf07d3.png)
+  - **특징**: 카르멘 린콘이 실무 현업에서 유용하게 직접 사용하며 빌드업한 대규모 Claude AI 프롬프트 스킬, 복잡한 워크플로우 전개 방식, 정교한 초창기 프로젝트 셋업 가이드를 아낌없이 집대성한 고품격 노션 퍼블릭 저장소입니다. 이 저장소 내에는 단순 텍스트 프롬프팅을 넘어 실무 UX 리서치 설계, UI 와이어프레임 설계 가이드라인, UX 카피라이팅 가이드 및 디자인 토큰 파이프라인의 실질적 구현 원칙과 유용한 AI 전문 용어 사전까지 체계적으로 정렬되어 있어 웹 디자인 크리에이터들에게 창의적이고 실용적인 영감을 부여합니다.
+- **[performative-ui](https://vorpus.github.io/performativeUI/)** (출처: *React Status #478*)
+  ![performative-ui 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ik3o5cphjgwepp8vokto.jpg)
+  - **특징**: 최근 실리콘밸리 진영의 수많은 AI 기술 스타트업 웹사이트들이 채택하고 있는 정형화된 디자인 트렌드를 위트 있게 비꼬는 흥미로운 풍자 목적의 React 컴포넌트 세트입니다. "우리 회사의 현재 투자 펀딩 라운드가 얼마나 폭발적으로 초과 달성되었는가"를 대외적으로 위시하기 위한 난해한 ASCII 영웅 아트 장식, 복잡하게 연결되어 돌아가는 가상 머신 네트워크 노드 맵 배경 레이아웃 등 트렌디한 스타트업 UI 클리셰들을 손쉽게 임베딩할 수 있도록 조크 형태로 구현해 큰 인기를 끌고 있습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Announcing Angular v22](https://blog.angular.dev/)** (출처: *JavaScript Weekly #789*)
+  + 요약: 구글 개발팀의 유서 깊은 엔터프라이즈 프론트엔드 프레임워크 Angular v22 정식 버전이 전격 출범했습니다. 이번 메이저 릴리스에서는 오랫동안 실험적 명세에 머무르며 피드백을 모으던 차세대 반응형 구조인 'Signal Forms', 내장형 콤팩트 배포 웹 접근성 규격 'Angular Aria', 그리고 비동기 환경에서도 데이터 무결성을 유지하는 안정적인 '비동기 반응성(Asynchronous Reactivity)' 모델이 드디어 프로덕션 안정화(Stable) 등급으로 완벽하게 격상되었습니다.
+- **[Accessible UX Research, Now Shipping](https://www.smashingmagazine.com/printed-books/accessible-ux-research/)** (출처: *Smashing Newsletter #562*)
+  + 요약: Smashing 단행본 수트의 최신 신간인 Michele A. Williams 박사의 저서 *Accessible UX Research*가 전 세계 인쇄본 및 e북 다운로드 출고를 개시했습니다. 이 책은 신체적·인지적 다양성을 지닌 실제 장애인 및 취약 계층 테스터 피험자들을 리서치 단계에서 배제하지 않고, 올바르게 모집(Recruiting)하여 편향 없는 심층 Facilitation 인터뷰를 안전하게 수행하고 신뢰 인터랙션을 형성하는 실무 인클루시브 리서치 방법론을 폭넓게 총망라합니다.
+- **[Nominations for the Tiny Awards are now open](https://tinyawards.net/)** (출처: *Frontend Focus #745*)
+  + 요약: 지나치게 상업화되고 거대화된 현대 인터넷 비즈니스 웹 생태계에 반기를 들며, 인터넷 초창기 감성의 순수하고 시적이며 유니크한 가치를 담아 장인정신으로 직접 빌드한 인디 아티스트들의 미니멀 크리에이티브 웹사이트들을 선정 및 응원하는 'Tiny Awards'의 2026년도 글로벌 오픈 추천 접수가 개시되었습니다.
+- **[I Wish Deno Would Keep Doing What It Does Best](https://javascriptweekly.com/link/186284/web)** (출처: *JavaScript Weekly #789*)
+  + 요약: 한 열성적인 디노 생태계 핵심 유저의 날카로운 기고문으로, 최근 Deno 코어 팀이 Node.js 생태계의 복잡다단한 npm 레거시 모듈과의 100% 완벽 호환성에 지나치게 자원과 집착을 쏟아붓는 행보를 일침합니다. Deno 본연의 독보적 경쟁력이자 퓨어한 강점이었던 '제로 구성 기반의 웹 표준 브라우저 API 순수 추구', '별도 구성 없는 단일 완벽 바이너리 런타임 경험'이라는 본질적 엣지를 잃지 말아야 한다는 묵직한 커뮤니티 내부의 자성 목소리를 수록했습니다.
+- **[What Bun Can Tell Us About AI and Open Source](https://javascriptweekly.com/link/186286/web)** (출처: *JavaScript Weekly #789*)
+  + 요약: 공신력 있는 글로벌 기술 분석 기관 RedMonk의 Stephen O'Grady가 기고한 오피니언으로, 고성능 자바스크립트 런타임 경쟁을 이끄는 Bun 패키지의 최신 코어 내부 코드베이스 중 막대한 분량이 인간 개발자가 아닌 고도화된 대규모 AI 자동화 생성 도구를 거쳐 축적 및 유지되고 있는 독특한 인프라 현상을 짚어냅니다. 시스템의 가장 정밀한 하부 구조를 담당하는 핵심 엔진 코드가 머신 러닝 코드로 고속 교체될 때, 과연 미래의 유지 보수 지속 가능성과 오픈소스 거버넌스의 도덕적 연대가 안전하게 영위될 수 있을지 심오한 질문을 던집니다.
+
+## 6. 🎉 릴리스
+- **[Safari 27 Beta](https://webkit.org/blog/17967/news-from-wwdc26-webkit-in-safari-27-beta/)** (출처: *Frontend Focus #745*)
+  + 업데이트: 애플이 WWDC26을 통해 아이폰, 아이패드, 맥 제품군에 탑재될 차세대 Safari 27 베타 버전을 전격 론칭했습니다. 브라우저 역사상 최초로 완전한 모던 스타일 튜닝이 개방된 네이티브 `<select>` 폼 컴포넌트 탑재, 화면 전송 마찰을 억제해주는 정밀한 스크롤 앵커링 스펙, 최상위 레벨 `await` 실행 성능을 대폭 끌어올린 업계 표준 규격 'ESM Loader rewrite' 및 웹어셈블리 환경 내 JS 프로미스 통합 기술(JSPI) 지원을 망라하여 총 58개의 대형 프론트엔드 명세를 탑재했습니다.
+- **[Electron 43 Beta](https://github.com/electron/electron/releases/tag/v43.0.0-beta.1)** (출처: *JavaScript Weekly #789*)
+  + 업데이트: 데스크톱 앱 빌더인 Electron 43 버전이 정식 베타 트랙에 안착했습니다. 메인 프로세스 구동 속도를 혁신하기 위해 내장형 Node.js 스타트업 내부 스냅샷 구조를 정식 연동했으며, 전체 소스 번들을 고성능 V8 엔진 바이너리 바이트코드 스냅샷 형태로 캐싱 처리하고 컴파일 최적화를 전면 단행해 데스크톱 데몬 로딩 타임을 획기적으로 압축했습니다.
+- **[TanStack Table v9 Beta](https://javascriptweekly.com/link/186276/web)** (출처: *JavaScript Weekly #789*)
+  + 업데이트: 대규모 데이터 분석 그리드 레이아웃 구축의 업계 표준인 고성능 무상태 헤드리스 표 엔진 TanStack Table의 v9 베타 빌드가 공개되었습니다. 기존 프레임워크 지원 계열(React, Vue, Angular, Svelte, Solid)을 넘어 모던 웹 컴포넌트 표준인 Lit 프레임워크 바인딩 규격까지 완벽하게 공인 수렴했습니다.
+- **[React Native 0.86.0](https://github.com/react/react-native/releases/tag/v0.86.0)** (출처: *React Status #478*)
+  + 업데이트: 크로스 플랫폼 모바일 아키텍처인 React Native의 v0.86.0 안정화 빌드가 공식 출시되었습니다. 아울러 윈도우 데스크톱 에코시스템 확장을 정밀하게 지탱하는 **React Native Windows v0.83** 최신 릴리스도 나란히 병행 배포되었습니다.
+- **[Node-RED 5.0](https://javascriptweekly.com/link/186277/web)** (출처: *JavaScript Weekly #789*)
+  + 업데이트: 다양한 하드웨어 및 외부 웹 서비스 API 파이프라인 제어를 비주얼 드래그 앤 드롭 노드로 설계하는 Node.js 기반의 간판 로우코드 워크플로우 솔루션 Node-RED가 정식 v5.0 대형 메이저 고지를 밟았습니다.
+- **[MUI (Material UI) 9.1.0](https://github.com/mui/material-ui/releases/tag/v9.1.0)** (출처: *React Status #478*)
+  + 업데이트: 구글 머티리얼 가이드 기반 UI 라이브러리인 MUI v9.1.0 버전이 배포되었습니다. 운영체제 및 디바이스 환경에서 애니메이션 시각 피로를 호소하는 민감성 유저들의 시스템 환경설정 상태를 추적해 화면 모션을 컴포넌트 단위에서 스스로 제어 및 감쇠해주는 표준 `prefers-reduced-motion` 미디어 레이아웃 호환 기능을 코어 단에 내장했습니다.
+- **[Rolldown 1.1](https://javascriptweekly.com/link/186278/web)** (출처: *JavaScript Weekly #789*)
+  + 업데이트: Cloudflare의 강력한 코어 패밀리로 편입된 차세대 Rust 기반의 초고속 에코 빌드 엔진 Rolldown의 v1.1 최신 안정화 버그 패치 명세가 업데이트되었습니다.
+- **[pnpm 11.5](https://javascriptweekly.com/link/186279/web)** (출처: *JavaScript Weekly #789*)
+  + 업데이트: 고속의 콘텐츠 주소 지정형 노드 모듈 의존성 제어로 하드디스크 용량을 극도로 아껴주는 패키지 관리 도구 pnpm의 v11.5 마이너 빌드가 공개되어 링크 분석 최적화를 단행했습니다.
+
+## ✍️ 마치며
+이번 주 전해진 일련의 소식들은 프론트엔드 생태계가 마침내 성숙기에 접어들며 본질적인 안정성을 추구하고 있음을 여실히 보여줍니다. VoidZero의 Cloudflare 합류와 React Foundation의 독립은 오픈소스 도구가 상업적 가치와 영속성 사이에서 어떻게 자립해야 하는가에 대한 명확한 비전을 제시하고 있습니다. 또한 SPA 프레임워크의 과도한 복잡성을 걷어내고 HTML-First 구조를 선택해 비즈니스 지표를 개선한 사례나, CSS 내장 함수 및 시맨틱 헤딩 제어 같은 네이티브 명세의 발전은 우리가 도구의 화려함에 매몰되어 웹의 본질을 잊고 있었던 것은 아닌지 되돌아보게 만듭니다. 기술의 유행을 무비판적으로 따르기보다, 만들고자 하는 서비스의 특성에 부합하는 가장 단순하고 표준에 가까운 설계를 치열하게 고민하는 것이 훌륭한 소프트웨어를 만드는 지름길임을 다시금 확신하게 됩니다.
+
+#### 출처
+- [JavaScript Weekly #789](https://javascriptweekly.com/issues/789)
+- [Frontend Focus #745](https://frontendfoc.us/issues/745)
+- [React Status #478](https://react.statuscode.com/issues/478)
+- [Smashing Newsletter #562](https://mailchi.mp/smashingmagazine/562-ai-skills-and-workflows-for-designers)
