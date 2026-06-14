@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Newspaper,
 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRef } from 'react'
 import { Post } from '@/config/types'
@@ -86,19 +87,32 @@ const WeeklyStrip = ({ language, weeklyPosts }: WeeklyStripProps) => {
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-chomin to-chomin-dark group-hover:h-1 transition-all duration-200" />
             </div>
 
-            <div className="p-3.5">
-              {/* 날짜 */}
-              <div className="flex items-center gap-1 mb-2 text-[10px] text-gray-400">
-                <CalendarDays className="w-3 h-3" />
-                <span>
-                  {post.month}/{post.day}
-                </span>
+            <div className="flex">
+              {/* 썸네일 */}
+              <div className="relative shrink-0 w-[56px] aspect-square">
+                <Image
+                  src={post.thumbnail}
+                  alt={`thumbnail for ${post.title}`}
+                  fill
+                  sizes="56px"
+                  className="object-cover"
+                />
               </div>
 
-              {/* 제목 */}
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug group-hover:text-chomin transition-colors duration-200">
-                {post.title}
-              </h3>
+              <div className="flex-1 min-w-0 p-3">
+                {/* 날짜 */}
+                <div className="flex items-center gap-1 mb-1.5 text-[10px] text-gray-400">
+                  <CalendarDays className="w-3 h-3" />
+                  <span>
+                    {post.month}/{post.day}
+                  </span>
+                </div>
+
+                {/* 제목 */}
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug group-hover:text-chomin transition-colors duration-200">
+                  {post.title}
+                </h3>
+              </div>
             </div>
           </Link>
         ))}
