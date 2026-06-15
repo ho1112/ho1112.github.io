@@ -294,54 +294,67 @@ export default function ResumePage({
           </p>
           <p className="mt-3 text-sm font-medium">
             {t(
-              'WEB 소설 투고 페이지 마이그레이션 및 신규 개발',
-              'WEB小説投稿ページのマイグレーション・新規開発'
+              'WEB 소설 투고 페이지(연 1회 개최) 마이그레이션 및 신규 개발 — 2회분 담당',
+              'WEB小説投稿ページ（年1回開催）マイグレーションおよび新規開発 — 2回分担当'
             )}
           </p>
-          <p className="mt-2 text-xs text-muted-foreground italic">
-            {t(
-              '※ 사내에 Next.js 경험자가 없는 상태에서 아키텍처 설계부터 단독으로 담당',
-              '※ 社内にNext.js経験者がいない状態でアーキテクチャ設計から単独で担当'
-            )}
+          <p className="mt-1 text-xs text-muted-foreground">
+            Designer:1, Engineer:1
           </p>
+          <ul className="mt-3 text-sm text-muted-foreground list-disc list-inside space-y-1">
+            <li>
+              {t(
+                '전임 담당자 퇴사로 전년도(Vue) 코드 유지보수 불가 상태. 사내에 Next.js 경험자가 없어 Next.js를 주력으로 다루는 프론트엔드 엔지니어로서 참가',
+                '前任担当者の退職で前年度（Vue）コードの保守が不可能な状態。社内にNext.js経験者がおらず、Next.jsを主力とするフロントエンドエンジニアとして参画'
+              )}
+            </li>
+            <li>
+              {t(
+                '프로젝트 생성부터 아키텍처 설계·구현까지 단독 담당',
+                'プロジェクト作成からアーキテクチャ設計・実装まで単独で担当'
+              )}
+            </li>
+          </ul>
 
           <ChallengeTable
             language={language}
             items={[
               {
-                challenge: t(
-                  '전년도(Vue) 응모 페이지의 성능·DX 문제 + 사내 Next.js 도입 요구',
-                  '前年度（Vue）応募ページのパフォーマンス・DX課題＋社内Next.js導入要求'
+                challenge: (
+                  <>
+                    <strong>{language === 'ko' ? 'Vue→Next.js 전면 재구축' : 'Vue→Next.js全面再構築'}</strong>
+                    <br />
+                    {language === 'ko'
+                      ? '매년 비주얼이 바뀌고 시즌별로도 테마가 변경되는 이벤트 페이지의 특성상 확장 가능한 아키텍처 설계가 필요했다.'
+                      : '毎年ビジュアルが変わり、シーズンごとにテーマも変更されるイベントページの特性上、拡張可能なアーキテクチャ設計が必要だった。'}
+                  </>
                 ),
-                result: t(
-                  'Next.js App Router로 마이그레이션. 연도별 아카이브 분리 구조(contents/{year}/)를 설계하여 매년 비주얼이 바뀌어도 공통 폼·store가 유지되는 아키텍처를 구축. 이후 사내 다른 프로젝트의 참조 코드로 활용',
-                  'Next.js App Routerへマイグレーション。年度別アーカイブ分離構造（contents/{year}/）を設計し、毎年ビジュアルが変わっても共通フォーム・storeが維持されるアーキテクチャを構築。以後、社内の他プロジェクトの参照コードとして活用'
-                ),
+                result: language === 'ko'
+                  ? 'Next.js App Router로 프로젝트를 처음부터 구축. "바뀌는 것(연도별 비주얼)"과 "안 바뀌는 것(폼·store·API)"을 분리하는 구조를 설계. 연도별 아카이브 분리(contents/{year}/)와 yearManager를 통한 자동 분기로 새 연도 추가 시 공통 로직을 건드리지 않는 확장 가능한 아키텍처를 구축. 연도 내 시즌별 4회 테마·이미지 변경에도 대응'
+                  : 'Next.js App Routerでプロジェクトをゼロから構築。「変わるもの（年度別ビジュアル）」と「変わらないもの（フォーム・store・API）」を分離する構造を設計。年度別アーカイブ分離（contents/{year}/）とyearManagerによる自動分岐で、新年度追加時に共通ロジックを触らない拡張可能なアーキテクチャを構築。年度内シーズン別4回のテーマ・イメージ変更にも対応',
               },
               {
-                challenge: t(
-                  '시즌별 캠페인 페이지의 동적 디자인 요구 + 모바일 대응 미흡',
-                  'シーズン別キャンペーンページの動的デザイン要求＋モバイル対応不足'
+                challenge: (
+                  <>
+                    <strong>{language === 'ko' ? '메인 비주얼 애니메이션 구현' : 'メインビジュアルアニメーション実装'}</strong>
+                    <br />
+                    {language === 'ko'
+                      ? '2024년도는 디자인이 완전히 변경되어 메인 비주얼에 동적 애니메이션 연출과 스크롤 연동 제어가 요구되었다.'
+                      : '2024年度はデザインが完全に変更され、メインビジュアルに動的アニメーション演出とスクロール連動制御が求められた。'}
+                  </>
                 ),
-                result: t(
-                  'Intersection Observer API로 스크롤 연동 동적 디자인을 적용하고 반응형으로 모바일 UX를 개선',
-                  'Intersection Observer APIでスクロール連動の動的デザインを適用し、レスポンシブでモバイルUXを改善'
-                ),
-              },
-              {
-                challenge: t(
-                  '일본-한국 팀 간 커뮤니케이션 장벽',
-                  '日韓チーム間のコミュニケーション障壁'
-                ),
-                result: t(
-                  '양 팀 간 기술 연동 및 커뮤니케이션 브리지 역할을 수행',
-                  '両チーム間の技術連携およびコミュニケーションブリッジ役を担当'
-                ),
+                result: language === 'ko'
+                  ? '정지 이미지에 CSS 애니메이션으로 줌인 효과를 적용하고 2장의 캐릭터 이미지를 크로스페이드로 부드럽게 전환하는 루프 연출을 구현. Intersection Observer API로 뷰포트 이탈 시 애니메이션을 일시정지하고 재진입 시 마지막 상태에서 이어서 재생하도록 제어'
+                  : '静止画像にCSSアニメーションでズームイン効果を適用し、2枚のキャラクター画像をクロスフェードで滑らかに切り替えるループ演出を実装。Intersection Observer APIでビューポート離脱時にアニメーションを一時停止し、再進入時に最後の状態から再生を再開するよう制御',
               },
             ]}
           />
+          <ul className="mt-3 list-disc list-inside text-sm text-muted-foreground space-y-1">
+            <li>{t('output: \'export\'로 정적 빌드하여 CDN 서빙 구조를 채택', 'output: \'export\'で静的ビルドし、CDNサーブ構成を採用')}</li>
+            <li>{t('일본-한국 팀 간 기술 연동 및 커뮤니케이션 브리지 역할을 수행', '日韓チーム間の技術連携およびコミュニケーションブリッジ役を担当')}</li>
+          </ul>
 
-          <TechTags items={['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'SCSS', 'Redux Toolkit']} />
+          <TechTags items={['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'SCSS', 'Redux Toolkit', 'Xcode Simulator', 'Figma']} />
         </div>
 
         {/* ========== skyticket ========== */}
