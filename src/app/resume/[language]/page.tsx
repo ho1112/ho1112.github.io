@@ -155,26 +155,26 @@ export default function ResumePage({
           <p className="mt-1 text-xs text-muted-foreground">
             PO:1, PM:2, Designer:3, Engineer:8
           </p>
-          <ul className="mt-3 text-sm text-muted-foreground list-disc list-inside space-y-1">
-            <li>
-              {t(
+          <div className="mt-3 text-sm text-foreground space-y-1.5">
+            <p>
+              ・ {t(
                 'Laravel 중심 팀에서 유일한 프론트엔드 전문 엔지니어로 참여. 프론트엔드 관련 의사결정(아키텍처 설계, 기술 선정, 코드 컨벤션)을 주도',
                 'Laravel中心のチームで唯一のフロントエンド専任エンジニアとして参画。フロントエンド関連の意思決定（アーキテクチャ設計、技術選定、コードコンベンション）を主導'
               )}
-            </li>
-            <li>
-              {t(
+            </p>
+            <p>
+              ・ {t(
                 'toB(기업용 관리 화면)와 toC(학생용 서비스) 양쪽 프론트엔드를 동시 담당',
                 'toB（企業向け管理画面）とtoC（学生向けサービス）双方のフロントエンドを同時担当'
               )}
-            </li>
-            <li>
-              {t(
+            </p>
+            <p>
+              ・ {t(
                 '프론트엔드 업무 범위를 넘어 GraphQL 쿼리 작성 및 Laravel 백엔드 수정도 병행',
                 'フロントエンドの業務範囲を超え、GraphQLクエリ作成やLaravelバックエンド修正も並行して対応'
               )}
-            </li>
-          </ul>
+            </p>
+          </div>
 
           <ChallengeTable
             language={language}
@@ -301,20 +301,20 @@ export default function ResumePage({
           <p className="mt-1 text-xs text-muted-foreground">
             Designer:1, Engineer:1
           </p>
-          <ul className="mt-3 text-sm text-muted-foreground list-disc list-inside space-y-1">
-            <li>
-              {t(
+          <div className="mt-3 text-sm text-foreground space-y-1.5">
+            <p>
+              ・ {t(
                 '전임 담당자 퇴사로 전년도(Vue) 코드 유지보수 불가 상태. 사내에 Next.js 경험자가 없어 Next.js를 주력으로 다루는 프론트엔드 엔지니어로서 참가',
                 '前任担当者の退職で前年度（Vue）コードの保守が不可能な状態。社内にNext.js経験者がおらず、Next.jsを主力とするフロントエンドエンジニアとして参画'
               )}
-            </li>
-            <li>
-              {t(
+            </p>
+            <p>
+              ・ {t(
                 '프로젝트 생성부터 아키텍처 설계·구현까지 단독 담당',
                 'プロジェクト作成からアーキテクチャ設計・実装まで単独で担当'
               )}
-            </li>
-          </ul>
+            </p>
+          </div>
 
           <ChallengeTable
             language={language}
@@ -370,8 +370,8 @@ export default function ResumePage({
           </p>
           <p className="mt-3 text-sm font-medium">
             {t(
-              'MAU 700만 규모의 호텔·투어·항공권 예약 시스템 개발·운용',
-              'MAU700万規模のホテル・ツアー・航空券予約システム開発・運用'
+              'MAU 700만 규모의 호텔·투어·항공권 예약 시스템 및 캠페인 페이지 개발·운용',
+              'MAU700万規模のホテル・ツアー・航空券予約システムおよびキャンペーンページ開発・運用'
             )}
           </p>
 
@@ -379,20 +379,9 @@ export default function ResumePage({
           <h4 className="mt-6 text-sm font-bold">
             {t('◉ 호텔팀', '◉ ホテルチーム')}
           </h4>
-          <ul className="mt-2 text-sm text-muted-foreground list-disc list-inside space-y-1">
-            <li>
-              {t(
-                '호텔·투어·항공권 예약 시스템 및 캠페인 페이지 개발, 트러블 대응',
-                'ホテル・ツアー・航空券予約システムおよびキャンペーンページ開発、トラブル対応'
-              )}
-            </li>
-            <li>
-              {t(
-                'E2E 테스트(Cypress) 도입으로 디그레 체크 및 테스트 시간 단축',
-                'E2Eテスト（Cypress）導入でデグレチェックおよびテスト時間短縮'
-              )}
-            </li>
-          </ul>
+          <p className="mt-1 text-xs text-muted-foreground">
+            PdM:1, Designer:2, Engineer:8 (FE:4, BE:4)
+          </p>
 
           <ChallengeTable
             language={language}
@@ -403,63 +392,73 @@ export default function ResumePage({
                     <strong>{language === 'ko' ? 'Web Components 글로벌 네비게이션' : 'Web Componentsグローバルナビゲーション'}</strong>
                     <br />
                     {language === 'ko'
-                      ? 'PHP(항공), Vue(렌터카), React(호텔) 등 이기종 기술 스택으로 구성된 서비스들의 상단 네비게이션이 각각 별도로 구현되어 있어, 디자인이나 링크를 변경할 때마다 모든 서비스 담당자가 개별 대응해야 하는 상황이었다.'
+                      ? 'PHP(항공) Vue(렌터카) React(호텔) 등 이기종 기술 스택으로 구성된 서비스들의 상단 네비게이션이 각각 별도로 구현되어 있어 디자인이나 링크를 변경할 때마다 모든 서비스 담당자가 개별 대응해야 하는 상황이었다.'
                       : 'PHP（航空）、Vue（レンタカー）、React（ホテル）など異なる技術スタックで構成されたサービスの上部ナビゲーションがそれぞれ別途実装されており、デザインやリンクを変更するたびに全サービス担当者が個別対応する必要があった。'}
                   </>
                 ),
                 result: language === 'ko'
-                  ? 'Web Components(Lit)를 활용해 기술 스택에 의존하지 않는 통합 글로벌 네비게이션을 설계·개발. Shadow DOM으로 캡슐화하여 기존 서비스의 스타일 충돌 없이 도입. 프로젝트 시작부터 유지보수까지 단독 담당'
-                  : 'Web Components（Lit）を活用し技術スタックに依存しない統合グローバルナビゲーションを設計・開発。Shadow DOMでカプセル化し既存サービスのスタイル衝突なく導入。プロジェクト開始から保守まで単独担当',
+                  ? 'Web Components(Lit)를 활용하여 기술 스택에 의존하지 않는 통합 글로벌 네비게이션을 설계 및 개발했다. Shadow DOM으로 캡슐화하여 기존 서비스의 스타일과 충돌하는 일 없이 부드럽게 도입할 수 있었다. 또한 PC, 태블릿, 스마트폰 등 디바이스 환경별로 컴포넌트를 분기 처리하고 각각에 맞는 반응형 대응을 실시했다. 해당 기능은 프로젝트 기획 단계부터 유지보수까지 단독으로 담당하여 마무리했다.'
+                  : 'Web Components（Lit）を活用し、技術スタックに依存しない統合グローバルナビゲーションを設計・開発した。Shadow DOMによるカプセル化を行うことで、既存サービスのスタイルと衝突することなくスムーズに導入できた。また、PC・タブレット・スマートフォンの各デバイス環境に合わせてコンポーネントを分岐させ、最適なレスポンシブ対応を実施した。本機能はプロジェクトの立ち上げから保守まで単独で担当した。',
               },
               {
                 challenge: (
                   <>
-                    <strong>{language === 'ko' ? 'SEO 리포지토리 통합' : 'SEOリポジトリ統合'}</strong>
+                    <strong>{language === 'ko' ? '호텔·SEO 리포지토리 통합' : 'ホテル・SEOリポジトリ統合'}</strong>
                     <br />
                     {language === 'ko'
-                      ? 'SEO 전용 페이지가 별도 리포지토리로 분리 운영되고 있어, 호텔 API·리스트·가격 등의 로직이 본체와 중복되고 있었다. URL 패턴 관리도 복잡화되어 있어 유지보수 비용이 높아지고 있었다.'
-                      : 'SEO専用ページが別リポジトリで分離運用されており、ホテルAPI・リスト・価格などのロジックが本体と重複していた。URLパターン管理も複雑化し、保守コストが増大していた。'}
+                      ? '호텔 예약 앱 본체와 SEO 전용 페이지가 별도 리포지토리로 분리 운영되어 호텔 API와 컴포넌트 등 핵심 로직이 중복 관리되고 있었다. 또한 새로운 패턴의 SEO 페이지가 추가될 때마다 인프라 팀에 라우팅 설정을 의뢰해야 하는 구조적인 병목 현상이 있어 신속한 개발에 지장이 있었다.'
+                      : 'ホテル予約アプリ本体とSEO専用ページが別リポジトリで分離運用されており、ホテルAPIやコンポーネントなどのコアロジックが重複管理されていた。また、新規パターンのSEOページが追加される度にインフラチームへルーティング設定を依頼しなければならない構造的なボトルネックがあり、迅速な開発の妨げになっていた。'}
                   </>
                 ),
                 result: language === 'ko'
-                  ? '통합을 제안·주도. 컴포넌트 경계를 재정의(organisms = 앱 플로우 / uiParts = 콘텐츠·URL 기반)하고, URL·SSR·중복 API 정리를 실행하여 단일 리포지토리로 통합'
-                  : '統合を提案・主導。コンポーネント境界を再定義（organisms＝アプリフロー / uiParts＝コンテンツ・URL基盤）し、URL・SSR・重複API整理を実行して単一リポジトリに統合',
-              },
-              {
-                challenge: (
-                  <>
-                    <strong>{language === 'ko' ? '호텔 기능 개발' : 'ホテル機能開発'}</strong>
-                    <br />
-                    {language === 'ko'
-                      ? 'MAU 700만 규모의 호텔 예약 서비스에서 검색 기능의 확장 요구와 해외 호텔 대응이 필요했다. 또한 CSR 기반으로 구현되어 있어 초기 표시 속도가 느리고 SEO 성능에 한계가 있었다.'
-                      : 'MAU700万規模のホテル予約サービスで検索機能の拡張要求と海外ホテル対応が必要だった。またCSR基盤で実装されており初期表示速度が遅く、SEOパフォーマンスに限界があった。'}
-                  </>
-                ),
-                result: language === 'ko'
-                  ? '성인/어린이별 검색, 단체 예약용 다중 객실 검색 기능 추가. 해외 호텔 검색 메인 페이지 신규 작성. CSR→SSR/SSG(ISR) 전환으로 초기 표시 속도 및 SEO 성능 향상. Google Tag Manager와 dataLayer 구축으로 웹 분석 시스템 구현'
-                  : '大人・子供別検索、団体予約用複数部屋検索機能追加。海外ホテル検索メインページ新規作成。CSR→SSR/SSG（ISR）変更で初期表示速度およびSEOパフォーマンス向上。Google Tag ManagerとdataLayer構築でWeb分析システム実装',
+                  ? '단일 리포지토리 통합을 직접 제안하고 작업을 주도했다. 통합을 통해 라우팅을 프론트엔드 단에서 일괄 제어하게 되어, 인프라 팀 의존 없이 신속하게 페이지를 확장할 수 있게 되었다. 동시에 컴포넌트 경계를 재정의(organisms/uiParts)하여 중복되던 API와 로직을 성공적으로 일원화하고 유지보수 효율을 크게 향상시켰다.'
+                  : '単一リポジトリへの統合を自ら提案し、移行作業を主導した。統合によりルーティングをフロントエンドで一括制御できるようになり、インフラチームに依存することなく迅速なページ拡張が可能になった。同時にコンポーネント境界（organisms / uiParts）を再定義し、重複していたAPIやロジックの一元化に成功、保守効率を大幅に向上させた。',
               },
             ]}
           />
+
+          <ul className="mt-4 text-sm text-muted-foreground list-disc list-inside space-y-1">
+            <li>
+              {t(
+                '성인/어린이별 검색 및 단체 예약용 다중 객실 검색 기능, 해외 호텔 검색 메인 페이지 등 신규 기능 개발',
+                '大人・子供別検索および団体予約用複数部屋検索機能、海外ホテル検索メインページなど新規機能開発'
+              )}
+            </li>
+            <li>
+              {t(
+                'Google Tag Manager와 dataLayer 구축을 통한 웹 분석 환경 세팅',
+                'Google Tag ManagerとdataLayer構築によるWeb分析環境の整備'
+              )}
+            </li>
+            <li>
+              {t(
+                'E2E 테스트(Cypress) 도입으로 디그레 체크 및 테스트 시간 단축',
+                'E2Eテスト（Cypress）導入でデグレチェックおよびテスト時間短縮'
+              )}
+            </li>
+          </ul>
 
           {/* ── SEO対応チーム ── */}
           <h4 className="mt-8 text-sm font-bold">
             {t('◉ SEO 대응팀', '◉ SEO対応チーム')}
           </h4>
-          <ul className="mt-2 text-sm text-muted-foreground list-disc list-inside space-y-1">
-            <li>
-              {t(
+          <p className="mt-1 text-xs text-muted-foreground">
+            PdM:1, Engineer:2 (FE:2)
+          </p>
+          <div className="mt-2 text-sm text-foreground space-y-1.5">
+            <p>
+              ・ {t(
                 '메인 프론트엔드 엔지니어로서 SEO 개선 작업을 주도',
                 'メインフロントエンドエンジニアとしてSEO改善作業を主導'
               )}
-            </li>
-            <li>
-              {t(
-                '디렉터·외부 SEO 컨설턴트·디자이너·백엔드 엔지니어와 협업하여 SEO 전용 페이지 기획부터 구현까지 담당',
-                'ディレクター・外部SEOコンサルタント・デザイナー・バックエンドエンジニアと協業し、SEO専用ページの企画から実装まで担当'
+            </p>
+            <p>
+              ・ {t(
+                '1주일 단위 스프린트 환경에서 PdM·외부 SEO 컨설턴트 등과 긴밀히 협업하며, 매주 기획-구현-데모 사이클을 반복하는 애자일 개발 주도',
+                '1週間単位のスプリント環境下でPdM・外部SEOコンサルタント等と緊密に協業し、毎週の企画・実装・デモサイクルを反復するアジャイル開発を主導'
               )}
-            </li>
-          </ul>
+            </p>
+          </div>
 
           <ChallengeTable
             language={language}
@@ -470,13 +469,13 @@ export default function ResumePage({
                     <strong>{language === 'ko' ? 'Core Web Vitals 개선' : 'Core Web Vitals改善'}</strong>
                     <br />
                     {language === 'ko'
-                      ? 'Core Web Vitals 스코어가 "개선 필요(황색)"으로, UX 품질과 Google 검색 순위 양쪽에 부정적인 영향을 미치고 있었다. 이미지 최적화와 렌더링 성능 개선이 시급했다.'
+                      ? 'Core Web Vitals 스코어가 "개선 필요(황색)"으로 UX 품질과 Google 검색 순위 양쪽에 부정적인 영향을 미치고 있었다. 이미지 최적화와 렌더링 성능 개선이 시급했다.'
                       : 'Core Web Vitalsスコアが「改善が必要（黄色）」で、UX品質とGoogle検索順位の双方に悪影響を及ぼしていた。イメージ最適化とレンダリングパフォーマンス改善が急務だった。'}
                   </>
                 ),
                 result: language === 'ko'
-                  ? 'FCP/LCP/CLS/FID 개선 + 이미지 최적화를 실시하여 Lighthouse 스코어를 "양호(녹색)"으로 향상. 링크·메타데이터 설정과 canonical tag를 활용한 URL 정규화 구현'
-                  : 'FCP/LCP/CLS/FID改善＋イメージ最適化を実施し、Lighthouseスコアを「良好（緑色）」に向上。リンク・メタデータ設定とcanonical tagを活用したURL正規化実装',
+                  ? 'CDN을 활용한 이미지 리사이징 및 지연 로딩(Lazy Loading)을 도입하여 FCP, LCP, CLS, FID 지표를 전반적으로 개선했으며, Lighthouse 스코어를 "양호(녹색)" 단계까지 끌어올렸다. 또한 H태그 계층 구조 재정비, 구조화 마크업 및 canonical tag 적용 등 기술적 SEO를 완수하여 검색 엔진 친화적인 환경을 구축했다.'
+                  : 'CDNを活用した画像リサイジングおよび遅延読み込み（Lazy Loading）を導入し、FCP、LCP、CLS、FID指標を全般的に改善、Lighthouseスコアを「良好（緑色）」段階まで引き上げた。さらに、Hタグの階層構造の再整備、構造化マークアップおよびcanonical tagの適用など、テクニカルSEOを完遂し検索エンジンに優しい環境を構築した。',
               },
               {
                 challenge: (
@@ -484,16 +483,31 @@ export default function ResumePage({
                     <strong>{language === 'ko' ? '데이터 기반 SEO 페이지 대량 생성' : 'データ基盤SEOページ大量生成'}</strong>
                     <br />
                     {language === 'ko'
-                      ? '호텔·온천 등의 SEO 랜딩 페이지를 수동으로 작성하기에는 대상이 너무 방대했다. 디렉터·외부 SEO 컨설턴트와 협업하여 검색 유입을 강화할 테마 페이지가 필요했으나, 콘텐츠 데이터를 수집·가공하는 자동화 파이프라인이 없었다.'
-                      : 'ホテル・温泉などのSEOランディングページを手動で作成するには対象が膨大だった。ディレクター・外部SEOコンサルタントと協業して検索流入を強化するテーマページが必要だったが、コンテンツデータを収集・加工する自動化パイプラインがなかった。'}
+                      ? '온천, 기차역, 테마파크 주변의 호텔 추천 SEO 페이지를 대량 양산하고자 했으나, 사내 DB에는 관련 데이터가 전혀 없었다. PdM이 선정한 타겟 기초 자료를 바탕으로 페이지 생성을 자동화할 시스템적 해결책이 필요한 상황이었다.'
+                      : '温泉、駅、テーマパーク周辺のホテル推薦SEOページを大量生産したかったが、社内DBには関連データが全く存在しなかった。PdMが選定したターゲットの基礎資料を基に、ページ生成を自動化するシステム的な解決策が必要な状況だった。'}
                   </>
                 ),
                 result: language === 'ko'
-                  ? '스프레드시트에서 데이터를 추출하여 페이지를 자동 생성하는 시스템을 구축. 또한 2개의 외부 API(외부 리뷰 시스템 yotpo, Google BigQuery)에서 정보를 통합하여 SEO 페이지를 생성하는 파이프라인을 구현. 구조화 마크업·canonical tag·BreadCrumb도 함께 구현하여 검색 유입을 강화'
-                  : 'スプレッドシートからデータを抽出してページを自動生成するシステムを構築。また2つの外部API（外部レビューシステムyotpo、Google BigQuery）から情報を統合してSEOページを生成するパイプラインを実装。構造化マークアップ・canonical tag・BreadCrumbも合わせて実装し、検索流入を強化',
+                  ? 'PdM이 자료 조사용으로 작성하던 구글 스프레드시트를 프론트엔드의 데이터 소스로 직접 연동하는 방안을 제안했다. 스프레드시트의 타겟 좌표를 읽어와 API로 주변 인기 호텔과 어메니티 기반 FAQ를 자동 조합하는 파이프라인을 구축했다. 렌더링 부하를 고려해 SSG(ISR) 방식을 적용함으로써 성능 저하 없이 대량의 SEO 페이지 자동 생성에 성공했고, 오가닉 검색 유입을 크게 강화했다.'
+                  : 'PdMが資料調査用として作成していたGoogleスプレッドシートを、フロントエンドのデータソースとして直接連携させるアプローチを自ら提案した。スプレッドシートのターゲット座標を取得し、APIを用いて周辺の人気ホテルや設備情報に基づくFAQを自動で組み合わせるデータパイプラインを構築した。レンダリング負荷を考慮してSSG（ISR）方式を適用することで、パフォーマンスを落とさずに大量のSEOページの自動生成に成功し、オーガニック検索からの流入を大幅に強化した。',
               },
             ]}
           />
+
+          <ul className="mt-4 text-sm text-muted-foreground list-disc list-inside space-y-1">
+            <li>
+              {t(
+                '기존 CSR 기반 페이지를 SSR/SSG(ISR)로 전환하여 초기 로딩 속도 및 SEO 성능 향상',
+                '既存のCSR基盤ページをSSR/SSG（ISR）へ移行し、初期表示速度およびSEOパフォーマンスを向上'
+              )}
+            </li>
+            <li>
+              {t(
+                'PdM의 타겟 호텔 선정 및 거리 파악을 돕기 위해, 기존 지도 페이지를 개조하여 대상 호텔만 시각화해주는 사내용 지도 툴을 자체 제작하여 업무 효율 향상에 기여',
+                'PdMのターゲットホテル選定や距離把握を支援するため、既存の地図ページを改修し対象ホテルのみを視覚化する社内用地図ツールを独自に制作、業務効率向上に寄与'
+              )}
+            </li>
+          </ul>
 
           <TechTags items={['Next.js', 'React', 'TypeScript', 'Styled Components', 'Redux', 'Express', 'Web Components', 'Lit', 'Storybook', 'Cypress']} />
         </div>
@@ -518,24 +532,24 @@ export default function ResumePage({
         {/* ========== Java 풀스택 프리랜서 ========== */}
         <div className="mb-12 rounded border border-border/50 p-5">
           <h3 className="text-base font-bold mb-4">
-            {t('☕ Java 풀스택 프로젝트', '☕ Java フルスタックプロジェクト')}
+            {t('☕ Java 풀스택（업무위탁・2019/08〜2020/11）', '☕ Java フルスタック（業務委託・2019/08〜2020/11）')}
           </h3>
 
           <div className="mb-6">
             <h4 className="text-sm font-semibold">
-              {t('주식 투자 정보 검색 서비스（2020/01〜2020/11）', '株式投資情報検索サービス（2020/01〜2020/11）')}
+              {t('도쿄증권거래소(東証) 주식 투자 정보 검색 서비스（2020/01〜2020/11）', '東京証券取引所（東証）株式投資情報検索サービス（2020/01〜2020/11）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('증권 업계', '証券業界')}</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
-              <li>{t('메인 SE로 참가, 기술 스택 설계 및 환경 구축', 'メインSEとして参加、技術スタック設計および環境構築')}</li>
-              <li>{t('주식 종목 검색, 기간별 분석 결과 기능 개발', '株式銘柄検索、期間別分析結果機能開発')}</li>
+              <li>{t('메인 SE로 참가, 기술 스택 설계, 환경 구축 및 데모 버전 개발', 'メインSEとして参加、技術スタック設計、環境構築、デモバージョン開発')}</li>
+              <li>{t('주식 종목 검색, 기간별 분석 결과 및 클라이언트 화면 기능 개발', '株式銘柄検索、期間別分析結果およびクライアント画面機能開発')}</li>
             </ul>
-            <TechTags items={['Java', 'Spring Boot', 'PostgreSQL', 'MyBatis', 'JavaScript', 'jQuery']} />
+            <TechTags items={['Java', 'Spring Boot', 'PostgreSQL', 'MyBatis', 'JavaScript', 'jQuery', 'Thymeleaf']} />
           </div>
 
           <div>
             <h4 className="text-sm font-semibold">
-              {t('물류・재고관리 시스템（2019/08〜2019/12）', '物流・在庫管理システム（2019/08〜2019/12）')}
+              {t('KONAMI 물류・재고관리 시스템（2019/08〜2019/12）', 'KONAMI 物流・在庫管理システム（2019/08〜2019/12）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('물류 업계', '物流業界')}</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
@@ -560,11 +574,12 @@ export default function ResumePage({
 
           <div className="mb-6">
             <h4 className="text-sm font-semibold">
-              {t('전기 제어·하네스 설계 소프트웨어（2019/01〜2019/06）', '電気制御・ハーネス設計ソフトウェア（2019/01〜2019/06）')}
+              {t('図研 전기 제어·하네스 설계 소프트웨어（2019/01〜2019/06）', '図研 電気制御・ハーネス設計ソフトウェア（2019/01〜2019/06）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('제조 업계', '製造業界')}</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>{t('Windows 네이티브 데스크탑 프로그램 개발', '電気・ハーネス設計用Windowsネイティブデスクトッププログラム開発')}</li>
+              <li>{t('복수의 서버 시스템(Java, C#) 연동 및 다양한 버전의 네이티브 시스템 대응 개발', '複数のサーバーサイドシステムを連携して開発（Java, C#）、違うバージョンのネイティブシステムに対応')}</li>
               <li>{t('고객별 버전 커스터마이징 및 해외 문의 대응', '顧客別バージョンカスタマイズ保守、海外問い合わせ対応')}</li>
             </ul>
             <TechTags items={['Java', 'C#', 'Oracle', 'JavaScript']} />
@@ -583,7 +598,7 @@ export default function ResumePage({
 
           <div>
             <h4 className="text-sm font-semibold">
-              {t('보험 서비스 간 통합 인증 시스템 SSO（2018/04〜2018/08）', '保険サービス間の統合認証システム SSO（2018/04〜2018/08）')}
+              {t('第一生命 보험 서비스 간 통합 인증 시스템 SSO（2018/04〜2018/08）', '第一生命 保険サービス間の統合認証システム SSO（2018/04〜2018/08）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('보험 업계', '保険業界')}</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
