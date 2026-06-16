@@ -113,16 +113,12 @@ export default function ResumePage({
         <h2 className="mb-4 text-lg font-bold">{t('📝 직무요약', '📝 職務要約')}</h2>
         <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
           {t(
-            `2018년 株式会社GROP SC에 입사하여 Java 기반의 웹 서비스 및 네이티브 프로그램 개발을 담당. 이후 프리랜서로 전향하여 Java 풀스택 엔지니어로 증권·물류 업계의 시스템 개발에 참여.
+            `2018년부터 웹 엔지니어로서 개발에 종사하며, 약 8년의 실무 경험을 보유하고 있습니다. 직근 5년간은 React/Next.js를 활용한 프론트엔드 개발에 특화하여, 대규모 트래픽의 toC 서비스 UI/UX 개선 및 toB 업무 시스템 개발 등 다양한 프로젝트에서 설계·구현·운용을 담당해 왔습니다.
 
-2020년 12월부터 프론트엔드 엔지니어로 전향. 웹 게임, MAU 700만 규모의 여행 플랫폼, 웹소설 플랫폼을 거쳐 현재 인재 스카우트 서비스의 toB·toC 시스템 개발을 담당.
+특히 프론트엔드 전문가가 부재하거나 기술 부채가 쌓인 환경에서, 현장의 과제를 스스로 발견하고 아키텍처 설계, 기술 선정, DX 개선을 자발적으로 제안·주도한 경험이 있습니다. Core Web Vitals 최적화를 통한 SEO 개선 실적이 있으며, 기획·디자인 단계에서부터 PdM이나 디자이너와 밀접하게 연계하여 프로덕트 관점에서 최적의 기술적 해결책을 도출하는 것을 강점으로 하고 있습니다.`,
+            `2018年よりWebエンジニアとして開発に従事し、約8年の実務経験を有しています。直近5年間はReact/Next.jsを用いたフロントエンド開発に特化し、大規模トラフィックを持つtoCサービスのUI/UX改善や、toB向けの業務システム開発など、多様なプロジェクトにおいて設計・実装・運用を担当してきました。
 
-프론트엔드 전문가가 부재하거나 기술 부채가 쌓인 환경에서 아키텍처 정비, DX 개선, 테스트 자동화를 주도. E2E 테스트 도입으로 기존 15분 수동 테스트를 2분으로 단축하고, Sentry 에러 모니터링을 통해 주간 에러 건수를 94% 절감(1,065건→60건)한 경험 있음.`,
-            `2018年に株式会社GROP SCに入社し、JavaベースのWebサービスおよびネイティブプログラム開発を担当。その後フリーランスに転向し、Javaフルスタックエンジニアとして証券・物流業界のシステム開発に参画。
-
-2020年12月よりフロントエンドエンジニアに転向。Webゲーム、MAU700万規模の旅行プラットフォーム、Webノベルプラットフォームを経て、現在は人材スカウトサービスのtoB・toCシステム開発を担当。
-
-フロントエンド専門家が不在または技術負債が蓄積した環境において、アーキテクチャ整備、DX改善、テスト自動化を主導。E2Eテスト導入により従来15分の手動テストを2分に短縮し、Sentryエラーモニタリングを通じて週次エラー件数を94%削減（1,065件→60件）した経験あり。`
+特にフロントエンド専門家が不在または技術負債が蓄積した環境において、現場の課題を自ら発見し、アーキテクチャ設計、技術選定、DX改善を自発的に提案・主導した経験があります。Core Web Vitalsの最適化を通じたSEO改善の実績があり、企画・デザイン段階からPdMやデザイナーと密接に連携し、プロダクト視点で最適な技術的解決策を導き出すことを強みとしています。`
           )}
         </p>
       </section>
@@ -156,6 +152,12 @@ export default function ResumePage({
             PdM:1, Designer:3, Engineer:8
           </p>
           <div className="mt-3 text-sm text-foreground space-y-1.5">
+            <p>
+              ・ {t(
+                '리리스 후 약 2년이 경과한 프로덕트에 참가',
+                'リリースから約2年が経過したプロダクトに参画'
+              )}
+            </p>
             <p>
               ・ {t(
                 'Laravel 중심 팀에서 프론트엔드 전문 엔지니어로 참여. 프론트엔드 관련 의사결정(아키텍처 설계, 기술 선정, 코드 컨벤션)을 주도',
@@ -375,8 +377,8 @@ export default function ResumePage({
           </p>
           <p className="mt-3 text-sm font-medium">
             {t(
-              'MAU 700만 규모의 호텔·투어·항공권 예약 시스템 및 캠페인 페이지 개발·운용',
-              'MAU700万規模のホテル・ツアー・航空券予約システムおよびキャンペーンページ開発・運用'
+              'MAU 700만 규모의 호텔·투어·항공권 예약 시스템 개발 및 SEO 최적화',
+              'MAU700万規模のホテル・ツアー・航空券予約システム開発およびSEO最適化'
             )}
           </p>
 
@@ -639,7 +641,7 @@ export default function ResumePage({
               { category: t('스타일링', 'スタイリング'), skills: 'Tailwind CSS, SCSS, Styled Components' },
               { category: t('테스팅', 'テスト'), skills: 'Playwright, Cypress, Storybook, Jest' },
               { category: 'DB', skills: 'PostgreSQL, MongoDB, Oracle, Supabase' },
-              { category: t('인프라・도구', 'インフラ・ツール'), skills: 'Docker, AWS, Firebase, Git, Figma' },
+              { category: t('인프라・도구', 'インフラ・ツール'), skills: 'Docker, GCP, Git, Figma' },
             ].map((row, i) => (
               <tr key={i}>
                 <td className="border border-border/60 px-3 py-2 font-medium">{row.category}</td>
