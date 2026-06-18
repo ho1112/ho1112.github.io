@@ -366,7 +366,7 @@ export default function ResumePage({
             <li>{t('일본-한국 팀 간 기술 연동 및 커뮤니케이션 브리지 역할을 수행', '日韓チーム間の技術連携およびコミュニケーションブリッジ役を担当')}</li>
           </ul>
 
-          <TechTags items={['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'SCSS', 'Redux Toolkit', 'Xcode Simulator', 'Figma']} />
+          <TechTags items={['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'SCSS', 'REST API', 'Redux Toolkit', 'Xcode Simulator', 'Figma']} />
         </div>
 
         {/* ========== skyticket ========== */}
@@ -521,7 +521,7 @@ export default function ResumePage({
             </li>
           </ul>
 
-          <TechTags items={['Next.js', 'React', 'TypeScript', 'Styled Components', 'Redux', 'Express', 'Web Components', 'Lit', 'Storybook', 'Cypress']} />
+          <TechTags items={['Next.js', 'React', 'TypeScript', 'Styled Components', 'REST API', 'Redux', 'Express', 'Web Components', 'Lit', 'Storybook', 'Cypress']} />
         </div>
 
         {/* ========== Web Game ========== */}
@@ -535,10 +535,13 @@ export default function ResumePage({
           <p className="mt-1 text-sm text-muted-foreground">
             {t('웹 게임 업계', 'Webゲーム業界')}
           </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            PM:1, Engineer:3
+          </p>
           <ul className="mt-3 list-disc list-inside text-sm text-muted-foreground space-y-1">
             <li>{t('레거시 코드 리팩토링 및 서비스 리뉴얼 대응', 'レガシーコード最新化と既存の不具合修正を担当し、システムのリニューアルに対応')}</li>
           </ul>
-          <TechTags items={['JavaScript', 'Node.js', 'Pixi.js']} />
+          <TechTags items={['JavaScript', 'Node.js', 'Pixi.js', 'Mocha']} />
         </div>
 
         {/* ========== Java 풀스택 프리랜서 ========== */}
@@ -552,6 +555,7 @@ export default function ResumePage({
               {t('도쿄증권거래소(東証) 주식 투자 정보 검색 서비스（2020/01〜2020/11）', '東京証券取引所（東証）株式投資情報検索サービス（2020/01〜2020/11）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('증권 업계', '証券業界')}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">PM:1, Engineer:2</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>{t('메인 SE로 참가, 기술 스택 설계, 환경 구축 및 데모 버전 개발', 'メインSEとして参加、技術スタック設計、環境構築、デモバージョン開発')}</li>
               <li>{t('주식 종목 검색, 기간별 분석 결과 및 클라이언트 화면 기능 개발', '株式銘柄検索、期間別分析結果およびクライアント画面機能開発')}</li>
@@ -564,6 +568,7 @@ export default function ResumePage({
               {t('KONAMI 물류・재고관리 시스템（2019/08〜2019/12）', 'KONAMI 物流・在庫管理システム（2019/08〜2019/12）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('물류 업계', '物流業界')}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">PM:1, Engineer:3</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>{t('소비세 증세(8%→10%) 대응 기반 시스템 수정', '消費税増税（8%→10%）に対応して基盤システム修正')}</li>
               <li>{t('품목·종별 재고관리, 집계 시스템, CSV/Excel 출력 기능 개발', '品目・種別別在庫管理、集計システム、CSV/Excel出力機能開発')}</li>
@@ -589,6 +594,7 @@ export default function ResumePage({
               {t('図研 전기 제어·하네스 설계 소프트웨어（2019/01〜2019/06）', '図研 電気制御・ハーネス設計ソフトウェア（2019/01〜2019/06）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('제조 업계', '製造業界')}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">PM:1, Engineer:8</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>{t('Windows 네이티브 데스크탑 프로그램 개발', '電気・ハーネス設計用Windowsネイティブデスクトッププログラム開発')}</li>
               <li>{t('복수의 서버 시스템(Java, C#) 연동 및 다양한 버전의 네이티브 시스템 대응 개발', '複数のサーバーサイドシステムを連携して開発（Java, C#）、違うバージョンのネイティブシステムに対応')}</li>
@@ -602,6 +608,7 @@ export default function ResumePage({
               {t('부품 정보 검색 시스템（2018/09〜2018/12）', '部品情報検索システム（2018/09〜2018/12）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('제조 업계', '製造業界')}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">PM:1, Engineer:1</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>{t('사내 부품 등록·검색 화면 개발 및 테스트 케이스 작성', '社内部品登録・検索画面開発、テストケース作成')}</li>
             </ul>
@@ -613,7 +620,9 @@ export default function ResumePage({
               {t('第一生命 보험 서비스 간 통합 인증 시스템 SSO（2018/04〜2018/08）', '第一生命 保険サービス間の統合認証システム SSO（2018/04〜2018/08）')}
             </h4>
             <p className="text-xs text-muted-foreground mt-0.5">{t('보험 업계', '保険業界')}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">PM:1, Engineer:3</p>
             <ul className="mt-2 list-disc list-inside text-sm text-muted-foreground space-y-1">
+              <li>{t('사내용 싱글 사인온 시스템 개발', '社内向けのシングルサインオンシステムの開発')}</li>
               <li>{t('기존 서비스와 신규 서비스 통합, 레거시 코드 최신화', '既存サービスと新規サービス統合、レガシーコード最新化')}</li>
             </ul>
             <TechTags items={['Java', 'JavaScript', 'DB2']} />
@@ -644,7 +653,7 @@ export default function ResumePage({
               { category: t('언어', '言語'), skills: 'TypeScript, JavaScript, Java, HTML, CSS, GraphQL' },
               { category: t('프레임워크・라이브러리', 'フレームワーク・ライブラリ'), skills: 'React, Next.js, Vue.js, Node.js, Spring Boot, Redux, Apollo Client, jQuery' },
               { category: t('스타일링', 'スタイリング'), skills: 'Tailwind CSS, SCSS, Styled Components' },
-              { category: t('테스팅', 'テスト'), skills: 'Playwright, Cypress, Storybook, Jest' },
+              { category: t('테스팅', 'テスト'), skills: 'Playwright, Cypress, Storybook, Jest, Mocha' },
               { category: 'DB', skills: 'PostgreSQL, MongoDB, Oracle, Supabase' },
               { category: t('인프라・도구', 'インフラ・ツール'), skills: 'Docker, GCP, Git, Bun, Figma' },
             ].map((row, i) => (
