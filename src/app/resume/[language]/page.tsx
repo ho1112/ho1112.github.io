@@ -103,6 +103,11 @@ export default function ResumePage({
           <a href="https://www.linkedin.com/in/lee-hoyeon/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
             <IconLinkedin className="h-5 w-5" />
           </a>
+          <a href="mailto:carrien1112@gmail.com" className="hover:text-foreground transition-colors">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+            </svg>
+          </a>
         </div>
       </div>
 
@@ -636,12 +641,12 @@ export default function ResumePage({
           </thead>
           <tbody>
             {[
-              { category: t('언어', '言語'), skills: 'TypeScript, JavaScript, Java, HTML, CSS' },
-              { category: t('프레임워크', 'フレームワーク'), skills: 'React, Next.js, Vue.js, Spring Boot' },
+              { category: t('언어', '言語'), skills: 'TypeScript, JavaScript, Java, HTML, CSS, GraphQL' },
+              { category: t('프레임워크・라이브러리', 'フレームワーク・ライブラリ'), skills: 'React, Next.js, Vue.js, Node.js, Spring Boot, Redux, Apollo Client, jQuery' },
               { category: t('스타일링', 'スタイリング'), skills: 'Tailwind CSS, SCSS, Styled Components' },
               { category: t('테스팅', 'テスト'), skills: 'Playwright, Cypress, Storybook, Jest' },
               { category: 'DB', skills: 'PostgreSQL, MongoDB, Oracle, Supabase' },
-              { category: t('인프라・도구', 'インフラ・ツール'), skills: 'Docker, GCP, Git, Figma' },
+              { category: t('인프라・도구', 'インフラ・ツール'), skills: 'Docker, GCP, Git, Bun, Figma' },
             ].map((row, i) => (
               <tr key={i}>
                 <td className="border border-border/60 px-3 py-2 font-medium">{row.category}</td>
