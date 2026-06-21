@@ -2,21 +2,19 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { CategoryDetail } from '@/config/types'
+
 import { CategoryButton } from './CategoryButton'
 import { CategoryExpandableMenu } from './CategoryExpandableMenu'
 
 interface CategoryListProps {
   language: string
-  categoryList: CategoryDetail[]
-  allPostCount: number
+
   currentCategory?: string
 }
 
 const CategoryList = ({
   language,
-  categoryList,
-  allPostCount,
+
   currentCategory = 'all',
 }: CategoryListProps) => {
   const router = useRouter()

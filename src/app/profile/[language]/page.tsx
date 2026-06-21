@@ -109,7 +109,9 @@ export default function ProfilePage({
                     {item.title}
                   </a>
                   {index < tocItems.length - 1 && (
-                    <span className="ml-3 text-xs text-muted-foreground">|</span>
+                    <span className="ml-3 text-xs text-muted-foreground">
+                      |
+                    </span>
                   )}
                 </span>
               ))}
@@ -117,13 +119,17 @@ export default function ProfilePage({
           </div>
 
           {/* 상세 이력서 링크 */}
-          <a 
-            href={`/resume/${language}`} 
+          <a
+            href={`/resume/${language}`}
             className="border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/20 hover:from-chomin/10 hover:to-chomin/30 transition-all flex flex-row sm:flex-col items-center justify-center gap-2 sm:w-40 group shadow-sm hover:shadow"
           >
-            <span className="text-xl group-hover:scale-110 transition-transform">💼</span>
+            <span className="text-xl group-hover:scale-110 transition-transform">
+              💼
+            </span>
             <span className="text-xs font-semibold text-foreground text-center">
-              {language === 'ko' ? '상세 이력서 보기' : '詳細な職務経歴書を見る'}
+              {language === 'ko'
+                ? '상세 이력서 보기'
+                : '詳細な職務経歴書を見る'}
             </span>
           </a>
         </div>

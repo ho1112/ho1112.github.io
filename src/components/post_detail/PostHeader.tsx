@@ -2,7 +2,7 @@ import { CalendarDays, Clock3 } from 'lucide-react'
 import Link from 'next/link'
 import { Post } from '@/config/types'
 import { getLanguageText } from '@/utils/language'
-import { HitsOfPost } from '../common/HitsOfPost'
+
 
 interface Props {
   language: string

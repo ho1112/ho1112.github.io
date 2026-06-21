@@ -1,6 +1,6 @@
 'use client'
 
-import { Github } from 'lucide-react'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useScrollTracker } from '@/hook/useScrollTracker'
