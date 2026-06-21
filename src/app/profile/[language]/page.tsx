@@ -91,27 +91,41 @@ export default function ProfilePage({
   return (
     <div className="relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
       <div className="py-8">
-        {/* 목차 섹션 */}
-        <div className="mb-6 border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/10 w-fit">
-          <h2 className="text-sm font-semibold mb-2 flex items-center">
-            <span className="text-base mr-1.5">📑</span>
-            {language === 'ko' ? '목차' : '目次'}
-          </h2>
-          <div className="flex flex-wrap gap-x-3 gap-y-1">
-            {tocItems.map((item, index) => (
-              <span key={item.id} className="flex items-center">
-                <a
-                  href={`#${item.id}`}
-                  className="text-xs hover:text-chomin transition-colors"
-                >
-                  {item.title}
-                </a>
-                {index < tocItems.length - 1 && (
-                  <span className="ml-3 text-xs text-muted-foreground">|</span>
-                )}
-              </span>
-            ))}
+        {/* 목차 및 이력서 링크 섹션 */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-3">
+          {/* 목차 */}
+          <div className="border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/10 flex-1">
+            <h2 className="text-sm font-semibold mb-2 flex items-center">
+              <span className="text-base mr-1.5">📑</span>
+              {language === 'ko' ? '목차' : '目次'}
+            </h2>
+            <div className="flex flex-wrap gap-x-3 gap-y-1">
+              {tocItems.map((item, index) => (
+                <span key={item.id} className="flex items-center">
+                  <a
+                    href={`#${item.id}`}
+                    className="text-xs hover:text-chomin transition-colors"
+                  >
+                    {item.title}
+                  </a>
+                  {index < tocItems.length - 1 && (
+                    <span className="ml-3 text-xs text-muted-foreground">|</span>
+                  )}
+                </span>
+              ))}
+            </div>
           </div>
+
+          {/* 상세 이력서 링크 */}
+          <a 
+            href={`/resume/${language}`} 
+            className="border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/20 hover:from-chomin/10 hover:to-chomin/30 transition-all flex flex-row sm:flex-col items-center justify-center gap-2 sm:w-40 group shadow-sm hover:shadow"
+          >
+            <span className="text-xl group-hover:scale-110 transition-transform">💼</span>
+            <span className="text-xs font-semibold text-foreground text-center">
+              {language === 'ko' ? '상세 이력서 보기' : '詳細な職務経歴書を見る'}
+            </span>
+          </a>
         </div>
 
         {/* 헤더 섹션 */}

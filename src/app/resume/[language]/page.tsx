@@ -5,7 +5,7 @@ import IconLinkedin from '@/components/icon/LinkedIn'
 import IconNpm from '@/components/icon/Npm'
 import IconVSCode from '@/components/icon/VSCode'
 import ChatbotButton from '@/components/profile/ChatbotButton'
-import ChatbotSection from '@/components/profile/ChatbotSection'
+
 
 export async function generateStaticParams() {
   return [{ language: 'ko' }, { language: 'ja' }]
@@ -703,8 +703,6 @@ export default function ResumePage({
 
       <hr className="border-border/50 mb-10" />
 
-      {/* ===== 챗봇 섹션 ===== */}
-      <ChatbotSection language={language} />
 
       {/* ===== 개인 프로젝트 ===== */}
       <section className="mb-10">
