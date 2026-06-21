@@ -32,8 +32,6 @@ const PostListPage = async ({ language, category }: PostListProps) => {
         <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
           <CategoryList
             language={language}
-            allPostCount={allPostCount}
-            categoryList={categoryList}
             currentCategory={category}
           />
         </section>
@@ -95,8 +93,6 @@ const PostListPage = async ({ language, category }: PostListProps) => {
       <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
         <CategoryList
           language={language}
-          allPostCount={allPostCount}
-          categoryList={categoryList}
           currentCategory={category}
         />
       </section>
