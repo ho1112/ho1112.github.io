@@ -79,12 +79,17 @@ export default function ResumePage({
   return (
     <div className="mx-auto w-full max-w-[720px] px-5 py-10 sm:px-6">
       {/* ===== 헤더 ===== */}
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold">
-          {t('이호연', '李虎演（イホヨン）')}
-        </h1>
-        <p className="mt-1 text-muted-foreground">
-          {t('프론트엔드 엔지니어', 'フロントエンドエンジニア')}
+      <header className="mb-8 flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">
+            {t('이호연', '李虎演（イホヨン）')}
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            {t('프론트엔드 엔지니어', 'フロントエンドエンジニア')}
+          </p>
+        </div>
+        <p className="mt-4 sm:mt-0 text-sm text-muted-foreground">
+          {t('최종 업데이트: 2026년 6월', '最終更新日：2026年6月')}
         </p>
       </header>
 
@@ -646,26 +651,50 @@ export default function ResumePage({
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="bg-muted/30">
-              <th className="border border-border/60 px-3 py-2 text-left font-medium w-[30%]">
+              <th className="border border-border/60 px-3 py-2 text-left font-medium w-[25%]">
                 {t('분류', '種類')}
               </th>
               <th className="border border-border/60 px-3 py-2 text-left font-medium">
                 {t('기술', '技術')}
               </th>
+              <th className="border border-border/60 px-3 py-2 text-left font-medium whitespace-nowrap">
+                {t('경험년수', '経験年数')}
+              </th>
             </tr>
           </thead>
           <tbody>
             {[
-              { category: t('언어', '言語'), skills: 'TypeScript, JavaScript, Java, HTML, CSS, GraphQL' },
-              { category: t('프레임워크・라이브러리', 'フレームワーク・ライブラリ'), skills: 'React, Next.js, Vue.js, Node.js, Spring Boot, Redux, Apollo Client, jQuery' },
-              { category: t('스타일링', 'スタイリング'), skills: 'Tailwind CSS, SCSS, Styled Components' },
-              { category: t('테스팅', 'テスト'), skills: 'Playwright, Cypress, Storybook, Jest, Mocha' },
-              { category: 'DB', skills: 'PostgreSQL, MongoDB, Oracle, Supabase' },
-              { category: t('인프라・도구', 'インフラ・ツール'), skills: 'Docker, GCP, Git, Bun, Figma' },
+              { category: t('언어', '言語'), name: 'JavaScript', years: t('8년', '8年'), rowSpan: 5 },
+              { name: 'TypeScript', years: t('5년', '5年') },
+              { name: 'Java', years: t('3년', '3年') },
+              { name: 'HTML / CSS', years: t('8년', '8年') },
+              { name: 'GraphQL', years: t('2년', '2年') },
+              { category: <>{t('프레임워크・', 'フレームワーク・')}<br />{t('라이브러리', 'ライブラリ')}</>, name: 'React', years: t('5년', '5年'), rowSpan: 6 },
+              { name: 'Next.js', years: t('5년', '5年') },
+              { name: 'Redux', years: t('3년', '3年') },
+              { name: 'Apollo Client', years: t('2년', '2年') },
+              { name: 'Spring Boot', years: t('1년', '1年') },
+              { name: 'Node.js, Vue.js, jQuery', years: '-' },
+              { category: t('스타일링', 'スタイリング'), name: 'SCSS', years: t('4년', '4年'), rowSpan: 3 },
+              { name: 'Styled Components', years: t('3년', '3年') },
+              { name: 'Tailwind CSS', years: t('1년', '1年') },
+              { category: t('테스팅', 'テスト'), name: 'Playwright', years: t('2년', '2年'), rowSpan: 3 },
+              { name: 'Cypress', years: t('2년', '2年') },
+              { name: 'Jest', years: t('2년', '2年') },
+              { category: 'DB', name: 'PostgreSQL, MongoDB, Oracle, Supabase', years: '', rowSpan: 1 },
+              { category: t('인프라・도구', 'インフラ・ツール'), name: 'Docker, GCP, Git, GitHub Actions, Bun, Figma, Storybook', years: '', rowSpan: 1 },
             ].map((row, i) => (
               <tr key={i}>
-                <td className="border border-border/60 px-3 py-2 font-medium">{row.category}</td>
-                <td className="border border-border/60 px-3 py-2 text-muted-foreground">{row.skills}</td>
+                {row.category !== undefined && (
+                  <td 
+                    className="border border-border/60 px-3 py-2 font-medium text-sm align-top" 
+                    rowSpan={row.rowSpan}
+                  >
+                    {row.category}
+                  </td>
+                )}
+                <td className="border border-border/60 px-3 py-2 text-muted-foreground">{row.name}</td>
+                <td className="border border-border/60 px-3 py-2 text-muted-foreground whitespace-nowrap">{row.years}</td>
               </tr>
             ))}
           </tbody>
