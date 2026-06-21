@@ -1086,7 +1086,7 @@ export default function ResumePage({
               >
                 <IconBlog className="h-5 w-5" /> post
               </a>
-              <ChatbotButton language={language} />
+              <ChatbotButton language={language} redirectToProfile />
             </div>
           </div>
 

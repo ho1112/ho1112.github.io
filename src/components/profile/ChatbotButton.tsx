@@ -1,10 +1,16 @@
 'use client'
 
+import Link from 'next/link'
+
 interface ChatbotButtonProps {
   language: 'ko' | 'ja'
+  redirectToProfile?: boolean
 }
 
-export default function ChatbotButton({ language }: ChatbotButtonProps) {
+export default function ChatbotButton({
+  language,
+  redirectToProfile,
+}: ChatbotButtonProps) {
   const handleClick = () => {
     document.getElementById('itsme')?.scrollIntoView({
       behavior: 'smooth',
@@ -12,11 +18,8 @@ export default function ChatbotButton({ language }: ChatbotButtonProps) {
     })
   }
 
-  return (
-    <button
-      onClick={handleClick}
-      className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
-    >
+  const content = (
+    <>
       <svg
         className="w-4 h-4"
         fill="none"
@@ -31,6 +34,26 @@ export default function ChatbotButton({ language }: ChatbotButtonProps) {
         />
       </svg>
       {language === 'ko' ? '챗봇 보기' : 'チャットボットを見る'}
+    </>
+  )
+
+  if (redirectToProfile) {
+    return (
+      <a
+        href={`/profile/${language}#itsme`}
+        className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+      >
+        {content}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      className="text-muted-foreground hover:text-foreground hover:underline text-sm flex items-center gap-1"
+    >
+      {content}
     </button>
   )
 }
