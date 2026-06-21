@@ -30,10 +30,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
     return (
       <>
         <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
-          <CategoryList
-            language={language}
-            currentCategory={category}
-          />
+          <CategoryList language={language} currentCategory={category} />
         </section>
         <section className="mt-8 mx-auto px-4 w-full max-w-[1068px]">
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -91,10 +88,7 @@ const PostListPage = async ({ language, category }: PostListProps) => {
   return (
     <>
       <section className="h-[48px] py-1 sm:border-b sm:shadow-md">
-        <CategoryList
-          language={language}
-          currentCategory={category}
-        />
+        <CategoryList language={language} currentCategory={category} />
       </section>
       {/* 최신 포스트 */}
       <LatestSection
