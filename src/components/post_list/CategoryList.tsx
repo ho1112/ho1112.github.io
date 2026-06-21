@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-
 import { CategoryButton } from './CategoryButton'
 import { CategoryExpandableMenu } from './CategoryExpandableMenu'
 

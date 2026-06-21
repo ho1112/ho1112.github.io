@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Post } from '@/config/types'
 import { getLanguageText } from '@/utils/language'
 
-
 interface Props {
   language: string
   post: Post
