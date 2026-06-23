@@ -92,30 +92,33 @@ export default function ProfilePage({
     <div className="relative mx-auto w-full max-w-[750px] px-5 sm:px-6">
       <div className="py-8">
         {/* 목차 및 이력서 링크 섹션 */}
-        <div className="mb-6 flex flex-col sm:flex-row gap-3">
+        <div className="mb-6 flex flex-col sm:flex-row sm:justify-between gap-3">
           {/* 목차 */}
-          <div className="border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/10 flex-1">
+          <div className="border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/10 w-full sm:w-fit">
             <h2 className="text-sm font-semibold mb-2 flex items-center">
               <span className="text-base mr-1.5">📑</span>
               {language === 'ko' ? '목차' : '目次'}
             </h2>
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
+            <ul className="grid grid-cols-2 gap-y-2 gap-x-1 sm:flex sm:flex-wrap sm:gap-x-0 sm:gap-y-1">
               {tocItems.map((item, index) => (
-                <span key={item.id} className="flex items-center">
+                <li key={item.id} className="flex items-center text-xs">
+                  {/* 모바일에서만 보이는 불릿 기호 */}
+                  <span className="w-1 h-1 rounded-full bg-chomin/70 mr-1.5 sm:hidden shrink-0" />
                   <a
                     href={`#${item.id}`}
-                    className="text-xs hover:text-chomin transition-colors"
+                    className="hover:text-chomin transition-colors whitespace-nowrap"
                   >
                     {item.title}
                   </a>
+                  {/* PC에서만 보이는 구분선(|) */}
                   {index < tocItems.length - 1 && (
-                    <span className="ml-3 text-xs text-muted-foreground">
+                    <span className="hidden sm:inline-block mx-3 text-muted-foreground">
                       |
                     </span>
                   )}
-                </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* 상세 이력서 링크 */}
@@ -124,7 +127,7 @@ export default function ProfilePage({
             className="border rounded-lg p-3 bg-gradient-to-br from-chomin/5 to-chomin/20 hover:from-chomin/10 hover:to-chomin/30 transition-all flex flex-row sm:flex-col items-center justify-center gap-2 sm:w-40 group shadow-sm hover:shadow"
           >
             <span className="text-xl group-hover:scale-110 transition-transform">
-              💼
+              📋
             </span>
             <span className="text-xs font-semibold text-foreground text-center">
               {language === 'ko'
