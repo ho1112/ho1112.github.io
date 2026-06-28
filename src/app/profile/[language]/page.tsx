@@ -28,7 +28,7 @@ export default function ProfilePage({
     VUE: 'Vue.js',
     SCSS: 'SCSS',
     TAILWIND: 'Tailwind CSS',
-    STYLED_COMPONENTS: 'Styled Components',
+    STYLED_COMPONENTS: 'styled-components',
     WEB_COMPONENTS: 'Web Components',
     LIT: 'Lit',
     JQUERY: 'jQuery',

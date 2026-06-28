@@ -637,7 +637,7 @@ export default function ResumePage({
               'Next.js',
               'React',
               'TypeScript',
-              'Styled Components',
+              'styled-components',
               'REST API',
               'Redux',
               'Express',
@@ -912,7 +912,7 @@ export default function ResumePage({
                 years: t('4년', '4年'),
                 rowSpan: 3,
               },
-              { name: 'Styled Components', years: t('3년', '3年') },
+              { name: 'styled-components', years: t('3년', '3年') },
               { name: 'Tailwind CSS', years: t('1년', '1年') },
               {
                 category: t('테스팅', 'テスト'),
