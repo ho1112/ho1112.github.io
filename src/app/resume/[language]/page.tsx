@@ -451,6 +451,7 @@ export default function ResumePage({
               'Tailwind CSS',
               'SCSS',
               'REST API',
+              'MSW',
               'Redux Toolkit',
               'Xcode Simulator',
               'Figma',
