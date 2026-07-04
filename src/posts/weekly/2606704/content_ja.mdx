@@ -1,0 +1,145 @@
+---
+title: '🚀 2026-07 W1 #65'
+desc: CSS calc-size()活用法、Meta Astryxデザインシステムオープンソース公開、Deno 2.9およびnpm v12リリース | 2026年7月第1週目 週間技術ニュースレター
+date: 2026-07-04
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 今週の主要テーマ
+今週のWeb開発エコシステムでは、パフォーマンス最適化とともに新しい開発標準に関する議論が活発に行われました。Deno 2.9のリリースとともに、Metaが社内で8年間使用してきたAstryxデザインシステムを公開し、大きな関心を集めました。また、CSS Containmentのようなパフォーマンス向上手法に加え、npm v12導入に伴うサプライチェーンセキュリティやデプロイ関連のイシューが注目を集めています。
+
+## 1. 🔍 深掘り
+- **[The Goldilocks Customizable Select Height](https://jakearchibald.com/2026/goldilocks-select-height/)** (出典: *Frontend Focus #748*)
+  ![The Goldilocks Customizable Select Height](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1782904196/tjmlfqnyyznp1pq3cu0a.png)
+  - 背景: カスタマイズ可能な`<select>`要素の高さを正確に制御するのに苦労している開発者のために登場しました。
+  - 主な機能: `calc-size()`を活用し、要素の固有サイズを尊重しつつ寸法(dimensions)を制限する、最適な高さ設定方法を提案しています。
+  - コード例:
+    ```css
+    select {
+      height: calc-size(auto, 0px..100px);
+    }
+    ```
+  - 実務への適用: 複雑なフォームUIを構成する際、一貫したレイアウトを維持するのに非常に役立ちます。
+  - 注意事項: ブラウザのサポート状況を確認し、必要に応じてフォールバックのスタイルを必ず併用する必要があります。
+
+- **[Meta Releases Its Astryx Design System](https://astryx.atmeta.com/)** (出典: *React Status #481*)
+  ![Meta Releases Its Astryx Design System](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/d3rq25ebulc1pplq8yvb.jpg)
+  - 背景: Metaで8年以上、13,000以上のアプリに適用されてきた社内デザインシステムがオープンソースとして公開されました。
+  - 主な機能: ReactとStyleXをベースに、160以上のコンポーネント、テーマ設定、テンプレート、および専用ツールを提供します。
+  - コード例:
+    ```tsx
+    import { Button } from '@astryx/components';
+
+    function App() {
+      return <Button variant="primary">Astryx Button</Button>;
+    }
+    ```
+  - 実務への適用: 大規模なエンタープライズ級のUIを一貫して構築する必要がある環境に最適化されています。
+  - 注意事項: 既存のライブラリをリプレイスする際、StyleXの学習曲線を考慮する必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[An Animated Radial Gradient Mask Over Text in CSS](https://cassidoo.co/post/radial-mask-text-css/)** (出典: *Frontend Focus #748*)
+  + 要約: CSSの`mask`プロパティとrepeating radial gradientを組み合わせて、テキストにアニメーション効果を適用するクリエイティブな手法を紹介しています。
+- **[Why Drizzle Couldn't Publish New Releases on npm for a Month](https://www.vlt.io/blog/packument-size-limits)** (出典: *JavaScript Weekly #792*)
+  + 要約: npmのパッケージメタデータ(packument)のサイズ制限ルールによりライブラリのデプロイに失敗した事例を通じて、デプロイパイプライン管理の重要性を説明しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[mapcn: Ready-to-Use Customizable Map Components](https://www.mapcn.dev/)** (出典: *React Status #481*)
+  ![mapcn: Ready-to-Use Customizable Map Components](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/mbrvbof3q1ujqnfapog4.jpg)
+  + 概要: MapLibreとTailwindを活用したReact用のカスタム地図コンポーネントライブラリです。
+  + 使い方:
+    ```tsx
+    import { Map } from 'mapcn';
+
+    <Map provider="maplibre" theme="tailwind"/>
+    ```
+  + 実践チップ: shadcn/uiと同じアプローチを使用しているため、既に該当UIを使用中であれば非常に簡単に統合できます。
+
+- **[Nub: An All-in-One Toolkit That Augments Node.js](https://nubjs.com/blog/introducing-nub)** (出典: *JavaScript Weekly #792*)
+  + 概要: Node.jsを代替するのではなく、むしろTypeScriptサポート、.env処理、Worker機能などを補完して強化するZodの作成者によるツールキットです。
+  + 使い方:
+    ```bash
+    npm install -g --ignore-scripts=false @nubjs/nub
+    nub index.ts             # run a TypeScript file
+    nub run dev              # run a package.json script
+    nub watch src/server.ts  # restart on file changes
+    nubx prisma generate     # run a CLI from node_modules/.bin
+    nub install              # install dependencies, pnpm-compatible
+    nub pm shim              # Corepack-style package-manager shims
+    nub node install 26      # manage Node.js versions
+    ```
+  + 実践チップ: 既存のNode.jsプロジェクトのインフラを変更せずに、高速な開発環境を構築したい場合に非常に強力な代案となります。
+
+---
+#### 見逃せないコンテンツ
+- **[Slim Select 4.0: An Advanced Select Dropdown Control](https://slimselectjs.com/)** (出典: *Frontend Focus #748*)
+  + 要約: 依存関係のないドロップダウンコンポーネントで、今回の4.0アップデートではモバイルユーザー向けのモーダルモードが追加されました。
+- **[Gea: A Compiler-First Reactive UI Framework](https://geajs.com/)** (出典: *JavaScript Weekly #792*)
+  + 要約: VDOMなしでコンパイル時に最適化を行い、圧倒的に小さいビルドサイズを提供するリアクティブフレームワークです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[CSS Vs. JavaScript Animations](https://www.joshwcomeau.com/animation/css-vs-javascript/)** (出典: *Smashing Newsletter #565*)
+  ![CSS Vs. JavaScript Animations](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/52b3dd34-f170-6c20-9316-aa9e52cf8f2b.png)
+  + 主要なインサイト: 単にCSSがJSより速いという固定観念から脱却し、アニメーションの性質に応じてどちらの方式を選択すればパフォーマンスとメンテナンス効率を同時に向上できるかを体系的に比較しています。
+
+- **[The Hidden Cost of Hydration Mismatches](https://3perf.com/blog/hydration-mismatch/)** (出典: *React Status #481*)
+  + 主要なインサイト: ハイドレーションの不一致とWebフォントの読み込みが組み合わさった際に発生するLCPパフォーマンス低下の問題を診断し、これを防ぐための技術的なアプローチを取り上げています。
+
+---
+#### 見逃せないコンテンツ
+- **[Caching Query Parameters](https://www.debugbear.com/blog/no-vary-search)** (出典: *Smashing Newsletter #565*)
+  + 要約: `No-Vary-Search` HTTPヘッダーを利用して不要なキャッシュミスを減らし、Webパフォーマンスを最適化する戦略を説明しています。
+- **[Context-Aware Web Performance](https://csswizardry.com/2026/05/meet-your-users-where-they-are-with-obs-js/)** (出典: *Smashing Newsletter #565*)
+  + 要約: ユーザーのデバイス状態(バッテリー、ネットワークなど)を検知して適切なリソースを提供するObs.jsライブラリの活用事例を取り上げています。
+---
+
+## 4. ✨ アイデア
+- **[Where to Find the Colors Your Screen Can’t Show You](https://moultano.wordpress.com/2026/06/19/where-to-find-the-colors-your-screen-cant-show-you/)** (出典: *Frontend Focus #748*)
+  - ![Where to Find the Colors Your Screen Can’t Show You](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1782305009/ihheeh0bkjqhiahtjkis.png)
+  + 特徴: 現代のディスプレイスペックであるP3、OKLCHを超え、依然として人間の目は認識するものの画面では表現できない色に対する探求を通じ、色彩に関するインスピレーションを提供します。
+
+## 5. ⚡️ ミニノート
+- **[Introducing the `<usermedia>` HTML element](https://developer.chrome.com/blog/usermedia-html-element)** (出典: *Frontend Focus #748*)
+  + 要約: Chrome 151から適用され、従来の`getUserMedia()`権限設定をより直感的に制御できるように支援する新しいHTML要素です。
+- **[npm adds preventive account protection for high impact accounts](https://github.blog/changelog/2026-06-25-npm-adds-preventive-account-protection-for-high-impact-accounts/)** (出典: *JavaScript Weekly #792*)
+  + 要約: 主要なパッケージメンテナーのメール変更や2FA復旧時に、アカウントを72時間ロックしてセキュリティを強化します。
+- **[Pointer Events Level 3 is now a W3C Recommendation](https://www.w3.org/news/2026/pointer-events-level-3-is-now-a-w3c-recommendation/)** (出典: *Frontend Focus #748*)
+  + 要約: 入力デバイスの統合処理のための標準であるPointer Events Level 3がW3Cの公式勧告案として採択されました。
+- **[Storybook for TanStack React](https://storybook.js.org/blog/storybook-for-tanstack-react/)** (出典: *React Status #481*)
+  + 要約: TanStackの主要ライブラリ(Router, Start, Query)に対するStorybookの公式サポートが開始されました。
+- **[Restrict issue creation to collaborators only](https://github.blog/changelog/2026-06-29-restrict-issue-creation-to-collaborators-only/)** (出典: *JavaScript Weekly #792*)
+  + 要約: GitHubリポジトリでIssue作成権限をコラボレーターのみに制限できる機能がアップデートされました。
+
+## 6. 🎉 リリース
+- **[Deno 2.9 Released](https://deno.com/blog/v2.9)** (*JavaScript Weekly #792*)
+  + アップデート: コールドスタート速度が約2倍向上し、スクリプトベースのスタンドアロンデスクトップアプリサポート機能が追加されました。
+- **[npm v12.0.0-pre.2](https://github.com/npm/cli/releases/tag/v12.0.0-pre.2)** (*JavaScript Weekly #792*)
+  + アップデート: `.npmrc`ファイル内で認識されないキーを使用した場合にエラーを発生させる、強力な検証機能を含むプレビューリリースです。
+- **[Node.js v26.4.0](https://nodejs.org/en/blog/release/v26.4.0)** (*JavaScript Weekly #792*)
+  + アップデート: `node_modules`なしで静的なJSONファイルとしてパッケージを解決するパッケージマップ(Package Map)機能が実験的に導入されました。
+- **[Ant Design 6.5.0](https://github.com/ant-design/ant-design/releases/tag/6.5.0)** (*React Status #481*)
+  + アップデート: バンドルサイズの最適化およびAIエージェント連動のための`DESIGN.md`サポートが追加されました。
+- **[React Router 8.1.0](https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v810)** (*React Status #481*)
+  + アップデート: エージェントスキルのインストール機能と計装(インストルメンテーション)データのメタデータが改善されました。
+- **[MUI 9.2.0](https://github.com/mui/material-ui/releases/tag/v9.2.0)** (*React Status #481*)
+  + アップデート: コンポーネントライブラリ全般の機能安定化とバグ修正が含まれています。
+- **[Prettier 3.9.0](https://prettier.io/blog/2026/06/27/3.9.0)** (*JavaScript Weekly #792*)
+  + アップデート: コードフォーマットの一貫性と安定性を強化したマイナーアップデートです。
+- **[Rspack 2.1](https://rspack.rs/blog/announcing-2-1)** (*JavaScript Weekly #792*)
+  + アップデート: Rustベースのバンドラーのパフォーマンス改善とエコシステムの互換性が強化されました。
+- **[pnpm 11.9](https://pnpm.io/blog/releases/11.9)** (*JavaScript Weekly #792*)
+  + アップデート: モノレポ管理およびインストール環境の安定性向上に注力しました。
+- **[Font Awesome 7.3.0](https://fontawesome.com/changelog)** (*Frontend Focus #748*)
+  + アップデート: 有料ティア向けの200以上の新規レトロピクセルアイコンセットがリリースされました。
+
+## ✍️ おわりに
+今週のニュースを見ると、Web開発エコシステムは「パフォーマンス」と「AIエージェント」という2つのキーワードを中心に急速に進化しています。特にDeno 2.9のデスクトップアプリサポートやMetaのAstryx公開は、既存の開発体験をより良い方向へ転換しようとする試みのように見えます。単に新しいツールを学ぶことにとどまらず、これらの技術が私たちの開発ワークフローにどのような価値を付加するかを深く考える一週間になればと思います。技術の根本的な原理を理解し、適材適所にツールを活用する柔軟性がさらに重要になる時期です。
+
+#### 出典
+- [JavaScript Weekly #792](https://javascriptweekly.com/issues/792)
+- [Frontend Focus #748](https://frontendfoc.us/issues/748)
+- [React Status #481](https://react.statuscode.com/issues/481)
+- [Smashing Newsletter #565](https://mailchi.mp/smashingmagazine/565-new-in-web-performance)
