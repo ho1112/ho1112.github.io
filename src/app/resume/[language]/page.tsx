@@ -88,7 +88,7 @@ export default function ResumePage({
           </p>
         </div>
         <p className="mt-4 sm:mt-0 text-sm text-muted-foreground">
-          {t('최종 업데이트: 2026년 6월', '最終更新日：2026年6月')}
+          {t('최종 업데이트: 2026년 7월', '最終更新日：2026年7月')}
         </p>
       </header>
 
