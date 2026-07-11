@@ -1,0 +1,148 @@
+---
+title: '🚀 2026-07 W2 #66'
+desc: ChatGPTの遅延読み込み設計、フロントエンドエコシステムの振り返り、Electronバンドルの最適化 | 2026年7月第2週目 週間技術ニュースレター
+date: 2026-07-11
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は、フロントエンドエコシステムが過去数十年間でどのように変化してきたかを振り返るとともに、パフォーマンスと最適化に関する詳細な分析が目立ちました。OpenAIが10億人のトラフィックを処理するために、ChatGPTのウェブ版を徹底的な遅延読み込み（Lazy Loading）ベースで設計した事例や、Electronアプリのバンドルサイズを劇的に削減した経験談などは、実務者にとって素晴らしいベンチマークとなります。さらに、新しいCSS機能やJavaScriptに依存しない純粋なウェブ標準パターンも紹介されており、技術の最適化と標準化のトレンドが徐々に明確になっていることが確認できました。
+
+## 1. 🔍 深掘り
+- **[Reverse Engineering ChatGPT Web: How OpenAI Built for a Billion Users](https://performance.dev/chatgpt)** (出典: *React Status #482*)
+  ![Reverse Engineering ChatGPT Web](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wlosvotksinv7i6ksskg.jpg)
+   - 背景: 膨大なユーザーを処理する人気サービスであるChatGPTのウェブ版が、初期ロード速度とレンダリングパフォーマンスをどのように確保したのか、技術的な構造を掘り下げます。
+   - 主要機能: React Router 7、TanStack Query、Radix、ProseMirrorなどの最新スタックを活用し、ユーザーがタイピングを開始するまで非必須スクリプトのロードを徹底的に遅延させる最適化手法を適用しました。
+   - 実務への適用: トラフィックの最適化が不可欠な大規模ウェブアプリケーション設計時の直接的なリファレンスとして活用可能です。
+- **[The Descent: What Happened to the Frontend While You Weren't Watching](https://davidpoblador.com/deep-dives/what-happened-to-the-frontend/)** (出典: *Frontend Focus #749*)
+  ![The Descent](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/nvhy6t6nskpbpvodlwbq.jpg)
+   - 背景: 過去の単純なFTPアップロード方式だったフロントエンド開発が、現在の複雑なビルドパイプラインへと進化してきた過去20年間の技術的進化の過程を包括的に振り返ります。
+   - 主要機能: 2026年現在使用されている高度化されたツールのリストを点検し、今後HTML-firstの原則へと回帰する可能性について考察します。
+   - 実務への適用: 現在使用している複雑なフロントエンドツールチェーンの歴史的な文脈を理解し、アーキテクチャを点検する際の広い視野を提供します。
+
+---
+#### 見逃せないコンテンツ
+- **[Loop Engineering](https://addyosmani.com/blog/loop-engineering/)** (出典: *Smashing Newsletter #566*)
+  + 要約: AIエージェントに単純なプロンプトを渡すだけでなく、コードを自ら作成させるシステム設計（ループエンジニアリング）方法論の基本的なビルディングブロックと未来に焦点を当てます。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Ponytail](https://ponytail.dev/)** (出典: *Smashing Newsletter #566*)
+  ![Ponytail](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/7db9ddeb-4b55-772c-8c92-db7b75fb5202.png)
+  + 概要: 「書かれていないコードが最高のコードである」という哲学に基づき、安全性とアクセシビリティを妥協することなく、最小限のコードのみを記述するようにAIコーディングエージェントを学習させるツールセットです。
+  + コード例:
+  ```py
+  - class CacheManager:
+  -     def __init__(self, ttl, maxsize):
+  -         self._store, self._lock = {}, Lock()
+  -     # ...44 more lines you maintain forever
+  + @lru_cache(maxsize=1000)
+  + def fetch(...): ...
+  ```
+  + 実践チップ: 過度なボイラープレートや不要なコード生成を防ぎ、簡潔なコアロジックのみを実装するようにAIをチューニングする際に非常に役立ちます。
+- **[Google's New Toolkit to Make Your Website 'Agent-Ready'](https://developer.chrome.com/blog/agent-ready-toolkit)** (出典: *Frontend Focus #749*)
+  ![Agent-Ready Toolkit](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1783511937/juejh1yexzx2hk2r4ymf.png)
+  + 概要: 開発中のウェブサイトがAIエージェントにどれほどフレンドリーであるかを監査（audit）できる、新しいLighthouseベースのツールキットであり、アクセシビリティツリーの品質とレイアウトの安定性を検査します。
+  + コード例:
+  ```json
+  {
+    "mcpServers": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "chrome-devtools-mcp@latest",
+          "--autoConnect",
+          "--categoryExperimentalWebmcp",
+          "--channel=canary"
+        ]
+      }
+    }
+  }
+  ```
+  + 実践チップ: 近づくAIエージェント時代に合わせて、ウェブサイトが正しく機械可読であるかを事前にチェックする衛生点検（hygiene checklist）ツールとして有用に活用できます。
+
+---
+#### 見逃せないコンテンツ
+- **[visual-json: A Visual JSON Editor That's Schema-Aware, Embeddable and Extensible](https://visual-json.dev/)** (出典: *Frontend Focus #749*)
+  + 要約: ツリービュー、フォームビュー、ディフ（diff）ビューなど、様々な視覚的編集モードをサポートし、ウェブアプリケーションに簡単に埋め込むことができる強力なJSONエディターです。
+- **[Wakamai Fondue](https://wakamaifondue.com/)** (出典: *Smashing Newsletter #566*)
+  + 要約: セルフホスティングするフォントファイルをアップロードすると、サポートしている言語、Unicode、レイアウト機能などを一目で詳細に分析し、視覚化してくれる実用的な分析ツールです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Get Ready for the CSS border-shape Property](https://css-tricks.com/get-ready-for-the-powerful-css-border-shape-property/)** (出典: *Frontend Focus #749*)
+  ![CSS border-shape](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1783510365/h2xbffmxybxwqk0ox118.png)
+  + 主要なインサイト: 新しく登場したCSSの `border-shape` プロパティの強力な機能を紹介し、これを利用して複雑な装飾や素晴らしいアニメーション効果を純粋なCSSのみで実装できる様々な活用事例を提示します。
+  + コード例:
+  ```css
+  .shape {
+    /* Old code */
+    clip-path: shape() | polygon() | ...;
+
+    /* New code */
+    border-shape: shape() | polygon() | ...;
+  }
+  ```
+- **[React Forms Done Right](https://upskills.dev/tutorials/react-forms-done-right)** (出典: *React Status #482*)
+  + 主要なインサイト: JavaScriptのない純粋なHTMLフォームから、React 19のネイティブフォームアクション、Zodを組み合わせたTanStack Formまで、ウェブフォームを正しく堅牢に実装する方法をインタラクティブな段階別コード例で説明します。
+- **[How Medal Cut Its Electron Frontend Bundle from 40MB to 2.7MB](https://medal.tv/blog/posts/w-key-in-frontend-synergizing-technology-and-product)** (出典: *JavaScript Weekly #793*)
+  + 主要なインサイト: ゲームプラットフォームであるMedalが、Vite、Rolldown、精巧なコードスプリッティング、デッドコード削除などの手法を適用し、デスクトップElectronアプリのフロントエンドバンドルサイズを40MBから2.7MBへと画期的に削減した最適化プロセスを詳細に共有します。
+
+---
+#### 見逃せないコンテンツ
+- **[Getting Started with Anchor Positioning](https://www.joshwcomeau.com/css/anchor-positioning/)** (出典: *Frontend Focus #749*)
+  + 要約: CSSの新しい強力なレイアウト機能であるアンカーポジショニング（Anchor Positioning）APIのコア概念と実用的なコードスニペットを明快にまとめたチュートリアルです。
+- **[Things You No Longer Need JavaScript For](https://aarontgrogg.github.io/NoLoJS/)** (出典: *JavaScript Weekly #793*)
+  + 要約: 過去にはJavaScriptで処理しなければならなかったパターンを、最新のHTMLとCSS機能のみで代替できる方法をカタログ形式で提供し、不要なスクリプトの依存性を減らすインスピレーションを与えます。
+---
+
+## 4. ✨ アイデア
+- **[GTA2 Web — JS Port](https://gta2js.vercel.app/)** (出典: *Frontend Focus #749*)
+  ![GTA2 Web](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1783516354/bmd5wf9ndohdbdiwrszn.png)
+  + 特徴: 古典的な名作ゲームであるGTA 2をブラウザ内でネイティブに動作するようにJavaScriptで移植し、WebRTCを利用したP2Pマルチプレイヤー環境まで追加した興味深い実験プロジェクトです。
+- **[Streaming Real-Time HDR Reflections to Every Device with Miris](https://www.miris.com/blog/streaming-real-time-hdr-reflections-to-the-web?utm_source=web_referral&mrls=web_referral&utm_medium=public_relations&mrlc=public_relations&utm_campaign=raz-pr&utm_content=sign_up&prg=scale&utm_term=javascript&dp=dp)** (出典: *JavaScript Weekly #793*)
+  + 特徴: 1.2GBにも及ぶ巨大なアセットをストリーミングし、リアルタイムのHDR反射効果をすべてのデバイスのWebXRベースの環境で無理なくレンダリングすることに成功した、クリエイティブな視覚化事例です。
+
+## 5. ⚡️ ミニノート
+- **[Base UI is Now the Default in shadcn/ui](https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default)** (出典: *React Status #482*)
+  + 要約: 広く使われているコンポーネントライブラリである `shadcn/ui` が、新しいプロジェクトを作成する際のデフォルトの依存関係を、従来のRadixの代わりにBase UIへと変更し推奨しています。
+- **[Vercel acquires Better Auth](https://vercel.com/blog/vercel-acquires-better-auth)** (出典: *React Status #482*)
+  + 要約: Next.jsの開発元であるVercelが、優れたユーザビリティで注目を集めている認証ライブラリ「Better Auth」の開発チームを電撃的に買収しました。
+- **[Introducing the Safari MCP Server for Web Developers](https://webkit.org/blog/18136/introducing-the-safari-mcp-server-for-web-developers/)** (出典: *Frontend Focus #749*)
+  + 要約: Safariの最新技術プレビュー版にMCPサーバー機能が新たに導入され、AIエージェントがブラウザウィンドウと直接接続してユーザー体験を模倣しながらデバッグできるようになりました。
+- **[js1024, the annual 1KB code-golf competition, is open for entries](https://js1024.fun/#2026)** (出典: *JavaScript Weekly #793*)
+  + 要約: わずか1,024バイトのコードで成果物を競う有名なコードゴルフ大会「js1024」が、今年は「dreaming」というテーマで参加受付を開始しました。
+- **[PGlite reaches 10 million weekly downloads](https://electric.ax/blog/2026/06/25/pglite-reaches-10-million-weekly-downloads)** (出典: *JavaScript Weekly #793*)
+  + 要約: ブラウザとJavaScriptランタイム環境で完璧に動作する、WebAssemblyビルドベースのPostgresであるPGliteが、週間ダウンロード数1,000万回を突破しました。
+
+## 6. 🎉 リリース
+- **[TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)** (*React Status #482*)
+  + アップデート: Go言語をベースに新しく書き直され、従来に比べて最大10倍速くなった処理速度を誇るTypeScript 7.0コンパイラが公開されました。
+- **[vinext 1.0 Beta](https://github.com/cloudflare/vinext)** (*React Status #482*)
+  + アップデート: Cloudflareが、Viteを利用してNext.jsのAPI環境をそのまま実行できるように開発したフレームワーク「vinext」が1.0ベータ版に到達しました。
+- **[React Email Editor 2.0](https://github.com/unlayer/react-email-editor/releases/tag/v2.0.0)** (*React Status #482*)
+  + アップデート: ユーザーが簡単にドラッグ＆ドロップでメールテンプレートを修正し、カスタマイズできるReact用メールエディターコンポーネントのバージョン2.0がリリースされました。
+- **[Vite+ Beta](https://voidzero.dev/posts/announcing-vite-plus-beta)** (*React Status #482*)
+  + アップデート: Vite、Vitest、Oxlintなどの必須ツールを `vp` という単一のコマンドで統合して実行できる新しいウェブ開発ツールチェーン「Vite+」のベータ版が公開されました。
+- **[React Hook Form 7.81.0](https://github.com/react-hook-form/react-hook-form/releases/tag/v7.81.0)** (*React Status #482*)
+  + アップデート: 動的に変化するフォームフィールドの配列構造を、はるかに簡単に扱えるようにする `FieldArray` コンポーネントが新たに追加されました。
+- **[React Router 8.2.0](https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v820)** (*React Status #482*)
+  + アップデート: ブラウザおよびサーバーのルーティング環境の両方で、安定性をさらに高めたReact Routerのマイナーバージョン8.2.0がリリースされました。
+- **[webpack-dev-server 6.0](https://github.com/webpack/webpack-dev-server/releases/tag/v6.0.0)** (*JavaScript Weekly #793*)
+  + アップデート: 長期間使用されてきた公式のwebpack開発サーバーが、Express 5とネイティブESMを完璧にサポートするように構造をアップグレードし、バージョン6.0をリリースしました。
+- **[Dependency Cruiser 18.0](https://github.com/sverweij/dependency-cruiser)** (*JavaScript Weekly #793*)
+  + アップデート: プロジェクト内のモジュール間の依存関係を検証し、視覚的なグラフとして出力することでアーキテクチャの管理に役立つ「Dependency Cruiser 18.0」が発表されました。
+- **[npm 11.18.0](https://github.com/npm/cli/releases/tag/v11.18.0)** (*JavaScript Weekly #793*)
+  + アップデート: Node.jsエコシステムの標準パッケージマネージャーであるnpmのマイナーアップデート、バージョン11.18.0が配布され、安定性が強化されました。
+- **[TinyBase 9.0](https://tinybase.org/guides/releases/#v9-0)** (*JavaScript Weekly #793*)
+  + アップデート: リアクティブデータストアおよび同期エンジンバックエンドのバグ修正と全般的な安定化リリースであるバージョン9.0が配布されました。
+
+## ✍️ おわりに
+今週のニュースに触れて最も印象深かった点は、フロントエンドエコシステムが盲目的な新しいツールの導入から脱却し、内実と最適化を固める方向へと成熟しつつあるということです。ChatGPTが遅延読み込み設計で天文学的なトラフィックを処理した事例や、純粋なHTML/CSS機能が発展することで、過去に不可欠とされていたJavaScriptのロジックを取り除いているトレンドがこれを裏付けています。華麗な技術スタックを積み上げることも重要ですが、不要な依存関係を取り除き、ユーザーに最も速くて軽い体験を届ける「エンジニアリングの本質」について、改めて深く考えさせられる一週間でした。
+
+#### 出典
+- [JavaScript Weekly #793](https://javascriptweekly.com/issues/793)
+- [Frontend Focus #749](https://frontendfoc.us/issues/749)
+- [React Status #482](https://react.statuscode.com/issues/482)
+- [Smashing Newsletter #566](https://mailchi.mp/smashingmagazine/566-new-adventures-in-front-end)
