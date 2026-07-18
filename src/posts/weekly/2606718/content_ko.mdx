@@ -1,0 +1,142 @@
+---
+title: '🚀 2026-07 W3 #67'
+desc: 프론트엔드 No-build 고찰, Rust로 재탄생한 Bun, 브라우저 AI LiteRT.js | 2026년 7월 3주차 주간 기술 뉴스레터
+date: 2026-07-18
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주 프론트엔드 생태계는 기초 아키텍처의 혁신과 실용적인 도구의 발전이 두드러졌습니다. 오랫동안 논의되어 온 빌드 도구의 필요성에 대한 고찰부터, Bun의 핵심 엔진을 Rust로 재작성한 대규모 마이그레이션까지 기술의 한계를 넓히는 소식들이 시선을 끕니다. 또한, 레거시 시스템을 어떻게 현대화할 것인가에 대한 깊이 있는 통찰과 함께 브라우저 환경에서 직접 구동되는 고성능 AI 추론 엔진까지 다채로운 변화의 흐름을 정리해 보았습니다.
+
+## 1. 🔍 심층 분석
+- **[Do We Still Need Build Tools for Frontend Dev?](https://olliewilliams.xyz/blog/no-build/)** (출처: *Frontend Focus #750*)
+  ![Build Tools](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/xakvproho361uhrwln0e.jpg)
+  - 배경: 지난 몇 년간 브라우저의 네이티브 기능이 강력해지면서 프론트엔드 개발에서 무거운 빌드 도구를 완전히 제거할 수 있을지에 대한 의문이 꾸준히 제기되어 왔습니다.
+  - 핵심 기능: 벤더 프리픽스나 ES5 트랜스파일링 같은 작업은 더 이상 필수적이지 않게 되었지만, 성능 최적화를 위한 번들링과 축소(Minification)의 가치는 여전히 유효함을 분석합니다.
+  - 코드 예제:
+    ```js
+    // 네이티브 ES 모듈을 활용한 No-build 접근 방식
+    import { initializeApp } from './app.js';
+    initializeApp();
+    ```
+  - 실무 적용: 프로젝트의 규모와 복잡도에 따라 No-build 환경을 어디까지 도입할 수 있는지, 도구의 취사선택 기준을 마련할 때 유용한 지침이 됩니다.
+  - 주의사항: 개발 편의성과 실 서비스 로딩 성능(네트워크 요청 수 증가 등) 사이의 트레이드오프를 반드시 고려해야 합니다.
+- **[Rewriting Bun in Rust](https://bun.com/blog/bun-in-rust)** (출처: *JavaScript Weekly #794*)
+  - 배경: 높은 성능으로 주목받던 JavaScript 런타임 Bun이 메모리 안정성과 생태계 확장을 위해 기존 Zig 언어에서 Rust로 엔진을 전면 재작성했습니다.
+  - 핵심 기능: 대규모 LLM(Claude Code)을 활용하여 복잡한 코드베이스를 성공적으로 포팅했으며, Rust의 소유권 모델을 통해 런타임의 안정성을 크게 향상시켰습니다.
+  - 코드 예제:
+    ```js
+    // 곧 출시될 Bun 1.4 환경에서의 간단한 서버 구동 예시
+    const server = Bun.serve({
+      fetch(req) {
+        return new Response("Rust-powered Bun is blazing fast!");
+      },
+    });
+    ```
+  - 실무 적용: 새로운 런타임 1.4 버전을 프로덕션 환경에 도입하고자 할 때, 내부 아키텍처의 근본적인 변화와 그에 따른 성능 향상 원리를 이해하는 데 도움이 됩니다.
+  - 주의사항: 언어 및 코어 엔진이 완전히 교체되었기 때문에 초기 릴리스에서는 예상치 못한 엣지 케이스나 호환성 문제가 발생할 가능성을 염두에 두어야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Understanding Legacy Code](https://understandlegacycode.com/)** (출처: *Smashing Newsletter #567*)
+  + 요약: 문서화되지 않고 얽혀 있는 거대한 레거시 코드베이스를 직면했을 때, 이를 분석하고 유지보수 가능한 상태로 만드는 실용적인 팁과 리소스를 모아놓은 가이드입니다.
+- **[Proxy and Reflect: Redefining How Objects Fundamentally Work](https://piccalil.li/blog/proxy-and-reflect/)** (출처: *JavaScript Weekly #794*)
+  + 요약: 자바스크립트 객체의 내부 동작을 가로채는 Proxy와 Reflect API의 근본적 존재 이유를 탐구하고, 이를 활용해 반응형 상태 시스템(Reactivity)을 구축하는 원리를 분석합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[shadcn/typeset: A Complete Typography System for HTML](https://ui.shadcn.com/docs/changelog/2026-07-typeset)** (출처: *React Status #483*)
+  ![shadcn typeset](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bjmfrkg2i2mujsoag2zb.jpg)
+  + 개요: 마크다운 출력 등 렌더링된 HTML에 바로 적용할 수 있는 타이포그래피 시스템으로, 단일 CSS 파일과 하나의 래퍼 클래스로 간편하게 구성됩니다.
+  + 사용법:
+    ```js
+    <div className="shadcn-typeset">
+      <h1>간결한 타이포그래피</h1>
+      <p>수많은 설정 대신 몇 가지 CSS 변수만으로 아름다운 텍스트 스타일을 제어합니다.</p>
+    </div>
+    ```
+  + 실전 팁: Typeset 빌더를 통해 프로젝트에 맞게 커스터마이징하고 생성된 코드를 즉시 복사하여 사용할 수 있어 개발 생산성을 높여줍니다.
+- **[LiteRT.js: High Performance Web AI Inference from Google](https://developers.googleblog.com/litertjs-googles-high-performance-web-ai-inference/)** (출처: *JavaScript Weekly #794*)
+  ![LiteRT.js](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/solv9pgf1thozoexx7xt.jpg)
+  + 개요: 브라우저 환경에서 직접 고성능 AI 모델을 구동하기 위해 Google에서 선보인 LiteRT의 JavaScript 바인딩 도구입니다.
+  + 사용법:
+    ```js
+    import { LiteRT } from 'litert.js';
+    const model = await LiteRT.load('image_upscaler.tflite');
+    const result = model.predict(imageTensor);
+    ```
+  + 실전 팁: 기존 TensorFlow.js 방식보다 뛰어난 추론 성능을 발휘하므로, 클라이언트 단에서 실시간 이미지 처리나 자연어 분석을 수행할 때 매우 효과적입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Ant: A JavaScript Runtime in a 9MB Binary](https://antjs.org/)** (출처: *JavaScript Weekly #794*)
+  + 요약: V8 엔진이나 JavaScriptCore 없이 C언어로 제작되어 단 9MB 크기의 바이너리로 npm 패키지까지 실행 가능한 초경량 JavaScript 런타임입니다.
+- **[UX Components: A Practical Reference for UI Components Across Design Systems](https://www.ux-components.com/)** (출처: *Frontend Focus #750*)
+  + 요약: 아코디언, 모달 등 다양한 디자인 시스템에서 사용되는 UI 컴포넌트의 역할, 사용법, 권장 사항 등을 백과사전처럼 모아둔 실용적 레퍼런스입니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Visual Design Rules You Can Safely Follow Every Time](https://anthonyhobday.com/sideprojects/saferules/)** (출처: *Frontend Focus #750*)
+  ![Visual Design Rules](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1784033477/c92ocrrzkht4li9c65dp.png)
+  + 핵심 인사이트: 인터페이스를 설계할 때 복잡한 이론 없이도 대비, 정렬, 여백 등 예외 없이 안전하게 따를 수 있는 탄탄한 시각 디자인 규칙들을 직관적으로 설명하여 누구나 완성도 높은 UI를 만들 수 있도록 돕습니다.
+- **[In Defense of Polyfills](https://lea.verou.me/blog/2026/polyfills/)** (출처: *Frontend Focus #750*)
+  + 핵심 인사이트: 모던 브라우저의 호환성이 크게 개선되었음에도 불구하고, 웹 생태계가 정체되지 않고 지속적으로 발전하기 위해 폴리필(Polyfill)이 여전히 중요한 역할을 하고 있음을 설득력 있게 주장합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Thinking Horizontally in CSS @layer](https://master.dev/blog/thinking-horizontally-in-css-layer/)** (출처: *Frontend Focus #750*)
+  + 요약: 디자인 토큰을 `@layer`에 캡슐화하여 명시도(Specificity) 충돌을 방지하고 컴포넌트 스코프 스타일을 깔끔하게 유지하는 CSS 아키텍처 패턴을 제안합니다.
+- **[Transforming Legacy Systems](https://www.koruux.com/blog/transforming-legacy-system/)** (출처: *Smashing Newsletter #567*)
+  + 요약: 엔터프라이즈 UX를 핵심 무기로 삼아 리스크를 최소화하면서 낡은 레거시 시스템을 원활하게 현대화하는 전략적 접근법을 공유합니다.
+---
+
+## 4. ✨ 아이디어
+- **[HYPERBLAM: Make Music with HTML](https://hyperblam.how/)** (출처: *Frontend Focus #750*)
+  - ![HYPERBLAM](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1784027139/kldlis2ptj46gty5gwdw.png)
+  + 특징: 복잡한 자바스크립트 로직 없이 HTML 구조와 Web Audio API만을 사용하여 드럼 머신이나 이펙트 보드 등 창의적인 음악 생성기를 선언적으로 구현하는 독창적인 웹 인터랙션 아이디어를 선보입니다.
+- **[Building a 'Magical' 3D Button](https://www.joshwcomeau.com/animation/3d-button/)** (출처: *Frontend Focus #750*)
+  + 특징: 평범한 버튼 요소에 CSS와 섬세한 애니메이션을 더해 사용자의 클릭을 유도하고 시각적 즐거움을 주는 '마법 같은' 3D 버튼 컴포넌트 제작 튜토리얼입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[React's Team Page Gets a Restructure](https://react.dev/community/team)** (출처: *React Status #483*)
+  + 요약: React의 거버넌스 구조 개편에 발맞추어 리더십 위원회와 컴파일러, React Native 등 다양한 워킹 그룹 멤버들을 중심으로 공식 팀 페이지가 리뉴얼되었습니다.
+- **[Vercel is formalizing a predictable, monthly Next.js security release schedule](https://socket.dev/blog/nextjs-moves-to-scheduled-security-releases)** (출처: *React Status #483*)
+  + 요약: Vercel이 Next.js 프레임워크에 대한 보안 릴리스 일정을 매월 예측 가능한 주기로 공식화하여 며칠 내로 첫 정기 릴리스를 선보일 예정입니다.
+- **[Cloudflare has launched 'Drop'](https://www.cloudflare.com/drop/)** (출처: *Frontend Focus #750*)
+  + 요약: 별도의 복잡한 배포 과정 없이 페이지에 폴더나 ZIP 파일을 드래그 앤 드롭하는 것만으로 신속하게 사이트를 라이브로 올릴 수 있는 서비스 'Drop'을 출시했습니다.
+- **[Mozilla is trying a two-week release cadence for Firefox](https://groups.google.com/a/mozilla.org/g/dev-platform/c/qlaQ1YSlOP8?pli=1)** (출처: *Frontend Focus #750*)
+  + 요약: 모질라가 다가오는 9월부터 Firefox 브라우저의 정기 릴리스 주기를 기존 4주에서 2주로 대폭 단축하는 새로운 방안을 시도합니다.
+- **[Precursor: Detecting Agentic Behavior with Continuous Client-Side Signals](https://blog.cloudflare.com/introducing-precursor/)** (출처: *JavaScript Weekly #794*)
+  + 요약: 클라이언트 측에서 마우스 포인터 움직임 등 지속적인 행동 신호를 모니터링하여 실제 사람과 자동화된 에이전트 트래픽을 정교하게 구별해내는 새로운 검증 시스템입니다.
+
+## 6. 🎉 릴리스
+- **[npm v12 Released: Install Scripts are Off by Default](https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation/)** (*JavaScript Weekly #794*)
+  + 업데이트: 보안 강화를 위해 패키지 설치 시 라이프사이클 스크립트가 더 이상 기본으로 실행되지 않도록 변경된 메이저 버전이 공식 출시되었습니다.
+- **[TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)** (*JavaScript Weekly #794*)
+  + 업데이트: 기존 버전 대비 획기적인 컴파일 속도 향상을 이루어낸 Go 언어 기반의 새로운 TypeScript 컴파일러 최종 버전이 릴리스되었습니다.
+- **[Node.js 26.5.0 (Current)](https://nodejs.org/en/blog/release/v26.5.0)** (*JavaScript Weekly #794*)
+  + 업데이트: Import Attributes를 통해 텍스트 파일을 직접 임포트할 수 있는 기능과 `blob.textStream()` API 지원이 새롭게 추가되었습니다.
+- **[react-dropzone 17.0: Create File Drag-and-Drop Zones](https://react-dropzone.js.org/)** (*React Status #483*)
+  + 업데이트: 리액트 환경에서 파일 드래그 앤 드롭 영역을 훅(Hook) 기반으로 손쉽게 구현할 수 있는 성숙한 라이브러리의 메이저 업데이트입니다.
+- **[React Mosaic 7.0: A Component Tiling 'Window Manager'](https://github.com/nomcopter/react-mosaic)** (*React Status #483*)
+  + 업데이트: 레이아웃 엔진에 큰 변화를 주었으며 React 16~19 버전을 모두 타겟팅하고 완벽한 ESM 및 CJS 빌드를 지원하는 타일링 컴포넌트 릴리스입니다.
+- **[react-fontawesome 3.4](https://github.com/FortAwesome/react-fontawesome/releases/tag/v3.4.0)** (*React Status #483*)
+  + 업데이트: Font Awesome 아이콘을 React에서 렌더링하기 위한 공식 라이브러리로, 새롭게 도입된 7.3 버전의 애니메이션 기능을 온전히 지원합니다.
+- **[Color.js 0.7: 'Let’s Get Serious About Color'](https://colorjs.io/)** (*Frontend Focus #750*)
+  + 업데이트: 다수의 새로운 색 공간과 Gamut 매핑 방식을 추가하고, 네이티브 지원이 부족한 브라우저 환경을 위한 향상된 폴백 기능을 탑재했습니다.
+- **[A-Frame 1.8: A Framework for Building WebXR Experiences](https://aframe.io/)** (*Frontend Focus #750*)
+  + 업데이트: 모바일과 데스크톱은 물론 VR 헤드셋 등 WebXR 호환 브라우저에서 구동되는 가상현실 경험을 구축하기 위한 장수 프레임워크의 최신판입니다.
+- **[web-ext 10.5: A Tool to Build, Run, and Test Web Extensions](https://github.com/mozilla/web-ext)** (*Frontend Focus #750*)
+  + 업데이트: 크로스 플랫폼 환경에서 브라우저 익스텐션을 표준화된 방식으로 빌드하고 테스트할 수 있도록 지원하는 인기 CLI 도구의 업데이트입니다.
+- **[Fuse.js 7.5](https://github.com/krisk/Fuse/releases/tag/v7.5.0)** (*JavaScript Weekly #794*)
+  + 업데이트: 점수 산정 및 랭킹 시스템과 관련된 여러 버그를 수정하여 퍼지 검색(Fuzzy Search) 결과의 신뢰성을 한층 높였습니다.
+
+## ✍️ 마치며
+이번 주 소식들을 정리하며, 프론트엔드 생태계가 성능 최적화와 개발자 경험 모두를 근본적으로 개선하려는 방향으로 역동적으로 나아가고 있음을 다시 한번 느낍니다. 특히 Bun이 런타임의 안정성을 극대화하기 위해 Rust로 코어 엔진을 전면 재작성하는 과정에서, Claude Code와 같은 AI 에이전트를 적극적으로 활용한 점은 무척 인상적입니다. 일상적인 코딩이나 단순한 스크립트 작성을 넘어, 아키텍처 수준의 대규모 리팩토링이나 언어 전환이라는 거대한 구조적 변화에도 Cursor, Claude 등의 AI가 필수적인 도구로 깊숙이 자리 잡아가고 있음을 명확히 보여주는 대목입니다. 
+또한, Vercel이 Next.js의 보안 릴리스 일정을 월 단위로 정례화하고 새로운 캐싱 모델을 고도화하는 모습은, 과거 Next.js 13에서 14로 업그레이드하며 겪었던 Turbopack의 비약적인 속도 향상만큼이나 복잡해지는 데이터 패칭과 성능 최적화 이슈에 새로운 기준을 제시할 것으로 기대됩니다.
+
+#### 출처
+- [JavaScript Weekly #794](https://javascriptweekly.com/issues/794)
+- [Frontend Focus #750](https://frontendfoc.us/issues/750)
+- [React Status #483](https://react.statuscode.com/issues/483)
+- [Smashing Newsletter #567](https://mailchi.mp/smashingmagazine/567-legacy-code-design-and-refactoring)
