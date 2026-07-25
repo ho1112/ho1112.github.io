@@ -1,0 +1,114 @@
+---
+title: '🚀 2026-07 W4 #68'
+desc: 状態管理の本質、Canvas環境のアクセシビリティ、CSS Subgridレイアウト | 2026年7月第4週目 週間技術ニュースレター
+date: 2026-07-25
+thumbnail: /posts/weekly/july.avif
+---
+
+## 🔥 今週の主要テーマ
+今週のウェブエコシステムは、状態管理の本質的な意味に関する深い議論から、Canvas環境におけるアクセシビリティ（Accessibility）の内製化、そしてCSS Subgridを活用した柔軟なレイアウト設計まで、フロントエンドアーキテクチャの根本を扱うテーマが主を成しました。また、開発者を狙った巧妙なマルウェア攻撃の事例が共有され、セキュリティに対する警戒心を喚起する一週間でした。
+
+## 1. 🔍 深掘り
+- **[The Absolute State of Management](https://infrequently.org/2026/07/state-management/)** (出典: *React Status #484* )
+  ![The Absolute State of Management](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hk2uxzwzyzmsfyy4vv74.jpg)
+   - 背景: Redux、MobX、Zustandなどの既存ツールが実質的に状態を「管理」するのではなく、「伝播」する役割に過ぎないという本質的な疑問の提起。
+   - 主要な機能: 真の状態管理とは、CRDTや同期エンジンのようにデータの競合を解決し、時間の流れを扱うことだと説明しています。
+   - 実務への適用: 複雑な状態管理が要求されるシステム設計の際、状態同期の領域とレンダリングのためのビューステートをより明確に分離するアーキテクチャの構築に有用です。  
+   - 注意事項: レンダリング最適化のための単純な状態管理と、ドメインデータの整合性を保証する真の「状態管理」を混同しないように注意する必要があります。
+- **[How Figma Built Accessibility Into a Canvas-Based Product](https://www.figma.com/blog/building-accessibility-into-a-canvas-based-product/)** (出典: *Frontend Focus #751* )
+   - 背景: CanvasでレンダリングされたUIは、ブラウザが標準で提供するアクセシビリティ機能を活用できず、最初から独自に構築しなければならないという課題に直面。
+   - 主要な機能: スクリーンリーダーの互換性サポート、キーボードナビゲーション体系の構築、そして精巧なフォーカス管理など、キャンバス環境に最適化されたアクセシビリティシステムを設計しました。
+   - 実務への適用: WebGLまたはCanvasベースの複雑な視覚的ウェブアプリケーションにおいて、普遍的なユーザーアクセシビリティを保証しなければならないシナリオの素晴らしいリファレンスになります。
+
+---
+#### 見逃せないコンテンツ
+- **[Handling Concurrency on the Web with Web Locks API](https://tech.olx.com/handling-concurrency-on-the-web-with-web-locks-api-163b7e07eddd)** (出典: *JavaScript Weekly #795* )
+  + 要約: 同一オリジン（Origin）の複数のタブやワーカー間でLockを取得および解放できるようにサポートするWeb Locks APIの活用方法を取り上げています。
+- **[Engineering High-Performance Parsers with Data-Oriented Design](https://www.arshad.fyi/writings/engineering-high-performance-parsers)** (出典: *JavaScript Weekly #795* )
+  + 要約: OxcやSWCよりも高速なJavaScriptパーサーである「Yuku」を開発する際に導入した、データ指向設計（Data-Oriented Design）の実践的な最適化手法を共有しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Jelly UI: Soft Web Components](https://jelly-ui.com/)** (出典: *Frontend Focus #751* )
+  ![Jelly UI: Soft Web Components](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1784722408/vymgtzkm4hd8me8fleyk.png)
+  + 概要: ネイティブHTMLコントロール要素に「ソフト」な物理的モーション効果を付与する、依存関係のないウェブコンポーネントライブラリです。
+  + 実践チップ: 40個のエレメントが提供されており、公式ショーケースを通じてコンポーネントの動きを直接テストし、UIインタラクションを柔軟に構成することができます。
+- **[Flint: Chart Specs that Compile to Vega-Lite, ECharts, or Chart.js](https://microsoft.github.io/flint-chart/)** (出典: *JavaScript Weekly #795* )
+  ![Flint: Chart Specs that Compile to Vega-Lite, ECharts, or Chart.js](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hd77f7jirzohktslvrxp.jpg)
+  + 概要: 宣言的なJSONベースのシンプルなスペックを記述すると、それをVega-Lite、ECharts、Chart.jsでレンダリングできる形式にコンパイルしてくれるMicrosoftの変換プロジェクトです。
+  + 実践チップ: 複数のチャートライブラリを混用する必要がある場合や、AIエージェントのための中間データ表現形式が必要な場合に、チャートエンジン間の結合度を下げる目的で活用できます。
+
+---
+#### 見逃せないコンテンツ
+- **[unwasm: Import .wasm Files Like Any Other ES Module](https://github.com/unjs/unwasm)** (出典: *JavaScript Weekly #795* )
+  + 要約: WASMファイルがバンドルされたアプリケーションに含まれる際、これを一般的なESモジュールのように簡単にインポート（`import { sum } from "sum.wasm"`）できるようにサポートするビルドタイムツールです。
+- **[Shadscan: Deterministic UI Audits for shadcn Apps](https://www.shadscan.com/)** (出典: *React Status #484* )
+  + 要約: APIキーやAIなしで約60個の決定論的チェックを通じて、shadcnコンポーネントのアクセシビリティおよび状態管理のベストプラクティス遵守状況を静的に監査（Audit）してくれるツールです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[How a Fake Interview's Coding Challenge Steals Credentials](https://www.elastic.co/security-labs/contagious-interview-malware-svg-steganography)** (出典: *JavaScript Weekly #795* )
+  ![How a Fake Interview's Coding Challenge Steals Credentials](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/y1sie2zdhnhjtqtnvwcy.jpg)
+  + 主要なインサイト: 求職中の開発者をターゲットにした偽のコーディングインタビューチャレンジに、SVG画像内のマルウェアを隠蔽（ステガノグラフィー）して認証情報を奪取する攻撃キャンペーンを詳細に解剖しています。外部スクリプト実行に対する実務者の警戒心を大きく高めてくれる有益な記事です。
+- **[Rebuilding FIFA's Standings Layout with CSS Subgrid](https://ishadeed.com/article/fifa-layout/)** (出典: *Frontend Focus #751* )
+  ![Rebuilding FIFA's Standings Layout with CSS Subgrid](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/w7lmj3n3wkn15p1x2tot.jpg)
+  + 主要なインサイト: ワールドカップの順位表という複雑でネストされたテーブルレイアウト構造を、CSS GridおよびSubgridを活用してすっきりと柔軟なレスポンシブで設計するプロセスを、視覚的なコード例とともに見事に解説しています。
+
+---
+#### 見逃せないコンテンツ
+- **[Design Psychology](https://productdesignpsychology.com/)** (出典: *Smashing Newsletter #568* )
+  + 要約: プロダクト設計時に考慮すべきユーザーの思考方式、記憶、意思決定プロセスや認知バイアスなどを、実用的なUXパターンと結びつけて扱う素晴らしい無料の心理学書籍です。
+- **[Low and Mid-Tier Mobile for the Real World](https://csswizardry.com/2026/07/low-and-mid-tier-mobile-for-the-real-world-2026/)** (出典: *Frontend Focus #751* )
+  + 要約: 最新のフラッグシップ機ではなく、グローバル市場で実質的に最も多く販売されている中低価格帯のモバイルデバイス（例：Galaxy A17 5G）を基準に、パフォーマンステスト環境を再整備するようサポートするガイドです。
+---
+
+## 4. ✨ アイデア
+- **[Decoy Font: A TTF Font That Hides What You Type](https://www.mixfont.com/experiments/decoy-font)** (出典: *Frontend Focus #751* )
+  ![Decoy Font: A TTF Font That Hides What You Type](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1784724248/x2obao1q5dqo1bqz2okf.png)
+  + 特徴: 分離された空間周波数（spatial frequencies）を操作し、人間の目には正常な文字に見えますが、AIクローラーには無意味な「おとり（Decoy）」文字を伝達するように設計された実験的なTTFフォントです。
+- **[Emotions Explorer](https://feel.ifsart.com/)** (出典: *Smashing Newsletter #568* )
+  ![Emotions Explorer](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/bc825604-34f8-2547-3ed5-0dd87e6767a9.png)
+  + 特徴: 約100種類の感情をグリッド上にマッピングしてグループ化し、複合的な感情の語彙力を高め、プロダクトのUXや感情的なジャーニー（Emotional Journey）をより繊細に設計できるようサポートする視覚的な探索ツールです。
+
+## 5. ⚡️ ミニノート
+- **[Angular is switching to a yearly release cadence](https://github.com/angular/angular/pull/69817)** (出典: *JavaScript Weekly #795* )
+  + 要約: Angularが1年単位の新しいリリース周期に移行することを発表し、これに伴いv23は2027年6月にリリースされる予定です。
+- **[ESLint now offers official 'codemods' for automating ESLint version migrations](https://eslint.org/blog/2026/07/eslint-codemod-migrations/)** (出典: *JavaScript Weekly #795* )
+  + 要約: ESLintの主要なメジャーバージョンアップデート（v8→v9、v9→v10）を自動的にマイグレーションできるように、公式のcodemodツールがサポートされます。
+- **[July 2026 Security Release](https://nextjs.org/blog/july-2026-security-release)** (出典: *React Status #484* )
+  + 要約: 複数のセキュリティ脆弱性を解決したNext.jsの2026年7月の定期セキュリティアップデートリリースが配布されました。
+- **[now enable experimental.useTypeScriptCli](https://nextjs.org/docs/app/api-reference/config/next-config-js/useTypeScriptCli)** (出典: *React Status #484* )
+  + 要約: Next.js 16.3 Previewバージョンで`experimental.useTypeScriptCli`オプションを有効にすると、TypeScript 7.0バージョンを適用してテストできます。
+- **[the developer release notes](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/153)** (出典: *Frontend Focus #751* )
+  + 要約: デスクトップ用のPicture-in-Picture APIサポート、`popover="hint"`の改善、およびネイティブコンテナ（Native Containers）プレビュー機能が搭載されたFirefox 153がリリースされました。
+
+## 6. 🎉 リリース
+- **[React 19.2.8, 19.1.9 and 19.0.8 Released](https://github.com/react/react/releases/tag/v19.2.8)** (*React Status #484* )
+  + アップデート: サーバー関数エンドポイントの要求時に発生する可能性があったDoS（サービス拒否）の脆弱性を修正したReact 19のパッチバージョンリリースです。
+- **[Nuxt 4.5 Released: The Full-Stack Vue Framework](https://nuxt.com/blog/v4-5)** (*JavaScript Weekly #795* )
+  + アップデート: Vite 8およびRspack 2を基盤としており、実験的なSSRストリーミングサポートと新しいコンポーザブル機能が追加された大規模リリースです。（Nuxt 3は7月31日にサポートが終了します。）
+- **[Version 7.1 of Astro is out now](https://astro.build/blog/astro-710/)** (*Frontend Focus #751* )
+  + アップデート: インラインスクリプトおよびスタイルに対するきめ細かいCSP制御、ページネーションURLのカスタム制御機能などが新たに導入されたAstro 7.1バージョンです。
+- **[Preact 11.0 Beta 2](https://github.com/preactjs/preact/releases/tag/11.0.0-beta.2)** (*JavaScript Weekly #795* )
+  + アップデート: 正式11バージョンのリリースを控えた最後のベータバージョンの1つで、マイグレーションガイドが共に公開されました。
+- **[Vue 3.6 is now in Release Candidate stage](https://github.com/vuejs/core/releases/tag/v3.6.0-rc.1)** (*JavaScript Weekly #795* )
+  + アップデート: 仮想DOMのオーバーヘッドを劇的に減らすVapor Mode機能が完成して含まれたVue 3.6のリリース候補（RC）バージョンが配布されました。
+- **[Color.js 0.7: 'Let’s Get Serious About Color'](https://colorjs.io/)** (*JavaScript Weekly #795* )
+  + アップデート: 新しい色空間のサポート、向上した色域マッピング（gamut mapping）アルゴリズム、そしてブラウザが標準サポートしていない色のためのスマートなfallback機能が含まれた大型アップデートです。
+- **[React Colorful 5.8: A Simple Color Picker Component](https://omgovich.github.io/react-colorful/)** (*React Status #484* )
+  + アップデート: 軽量で直感的なカラーピッカーコンポーネントであるReact Colorfulに、Shadow DOMのサポートが新たに追加された5.8リリースです。
+- **[Jotai 3.0 Alpha](https://github.com/pmndrs/jotai/releases/tag/v3.0.0-alpha.0)** (*React Status #484* )
+  + アップデート: 広く使用されているAtomic方式のReact状態管理ライブラリであるJotaiの3.0アルファバージョンが公開されました。
+- **[React on Rails 17.0](https://github.com/shakacode/react_on_rails/releases/tag/v17.0.0)** (*React Status #484* )
+  + アップデート: Ruby on RailsアプリにReactを統合するソリューションで、今回のバージョンからReact 19環境を公式に完全サポートします。
+- **[WebStorm 2026.2](https://blog.jetbrains.com/webstorm/2026/07/webstorm-2026-2/)** (*JavaScript Weekly #795* )
+  + アップデート: JetBrainsのJavaScript IDEであるWebStormの2026.2バージョンで、TypeScript 7のサポートおよびSvelte、Vueのサポートが大幅に強化されました。
+
+## ✍️ おわりに
+今週のフロントエンドエコシステムは、表面的な華やかさを超えて、システムの安定性と根本的な限界を克服しようとする成熟した努力が際立ちました。特に、単純な同期を超えた状態管理の本質に関する考察や、Canvas環境においてブラウザの標準サポートなしにアクセシビリティをゼロから実装したFigmaの事例は、開発者としてユーザーエクスペリエンスにどのように責任を持つべきかという重い問いを投げかけています。さらに、求職者を狙う巧妙なマルウェアの登場は、外部コードの依存関係と検証において、私たち全員がさらに高い水準のセキュリティ意識を備えるべきであることを明確に示唆しています。
+
+#### 出典
+- [JavaScript Weekly #795](https://javascriptweekly.com/issues/795)
+- [Frontend Focus #751](https://frontendfoc.us/issues/751)
+- [React Status #484](https://react.statuscode.com/issues/484)
+- [Smashing Newsletter #568](https://mailchi.mp/smashingmagazine/568-ux-psychology-and-human-behavior)
