@@ -1,0 +1,439 @@
+---
+title: 'Sentry 에러를 주 1,000건에서 60건으로 줄인 이야기 ｜ 1년 4차례의 정리 기록'
+desc: Sentry를 도입했는데 에러가 너무 많아 아무도 보지 않던 상태에서, 약 1년·4차례의 정리로 주간 에러를 약 94% 줄인 기록. 분류 기준 만들기, race condition 근본 대응, 노이즈 필터링까지.
+date: 2026-08-02
+thumbnail: /posts/workLog/sentry/thumb.avif
+---
+
+## 배경: "넣어놨는데, 아무도 안 본다"
+
+> "Sentry는 도입되어 있는데, 에러가 너무 많아서 아무도 안 보게 됐다"
+
+여기서 출발했습니다.
+
+담당하고 있는 건 Next.js + GraphQL 기반의 인재 매칭 플랫폼(기업용 화면)입니다. Sentry 자체는 이미 붙어 있었어요. 그런데 대시보드를 열면 수백 건의 issue가 쭉 나열되어 있어서, 어느 게 진짜 심각한 것인지 판별이 안 됩니다. 판별이 안 되니 안 열게 되고, 안 여니까 더 쌓이고.
+에러 모니터링 도구로서는 최악의 상태입니다. **알람은 너무 울리면 안 울리는 것과 똑같으니까요.**
+이 상태에서 시작해서, 약 1년에 걸쳐 4차례 정리를 했습니다 (2024년 7월 → 2024년 11월 → 2025년 1월 → 2025년 8월).
+
+### 먼저, 숫자의 정의
+
+이 글에서 "건수"라고 쓴 것은 **주당 이벤트 수**입니다.
+
+- **1차 조사 시점: 주당 약 1,000건** (조사표의 주간 이벤트 수 합계. ※ 주간 유저 수가 1명인 issue는 제외했으니 실제로는 조금 더 많습니다)
+- **4차 대응 후: 주당 약 60건** (미해결 이슈 전체 기준)
+
+두 숫자는 재는 방식이 다릅니다. 1,000건은 매 차수마다 상위 10~16개 issue만 추려서 만든 조사표 기준이고, 60건은 그 뒤 미해결 issue 전체를 훑어서 잰 값입니다. 그래서 뒤에 나올 4차 조사표 자체(464건)에서 필터 대상을 뺀 값과는 딱 맞아떨어지지 않습니다 — 조사표가 다루지 않던 롱테일 issue들까지 60건에는 포함돼 있기 때문입니다.
+
+약 94% 감소입니다. 참고로 60건은 유저 1명짜리 issue까지 전부 포함한 값이라, 같은 기준으로 맞추면 감소폭은 이보다 더 큽니다.
+그리고 먼저 솔직하게 적어둡니다. **이 감소는 코드 수정만의 성과가 아닙니다.** "고친 것"과 "애초에 에러가 아니라고 판단해서 제외한 것"의 합산입니다.
+
+다만 이 글에서 공유하고 싶은 건 오히려 그 **구분하는 방법** 쪽입니다. 전부 고치려다 지치는 것보다, 고쳐야 할 것을 가려내는 쪽이 훨씬 효과가 있었거든요.
+
+---
+
+## 고치기 전에, 먼저 센다 ― 에러 분류 기준
+
+코드를 건드리기 전에, 먼저 대시보드의 전체 issue를 표로 옮겨 적었습니다. 한 번 정리할 때마다 10~16건 정도였습니다.
+
+### 정렬 기준: "1주일당 조우 유저 수"
+
+Sentry 기본값인 총 이벤트 수(누적)로 정렬하면 몇 년 전부터 쌓인 오래된 issue가 상위를 차지합니다. 누적 12,000건짜리 issue라도 지금 주에 3건밖에 안 나오면 우선순위는 낮죠.
+그래서 "지금, 지속적으로 누군가를 불편하게 만들고 있는가"를 재기 위해 **주간 조우 유저 수**를 기준으로 삼았습니다.
+
+그리고 주간 유저 수가 1명인 issue는 표에 올리지 않았습니다. 하나하나 다 대응하는 건 리소스 낭비라고 판단했거든요. 에러 정리는 "전부 없애기"가 목적이 아니라 "읽을 수 있는 대시보드 만들기"가 목적이라서, 어디서 선을 그을지를 먼저 정해두는 편이 결국 빨랐습니다.
+
+### 각 issue를 3종류로 분류
+![](/posts/workLog/sentry/kanban.avif)
+| 종류 | 내용 | 대응 |
+|---|---|---|
+| **앱 버그** | null 체크 누락, race condition 등 | 코드 수정 |
+| **외부 요인·노이즈** | 세션 만료, 유저 페이지 이탈, 브라우저 확장 충돌 | 설정으로 제외 |
+| **원인 불명·보류** | 재현 불가, 특정 환경에서만 발생 | 기록하고 다음 회차로 이월 |
+
+세 번째 "보류"를 명시적으로 갖고 있는 게 포인트입니다. **모르는 걸 모른다고 기록에 남겨두면**, 다음 정리 때 "지난번에 모르겠던 그거, 아직 살아있네"라고 추적할 수 있습니다. 실제로 이게 뒤에 나올 패턴 4로 이어졌습니다.
+
+### 1차 대응(2024년 7월)에서 보인 것
+
+상위에 올라온 면면은 이랬습니다 (주간 이벤트 수 / 주간 유저 수).
+
+| # | 에러 | 주간 건수 | 주간 유저 | 분류 |
+|---|---|---|---|---|
+| 1 | `Cannot read properties of null (reading 'unreadCount')` | 314 | 129 | 앱 버그 |
+| 2 | `Unauthenticated.` | 364 | 49 | 노이즈 |
+| 3 | `Cannot set properties of null (setting 'value')` | 68 | 35 | 앱 버그 |
+| 4 | `undefined is not an object (evaluating 'ex.messages')` | 46 | 28 | 앱 버그 |
+| 5 | `Cannot read properties of null (reading 'getBoundingClientRect')` | 40 | 16 | 앱 버그 |
+
+건수 1위였던 `Unauthenticated.`는 로그인 토큰 만료로 인한 인증 실패였습니다. 앱 버그가 아니라 정상적인 상태 전이죠. 여기서 노이즈 판정. 반면 `getBoundingClientRect` 계열은 코드로 고칠 수 있는 버그라 수정 대상으로.
+
+이 시점에는 "위에서부터 순서대로 고치면 끝나겠지"라고 생각했습니다. 생각은 했는데 말이죠.
+
+---
+
+## 2차 대응: 정렬 기준을 바꿨더니 다른 세계가 보였다
+
+4개월 뒤, Node.js v20 업데이트가 있어서 그 타이밍에 두 번째 정리를 했습니다. 이때 정렬 기준을 **주간** 이벤트 수로 바꿔서 봤어요. (앞서 비판한 건 issue 생애 전체의 누적 이벤트 수였고, 이번엔 "이번 주에 얼마나 났는가"를 다시 기준으로 삼은 것이라 다릅니다.)
+그랬더니 1차에서는 없던 게 1위로 올라왔습니다.
+
+| # | 에러 | 주간 건수 | 주간 유저 |
+|---|---|---|---|
+| 1 | `GET /api/approach/ogp/` — `certificate has expired` | 917 | **0** |
+| 2 | `Cannot read properties of undefined (reading 'messages')` | 363 | 124 |
+| 3 | `Unauthenticated.` | 164 | 48 |
+| 4 | `GET /api/approach/ogp/` — `Hostname/IP does not match certificate's altnames` | 147 | **0** |
+
+1위와 4위를 합쳐서 **주 1,000건 초과. 그리고 영향 유저 수는 0.**
+
+OGP 취득용 API 라우트에서, 대상 사이트의 SSL 인증서가 만료됐거나 호스트명이 일치하지 않아 실패하던 것들이었습니다. 서버사이드에서 발생하니 주간 유저 수라는 기준으로는 완전히 안 보이는 영역이었던 거죠.
+
+> "주간 유저 수로 정렬한다"는 판단은 옳았다. 하지만 **옳은 기준은 그 기준이 놓치는 것을 반드시 갖고 있다.**
+
+이후로는 두 축으로 보게 됐습니다.
+
+- **주간 유저 수 순** → 유저 경험을 망가뜨리고 있는 것
+- **주간 이벤트 수 순** → 대시보드의 신호 대 잡음비를 망가뜨리고 있는 것
+
+앞쪽만 보고 있으면 뒤쪽에 묻혀서 대시보드를 읽을 수 없다는 상태가 해소되지 않습니다. 반대로 뒤쪽만 보면 소수에게 심각한 영향을 주는 버그를 놓치게 되고요.
+
+여기까지는 시간순(1차 → 2차)으로 짚었습니다. 지금부터는 순서를 바꿔서, 실제로 어떻게 고쳤는지를 네 가지 패턴으로 나눠 정리합니다. 패턴 하나가 한 차수에서 끝난 게 아니라 여러 차수에 걸쳐 있는 경우도 있습니다 — 이를테면 패턴 3(ignoreErrors)은 1차에서 판단만 해두고 실제로 설정에 반영한 건 4차였습니다.
+
+---
+
+## 패턴 1: Optional Chaining ― 화면을 떨어뜨리지 않기 위해
+
+건수로도 제일 많았던 게 이겁니다. 다만 건수가 많다는 것보다 중요한 게 있어요.
+
+```
+Cannot read properties of null (reading 'getBoundingClientRect')
+Cannot read properties of undefined (reading 'validation')
+Cannot read properties of undefined (reading 'messages')
+```
+
+이런 종류의 TypeError는 React 렌더링 중에 발생하면 에러 바운더리까지 올라갑니다. 로그가 한 건 늘어난 얘기가 아니라 그 순간 유저 앞에서 화면이 깨질 수 있다는 뜻이에요.
+
+즉 이건 Unhandled Runtime Exception을 잡는 작업이었습니다.
+
+```typescript
+// Before
+const top = cardRef.current.getBoundingClientRect().top
+const errors = graphQLErrors[0].extensions.validation
+
+// After
+const top = cardRef.current?.getBoundingClientRect()?.top
+const errors = graphQLErrors?.[0]?.extensions?.validation
+```
+
+참고로 전부 optional chaining으로 처리한 건 아닙니다. `approach.messages.slice(-1)[0]` 이나 `convertFullNumberToHalfNumber(pasteValue).split('')` 처럼 앞단에서 if 체크로 막는 게 자연스러운 곳은 그렇게 대응했습니다.
+
+### 왜 타입 정의가 지켜주지 못했나
+
+제일 많았던 게 GraphQL 에러 객체의 `extensions`였습니다. 조사해보니 **502 Bad Gateway 응답과 함께 발생**하고 있었어요. 정상 응답일 때는 `extensions`에 validation 정보가 들어오는데, 502가 돌아오는 경로에서는 그렇지 않았습니다.
+
+"타입 정의상 존재해야 하는데"라는 방심이 쌓여 있었던 셈입니다.
+
+### 컴포넌트 unmount 타이밍의 함정
+
+DOM의 `getBoundingClientRect()`도 마찬가지로, 컴포넌트가 unmount되는 타이밍에 ref가 null이 되는 케이스가 있었습니다. 검색 화면의 카드, 닫기 버튼 등 유저가 빠르게 조작하면 밟게 되는 위치였고요.
+
+참고로 `es is undefined`가 Firefox에서만 나오는 issue도 있었습니다. 같은 원인이라도 브라우저에 따라 에러 메시지가 달라지므로, 메시지 문자열만으로 동일 issue인지 판단하지 않는 게 좋습니다.
+
+### 다만: `?.`는 숨기는 도구이기도 하다
+
+`?.`를 붙이면 예외는 사라집니다. 하지만 값을 못 가져왔다는 사실은 사라지지 않았습니다. 값이 undefined가 된 결과 화면이 어긋난 채 아무도 눈치채지 못한다면 그건 에러가 사라진 게 아니라 **에러가 안 보이게 된 것**일 뿐입니다.
+
+그래서 붙이기 전에 "값이 없어도 유저에게 문제가 없는 자리인가"를 한 번 보고 넘어가는 편이 좋습니다. 기계적으로 전부 붙이면 다음 정리 때 "원인 불명"을 늘리는 결과가 될 수 있습니다.
+
+---
+
+## 패턴 2: useRef로 race condition 막기 ― 2단계 이야기
+
+가장 제대로 고쳤다는 실감이 든 수정입니다. 그리고 한 번 실패한 수정이기도 합니다.
+
+### 1단계: 증상을 막았다 (1차 대응)
+
+1차 조사 3위에 이런 issue가 있었습니다.
+
+```
+Cannot set properties of null (setting 'value')
+Cannot set properties of null (setting 'id')
+```
+
+메시지 전송의 `onCompleted` 콜백 안에서 `messageRef.current.value = null`을 실행하는 부분입니다. null 체크를 추가해서 수정·릴리스했습니다.
+
+### 2단계: 재발했다 (2차~3차 대응)
+
+2차 대응에서 릴리스 후 건수를 확인해봤더니, 다른 수정들이 줄줄이 0건이 된 가운데 **이 issue만 7건이 남아 있었습니다.** 그리고 3차 조사에서도 여전히 살아 있었고요.
+이때 "ref가 null인 게 문제가 아니라 애초에 실행되면 안 되는 타이밍에 실행되고 있는 게 아닐까"라고 다시 생각했습니다.
+
+**상황**: 메시지 전송 중에 다른 채팅 화면으로 이동하면, `onCompleted`가 이미 다른 화면을 보고 있는 상태에서 발화합니다.
+
+```
+1. 채팅 A에서 메시지 전송 → API 요청 발생
+2. 유저가 채팅 B로 이동 → approach 상태가 B로 바뀜
+3. 서버에서 응답이 와서 onCompleted 발화
+4. 이 시점에 approach.id는 이미 "B"
+5. A 화면의 DOM을 만지려고 함 → ref는 null 💥
+```
+
+null 체크는 이 5번에서 에러가 안 나게 했을 뿐입니다. **B 화면을 보고 있는데 A의 후처리가 돌아간다**는 본체는 남아 있었습니다.
+
+### 대응: 전송 출처를 기록해두고, 일치하지 않으면 버린다
+
+```typescript
+// 전송 직전에 "어느 화면에서 보낸 요청인지" 기록
+latestSendApproachRef.current = approach.id
+sendMessages({ variables })
+
+// onCompleted에서 현재 화면과 일치하지 않으면 즉시 return
+if (
+  latestSendApproachRef.current &&
+  latestSendApproachRef.current !== approach.id
+) {
+  return
+}
+```
+
+### 왜 `useState`가 아니라 `useRef`인가
+
+이유는 두 가지입니다.
+
+1. **리렌더링을 일으키고 싶지 않다.** 이건 어느 화면에서 보냈는가라는 메타 정보이지 화면에 그려지는 값이 아닙니다. state로 만들면 의미 없는 리렌더링이 늘어납니다.
+2. **클로저 문제를 피하고 싶다.** `onCompleted`는 비동기 콜백이라 state를 참조하면 그 함수가 생성된 시점의 오래된 값을 잡아버리는 경우가 있습니다. ref는 `.current`를 통해 항상 최신 값을 동기적으로 읽을 수 있고요.
+
+이 케이스에서는 2번이 본질적입니다. 오히려 오래된 값을 잡아버리는 것 자체가 고치려는 현상이라서 state로는 원리적으로 풀리지 않습니다.
+
+---
+
+## 고친 다음, 다시 측정 ― 효과 검증
+
+2차 대응에서는 수정 릴리스 후(12/9~12) 다시 대시보드를 열어서, 대응한 issue별로 재발 건수를 기록했습니다.
+
+| 대응한 issue | 릴리스 후 건수 |
+|---|---|
+| `Cannot read properties of undefined (reading 'messages')` | 0건 |
+| `ea is undefined` | 0건 |
+| `getBoundingClientRect` 계열 (2건) | 0건 |
+| `Cannot read properties of null (reading 'replace')` | 0건 |
+| `Cannot set properties of null (setting 'value' / 'id')` | **7건** |
+
+여기서 중요한 건 7건 남아 있는 걸 "7건 남아 있다"고 적은 것이라고 생각합니다.
+
+만약 전부 0건이라고 쓰고 만족했다면, 패턴 2의 2단계(race condition 근본 대응)에는 도달하지 못했을 겁니다. **수정하고 끝내지 않고, 같은 기준으로 다시 잰다.** 이게 없었으면 고쳤다는 착각으로 했을지도 모릅니다.
+한 가지 더 덧붙이면, 릴리스 전부터 발생 빈도가 낮았던 issue에는 표시를 달아서 "0건이 된 게 릴리스 덕분이 아닐 수도 있다"고 주석을 남겼습니다. 효과 검증의 정확도를 스스로 부풀리지 않기 위한 장치입니다.
+
+---
+
+## 패턴 3: ignoreErrors ― "에러가 아닌 것"을 걷어내기
+
+```typescript
+// sentry.client.config.ts
+ignoreErrors: [
+  // 세션 종료 후의 동작이 원인이므로 무시
+  'Unauthenticated.',
+  // 유저의 페이지 이탈 시 발생하는 브라우저 기인 에러이므로 무시
+  'The user aborted a request.',
+  // 유저의 브라우저 확장 프로그램과 스크립트의 충돌이 원인이므로 무시
+  "property 'javaEnabled' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value",
+  // 의도적으로 같은 URL로 리다이렉트하고 있으므로 무시
+  'Invariant: attempted to hard navigate to the same URL',
+]
+```
+
+| 메시지 | 실체 |
+|---|---|
+| `Unauthenticated.` | 로그인 토큰 만료 후 API를 호출했을 때. 에러가 아니라 정상적인 상태 전이 |
+| `The user aborted a request.` | 렌더링 중 유저가 페이지를 이동해서 요청이 취소된 것 |
+| `property 'javaEnabled' is a read-only ...` | 브라우저 확장 프로그램과 스크립트의 충돌 (자세한 건 패턴 4) |
+| `Invariant: attempted to hard navigate to the same URL` | 의도적으로 동일 URL로 리다이렉트하는 부분에서 나오는 Next.js 내부 에러 |
+
+### 무시하는 이유를 코드에 적어둔다
+
+작지만 효과가 있는 습관입니다. `ignoreErrors`의 각 줄 위에 왜 무시해도 된다고 판단했는지를 한 줄 주석으로 남기고 있습니다. 나중에 이 목록을 다시 볼 때, 판단의 전제가 아직 유효한지 확인할 수 있게요.
+
+### "판단"과 "설정"은 별개였다
+
+여기가 개인적으로 가장 반성한 지점입니다.
+`Unauthenticated.`를 "대응 불필요"로 판단한 건 **1차 대응(2024년 7월)**입니다. 조사표에도 그렇게 적혀 있어요. 그런데 실제로 `ignoreErrors`에 넣은 건 **4차 대응(2025년 8월)**. 그 사이 내내 주 100~300건대로 대시보드에 쌓이고 있었습니다.
+**판단만 하고 설정을 안 하면 한 건도 안 줄어듭니다.** 당연한 얘긴데, 조사표에 "대응 없음"이라고 쓴 시점에 처리한 기분이 되어버렸어요. 정리를 할 거라면 "대응 불필요"도 액션이 있는 결론으로 다뤄야 했습니다.
+
+### 무시 설정은 생각보다 넓게 먹는다
+
+주의할 점이 하나 있습니다. **`ignoreErrors`의 문자열 지정은 부분 일치**입니다. `'Unauthenticated.'`라고 써도 그 메시지만 걸리는 게 아니라, 그 문자열을 포함하는 에러가 전부 걸러집니다. 엄밀하게 한정하고 싶다면 정규식(`/^Unauthenticated\.$/`)을 써야 합니다.
+"노이즈를 지운다"와 "불편한 걸 지운다"는 종이 한 장 차이라서, 이 목록은 늘릴 때 신중할 필요가 있습니다.
+
+---
+
+## 패턴 4: 소거법으로 "우리 버그가 아님"을 증명하기
+이게 가장 탐정 같아서 재밌었던 대응입니다.
+
+### 3차 대응: "1개 회사에서만 발생하고 있다"
+
+3차 조사에서 하위 쪽에 묘한 issue가 3건 나란히 있었습니다.
+
+```
+Cannot read properties of null (reading 'click')
+doFunction(...) is not a function
+editorBxScriptPolicy is not defined
+```
+
+전부 검색 화면이고, 주간 조우 유저 수는 1~2명. 건수도 적어서 평소라면 무시할 자리인데, 조사해보니 **전부 같은 1개 회사(가칭 A사)에서의 접속, IP는 2개**였습니다.
+
+이 시점에는 원인을 알 수 없었기 때문에, "원인 불명·보류"로 분류하고 기록만 남겼습니다. 무리하게 결론을 내지 않은 게 결과적으로 정답이었어요.
+
+### 4차 대응: 증거가 모인다
+
+7개월 뒤 4차 조사에서, 로그인 화면에 새로운 에러가 나타났습니다.
+
+```
+'get' on proxy: property 'javaEnabled' is a read-only and non-configurable
+data property on the proxy target but the proxy did not return its actual value
+```
+
+이걸로 선이 이어졌습니다. 판단 근거를 정리하면 이렇습니다.
+
+1. **발생이 1개 회사에 한정되어 있다** (IP도 2개뿐). 앱 버그라면 다른 회사에서도 나와야 합니다
+2. **우리 코드에 존재하지 않는 식별자가 참조되고 있다.** `editorBxScriptPolicy`라는 변수는 프로젝트 어디에도 정의한 적이 없습니다. `doFunction`도 마찬가지. 우리가 쓰지 않은 코드가 실행되고 있다는 뜻입니다
+3. **브라우저 네이티브 객체가 Proxy로 감싸져 있다.** `navigator.javaEnabled`에 대한 proxy invariant 위반은, 누군가가 `navigator`를 `Proxy`로 감쌌다는 의미입니다. 애플리케이션 코드가 이럴 이유는 없습니다
+4. **동일 증상의 선례가 있다.** 같은 `javaEnabled` proxy 에러가 다른 OSS 프로덕트의 issue에서도 보고되어 있었습니다 (맨 아래 참고 링크)
+5. **코드 리뷰에서 해당 부분에 문제가 없다.** 4차 대응 시점에 "코드적으로는 문제없어 보인다"고 결론 내렸습니다
+
+이상으로 **브라우저 확장 프로그램이 DOM이나 전역 객체를 바꿔치기하고 있고, 그게 우리 코드와 충돌하고 있다**고 판단했습니다.
+
+![](/posts/workLog/sentry/konan.avif)
+"확장 프로그램 탓인 것 같다"가 아니라 **"우리 버그가 아니라고 말할 수 있는 근거가 5개 있다"** 상태까지 가져가는 게 중요했습니다. 상부에 설명해야 할 일이 생겼을 때도 이게 그대로 재료가 되고요.
+
+### 대응: 전부 한꺼번에 무시하지는 않았다
+
+원인이 확장 프로그램이라고 판단했다고 해서 전부 같은 방식으로 처리하지는 않았습니다. 같은 확장 프로그램 탓이어도 성질이 다른 것들이 섞여 있었기 때문입니다.
+
+**① 어느 회사에서 나와도 확장 프로그램 유래라고 볼 수 있는 것 → `ignoreErrors`로 전역 무시**
+`property 'javaEnabled' is a read-only and non-configurable...`이 여기 해당합니다. proxy invariant 위반은 애플리케이션 코드로는 원리적으로 일으킬 수 없는 에러입니다. 어느 회사에서 나오든 원인이 같으니 회사를 조건으로 걸 이유가 없습니다. 패턴 3의 목록에 넣었습니다.
+
+**② 일반적인 메시지지만 A사에서만 발생하는 것 → `beforeSend`로 회사를 조건 삼아 무시**
+`Cannot read properties of null (reading 'click')`과 `doFunction(...) is not a function`이 여기 해당합니다. 까다로운 건 이것들이 우리 버그일 때도 똑같이 나오는 메시지라는 점입니다. `ignoreErrors`에 넣어버리면 다른 회사에서 진짜 크래시가 났을 때 알아챌 수 없습니다.
+`editorBxScriptPolicy is not defined`는 원인 특정의 근거로는 강력했지만, 발생이 주 1건이라 필터 목록에는 넣지 않았습니다.
+
+②의 구현이 이겁니다.
+
+```typescript
+beforeSend(event, hint) {
+  const error = hint.originalException
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string'
+  ) {
+    const errorMessage = error.message
+    const companyContext = event.contexts?.company
+    const companyId = companyContext?.company_id
+      ? String(companyContext.company_id)
+      : null
+
+    // 통지를 끄고 싶은 기업 ID와 에러
+    const ignoredErrorsByCompany: Record<string, string[]> = {
+      COMPANY_A: [
+        "Cannot read properties of null (reading 'click')",
+        'doFunction(...) is not a function',
+      ],
+    }
+
+    if (companyId && ignoredErrorsByCompany[companyId]) {
+      const targetErrorKeyword = ignoredErrorsByCompany[companyId]
+      if (
+        targetErrorKeyword.some((keyword: string) =>
+          errorMessage.includes(keyword)
+        )
+      ) {
+        return null
+      }
+    }
+  }
+
+  return event
+}
+```
+
+### beforeSend 구현 포인트
+
+구현상 포인트가 몇 가지 있습니다.
+
+**`event`가 아니라 `hint.originalException`을 보고 있다.** `beforeSend`의 두 번째 인자 `hint`에는 Sentry가 전송용으로 정형하기 전의 원본 예외 객체가 들어 있습니다. `event.exception.values[0].value`로도 같은 문자열을 얻을 수 있지만 계층이 깊습니다.
+
+**`hint.originalException`은 `unknown` 타입이라 좁혀야 한다.** `null`이나 문자열이 들어올 수도 있어서, `typeof`와 `in`으로 확인한 뒤 접근합니다.
+
+**회사 ID는 `contexts`에서 가져온다.** 기업 정보를 `company` 컨텍스트로 실어두고 있어서 `event.contexts?.company?.company_id`로 참조합니다. 값이 숫자로 들어올 때도 있어서 `String()`으로 정규화합니다.
+
+### `ignoreErrors`와 `beforeSend`의 구분
+
+| | `ignoreErrors` | `beforeSend` |
+|---|---|---|
+| 볼 수 있는 것 | 메시지 문자열만 | 이벤트와 hint의 내용 전체 |
+| 쓰는 곳 | **누구에게나 노이즈**인 것 | **특정 조건에서만** 노이즈인 것 |
+| 이번 예시 | 세션 만료, 요청 중단, proxy invariant 위반 | A사 한정 `click` / `doFunction` |
+
+판단 기준을 한 줄로 정리하면 이렇습니다. **"이 메시지가 다른 회사에서 날아왔을 때, 그게 진짜 버그일 수 있는가?"** 있을 수 있으면 `beforeSend`, 있을 수 없으면 `ignoreErrors`.
+
+그리고 `ignoredErrorsByCompany`라는 형태로 만든 덕분에 어느 회사의, 어떤 에러를, 지금 무시하고 있는지가 한눈에 보이게 됐습니다.
+
+---
+
+## 숫자 정리
+
+| 회차 | 시기 | 주로 한 일 | 주간 이벤트 수 |
+|---|---|---|---|
+| 1차 | 2024.07 | 분류 기준 확립, null 계열 초기 대응 | 약 1,065 |
+| 2차 | 2024.11 | 정렬 기준을 이벤트 수로, OGP 서버사이드 에러 발견, 효과 검증 도입 | 약 1,945(중 OGP 관련 1,076) |
+| 3차 | 2025.01 | race condition 근본 대응, A사 건을 보류로 기록 | 약 855 |
+| 4차 | 2025.08 | 노이즈 필터 설정, A사 건 결론 | 464 (2주간)≒ 주 232 |
+
+여기서 4차만 2주 기준인 데는 이유가 있습니다. 1~3차를 거치며 에러가 충분히 줄어서, 1주일로 끊으면 표본이 너무 적어졌기 때문입니다. 유의미한 수치를 보려고 집계 범위를 넓혀야 했습니다.
+
+집계 단위를 바꿔야 했다는 사실 자체가, 사실 어떤 숫자보다 직접적인 결과였다고 생각합니다. 처음엔 1주일치만 봐도 표가 꽉 찼는데, 1년 뒤에는 2주를 모아야 표가 만들어졌으니까요.
+
+4차 조사표의 464건은 아직 필터를 걸기 전 수치입니다. 이 중 이번에 걷어내기로 정한 게 이만큼이었습니다.
+
+| 필터 대상 | 2주 건수 |
+|---|---|
+| `Unauthenticated.` | 142 |
+| `The user aborted a request.` | 118 |
+| A사 `click` | 121 |
+| `javaEnabled` proxy | 3 |
+| `Invariant: same URL` | 2 |
+| **합계** | **386** |
+
+조사한 464건 중 386건, 그러니까 8할 이상이 "고칠 대상이 아니었다"는 뜻입니다. 1차 때 상위를 차지하던 것들을 코드로 다 고치고 난 뒤에도 남아 있던 대부분은 버그가 아니라 노이즈였던 거죠.
+
+내역을 다시 정리하면:
+
+- **코드 수정으로 사라진 것**: null 계열 크래시, race condition
+- **설정으로 걷어낸 것**: 세션 만료, 요청 중단, 확장 프로그램 유래
+- **별도 대응으로 넘긴 것**: OGP API의 서버사이드 에러 (에러 핸들링 쪽에서 대응)
+
+2차 숫자가 1차보다 늘어난 건, 정렬 기준을 바꿔서 그때까지 안 보이던 게 가시화됐기 때문입니다. 줄이는 작업을 하고 있는데 숫자가 늘어나는 순간이 있다는 건, 정리를 제대로 하고 있다는 증거이기도 합니다.
+
+---
+
+## 마치며
+
+1년 해보고 나서, 가장 효과가 있었던 건 기술적인 수정 그 자체보다 **"이건 고쳐야 하는가?"를 판단하는 기준을 먼저 만든 것**이었습니다.
+
+- 측정할 축을 정한다 (주간 유저 수 + 이벤트 수)
+- 3종류로 분류한다 (버그 / 노이즈 / 보류)
+- 고쳤으면 같은 축으로 다시 잰다
+- 모르는 건 "모른다"고 기록해서 다음으로 넘긴다
+
+특히 4번째가 효과적이었습니다. A사 건은 3차에서 무리하게 결론을 냈다면 "원인 불명인 채로 무시"하거나 "무관한 코드를 건드리거나" 둘 중 하나가 됐을 겁니다. **7개월 재워뒀더니 증거가 저쪽에서 늘어나 줬다**는 게 실제로 있는 일이더라고요.
+
+그리고 `?.`를 붙이는 것도, `ignoreErrors`에 넣는 것도, 둘 다 **"안 보이게 하는" 조작**입니다. 안 보이게 해도 되는 것인지 판단하지 않고 하면, 1년 뒤에 또 같은 정리를 하게 됩니다. 🙃
+
+---
+
+#### 🔗 참고
+
+- Sentry Docs — [Filtering (`ignoreErrors / beforeSen)](https://docs.sentry.io/platforms/javascript/guides/react/configuration/filtering/)
+- Sentry Docs — [InboundFilters integration](https://docs.sentry.io/platforms/javascript/configuration/integrations/inboundfilters/)
+- MDN — [Optional chaining (?.)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+- MDN — [handler.get()의 invariant](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/get)
+- Matomo — [javaEnabled proxy 에러 관련 issue](https://github.com/matomo-org/matomo/issues/22836)
