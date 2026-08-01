@@ -1,0 +1,173 @@
+---
+title: '🚀 2026-08 W1 #69'
+desc: TypeScript 7의 Go 네이티브 컴파일러 10배 속도, TanStack의 RSC 제거 아키텍처 결정, conic-gradient로 삼각형 그리기 | 2026년 8월 1주차 주간 기술 뉴스레터
+date: 2026-08-01
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 이번 주 핵심 테마
+
+이번 주는 "**엔진 교체**"가 관통하는 한 주였습니다. Anders Hejlsberg가 직접 시연한 **TypeScript 7의 Go 네이티브 컴파일러**(10배 속도), 그리고 **TanStack이 자사 사이트에서 RSC를 걷어낸 아키텍처 결정**이 프런트엔드 담론의 중심에 섰습니다. CSS 쪽에서는 `conic-gradient()`의 놀라운 활용법과 `infinity` 상수 이야기가, 도구 생태계에서는 "Rust가 여전히 JavaScript를 먹어치우고 있다"는 화두가 이어졌습니다. 여기에 Smashing이 소개한 사랑스러운 소규모 웹 프로젝트들까지, 실무와 영감을 두루 채운 주간이었습니다.
+
+## 1. 🔍 심층 분석
+- **[Why TanStack Stopped Using RSC on Its Site](https://tanstack.com/blog/we-stopped-using-rsc-on-tanstack-com)** (출처: *React Status #485*)
+  - 배경: TanStack은 원래 무거운 마크다운·구문 하이라이팅 렌더러(Shiki 기반, 약 358KB)를 클라이언트에 보내지 않으려고 React Server Components를 도입했습니다. RSC는 서버에서 콘텐츠를 렌더해 Flight 페이로드로만 전달하므로 초기 클라이언트 번들이 크게 줄어드는 실질적 이점이 있었습니다.
+  - 핵심 기능: 그런데 하이라이팅·마크다운 스택 자체를 27KB 수준으로 줄이고 나자 계산이 뒤집혔습니다. 작은 라이브러리라면, 매 요청마다 서버에서 렌더해 RSC/Flight 페이로드를 보내는 것보다, 작은 라이브러리를 한 번만 클라이언트로 보내고 여러 번 렌더하는 SSR 방식이 더 낫다는 것입니다. 이를 위해 TanStack은 의도적으로 작게 만든 두 라이브러리 **TanStack Markdown**(4.9KB)과 **TanStack Highlight**(8KB, 25개 언어)를 새로 만들었습니다.
+  - 코드 예제:
+```txt
+    # RSC 방식: 서버에서 마크다운/하이라이팅을 렌더 → Flight 페이로드로 전송
+    #           무거운 렌더러를 클라이언트에 보내지 않는 대신, 페이지마다 서버 왕복
+
+    # SSR + 소형 라이브러리 (TanStack의 새 선택)
+    #           TanStack Markdown(4.9KB) + Highlight(8KB)를 "한 번만" 전송
+    #           이후 라우트 전환은 클라이언트에서 반복 렌더 → 블로킹 타임↓, 코드 단순↑
+```
+  - 실무 적용: "RSC냐 SSR이냐"는 이념 대결이 아니라 **의존성 크기에 따라 달라지는 트레이드오프**임을 보여주는 사례입니다. 무거운 렌더러를 서버에 격리해야 한다면 RSC가, 렌더러가 충분히 작다면 "한 번 보내고 여러 번 렌더"하는 SSR이 유리합니다.
+  - 주의사항: 이 사이트는 RSC 제거 이후에도 일반 프로덕션 작업이 함께 반영된 상태라 "순수 RSC-only 실험"은 아닙니다. 저자 본인도 모든 바이트 절감을 RSC 제거 효과로 돌리지는 않는다고 명시합니다. 또한 새 라이브러리들은 아직 alpha 단계입니다.
+- **[The Creator of TypeScript Shows Off TypeScript 7](https://www.youtube.com/watch?v=OytpXXeNmTQ)** (출처: *JavaScript Weekly #796*)
+  ![TypeScript 7을 시연하는 Anders Hejlsberg](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/c_crop,g_south,w_w,h_h_sub_50/bjd0nutn9yncyimrgifx.jpg)
+  - 배경: 14년간 TypeScript는 자기 자신(TS/JS)으로 작성된 컴파일러를 써왔지만, 단일 스레드 JavaScript 런타임의 한계에 부딪혔습니다. Hejlsberg 팀은 컴파일러 전체를 **Go로 포팅**해 이 병목을 풀었습니다.
+  - 핵심 기능: 영상에서 Hejlsberg는 VS Code의 130만 줄 코드베이스에서 새 Go 기반 컴파일러가 만들어내는 **10배 속도 향상**을 시연합니다. 타입 체크 로직을 새로 발명한 게 아니라, TypeScript 6.0과 동일한 구조·로직을 유지한 채 Go로 다시 작성했기 때문에 오류·메시지·위치가 두 컴파일러 간에 동일합니다. 새로운 **LSP**(Language Server Protocol) 언어 서버도 함께 도입됩니다.
+  - 코드 예제:
+```bash
+    # 기존 typescript 대신 RC 채널 설치 → tsc가 곧 Go 네이티브 바이너리
+    npm install -D typescript@rc
+
+    # 타입 체크만 수행 (빌드는 esbuild/SWC/Vite가 담당하는 구성이 일반적)
+    npx tsc --noEmit
+
+    # 최신 나이틀리(바이너리명 tsgo)를 원한다면
+    npm install -D @typescript/native-preview
+```
+  - 실무 적용: 대부분의 성숙한 팀은 이미 `tsc`를 빌드가 아니라 CI의 타입 체크 용도로 씁니다. TypeScript 7은 파이프라인에서 가장 느리고 오래 기다리던 이 단계를 하룻밤 사이에 10배 빠르게 만들어줍니다.
+  - 주의사항: Vue, MDX, Astro, Svelte, Angular처럼 컴파일러를 프로그래매틱 API로 임베드해 쓰는 도구들은 API가 아직 안정화되지 않아 TypeScript 7의 이점을 온전히 누릴 수 없습니다. 이들은 당분간 TypeScript 6에 머물러야 합니다.
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[Bruno 4.0: An Open-Source HTTP API Client App](https://github.com/usebruno/bruno)** (출처: *JavaScript Weekly #796*)
+  + 개요: Postman 같은 도구의 오픈소스·경량 대안으로, JavaScript로 구동되어 HTTP API를 테스트하고 요청을 보낼 수 있습니다. 컬렉션을 파일 기반(Git 친화적)으로 관리한다는 점이 특징입니다.
+  + 사용법:
+```bash
+    # CLI로 컬렉션을 실행 → CI 파이프라인에 그대로 붙이기 좋다
+    npm install -g @usebruno/cli
+    bru run ./my-collection --env production
+```
+  + 실전 팁: API 요청 정의를 텍스트 파일로 커밋할 수 있어 PR 리뷰·버전 관리에 유리합니다. 클라우드 계정에 요청을 묶어두는 방식이 부담스러웠던 팀에 적합합니다.
+- **[KaTeX: Fast Math to HTML Typesetting for the Web](https://katex.org/)** (출처: *Frontend Focus #752*)
+  ![KaTeX 수식 렌더링 예시](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/prkxys3mvd2rulfbdb5p.jpg)
+  + 개요: Donald Knuth의 TeX에 기반한 수식 조판 라이브러리로, 무의존성(no-dependency)으로 TeX 수식을 환경에 상관없이 예측 가능하고 빠르게 렌더링합니다.
+  + 사용법:
+```js
+    import katex from "katex";
+    import "katex/dist/katex.min.css";
+
+    katex.render("c = \\pm\\sqrt{a^2 + b^2}", document.getElementById("math"), {
+      throwOnError: false,
+    });
+```
+  + 실전 팁: [sandbox 데모 페이지](https://katex.org/#demo)에서 렌더링이 얼마나 매끄러운지 바로 확인할 수 있습니다. 서버 사이드 렌더링과도 잘 맞아 정적 문서 생성에 유용합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Canvas UI: A Creative Canvas and WebGL Component Library](https://canvasui.dev/)** (출처: *Frontend Focus #752*)
+  + 요약: 복사-붙여넣기로 쓸 수 있는 오픈소스·프레임워크 무관 라이브러리로, HTML-in-Canvas와 WebGL 컴포넌트를 모아놓았습니다. 이번 주 소셜에서 큰 호평을 받았습니다.
+- **[Shadscan: Deterministic UI Audits for shadcn Apps](https://www.shadscan.com/)** (출처: *JavaScript Weekly #796*)
+  + 요약: shadcn 컴포넌트를 정적으로 분석해 접근성·상태·구성 모범사례를 약 60가지 결정론적 체크로 검사합니다. AI나 API 키가 필요 없다는 점이 실무에서 반갑습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[When You Need To Make a Triangle, Think Conic Gradients](https://master.dev/blog/when-you-need-to-make-a-triangle-think-conic-gradients/)** (출처: *Frontend Focus #752*)
+  ![conic-gradient로 만든 도형 예시](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bhdcsf1wb2njno2mhf3s.jpg)
+  + 핵심 인사이트: `conic-gradient()`는 생각보다 훨씬 유연합니다. 파이 조각, 방사형 광선(ray burst), 삼각형까지 만들 수 있고 트랜지션도 적용할 수 있습니다. 이미지 에셋 없이 순수 CSS만으로 도형을 그릴 수 있다는 점이 실무에서 큰 이점입니다.
+```css
+    /* 오른쪽 위가 잘린 직각삼각형 (예시) */
+    .triangle {
+      width: 200px;
+      aspect-ratio: 1;
+      background: conic-gradient(from 90deg at 0 0, transparent 25%, tomato 0);
+    }
+```
+- **[Your SPA is Leaking Memory: 'Soak Test' It](https://denodell.com/blog/your-spa-is-leaking-memory-soak-test-it)** (출처: *React Status #485*)
+  + 핵심 인사이트: SPA의 메모리 누수는 사용자가 겪기 전에 잡아야 합니다. 하나의 브라우저 컨텍스트에서 Playwright 플로우를 반복 실행하고, **DOM 노드 수와 이벤트 리스너 수**를 추적하면 누수를 조기에 발견할 수 있습니다.
+```js
+    // 같은 컨텍스트에서 동일 플로우를 반복하며 노드 수 증가를 관찰
+    for (let i = 0; i < 50; i++) {
+      await page.goto("/dashboard");
+      await page.getByRole("button", { name: "Close" }).click();
+      const nodes = await page.evaluate(() => document.querySelectorAll("*").length);
+      console.log(`iteration ${i}: ${nodes} nodes`);
+    }
+```
+  + 왜 이 글이 유익한가: 리스너를 제때 해제하지 않거나 클로저에 참조가 남는 등의 누수는 프로파일러로 한 번 봐서는 놓치기 쉽습니다. "반복 후 노드 수가 계속 늘어나는가"라는 단순 지표는 회귀 테스트로 자동화하기에도 좋습니다.
+- **[Handling Concurrency on the Web with Web Locks API](https://tech.olx.com/handling-concurrency-on-the-web-with-web-locks-api-163b7e07eddd)** (출처: *Frontend Focus #752*)
+  + 핵심 인사이트: 여러 탭이 같은 작업(예: 토큰 갱신, 아웃박스 동기화)을 동시에 실행해 경쟁하는 문제를, 널리 지원되는 **Web Locks API**로 직렬화하는 실전 가이드입니다.
+```js
+    // 여러 탭이 동시에 같은 작업을 실행하지 못하도록 직렬화
+    await navigator.locks.request("sync-outbox", async (lock) => {
+      await flushPendingRequests();
+    }); // 콜백이 끝나면 락이 자동 해제된다
+```
+  + 왜 이 글이 유익한가: 멀티탭 환경에서의 중복 요청·레이스 컨디션은 재현이 까다로운 버그입니다. 별도 인프라 없이 브라우저 표준 API만으로 해결할 수 있다는 점에서 실무 적용 문턱이 낮습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[To infinity and Beyond, in CSS](https://nerdy.dev/css-infinity-use-cases)** (출처: *Frontend Focus #752*)
+  + 요약: `e`, `pi`, `infinity`, `NaN`은 모두 CSS 수학 함수에서 쓸 수 있는 상수입니다. Adam Argyle이 `infinity`를 활용해 디자인을 개선하는 여러 방법을 소개합니다.
+- **[The Core Web Vitals Thresholds You Trust Might Be Wrong](https://embrace.io/blog/research-core-web-vitals/)** (출처: *Frontend Focus #752*)
+  + 요약: 10개 리테일러의 RUM 데이터에 따르면 Google의 2.5초 'good' LCP 기준이 너무 관대할 수 있으며, 최적의 인게이지먼트는 100ms~1초 구간에서 나타났다고 합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Football Data Portraits](https://wc26.bogachev.fr/)** (출처: *Smashing Newsletter #569*)
+  ![Football Data Portraits 3D 시각화](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/3ae92e71-2007-9bf4-946e-9358c8a7eea6.png)
+  + 특징: 2026 월드컵 경기마다 약 1,500개의 기록된 이벤트(모든 터치·패스·슛·카드)를 재구성해 **3D 시각화**로 만든 프로젝트입니다. 가장 포괄적인 통계가 아니라 경기의 감정—흐름의 변화, 압박, 승부가 뒤집히는 순간—을 담아낸 "데이터 초상화"를 지향한다는 발상이 인상적입니다.
+- **[Stolen Buttons](https://anatolyzenkov.com/stolen-buttons)** (출처: *Frontend Focus #752*)
+  ![Stolen Buttons 컬렉션](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/q5oxzy3squcgvinlpyje.jpg)
+  + 특징: 한 디자이너가 방문한 사이트에서 버튼을 '훔쳐' 모으는 취미를 담은 컬렉션으로, 지금의 디자인 시대정신을 반영합니다. 직접 나만의 수집을 시작할 수 있는 [브라우저 확장](https://anatolyzenkov.com/stolen-buttons/button-stealer)도 제공됩니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Kill the Cookie Banner](https://killthecookiebanner.eu/)** (출처: *Frontend Focus #752*)
+  + 요약: NOYB, EFF 등이 지지하는 캠페인으로, 쿠키 배너를 브라우저 프라이버시 신호로 대체하자는 EU 제안을 밀고 있습니다.
+- **[Await Dictionary (Promise.allKeyed)](https://github.com/tc39/proposal-await-dictionary)** (출처: *JavaScript Weekly #796*)
+  + 요약: 지난주 TC39 회의에서 여러 프라미스를 키로 묶어 처리하는 Await Dictionary 제안이 Stage 3로 진행되었습니다.
+- **[The Launch of CodePen 2.0](https://blog.codepen.io/2026/07/23/two-point-oh/)** (출처: *Frontend Focus #752*)
+  + 요약: 14년째 웹 개발 인프라로 자리 잡은 CodePen이 완전히 새로운 에디터와 함께 2.0으로 개편되었습니다. 유료 사용자는 펜을 CodePen 서브도메인으로 빠르게 배포할 수 있습니다.
+- **[Laws of Software Engineering](https://lawsofsoftwareengineering.com/)** (출처: *Smashing Newsletter #569*)
+  + 요약: Dr. Milan Milanović가 정리한 56가지 소프트웨어 엔지니어링 원칙·패턴 모음입니다. 각 법칙마다 핵심 요약, 예시, 유래, 시각화, 참고 자료가 딸려 있고 프린트 덱·마인드맵·포스터 PDF로도 받을 수 있습니다.
+- **[Oxlint's type-aware linting is now stable](https://oxc.rs/blog/2026-07-22-type-aware-linting-stable)** (출처: *JavaScript Weekly #796*)
+  + 요약: Rust 기반 린터 Oxlint의 타입 인식(type-aware) 린팅이 정식 안정화되었습니다. JavaScript 도구 체인에서 이어지는 Rust 물결의 한 흐름입니다.
+
+## 6. 🎉 릴리스
+- **[React 19.2.8, 19.1.9, 19.0.8](https://github.com/react/react/releases/tag/v19.2.8)** (*JavaScript Weekly #796*)
+  + 업데이트: 서버 함수 엔드포인트의 잠재적 [DoS 취약점](https://github.com/react/react/security/advisories/GHSA-wx67-qw84-cm4g)을 수정한 보안 패치 릴리스입니다.
+- **[Vue 3.6 RC2](https://github.com/vuejs/core/blob/minor/CHANGELOG.md#360-rc2-2026-07-22)** (*JavaScript Weekly #796*)
+  + 업데이트: Vue 3.6의 두 번째 릴리스 후보(RC2)가 공개되었습니다.
+- **[Nuxt 4.5.1 and 3.21.10](https://nuxt.com/blog/v4-5-security)** (*JavaScript Weekly #796*)
+  + 업데이트: 지난주 [Nuxt 4.5 대형 릴리스](https://nuxt.com/blog/v4-5) 이후의 보안 패치 릴리스입니다.
+- **[htmx 4.0](https://four.htmx.org/)** (*JavaScript Weekly #796*)
+  + 업데이트: htmx 4.0이 흥미롭게도 ["게임보이에서만 독점 출시하는 최초의 JavaScript 라이브러리"](https://swag.htmx.org/products/htmx-4-the-game)를 표방하며 기념 카트리지와 함께 등장했습니다.
+- **[ESLint 10.8](https://eslint.org/blog/2026/07/eslint-v10.8.0-released/)** (*JavaScript Weekly #796*)
+  + 업데이트: ESLint 10.8 릴리스.
+- **[Prisma 7.9](https://github.com/prisma/prisma/releases/tag/7.9.0)** (*JavaScript Weekly #796*)
+  + 업데이트: Prisma ORM 7.9 릴리스.
+- **[React Router 8.3](https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v830)** (*JavaScript Weekly #796*)
+  + 업데이트: React Router 8.3 릴리스.
+- **[pnpm 11.11–11.14](https://pnpm.io/blog/releases/11.11-11.14)** (*JavaScript Weekly #796*)
+  + 업데이트: 네이티브 워크스페이스 릴리스 관리, 설치 문제를 진단하는 `doctor` 명령 등을 도입한 연속 릴리스입니다.
+- **[MobX 7.0](https://github.com/mobxjs/mobx/releases/tag/mobx%407.0.0)** (*React Status #485*)
+  + 업데이트: 인기 상태 관리 라이브러리가 군살을 빼고 deprecation을 제거했으며, [React 바인딩을 업데이트](https://github.com/mobxjs/mobx/releases/tag/mobx-react%4010.0.0)하고 이제 항상 Proxy 기반 observable 객체·배열을 사용합니다.
+- **[VisionCamera 5.2](https://github.com/mrousavy/react-native-vision-camera/releases/tag/v5.2.0)** (*React Status #485*)
+  + 업데이트: React Native용 강력한 카메라 라이브러리로, `<SkiaCamera>`에 줌·노출·손전등 제어가 추가되었습니다.
+- **[MapLibre GL JS 6.0](https://maplibre.org/maplibre-gl-js/docs/)** (*JavaScript Weekly #796 / Frontend Focus #752*)
+  + 업데이트: 인터랙티브 벡터 타일 지도를 렌더링하는 WebGL 기반 라이브러리로, 6.0에서 ESM 전용이 되고 WebGL 2를 요구하며 폭넓은 성능 향상을 담았습니다. [릴리스 노트](https://github.com/maplibre/maplibre-gl-js/releases/tag/v6.0.0)와 [v5→v6 마이그레이션 가이드](https://github.com/maplibre/maplibre-gl-js/blob/main/docs/guides/v5-to-v6-migration-guide.md)를 참고하세요.
+
+## ✍️ 마치며
+
+이번 주 소식을 관통하는 흐름을 한마디로 요약하면, 성숙한 생태계가 "기본 엔진"을 다시 손보기 시작했다는 점입니다. TypeScript는 언어 문법을 거의 바꾸지 않으면서도 컴파일러를 통째로 Go로 옮겼고, TanStack은 한때 정답처럼 여겨지던 RSC를 상황에 맞게 걷어냈습니다. 두 사례 모두 "새 기술을 무조건 채택한다"가 아니라, **의존성의 크기와 실제 병목을 측정한 뒤 결정한다**는 공통점을 보여줍니다. RSC냐 SSR이냐, Rust냐 Go냐 같은 논쟁도 결국은 이념이 아니라 프로파일링 결과 위에서 이야기해야 한다는 것을 다시 확인하게 됩니다.
+
+동시에 `conic-gradient()`로 삼각형을 그리거나 Web Locks API로 멀티탭 경쟁을 해결하는 것처럼, 이미 널리 지원되는 플랫폼 기능을 다시 들여다보는 글들이 많았던 점도 인상적입니다. 화려한 신규 프레임워크만큼이나, 손에 쥐고 있는 표준 도구를 얼마나 깊이 아는지가 생산성을 가르는 시기라는 생각이 듭니다.
+
+#### 출처
+- [JavaScript Weekly #796](https://javascriptweekly.com/issues/796)
+- [Frontend Focus #752](https://frontendfoc.us/issues/752)
+- [React Status #485](https://react.statuscode.com/issues/485)
+- [Smashing Newsletter #569](https://mailchi.mp/smashingmagazine/569-lovely-little-websites)

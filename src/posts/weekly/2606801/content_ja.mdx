@@ -1,0 +1,173 @@
+---
+title: '🚀 2026-08 W1 #69'
+desc: TypeScript 7のGoネイティブコンパイラで10倍速、TanStackのRSC除去アーキテクチャ決定、conic-gradientで三角形を描く | 2026年8月第1週目 週間技術ニュースレター
+date: 2026-08-01
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週は「**エンジン交換**」が貫く一週間でした。Anders Hejlsbergが自ら実演した**TypeScript 7のGoネイティブコンパイラ**（10倍速）、そして**TanStackが自社サイトからRSCを取り除いたアーキテクチャの決定**が、フロントエンドの議論の中心に立ちました。CSS方面では`conic-gradient()`の驚くべき活用法や`infinity`定数の話が、ツールエコシステムでは「Rustは依然としてJavaScriptを侵食し続けている」という話題が続きました。さらにSmashingが紹介した愛らしい小規模Webプロジェクトまで、実務とインスピレーションを幅広く満たした一週間でした。
+
+## 1. 🔍 深掘り
+- **[Why TanStack Stopped Using RSC on Its Site](https://tanstack.com/blog/we-stopped-using-rsc-on-tanstack-com)** (出典: *React Status #485*)
+  - 背景: TanStackはもともと、重いマークダウン・構文ハイライトレンダラー（Shikiベース、約358KB）をクライアントに送らないようにするためReact Server Componentsを導入していました。RSCはサーバーでコンテンツをレンダリングしてFlightペイロードだけで届けるため、初期クライアントバンドルが大きく減るという実質的なメリットがありました。
+  - 主な機能: ところが、ハイライト・マークダウンスタックそのものを27KBレベルまで削減したところ、計算が逆転しました。小さなライブラリなら、リクエストごとにサーバーでレンダリングしてRSC/Flightペイロードを送るよりも、小さなライブラリを一度だけクライアントに送って何度もレンダリングするSSR方式の方が優れているというのです。そのためTanStackは、意図的に小さく作った2つのライブラリ**TanStack Markdown**（4.9KB）と**TanStack Highlight**（8KB、25言語）を新たに作りました。
+  - コード例:
+```txt
+    # RSC方式: サーバーでマークダウン/ハイライトをレンダリング → Flightペイロードで送信
+    #           重いレンダラーをクライアントに送らない代わりに、ページごとにサーバー往復
+
+    # SSR + 小型ライブラリ (TanStackの新しい選択)
+    #           TanStack Markdown(4.9KB) + Highlight(8KB)を「一度だけ」送信
+    #           以降のルート遷移はクライアントで繰り返しレンダリング → ブロッキングタイム↓、コード単純↑
+```
+  - 実務への適用: 「RSCかSSRか」はイデオロギー対決ではなく、**依存関係のサイズによって変わるトレードオフ**であることを示す事例です。重いレンダラーをサーバーに隔離する必要があるならRSCが、レンダラーが十分に小さいなら「一度送って何度もレンダリング」するSSRが有利です。
+  - 注意事項: このサイトはRSC除去以降も通常のプロダクション作業が併せて反映された状態なので、「純粋なRSC-only実験」ではありません。著者本人も、すべてのバイト削減をRSC除去の効果に帰するわけではないと明言しています。また、新しいライブラリはまだalpha段階です。
+- **[The Creator of TypeScript Shows Off TypeScript 7](https://www.youtube.com/watch?v=OytpXXeNmTQ)** (出典: *JavaScript Weekly #796*)
+  ![TypeScript 7を実演するAnders Hejlsberg](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/c_crop,g_south,w_w,h_h_sub_50/bjd0nutn9yncyimrgifx.jpg)
+  - 背景: 14年間、TypeScriptは自分自身(TS/JS)で書かれたコンパイラを使ってきましたが、シングルスレッドのJavaScriptランタイムの限界にぶつかりました。Hejlsbergのチームは、コンパイラ全体を**Goへポーティング**してこのボトルネックを解消しました。
+  - 主な機能: 動画でHejlsbergは、VS Codeの130万行のコードベースで新しいGoベースのコンパイラが生み出す**10倍の速度向上**を実演します。型チェックロジックを新たに発明したわけではなく、TypeScript 6.0と同じ構造・ロジックを維持したままGoで書き直したため、エラー・メッセージ・位置が2つのコンパイラ間で同一です。新しい**LSP**(Language Server Protocol)言語サーバーも併せて導入されます。
+  - コード例:
+```bash
+    # 既存のtypescriptの代わりにRCチャンネルをインストール → tscがまもなくGoネイティブバイナリに
+    npm install -D typescript@rc
+
+    # 型チェックのみ実行 (ビルドはesbuild/SWC/Viteが担当する構成が一般的)
+    npx tsc --noEmit
+
+    # 最新のナイトリー(バイナリ名tsgo)が欲しい場合は
+    npm install -D @typescript/native-preview
+```
+  - 実務への適用: ほとんどの成熟したチームは、すでに`tsc`をビルドではなくCIの型チェック用途で使っています。TypeScript 7は、パイプラインで最も遅く、長く待たされていたこの段階を、一晩にして10倍速くしてくれます。
+  - 注意事項: Vue、MDX、Astro、Svelte、Angularのように、コンパイラをプログラマティックAPIとして埋め込んで使うツールは、APIがまだ安定化されていないためTypeScript 7のメリットを完全には享受できません。これらは当分の間TypeScript 6に留まる必要があります。
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Bruno 4.0: An Open-Source HTTP API Client App](https://github.com/usebruno/bruno)** (出典: *JavaScript Weekly #796*)
+  + 概要: Postmanのようなツールのオープンソース・軽量な代替として、JavaScriptで動作しHTTP APIをテストしてリクエストを送ることができます。コレクションをファイルベース(Gitフレンドリー)で管理する点が特徴です。
+  + 使い方:
+```bash
+    # CLIでコレクションを実行 → CIパイプラインにそのまま組み込みやすい
+    npm install -g @usebruno/cli
+    bru run ./my-collection --env production
+```
+  + 実践的なTips: APIリクエスト定義をテキストファイルとしてコミットできるため、PRレビュー・バージョン管理に有利です。クラウドアカウントにリクエストを紐づける方式が負担だったチームに適しています。
+- **[KaTeX: Fast Math to HTML Typesetting for the Web](https://katex.org/)** (出典: *Frontend Focus #752*)
+  ![KaTeXの数式レンダリング例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/prkxys3mvd2rulfbdb5p.jpg)
+  + 概要: Donald KnuthのTeXに基づく数式組版ライブラリで、無依存(no-dependency)でTeX数式を環境に関係なく予測可能かつ高速にレンダリングします。
+  + 使い方:
+```js
+    import katex from "katex";
+    import "katex/dist/katex.min.css";
+
+    katex.render("c = \\pm\\sqrt{a^2 + b^2}", document.getElementById("math"), {
+      throwOnError: false,
+    });
+```
+  + 実践的なTips: [サンドボックスのデモページ](https://katex.org/#demo)で、レンダリングがどれだけ滑らかかをすぐに確認できます。サーバーサイドレンダリングとも相性が良く、静的ドキュメント生成に便利です。
+
+---
+#### 見逃せないコンテンツ
+- **[Canvas UI: A Creative Canvas and WebGL Component Library](https://canvasui.dev/)** (出典: *Frontend Focus #752*)
+  + 要約: コピー&ペーストで使えるオープンソース・フレームワーク非依存のライブラリで、HTML-in-CanvasとWebGLコンポーネントを集めたものです。今週のソーシャルで大きな好評を得ました。
+- **[Shadscan: Deterministic UI Audits for shadcn Apps](https://www.shadscan.com/)** (出典: *JavaScript Weekly #796*)
+  + 要約: shadcnコンポーネントを静的に分析し、アクセシビリティ・状態・構成のベストプラクティスを約60種類の決定論的チェックで検査します。AIやAPIキーが不要な点が実務で嬉しいところです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[When You Need To Make a Triangle, Think Conic Gradients](https://master.dev/blog/when-you-need-to-make-a-triangle-think-conic-gradients/)** (出典: *Frontend Focus #752*)
+  ![conic-gradientで作った図形の例](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bhdcsf1wb2njno2mhf3s.jpg)
+  + 主要なインサイト: `conic-gradient()`は思っている以上に柔軟です。パイのスライス、放射状の光線(ray burst)、三角形まで作ることができ、トランジションも適用できます。画像アセットなしで純粋なCSSだけで図形を描ける点が、実務で大きなメリットです。
+```css
+    /* 右上が切り取られた直角三角形 (例) */
+    .triangle {
+      width: 200px;
+      aspect-ratio: 1;
+      background: conic-gradient(from 90deg at 0 0, transparent 25%, tomato 0);
+    }
+```
+- **[Your SPA is Leaking Memory: 'Soak Test' It](https://denodell.com/blog/your-spa-is-leaking-memory-soak-test-it)** (出典: *React Status #485*)
+  + 主要なインサイト: SPAのメモリリークは、ユーザーが遭遇する前に捕まえるべきです。一つのブラウザコンテキストでPlaywrightフローを繰り返し実行し、**DOMノード数とイベントリスナー数**を追跡すれば、リークを早期に発見できます。
+```js
+    // 同じコンテキストで同一フローを繰り返し、ノード数の増加を観察
+    for (let i = 0; i < 50; i++) {
+      await page.goto("/dashboard");
+      await page.getByRole("button", { name: "Close" }).click();
+      const nodes = await page.evaluate(() => document.querySelectorAll("*").length);
+      console.log(`iteration ${i}: ${nodes} nodes`);
+    }
+```
+  + なぜこの記事が有益なのか: リスナーを適時に解放しなかったり、クロージャに参照が残ったりといったリークは、プロファイラで一度見ただけでは見逃しやすいものです。「繰り返した後にノード数が増え続けているか」という単純な指標は、回帰テストとして自動化するのにも適しています。
+- **[Handling Concurrency on the Web with Web Locks API](https://tech.olx.com/handling-concurrency-on-the-web-with-web-locks-api-163b7e07eddd)** (出典: *Frontend Focus #752*)
+  + 主要なインサイト: 複数のタブが同じ処理(例: トークン更新、アウトボックス同期)を同時に実行して競合する問題を、広くサポートされている**Web Locks API**で直列化する実践ガイドです。
+```js
+    // 複数のタブが同時に同じ処理を実行しないよう直列化
+    await navigator.locks.request("sync-outbox", async (lock) => {
+      await flushPendingRequests();
+    }); // コールバックが終わるとロックが自動的に解放される
+```
+  + なぜこの記事が有益なのか: マルチタブ環境での重複リクエスト・レースコンディションは、再現が難しいバグです。別途のインフラなしにブラウザ標準APIだけで解決できる点で、実務適用のハードルが低いです。
+
+---
+#### 見逃せないコンテンツ
+- **[To infinity and Beyond, in CSS](https://nerdy.dev/css-infinity-use-cases)** (出典: *Frontend Focus #752*)
+  + 要約: `e`、`pi`、`infinity`、`NaN`はすべてCSSの数学関数で使える定数です。Adam Argyleが`infinity`を活用してデザインを改善するさまざまな方法を紹介します。
+- **[The Core Web Vitals Thresholds You Trust Might Be Wrong](https://embrace.io/blog/research-core-web-vitals/)** (出典: *Frontend Focus #752*)
+  + 要約: 10社のリテーラーのRUMデータによると、Googleの2.5秒'good' LCP基準は寛容すぎる可能性があり、最適なエンゲージメントは100ms〜1秒の区間で現れたとのことです。
+---
+
+## 4. ✨ アイデア
+- **[Football Data Portraits](https://wc26.bogachev.fr/)** (出典: *Smashing Newsletter #569*)
+  ![Football Data Portraitsの3Dビジュアライゼーション](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/3ae92e71-2007-9bf4-946e-9358c8a7eea6.png)
+  + 特徴: 2026年ワールドカップの試合ごとに約1,500個の記録されたイベント(すべてのタッチ・パス・シュート・カード)を再構成して**3Dビジュアライゼーション**にしたプロジェクトです。最も包括的な統計ではなく、試合の感情—流れの変化、プレッシャー、勝負がひっくり返る瞬間—を捉えた「データ肖像画」を志向するという発想が印象的です。
+- **[Stolen Buttons](https://anatolyzenkov.com/stolen-buttons)** (出典: *Frontend Focus #752*)
+  ![Stolen Buttonsのコレクション](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/q5oxzy3squcgvinlpyje.jpg)
+  + 特徴: あるデザイナーが訪れたサイトからボタンを「盗んで」集める趣味を収めたコレクションで、今のデザインの時代精神を反映しています。自分だけの収集を始められる[ブラウザ拡張](https://anatolyzenkov.com/stolen-buttons/button-stealer)も提供されています。
+
+## 5. ⚡️ ミニノート
+- **[Kill the Cookie Banner](https://killthecookiebanner.eu/)** (出典: *Frontend Focus #752*)
+  + 要約: NOYB、EFFなどが支持するキャンペーンで、クッキーバナーをブラウザのプライバシーシグナルに置き換えようというEUの提案を推進しています。
+- **[Await Dictionary (Promise.allKeyed)](https://github.com/tc39/proposal-await-dictionary)** (出典: *JavaScript Weekly #796*)
+  + 要約: 先週のTC39会議で、複数のプロミスをキーでまとめて処理するAwait Dictionary提案がStage 3に進みました。
+- **[The Launch of CodePen 2.0](https://blog.codepen.io/2026/07/23/two-point-oh/)** (出典: *Frontend Focus #752*)
+  + 要約: 14年目のWeb開発インフラとして定着したCodePenが、まったく新しいエディタとともに2.0へと刷新されました。有料ユーザーはPenをCodePenのサブドメインへ素早くデプロイできます。
+- **[Laws of Software Engineering](https://lawsofsoftwareengineering.com/)** (出典: *Smashing Newsletter #569*)
+  + 要約: Dr. Milan Milanovićがまとめた56のソフトウェアエンジニアリング原則・パターン集です。各法則ごとに要点のまとめ、例、由来、可視化、参考資料が付いており、プリントデッキ・マインドマップ・ポスターのPDFとしても入手できます。
+- **[Oxlint's type-aware linting is now stable](https://oxc.rs/blog/2026-07-22-type-aware-linting-stable)** (出典: *JavaScript Weekly #796*)
+  + 要約: RustベースのリンターOxlintの型認識(type-aware)リンティングが正式に安定化されました。JavaScriptツールチェーンで続くRustの波の一つの流れです。
+
+## 6. 🎉 リリース
+- **[React 19.2.8, 19.1.9, 19.0.8](https://github.com/react/react/releases/tag/v19.2.8)** (*JavaScript Weekly #796*)
+  + アップデート: サーバー関数エンドポイントの潜在的な[DoS脆弱性](https://github.com/react/react/security/advisories/GHSA-wx67-qw84-cm4g)を修正したセキュリティパッチリリースです。
+- **[Vue 3.6 RC2](https://github.com/vuejs/core/blob/minor/CHANGELOG.md#360-rc2-2026-07-22)** (*JavaScript Weekly #796*)
+  + アップデート: Vue 3.6の2番目のリリース候補(RC2)が公開されました。
+- **[Nuxt 4.5.1 and 3.21.10](https://nuxt.com/blog/v4-5-security)** (*JavaScript Weekly #796*)
+  + アップデート: 先週の[Nuxt 4.5大型リリース](https://nuxt.com/blog/v4-5)以降のセキュリティパッチリリースです。
+- **[htmx 4.0](https://four.htmx.org/)** (*JavaScript Weekly #796*)
+  + アップデート: htmx 4.0が興味深いことに[「ゲームボーイでのみ独占リリースされる史上初のJavaScriptライブラリ」](https://swag.htmx.org/products/htmx-4-the-game)を標榜し、記念カートリッジとともに登場しました。
+- **[ESLint 10.8](https://eslint.org/blog/2026/07/eslint-v10.8.0-released/)** (*JavaScript Weekly #796*)
+  + アップデート: ESLint 10.8リリース。
+- **[Prisma 7.9](https://github.com/prisma/prisma/releases/tag/7.9.0)** (*JavaScript Weekly #796*)
+  + アップデート: Prisma ORM 7.9リリース。
+- **[React Router 8.3](https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v830)** (*JavaScript Weekly #796*)
+  + アップデート: React Router 8.3リリース。
+- **[pnpm 11.11–11.14](https://pnpm.io/blog/releases/11.11-11.14)** (*JavaScript Weekly #796*)
+  + アップデート: ネイティブワークスペースのリリース管理、インストール問題を診断する`doctor`コマンドなどを導入した連続リリースです。
+- **[MobX 7.0](https://github.com/mobxjs/mobx/releases/tag/mobx%407.0.0)** (*React Status #485*)
+  + アップデート: 人気の状態管理ライブラリが贅肉を落としてdeprecationを除去し、[Reactバインディングをアップデート](https://github.com/mobxjs/mobx/releases/tag/mobx-react%4010.0.0)して、今では常にProxyベースのobservableオブジェクト・配列を使用します。
+- **[VisionCamera 5.2](https://github.com/mrousavy/react-native-vision-camera/releases/tag/v5.2.0)** (*React Status #485*)
+  + アップデート: React Native向けの強力なカメラライブラリで、`<SkiaCamera>`にズーム・露出・ライト制御が追加されました。
+- **[MapLibre GL JS 6.0](https://maplibre.org/maplibre-gl-js/docs/)** (*JavaScript Weekly #796 / Frontend Focus #752*)
+  + アップデート: インタラクティブなベクタータイル地図をレンダリングするWebGLベースのライブラリで、6.0でESM専用になりWebGL 2を要求し、幅広いパフォーマンス向上を含んでいます。[リリースノート](https://github.com/maplibre/maplibre-gl-js/releases/tag/v6.0.0)と[v5→v6マイグレーションガイド](https://github.com/maplibre/maplibre-gl-js/blob/main/docs/guides/v5-to-v6-migration-guide.md)を参照してください。
+
+## ✍️ おわりに
+
+今週のニュースを貫く流れを一言で要約すると、成熟したエコシステムが「基本エンジン」を再び手入れし始めたという点です。TypeScriptは言語文法をほとんど変えずにコンパイラを丸ごとGoへ移し、TanStackはかつて正解のように思われていたRSCを状況に合わせて取り除きました。両事例とも「新しい技術を無条件に採用する」のではなく、**依存関係のサイズと実際のボトルネックを測定した上で決定する**という共通点を示しています。RSCかSSRか、RustかGoかといった論争も、結局はイデオロギーではなくプロファイリング結果の上で語るべきだということを、改めて確認させられます。
+
+同時に、`conic-gradient()`で三角形を描いたり、Web Locks APIでマルチタブの競合を解決したりするように、すでに広くサポートされているプラットフォーム機能を改めて見直す記事が多かった点も印象的です。華やかな新規フレームワークと同じくらい、手にしている標準ツールをどれだけ深く知っているかが生産性を分ける時期だという気がします。
+
+#### 出典
+- [JavaScript Weekly #796](https://javascriptweekly.com/issues/796)
+- [Frontend Focus #752](https://frontendfoc.us/issues/752)
+- [React Status #485](https://react.statuscode.com/issues/485)
+- [Smashing Newsletter #569](https://mailchi.mp/smashingmagazine/569-lovely-little-websites)
