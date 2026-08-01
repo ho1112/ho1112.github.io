@@ -1,0 +1,439 @@
+---
+title: 'Sentryのエラーを週1,000件から60件に減らした話 ｜ 1年間・4回の整理記録'
+desc: Sentryを導入したもののエラーが多すぎて誰も見なくなった状態から、約1年・4回の整理で週間エラーを約94%減らした記録。分類基準づくり、race conditionの根本対応、ノイズフィルタリングまで。
+date: 2026-08-02
+thumbnail: /posts/workLog/sentry/thumb.avif
+---
+
+## 背景: 「入れてあるのに、誰も見ない」
+
+> 「Sentryは導入されているのに、エラーが多すぎて誰も見なくなった」
+
+ここから出発しました。
+
+担当しているのはNext.js + GraphQLベースの人材マッチングプラットフォーム(企業向け画面)です。Sentry自体はすでに導入されていました。ところがダッシュボードを開くと数百件のissueがずらりと並んでいて、どれが本当に深刻なのか判別できません。判別できないから開かなくなり、開かないからさらに溜まっていく。
+エラーモニタリングツールとしては最悪の状態です。**アラームは鳴りすぎると、鳴らないのと同じですから。**
+この状態からスタートして、約1年かけて4回の整理を行いました(2024年7月 → 2024年11月 → 2025年1月 → 2025年8月)。
+
+### まず、数字の定義
+
+この記事で「件数」と書いたものは**週あたりのイベント数**です。
+
+- **1次調査時点: 週あたり約1,000件**（調査表の週間イベント数の合計。※ 週間ユーザー数が1名のissueは除外したので、実際はもう少し多いです）
+- **4次対応後: 週あたり約60件**（未解決issue全体基準）
+
+2つの数字は測り方が異なります。1,000件は毎回上位10~16個のissueだけを抜き出して作った調査表の基準で、60件はその後、未解決issue全体をざっと見て測った値です。なので、後で出てくる4次調査表そのもの(464件)からフィルタ対象を引いた値とはぴったり一致しません — 調査表が扱っていなかったロングテールのissueまで60件には含まれているためです。
+
+約94%の減少です。ちなみに60件は、ユーザー1名だけのissueまですべて含んだ値なので、同じ基準に揃えれば減少幅はこれより大きくなります。
+そして先に正直に書いておきます。**この減少はコード修正だけの成果ではありません。**「修正したもの」と「そもそもエラーではないと判断して除外したもの」の合算です。
+
+ただ、この記事で共有したいのはむしろその**区別する方法**のほうです。すべてを直そうとして疲れ果てるより、直すべきものを選り分けるほうが、はるかに効果がありましたから。
+
+---
+
+## 修正する前に、まず数える ― エラー分類の基準
+
+コードを触る前に、まずダッシュボードの全issueを表に書き写しました。1回整理するごとに10~16件ほどでした。
+
+### ソート基準: 「1週間あたりの遭遇ユーザー数」
+
+Sentryのデフォルトである総イベント数(累積)でソートすると、数年前から溜まった古いissueが上位を占めます。累積12,000件のissueでも、今週は3件しか出ていなければ優先度は低いですよね。
+そこで「今、継続的に誰かを困らせているか」を測るために、**週間の遭遇ユーザー数**を基準にしました。
+
+そして週間ユーザー数が1名のissueは表に載せませんでした。一つひとつすべて対応するのはリソースの無駄だと判断したからです。エラー整理は「すべて無くす」ことが目的ではなく「読めるダッシュボードを作る」ことが目的なので、どこで線を引くかを先に決めておくほうが、結局は速かったです。
+
+### 各issueを3種類に分類
+![](/posts/workLog/sentry/kanban.avif)
+| 種類 | 内容 | 対応 |
+|---|---|---|
+| **アプリのバグ** | nullチェック漏れ、race conditionなど | コード修正 |
+| **外部要因・ノイズ** | セッション満了、ユーザーのページ離脱、ブラウザ拡張の衝突 | 設定で除外 |
+| **原因不明・保留** | 再現不可、特定環境でのみ発生 | 記録して次回へ持ち越し |
+
+3つ目の「保留」を明示的に持っているのがポイントです。**わからないものをわからないと記録に残しておけば**、次の整理のときに「前回わからなかったあれ、まだ生きてるな」と追跡できます。実際これが、後で出てくるパターン4につながりました。
+
+### 1次対応(2024年7月)で見えたもの
+
+上位に上がってきた顔ぶれはこうでした(週間イベント数 / 週間ユーザー数)。
+
+| # | エラー | 週間件数 | 週間ユーザー | 分類 |
+|---|---|---|---|---|
+| 1 | `Cannot read properties of null (reading 'unreadCount')` | 314 | 129 | アプリのバグ |
+| 2 | `Unauthenticated.` | 364 | 49 | ノイズ |
+| 3 | `Cannot set properties of null (setting 'value')` | 68 | 35 | アプリのバグ |
+| 4 | `undefined is not an object (evaluating 'ex.messages')` | 46 | 28 | アプリのバグ |
+| 5 | `Cannot read properties of null (reading 'getBoundingClientRect')` | 40 | 16 | アプリのバグ |
+
+件数1位だった`Unauthenticated.`は、ログイントークンの満了による認証失敗でした。アプリのバグではなく正常な状態遷移ですね。ここでノイズ判定。一方で`getBoundingClientRect`系はコードで直せるバグなので修正対象に。
+
+この時点では「上から順番に直せば終わるだろう」と思っていました。思ってはいたんですけどね。
+
+---
+
+## 2次対応: ソート基準を変えたら別の世界が見えた
+
+4ヶ月後、Node.js v20のアップデートがあったので、そのタイミングで2回目の整理をしました。このときソート基準を**週間**のイベント数に変えて見てみました。(先ほど批判したのはissueの生涯全体の累積イベント数で、今回は「今週どれだけ出たか」を改めて基準にしたので別物です。)
+そうしたら、1次にはなかったものが1位に上がってきました。
+
+| # | エラー | 週間件数 | 週間ユーザー |
+|---|---|---|---|
+| 1 | `GET /api/approach/ogp/` — `certificate has expired` | 917 | **0** |
+| 2 | `Cannot read properties of undefined (reading 'messages')` | 363 | 124 |
+| 3 | `Unauthenticated.` | 164 | 48 |
+| 4 | `GET /api/approach/ogp/` — `Hostname/IP does not match certificate's altnames` | 147 | **0** |
+
+1位と4位を合わせて**週1,000件超過。そして影響ユーザー数は0。**
+
+OGP取得用のAPIルートで、対象サイトのSSL証明書が満了していたり、ホスト名が一致しなかったりして失敗していたものでした。サーバーサイドで発生するので、週間ユーザー数という基準では完全に見えない領域だったわけです。
+
+> 「週間ユーザー数でソートする」という判断は正しかった。しかし**正しい基準は、その基準が見落とすものを必ず持っている。**
+
+以降は2つの軸で見るようになりました。
+
+- **週間ユーザー数順** → ユーザー体験を壊しているもの
+- **週間イベント数順** → ダッシュボードの信号対雑音比を壊しているもの
+
+前者だけ見ていると、後者に埋もれてダッシュボードが読めないという状態が解消されません。逆に後者だけ見ると、少数に深刻な影響を与えるバグを見逃してしまいます。
+
+ここまでは時系列(1次 → 2次)で追ってきました。ここからは順序を変えて、実際にどう直したのかを4つのパターンに分けて整理します。1つのパターンが1つの回で終わったのではなく、複数の回にまたがっている場合もあります — 例えばパターン3(ignoreErrors)は1次で判断だけしておき、実際に設定へ反映したのは4次でした。
+
+---
+
+## パターン1: Optional Chaining ― 画面を落とさないために
+
+件数でも最も多かったのがこれです。ただ、件数が多いことよりも重要なことがあります。
+
+```
+Cannot read properties of null (reading 'getBoundingClientRect')
+Cannot read properties of undefined (reading 'validation')
+Cannot read properties of undefined (reading 'messages')
+```
+
+この種のTypeErrorは、Reactのレンダリング中に発生するとエラーバウンダリまで上がっていきます。ログが1件増えたという話ではなく、その瞬間ユーザーの目の前で画面が壊れうるという意味です。
+
+つまりこれは、Unhandled Runtime Exceptionを潰す作業でした。
+
+```typescript
+// Before
+const top = cardRef.current.getBoundingClientRect().top
+const errors = graphQLErrors[0].extensions.validation
+
+// After
+const top = cardRef.current?.getBoundingClientRect()?.top
+const errors = graphQLErrors?.[0]?.extensions?.validation
+```
+
+ちなみに、すべてをoptional chainingで処理したわけではありません。`approach.messages.slice(-1)[0]`や`convertFullNumberToHalfNumber(pasteValue).split('')`のように、手前でifチェックで防ぐのが自然な箇所はそのように対応しました。
+
+### なぜ型定義が守ってくれなかったのか
+
+最も多かったのがGraphQLエラーオブジェクトの`extensions`でした。調べてみると、**502 Bad Gatewayレスポンスと共に発生**していました。正常なレスポンスのときは`extensions`にvalidation情報が入ってくるのですが、502が返ってくる経路ではそうではありませんでした。
+
+「型定義上、存在するはずなのに」という油断が積み重なっていたわけです。
+
+### コンポーネントのunmountタイミングの罠
+
+DOMの`getBoundingClientRect()`も同様に、コンポーネントがunmountされるタイミングでrefがnullになるケースがありました。検索画面のカードや閉じるボタンなど、ユーザーが素早く操作すると踏むことになる位置でした。
+
+ちなみに`es is undefined`がFirefoxでだけ出るissueもありました。同じ原因でもブラウザによってエラーメッセージが変わるので、メッセージ文字列だけで同一issueかどうかを判断しないほうがいいです。
+
+### ただし: `?.`は隠すための道具でもある
+
+`?.`を付ければ例外は消えます。しかし、値を取得できなかったという事実は消えませんでした。値がundefinedになった結果、画面がずれたまま誰も気づかないなら、それはエラーが消えたのではなく、**エラーが見えなくなっただけ**です。
+
+なので、付ける前に「値がなくてもユーザーに問題がない箇所か」を一度確認してから進めるほうがいいです。機械的にすべて付けると、次の整理のときに「原因不明」を増やす結果になりかねません。
+
+---
+
+## パターン2: useRefでrace conditionを防ぐ ― 2段階の話
+
+最もきちんと直せたと実感できた修正です。そして、一度失敗した修正でもあります。
+
+### 1段階目: 症状を止めた (1次対応)
+
+1次調査の3位にこんなissueがありました。
+
+```
+Cannot set properties of null (setting 'value')
+Cannot set properties of null (setting 'id')
+```
+
+メッセージ送信の`onCompleted`コールバック内で`messageRef.current.value = null`を実行する部分です。nullチェックを追加して修正・リリースしました。
+
+### 2段階目: 再発した (2次~3次対応)
+
+2次対応でリリース後の件数を確認してみたら、他の修正が軒並み0件になった中で、**このissueだけ7件残っていました**。そして3次調査でも依然として生きていました。
+このとき「refがnullなのが問題ではなく、そもそも実行されてはいけないタイミングで実行されているのではないか」と考え直しました。
+
+**状況**: メッセージ送信中に別のチャット画面へ移動すると、`onCompleted`がすでに別の画面を見ている状態で発火します。
+
+```
+1. チャットAでメッセージ送信 → APIリクエスト発生
+2. ユーザーがチャットBへ移動 → approach状態がBに変わる
+3. サーバーから応答が来てonCompletedが発火
+4. この時点でapproach.idはすでに "B"
+5. A画面のDOMを触ろうとする → refはnull 💥
+```
+
+nullチェックは、この5番でエラーが出ないようにしただけです。**B画面を見ているのにAの後処理が走る**という本体は残っていました。
+
+### 対応: 送信元を記録しておき、一致しなければ捨てる
+
+```typescript
+// 送信直前に「どの画面から送ったリクエストか」を記録
+latestSendApproachRef.current = approach.id
+sendMessages({ variables })
+
+// onCompletedで現在の画面と一致しなければ即座にreturn
+if (
+  latestSendApproachRef.current &&
+  latestSendApproachRef.current !== approach.id
+) {
+  return
+}
+```
+
+### なぜ`useState`ではなく`useRef`なのか
+
+理由は2つあります。
+
+1. **リレンダリングを引き起こしたくない**。これはどの画面から送ったかというメタ情報であり、画面に描画される値ではありません。stateにすると意味のないリレンダリングが増えます。
+2. **クロージャ問題を避けたい**。`onCompleted`は非同期コールバックなので、stateを参照するとその関数が生成された時点の古い値を掴んでしまうことがあります。refは`.current`を通じて常に最新の値を同期的に読めます。
+
+このケースでは2番が本質的です。むしろ古い値を掴んでしまうこと自体が直そうとしている現象なので、stateでは原理的に解けません。
+
+---
+
+## 修正した後、再び測定 ― 効果検証
+
+2次対応では、修正リリース後(12/9~12)に再びダッシュボードを開いて、対応したissueごとに再発件数を記録しました。
+
+| 対応したissue | リリース後件数 |
+|---|---|
+| `Cannot read properties of undefined (reading 'messages')` | 0件 |
+| `ea is undefined` | 0件 |
+| `getBoundingClientRect`系 (2件) | 0件 |
+| `Cannot read properties of null (reading 'replace')` | 0件 |
+| `Cannot set properties of null (setting 'value' / 'id')` | **7件** |
+
+ここで重要なのは、7件残っているものを「7件残っている」と書いたことだと思います。
+
+もしすべて0件と書いて満足していたら、パターン2の2段階目(race conditionの根本対応)には辿り着けなかったでしょう。**修正して終わりにせず、同じ基準で再び測る**。これがなければ、直したという錯覚のまま済ませていたかもしれません。
+もう一つ付け加えると、リリース前から発生頻度が低かったissueには印を付けて、「0件になったのはリリースのおかげではないかもしれない」と注釈を残しました。効果検証の精度を自分で膨らませないための仕掛けです。
+
+---
+
+## パターン3: ignoreErrors ― 「エラーではないもの」を取り除く
+
+```typescript
+// sentry.client.config.ts
+ignoreErrors: [
+  // セッション終了後の動作が原因なので無視
+  'Unauthenticated.',
+  // ユーザーのページ離脱時に発生するブラウザ起因のエラーなので無視
+  'The user aborted a request.',
+  // ユーザーのブラウザ拡張機能とスクリプトの衝突が原因なので無視
+  "property 'javaEnabled' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value",
+  // 意図的に同じURLへリダイレクトしているので無視
+  'Invariant: attempted to hard navigate to the same URL',
+]
+```
+
+| メッセージ | 実体 |
+|---|---|
+| `Unauthenticated.` | ログイントークン満了後にAPIを呼び出したとき。エラーではなく正常な状態遷移 |
+| `The user aborted a request.` | レンダリング中にユーザーがページを移動してリクエストがキャンセルされたもの |
+| `property 'javaEnabled' is a read-only ...` | ブラウザ拡張機能とスクリプトの衝突 (詳しくはパターン4) |
+| `Invariant: attempted to hard navigate to the same URL` | 意図的に同一URLへリダイレクトする部分で出るNext.jsの内部エラー |
+
+### 無視する理由をコードに書いておく
+
+小さいですが効果のある習慣です。`ignoreErrors`の各行の上に、なぜ無視してよいと判断したのかを一行コメントで残しています。後でこのリストを見返すときに、判断の前提がまだ有効かどうかを確認できるように。
+
+### 「判断」と「設定」は別物だった
+
+ここが個人的に最も反省した点です。
+`Unauthenticated.`を「対応不要」と判断したのは**1次対応**(2024年7月)です。調査表にもそう書いてあります。ところが、実際に`ignoreErrors`に入れたのは**4次対応**(2025年8月)。その間ずっと、週100~300件台でダッシュボードに溜まっていました。
+**判断だけして設定をしなければ、一件も減りません**。当たり前の話ですが、調査表に「対応なし」と書いた時点で処理した気になってしまっていました。整理をするなら「対応不要」も、アクションのある結論として扱うべきでした。
+
+### 無視設定は思ったより広く効く
+
+注意点が一つあります。**`ignoreErrors`の文字列指定は部分一致**です。`'Unauthenticated.'`と書いても、そのメッセージだけが引っかかるのではなく、その文字列を含むエラーがすべて除外されます。厳密に限定したいなら正規表現(`/^Unauthenticated\.$/`)を使う必要があります。
+「ノイズを消す」と「不便なものを消す」は紙一重なので、このリストは増やすときに慎重になる必要があります。
+
+---
+
+## パターン4: 消去法で「私たちのバグではない」ことを証明する
+これが最も探偵っぽくて面白かった対応です。
+
+### 3次対応: 「1社でだけ発生している」
+
+3次調査で下のほうに、妙なissueが3件並んでいました。
+
+```
+Cannot read properties of null (reading 'click')
+doFunction(...) is not a function
+editorBxScriptPolicy is not defined
+```
+
+すべて検索画面で、週間の遭遇ユーザー数は1~2名。件数も少なく普段なら無視する位置ですが、調べてみると**すべて同じ1社(仮称A社)からのアクセスで、IPは2つ**でした。
+
+この時点では原因が分からなかったので、「原因不明・保留」に分類して記録だけ残しました。無理に結論を出さなかったのが、結果的に正解でした。
+
+### 4次対応: 証拠が集まる
+
+7ヶ月後の4次調査で、ログイン画面に新しいエラーが現れました。
+
+```
+'get' on proxy: property 'javaEnabled' is a read-only and non-configurable
+data property on the proxy target but the proxy did not return its actual value
+```
+
+これで線が繋がりました。判断根拠を整理するとこうです。
+
+1. **発生が1社に限定されている**(IPも2つだけ)。アプリのバグなら他の会社でも出るはずです
+2. **私たちのコードに存在しない識別子が参照されている**。`editorBxScriptPolicy`という変数は、プロジェクトのどこにも定義したことがありません。`doFunction`も同様。私たちが書いていないコードが実行されているという意味です
+3. **ブラウザのネイティブオブジェクトがProxyで包まれている**。`navigator.javaEnabled`に対するproxy invariant違反は、誰かが`navigator`を`Proxy`で包んだという意味です。アプリケーションコードがこうする理由はありません
+4. **同一症状の先例がある**。同じ`javaEnabled` proxyエラーが、他のOSSプロダクトのissueでも報告されていました(一番下の参考リンク)
+5. **コードレビューで該当箇所に問題がない**。4次対応の時点で「コード的には問題なさそう」と結論づけました
+
+以上から、**ブラウザ拡張機能がDOMやグローバルオブジェクトをすり替えており、それが私たちのコードと衝突している**と判断しました。
+
+![](/posts/workLog/sentry/konan.avif)
+「拡張機能のせいっぽい」ではなく、「**私たちのバグではないと言える根拠が5つある**」状態まで持っていくのが重要でした。上層部に説明する必要が生じたときも、これがそのまま材料になります。
+
+### 対応: すべてを一括で無視はしなかった
+
+原因が拡張機能だと判断したからといって、すべてを同じ方式で処理したわけではありません。同じ拡張機能のせいでも、性質の異なるものが混ざっていたからです。
+
+**① どの会社から出ても拡張機能由来と見なせるもの → `ignoreErrors`でグローバル無視**
+`property 'javaEnabled' is a read-only and non-configurable...`がこれに該当します。proxy invariant違反はアプリケーションコードでは原理的に引き起こせないエラーです。どの会社から出ても原因が同じなので、会社を条件にする理由がありません。パターン3のリストに入れました。
+
+**② 一般的なメッセージだがA社でだけ発生するもの → `beforeSend`で会社を条件に無視**
+`Cannot read properties of null (reading 'click')`と`doFunction(...) is not a function`がこれに該当します。厄介なのは、これらが私たちのバグのときも同じように出るメッセージだという点です。`ignoreErrors`に入れてしまうと、他の会社で本当のクラッシュが起きたときに気づけません。
+`editorBxScriptPolicy is not defined`は原因特定の根拠としては強力でしたが、発生が週1件なのでフィルタリストには入れませんでした。
+
+②の実装がこれです。
+
+```typescript
+beforeSend(event, hint) {
+  const error = hint.originalException
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string'
+  ) {
+    const errorMessage = error.message
+    const companyContext = event.contexts?.company
+    const companyId = companyContext?.company_id
+      ? String(companyContext.company_id)
+      : null
+
+    // 通知を切りたい企業IDとエラー
+    const ignoredErrorsByCompany: Record<string, string[]> = {
+      COMPANY_A: [
+        "Cannot read properties of null (reading 'click')",
+        'doFunction(...) is not a function',
+      ],
+    }
+
+    if (companyId && ignoredErrorsByCompany[companyId]) {
+      const targetErrorKeyword = ignoredErrorsByCompany[companyId]
+      if (
+        targetErrorKeyword.some((keyword: string) =>
+          errorMessage.includes(keyword)
+        )
+      ) {
+        return null
+      }
+    }
+  }
+
+  return event
+}
+```
+
+### beforeSend 実装のポイント
+
+実装上のポイントがいくつかあります。
+
+**`event`ではなく`hint.originalException`を見ている**。`beforeSend`の第二引数`hint`には、Sentryが送信用に整形する前の元の例外オブジェクトが入っています。`event.exception.values[0].value`でも同じ文字列を得られますが、階層が深いです。
+
+**`hint.originalException`は`unknown`型なので絞り込む必要がある**。`null`や文字列が入ってくることもあるので、`typeof`と`in`で確認してからアクセスします。
+
+**会社IDは`contexts`から取得する**。企業情報を`company`コンテキストに載せているので、`event.contexts?.company?.company_id`で参照します。値が数値で入ってくることもあるので、`String()`で正規化します。
+
+### `ignoreErrors`と`beforeSend`の使い分け
+
+| | `ignoreErrors` | `beforeSend` |
+|---|---|---|
+| 見られるもの | メッセージ文字列のみ | イベントとhintの内容全体 |
+| 使いどころ | **誰にとってもノイズ**なもの | **特定の条件でのみ**ノイズなもの |
+| 今回の例 | セッション満了、リクエスト中断、proxy invariant違反 | A社限定の `click` / `doFunction` |
+
+判断基準を一行にまとめるとこうです。「**このメッセージが他の会社から飛んできたとき、それが本当のバグでありうるか?**」ありうるなら`beforeSend`、ありえないなら`ignoreErrors`。
+
+そして`ignoredErrorsByCompany`という形にしたおかげで、どの会社の、どのエラーを、今無視しているのかが一目で分かるようになりました。
+
+---
+
+## 数字のまとめ
+
+| 回 | 時期 | 主にやったこと | 週間イベント数 |
+|---|---|---|---|
+| 1次 | 2024.07 | 分類基準の確立、null系の初期対応 | 約1,065 |
+| 2次 | 2024.11 | ソート基準をイベント数に、OGPサーバーサイドエラーの発見、効果検証の導入 | 約1,945(うちOGP関連1,076) |
+| 3次 | 2025.01 | race conditionの根本対応、A社の件を保留として記録 | 約855 |
+| 4次 | 2025.08 | ノイズフィルタの設定、A社の件の結論 | 464 (2週間)≒ 週232 |
+
+ここで4次だけ2週間基準なのには理由があります。1~3次を経てエラーが十分に減り、1週間で区切ると標本が少なくなりすぎたためです。有意な数値を見るために集計範囲を広げる必要がありました。
+
+集計単位を変えなければならなかったという事実そのものが、実はどんな数字よりも直接的な結果だったと思います。最初は1週間分を見るだけで表がいっぱいになったのに、1年後には2週間分を集めないと表ができなかったのですから。
+
+4次調査表の464件は、まだフィルタをかける前の数値です。このうち今回取り除くことにしたのが、これだけでした。
+
+| フィルタ対象 | 2週間件数 |
+|---|---|
+| `Unauthenticated.` | 142 |
+| `The user aborted a request.` | 118 |
+| A社 `click` | 121 |
+| `javaEnabled` proxy | 3 |
+| `Invariant: same URL` | 2 |
+| **合計** | **386** |
+
+調査した464件のうち386件、つまり8割以上が「修正する対象ではなかった」という意味です。1次のときに上位を占めていたものをコードですべて修正した後にも残っていた大部分は、バグではなくノイズだったわけです。
+
+内訳を改めて整理すると:
+
+- **コード修正で消えたもの**: null系のクラッシュ、race condition
+- **設定で取り除いたもの**: セッション満了、リクエスト中断、拡張機能由来
+- **別途対応に回したもの**: OGP APIのサーバーサイドエラー (エラーハンドリング側で対応)
+
+2次の数字が1次より増えたのは、ソート基準を変えたことで、それまで見えていなかったものが可視化されたためです。減らす作業をしているのに数字が増える瞬間があるというのは、整理をきちんとできている証拠でもあります。
+
+---
+
+## おわりに
+
+1年やってみて、最も効果があったのは技術的な修正そのものよりも、**「これは修正すべきか?」を判断する基準を先に作ったこと**でした。
+
+- 測定する軸を決める (週間ユーザー数 + イベント数)
+- 3種類に分類する (バグ / ノイズ / 保留)
+- 修正したら同じ軸で再び測る
+- 分からないものは「分からない」と記録して次に回す
+
+特に4番目が効果的でした。A社の件は3次で無理に結論を出していたら、「原因不明のまま無視」するか「無関係なコードを触る」かのどちらかになっていたでしょう。**7ヶ月寝かせておいたら証拠が向こうから増えてくれた**というのが、実際にあることなんですよね。
+
+そして`?.`を付けるのも、`ignoreErrors`に入れるのも、どちらも<strong>「見えなくする」操作</strong>です。見えなくしていいものなのか判断せずにやると、1年後にまた同じ整理をすることになります。🙃
+
+---
+
+#### 🔗 参考
+
+- Sentry Docs — [Filtering (`ignoreErrors / beforeSen)](https://docs.sentry.io/platforms/javascript/guides/react/configuration/filtering/)
+- Sentry Docs — [InboundFilters integration](https://docs.sentry.io/platforms/javascript/configuration/integrations/inboundfilters/)
+- MDN — [Optional chaining (?.)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+- MDN — [handler.get()のinvariant](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/get)
+- Matomo — [javaEnabledのproxyエラー関連issue](https://github.com/matomo-org/matomo/issues/22836)
