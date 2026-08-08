@@ -1,0 +1,158 @@
+---
+title: '🚀 2026-08 W2 #70'
+desc: TanStack Table v9のopt-inアーキテクチャ再設計、40行で再現するhtmxの本質、keyv・cacheable npmサプライチェーン攻撃 | 2026年8月第2週目 週間技術ニュースレター
+date: 2026-08-08
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週のトピックは「長らく寝かされていたオープンソースプロジェクトの大々的な再設計」です。4年ぶりに登場したTanStack Table v9はtree-shakableなプラグインアーキテクチャとして生まれ変わり、Next.js 16.3はチームを再編して新バージョンをリリースし、htmxの本質を40行で自ら再実装してみる記事が大きな注目を集めました。同時に`keyv`・`cacheable`パッケージを狙ったnpmサプライチェーン攻撃が進行中で、「安全なデプロイ」が実務的な課題として浮上しました。一方、Frontend FocusはState of CSS 2026の調査(開発者が最も愛している新機能はanchor positioning)を、Smashingはアクセシビリティ特集を伝え、一週間を彩りました。
+
+## 1. 🔍 深掘り
+- **[TanStack Table v9: A Faster, More Modular Foundation](https://tanstack.com/blog/announcing-tanstack-table-v9)** (出典: *React Status #486*)
+  ![TanStack Table v9 announcement](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/tdvf8n2ypodcj3csupni.jpg)
+  - 背景: v8のリリースから4年ぶりのメジャーリリースです。React Compilerが正式化されるにつれ、v8が使っていた状態管理パターンがコンパイラのルールと衝突し始め、これが内部アーキテクチャの全面的な書き直しの直接的なきっかけとなりました。
+  - 主要機能: すべての機能が「opt-in」方式に変わりました。ソート・フィルター・ページネーションといった機能を`tableFeatures()`で明示的に登録して初めて、コードと型がテーブルに含まれます。状態管理はTanStack Storeベースに移され、購読単位のきめ細かい再レンダリング制御が可能になり、row・column・cellのAPIが共有プロトタイプに載ることで、大容量テーブルでメモリを大きく節約します(一部シナリオでは最大約90%)。
+  - コード例:
+```js
+    import {
+      columnFilteringFeature,
+      rowSortingFeature,
+      rowPaginationFeature,
+      tableFeatures,
+      useTable,
+    } from '@tanstack/react-table'
+
+    // 必要な機能だけ登録 → 残りのコードはバンドルから除外(tree-shaking)
+    const features = tableFeatures({
+      columnFilteringFeature,
+      rowSortingFeature,
+      rowPaginationFeature,
+    })
+
+    function Table() {
+      const table = useTable({ features, columns, data })
+      // ... ヘッドレスレンダリングはv8と同じモデル
+    }
+```
+  - 実務での活用: ページネーションだけが必要なテーブルは、フィルターやグルーピングのコードをまったく含めません。半分ほどの機能しか使わないアプリなら、残りの半分を出荷しなくて済むため、管理者ダッシュボードやSaaSのデータグリッドのように、画面ごとに必要な機能が異なる場所で有利です。
+  - 注意事項: 潜在的な総バンドルサイズは、v8の約14kBからv9の約25kBに増えました。つまり`stockFeatures`で全機能を一度に使うとかえって大きくなるため、個別の機能を一つずつimportしてこそtree-shakingの恩恵を得られます。機能オブジェクトはコンポーネントの外側に静的に定義することが推奨されます。
+- **[Let's Make the Worst htmx Ever](https://zserge.com/posts/worst-htmx-ever/)** (出典: *JavaScript Weekly #797*)
+  - 背景: Serge Zaitsevが「worst React」「worst Vue」に続き、今回はhtmxの本質を根本から再実装します。5千行におよぶ単一ファイルで悪名高いhtmxが実際に何をしているのかを、自ら作ってみながら理解しようという趣旨です。
+  - 主要機能: 著者はhtmxのエッセンスを「SSS」と要約します。すなわち、要素をスキャンし(scan) → リクエストを送り(send) → レスポンスで置き換える(swap)。この3つさえあればhtmxの骨格が完成し、残りの機能(ブースティング、インジケーター、確認ダイアログなど)は、コアに手を加えないイベントベースのプラグインとして付け足します。
+  - コード例:
+```js
+    // x-get属性をスキャン(scan)し、クリック時にfetch(send)後、レスポンスで置き換え(swap)
+    document.querySelectorAll('[x-get]').forEach(el => {
+      el.addEventListener('click', async (e) => {
+        e.preventDefault()
+        const res = await fetch(el.getAttribute('x-get'))
+        el.outerHTML = await res.text() // これがhtmxの核心となる10行
+      })
+    })
+```
+  - 実務での活用: `beforeSend`・`afterSwap`のようなカスタムイベントを公開すれば、確認ダイアログ・スピナー・履歴の更新といった機能を、それぞれ十数行の独立したプラグインとして実装できます。フレームワークの「拡張ポイント」をどう設計すればコアを薄く保てるのかについての、良い教材です。
+  - 注意事項: 著者自身も認めているように、失敗した`fetch()`やnon-2XXレスポンスの処理、プロミスベースのキャンセル、ビュートランジションの待機などは欠けているため、実際のhtmxを代替することはできません。あくまでも「動作原理の学習用」として捉えるべきです。
+
+---
+#### 見逃せないコンテンツ
+- **[cdnjs at 9 Billion Requests a Day: A Migration Story](https://blog.cloudflare.com/cdnjs-dev-platform-migration/)** (出典: *JavaScript Weekly #797*)
+  + 要約: バンドリング・セルフホスティングなしでライブラリを読み込める無料CDN cdnjsが、今や全面的にCloudflare WorkersとR2の上で動くようになった過程を扱います。1日90億リクエスト規模のサービスのインフラ移行記を通じて、大規模な静的アセット配信の現実的な悩みを垣間見ることができます。
+- **[Inaccessible AI-Generated UI (Five-Layer Enforcement System)](https://frontendmasters.com/blog/ai-generated-ui-is-inaccessible-by-default/)** (出典: *Smashing Newsletter #570*)
+  + 要約: AIコード生成ツールは数秒でReactコンポーネントを作り出しますが、見た目がそれらしいだけで、支援技術が依存するセマンティック情報はほとんど空という場合が多くあります。LLMが生成したコンポーネントのセマンティックな正確さを強制するための5層構造を提案します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[TanStack Charts: A New Chart Grammar Option](https://tanstack.com/charts/latest)** (出典: *JavaScript Weekly #797*)
+  ![TanStack Charts](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/zzctbd5nks5jg4ur4cir.jpg)
+  + 概要: ここ数週間、TanStackが素早く反復開発中の、フレームワーク中立な宣言的チャート仕様の方式です。さまざまな可視化をJavaScriptで宣言すると、SVGまたはcanvasとしてレンダリングされ、思いのままにスタイリングできます。
+  + 使い方: 既存のチャートライブラリとのアプローチの違いは、公式の[比較ドキュメント](https://tanstack.com/charts/latest/docs/comparison)で確認できます。(現在はpre-alpha段階でAPIが変わり続けているため、プロダクション導入前にドキュメントの最新版を必ず確認することをおすすめします。)
+  + 実践チップ: 命令型のレンダリングライブラリに疲れたなら、「チャートを宣言する」という文法の観点から一度眺めてみる価値があります。出力がSVG/canvasの両方をサポートするため、レンダーターゲットを状況に合わせて選べます。
+- **[Plate: Build Your Own Rich Text Editor](https://platejs.org/)** (出典: *React Status #486*)
+  ![Plate rich text editor framework](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/rk6mx0cvwj0ccpzqec7o.jpg)
+  + 概要: Reactベースのテキストエディタを自分で組み立てられるフレームワークで、必要な機能と動作だけを選んで入れる方式です。ドキュメントが非常に充実しているのが特徴です。
+  + 使い方: ソースは[GitHubリポジトリ](https://github.com/udecode/plate)で確認でき、各機能は[公式ドキュメント](https://platejs.org/docs)を通じてプラグインの形で付け足していきます。「エディタに必要なだけ機能を選ぶ」という点で、上のTanStack Table v9のopt-in哲学とも通じます。
+  + 実践チップ: Notionスタイルのエディタやカスタムマークダウンエディタのように要件がそれぞれ異なるプロジェクトで、最初からすべて作る代わりに、必要なブロック・書式プラグインだけを選んで始めるのに向いています。
+
+---
+#### 見逃せないコンテンツ
+- **[ffmpeg webCLI: A Browser-Based Video Editor](https://github.com/tejaswigowda/ffmpeg-webCLI)** (出典: *Frontend Focus #753*)
+  + 要約: `ffmpeg.wasm`ベースのブラウザ内動画編集UIで、[こちらで直接使ってみる](https://tejaswigowda.com/ffmpeg-webCLI/)ことができます。トリミング・変換・圧縮・反転など30種類以上の処理を、サーバーへのアップロードなしにローカルで行います。
+- **[Morphicons: Morphing Library for Stroke-Based Icons](https://www.morphicons.com/)** (出典: *React Status #486*)
+  + 要約: propを1つ変えるだけでアイコンが滑らかに変形するライブラリです。Lucide、Tabler、Heroicons、Iconoir、shadcnのアイコンレジストリと連携して動作し、ホームページのライブデモで効果をすぐに確認できます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+
+- **[The Secure Way to Release an npm Package in 2026](https://evilmartians.com/chronicles/the-secure-way-to-release-an-npm-package)** (出典: *JavaScript Weekly #797*)
+  + 主要なインサイト: `postcss`など有名パッケージの著者(Andrey Sitnik)が書いた実践ガイドで、staged publishingとtrusted publishingを「どう」使うのかだけでなく、「なぜ」それが安全なのかを説明します。ちょうど今週`keyv`・`cacheable`のサプライチェーン攻撃が進行中なので、自分のパッケージを公開する開発者なら今すぐ読んでおく価値のある、時宜を得た記事です。
+- **[Building an Accessible Modal Dialog](https://agustinbarrientos.com/writing/senior-eye/accessible-modal-dialog/)** (出典: *Smashing Newsletter #570*)
+  ![Building An Accessible Modal Dialog](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/e86f53ef-dacb-bdb0-fb99-81f54e9c4513.png)
+  + 主要なインサイト: モーダルのアクセシビリティは、たいていフォーカス処理とキーボード・スクリーンリーダー対応のところで静かに崩れます。ネイティブの`<dialog>`要素を土台にしつつ、`<dialog>`が残す隙間を埋める細部まで段階的に押さえ、再利用可能なアクセシブルモーダルを作る実践ガイドです。
+- **[Something Nobody Told You About The Image Element: It Can Overflow!](https://master.dev/blog/something-nobody-told-you-about-the-image-element-it-can-overflow/)** (出典: *Frontend Focus #753*)
+  ![The img element can overflow](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1785935605/uccl0np3ctq361nfzqze.jpg)
+  + 主要なインサイト: `<img>`要素にはデフォルトで`overflow: clip`が適用されているという、ほとんどの人が知らなかったであろう事実を掘り下げます。Temani Afifがその理由と、この隠れたオーバーフローを再び見えるようにすると何が起きるのかを説明します。ブラウザのデフォルトスタイルに対する感覚を広げてくれる記事です。
+
+---
+#### 見逃せないコンテンツ
+- **[The CSS lh unit](https://ishadeed.com/article/lh-unit/)** (出典: *Frontend Focus #753*)
+  + 要約: Ahmad Shadeedが、line-heightの単位`lh`がどのように動作するのか、そしてどんな状況で検討する価値があるのかを、とっつきやすく整理しました。
+- **[Accessible Emojis And Icons](https://blog.pope.tech/2026/04/01/making-emojis-and-icons-screen-reader-accessible/)** (出典: *Smashing Newsletter #570*)
+  + 要約: 絵文字やアイコンは個性を添えてくれますが、視覚・認知に障害のあるユーザーには誤解を招くことがあります。HTMLはもちろん、メールやソーシャル投稿でもスクリーンリーダーにやさしくする方法を、Elle Smithが整理しました。
+---
+
+## 4. ✨ アイデア
+
+- **[Accessibility Quest](https://a11y.quest/)** (出典: *Smashing Newsletter #570*)
+  ![Accessibility Quest](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/07bb7b02-b70b-2ace-bf2f-4bf5825504e5.png)
+  + 特徴: Dave DaviesがWeb Accessibility Specialist試験の対策用に作ったアクセシビリティクイズです。128問で構成されており、すべての正解に解説と公式ドキュメントへのリンクが付いているため、学習資料をゲームのように解かせる、良いインタラクションの事例です。
+- **[This Page Tasks You With Mowing a Lawn](https://pudding.cool/2026/06/mow/)** (出典: *Frontend Focus #753*)
+  + 特徴: 芝生をできるだけ効率よく刈るという課題を投げかけるインタラクティブなページです。単なるミニゲームを超えて、情報を興味深く没入感をもって「見せる」方法についてのインスピレーションを与えてくれる、The Puddingらしい事例です。
+
+## 5. ⚡️ ミニノート
+- **[🚨 keyv & cacheable Packages Compromised](https://socket.dev/blog/popular-npm-packages-in-the-keyv-and-cacheable-namespaces-compromised-in-active-supply-chain)** (出典: *JavaScript Weekly #797*)
+  + 要約: 人気パッケージの`keyv`と`cacheable`が認証情報を盗み取るワームに感染し、その影響が数百のパッケージに広がって現在も進行中です。GitHubはこれに対応し、公開時点でのマルウェアスキャンの導入を始めました。
+- **[React Alicante & reactCon Conferences](https://reactalicante.es/)** (出典: *React Status #486*)
+  + 要約: React Alicanteが9月24〜26日にスペインで開催されます(Mark Erikson、Matteo Collinaなどが参加)。React Nativeカンファレンス[reactCon](https://www.nextappcon.com/reactcon)は10月7〜9日にベルリンで開催されます。
+- **[It's HTML Day 2026](https://2026.html.energy)** (出典: *Frontend Focus #753*)
+  + 要約: 今週の土曜日、HTMLをテーマに文章を書いて祝うHTML Day 2026が、世界各地で開催されます。
+- **[Deno vs Oracle Trademark Case Continues](https://ttabvue.uspto.gov/ttabvue/v?pno=92086835&pty=CAN&eno=26)** (出典: *JavaScript Weekly #797*)
+  + 要約: 「JavaScript™」の商標をめぐるDenoとOracleの争いが続くなか、証拠開示(ディスカバリー)手続きが進み、Denoが5回目の期限延長の要請に同意しました。
+- **[EU to Require Labeling of AI-Generated Content](https://www.euronews.com/my-europe/2026/08/02/ai-generated-label-becomes-mandatory-in-the-eu-for-companies)** (出典: *Frontend Focus #753*)
+  + 要約: EUの新しい規定により、企業は特定のAI生成コンテンツにラベルを表示しなければなりません。
+
+## 6. 🎉 リリース
+
+- **[Next.js 16.3 Released](https://nextjs.org/blog/next-16-3)** (*JavaScript Weekly #797 / React Status #486*)
+  + アップデート: チームを再編(Dan Abramov、Pete Huntが合流)した後にリリースされた新バージョンで、より速いビルド、任意のTypeScript 7型チェック、高速化したSSR、Instant Navigations、AI関連の改善などを盛り込んでいます。
+- **[Node.js v26.6.0 (Current) & v24.19.0 (LTS)](https://nodejs.org/en/blog/release/v26.6.0)** (*JavaScript Weekly #797*)
+  + アップデート: 最新のCurrentラインv26.6.0と、LTSライン[v24.19.0](https://nodejs.org/en/blog/release/v24.19.0)が同時に公開されました。
+- **[MobX 7.0](https://github.com/mobxjs/mobx/releases/tag/mobx%407.0.0)** (*JavaScript Weekly #797*)
+  + アップデート: 人気の状態管理ライブラリがサイズを削減してdeprecatedなAPIを取り除き、Reactバインディングを刷新し、これからは常にProxyベースのobservableなオブジェクト・配列を使用します。
+- **[Vite 8.2](https://github.com/vitejs/vite/blob/v8.2.0/packages/vite/CHANGELOG.md)** (*JavaScript Weekly #797*)
+  + アップデート: Vite 8.2がリリースされました。詳しい変更点はCHANGELOGを参照してください。
+- **[Hono 4.13.0](https://github.com/honojs/hono/releases/tag/v4.13.0)** (*JavaScript Weekly #797*)
+  + アップデート: 軽量Webフレームワーク Hono 4.13.0が公開されました。
+- **[Astro 7.2](https://astro.build/blog/astro-720/)** (*React Status #486*)
+  + アップデート: 実験的なインクリメンタル静的ビルドのサポートが追加され、前回のビルド以降に変わっていない事前レンダリング済みページの再生成をスキップします。
+- **[Base UI 1.7](https://base-ui.com/react/overview/releases/v1-7-0)** (*React Status #486*)
+  + アップデート: アンスタイルドなUIコンポーネントライブラリで、shadcn/uiの新しいデフォルトとして採用されました。
+- **[React Aria 1.20](https://react-aria.adobe.com/releases/v1-20-0)** (*React Status #486*)
+  + アップデート: Adobeのコンポーネントスイートに`PreviewTrigger`、`TokenField`コンポーネントが新たに追加されました。
+- **[SWR 2.5](https://github.com/vercel/swr/releases/tag/v2.5.0)** (*React Status #486*)
+  + アップデート: フックベースのデータフェッチングライブラリv2.5は、RSCキャッシュのプリロードと、キャッシュを空にして進行中の処理を破棄する`unload()` APIを追加しました。
+- **[Material UI 9.3](https://github.com/mui/material-ui/releases/tag/v9.3.0)** (*React Status #486*)
+  + アップデート: 広く使われている総合的なReactコンポーネントスイート Material UI 9.3がリリースされました。
+
+## ✍️ おわりに
+
+今週のリリースを貫く一つの流れは、「必要なだけ載せる」という哲学でした。TanStack Table v9が機能をopt-inへと転換したこと、htmxの本質を40行に還元して残りをプラグインへと追い出した実験、そしてBase UIのようなアンスタイルドライブラリの広がりまで、フレームワークの重心が「すべてを備えたデフォルト」から「明示的に選ぶ最小限のコア」へと移りつつある、という印象を受けます。コアを薄く保ち、拡張ポイントをうまく設計することが、結局はバンドルサイズと保守性を同時に手にする鍵になるようです。
+
+他方で`keyv`・`cacheable`のサプライチェーン攻撃は、私たちがどれだけ良いアーキテクチャを組んでも、それを出荷するパイプラインが破られれば意味がない、という事実をあらためて突きつけます。staged/trusted publishingのようなデプロイの衛生がもはや選択肢ではないという点、そしてSmashingが指摘したように、AIが作ってくれたUIのアクセシビリティを私たち自身で検証しなければならないという点 —— 結局「生成」よりも「検証と信頼」が、今週の本当のテーマだったのかもしれません。
+
+#### 出典
+- [JavaScript Weekly #797](https://javascriptweekly.com/issues/797)
+- [Frontend Focus #753](https://frontendfoc.us/issues/753)
+- [React Status #486](https://react.statuscode.com/issues/486)
+- [Smashing Newsletter #570](https://mailchi.mp/smashingmagazine/570-new-adventures-in-accessibility)
