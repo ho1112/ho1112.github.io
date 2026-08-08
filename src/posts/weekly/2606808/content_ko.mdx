@@ -1,0 +1,158 @@
+---
+title: '🚀 2026-08 W2 #70'
+desc: TanStack Table v9의 opt-in 아키텍처 재설계, 40줄로 재현한 htmx의 본질, keyv·cacheable npm 공급망 공격 | 2026년 8월 2주차 주간 기술 뉴스레터
+date: 2026-08-08
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 이번 주 핵심 테마
+
+이번 주의 화두는 "오래 묵힌 오픈소스 프로젝트들의 대대적인 재설계"입니다. 4년 만에 나온 TanStack Table v9는 tree-shakable 플러그인 아키텍처로 다시 태어났고, Next.js 16.3은 팀을 재편하며 새 버전을 냈으며, htmx의 본질을 40줄로 직접 재구현해보는 글이 큰 주목을 받았습니다. 동시에 `keyv`·`cacheable` 패키지를 노린 npm 공급망 공격이 진행 중이라 "안전한 배포"가 실무 이슈로 떠올랐습니다. 한편 Frontend Focus는 State of CSS 2026 설문(개발자들이 가장 사랑하는 신기능 anchor positioning)을, Smashing은 접근성 특집을 전하며 한 주를 채웠습니다.
+
+## 1. 🔍 심층 분석
+- **[TanStack Table v9: A Faster, More Modular Foundation](https://tanstack.com/blog/announcing-tanstack-table-v9)** (출처: *React Status #486*)
+  ![TanStack Table v9 announcement](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/tdvf8n2ypodcj3csupni.jpg)
+  - 배경: v8이 나온 지 4년 만의 메이저 릴리스입니다. React Compiler가 정식화되면서 v8이 쓰던 상태 관리 패턴이 컴파일러 규칙과 충돌하기 시작했고, 이것이 내부 아키텍처 전면 재작성의 직접적인 계기가 되었습니다.
+  - 핵심 기능: 모든 기능이 "opt-in" 방식으로 바뀌었습니다. 정렬·필터·페이지네이션 같은 기능을 `tableFeatures()`로 명시적으로 등록해야만 코드와 타입이 테이블에 포함됩니다. 상태 관리는 TanStack Store 기반으로 옮겨져 구독 단위의 세밀한 리렌더 제어가 가능해졌고, row·column·cell API가 공유 프로토타입에 올라가면서 대용량 테이블에서 메모리를 크게 절약합니다(일부 시나리오 최대 약 90%).
+  - 코드 예제:
+```js
+    import {
+      columnFilteringFeature,
+      rowSortingFeature,
+      rowPaginationFeature,
+      tableFeatures,
+      useTable,
+    } from '@tanstack/react-table'
+
+    // 필요한 기능만 등록 → 나머지 코드는 번들에서 제외(tree-shaking)
+    const features = tableFeatures({
+      columnFilteringFeature,
+      rowSortingFeature,
+      rowPaginationFeature,
+    })
+
+    function Table() {
+      const table = useTable({ features, columns, data })
+      // ... 헤드리스 렌더링은 v8과 동일한 모델
+    }
+```
+  - 실무 적용: 페이지네이션만 필요한 테이블은 필터·그룹핑 코드를 아예 싣지 않습니다. 절반 정도의 기능만 쓰는 앱이라면 나머지 절반을 배송하지 않아도 되므로, 관리자 대시보드나 SaaS의 데이터 그리드처럼 화면마다 요구 기능이 다른 곳에서 유리합니다.
+  - 주의사항: 잠재적 총 번들 크기는 v8의 약 14kB에서 v9의 약 25kB로 늘었습니다. 즉 `stockFeatures`로 전체 기능을 한 번에 쓰면 오히려 커지므로, 개별 기능을 하나씩 import 해야 tree-shaking 이점을 얻습니다. 기능 객체는 컴포넌트 바깥에 정적으로 정의하는 것이 권장됩니다.
+- **[Let's Make the Worst htmx Ever](https://zserge.com/posts/worst-htmx-ever/)** (출처: *JavaScript Weekly #797*)
+  - 배경: Serge Zaitsev가 "worst React", "worst Vue"에 이어 이번엔 htmx의 본질을 밑바닥부터 재구현합니다. 5천 줄짜리 단일 파일로 악명 높은 htmx가 실제로 하는 일이 무엇인지 직접 만들어보며 이해하자는 취지입니다.
+  - 핵심 기능: 저자는 htmx의 정수를 "SSS"로 요약합니다. 즉 요소를 훑고(scan) → 요청을 보내고(send) → 응답을 갈아끼운다(swap). 이 세 가지만 있으면 htmx의 뼈대가 완성되고, 나머지 기능(부스팅, 인디케이터, 확인 대화상자 등)은 코어를 건드리지 않는 이벤트 기반 플러그인으로 붙입니다.
+  - 코드 예제:
+```js
+    // x-get 속성을 훑어(scan) 클릭 시 fetch(send) 후 응답으로 교체(swap)
+    document.querySelectorAll('[x-get]').forEach(el => {
+      el.addEventListener('click', async (e) => {
+        e.preventDefault()
+        const res = await fetch(el.getAttribute('x-get'))
+        el.outerHTML = await res.text() // 이것이 htmx의 핵심 10줄
+      })
+    })
+```
+  - 실무 적용: `beforeSend`·`afterSwap` 같은 커스텀 이벤트를 노출하면, 확인창·스피너·히스토리 갱신 같은 기능을 각각 열 몇 줄짜리 독립 플러그인으로 구현할 수 있습니다. 프레임워크의 "확장 지점"을 어떻게 설계해야 코어를 얇게 유지할 수 있는지에 대한 좋은 교보재입니다.
+  - 주의사항: 저자 스스로 인정하듯 실패한 `fetch()`나 non-2XX 응답 처리, 프로미스 기반 취소, 뷰 트랜지션 대기 등은 빠져 있어 실제 htmx를 대체하지는 못합니다. 어디까지나 "동작 원리 학습용"으로 접근해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[cdnjs at 9 Billion Requests a Day: A Migration Story](https://blog.cloudflare.com/cdnjs-dev-platform-migration/)** (출처: *JavaScript Weekly #797*)
+  + 요약: 번들링·셀프호스팅 없이 라이브러리를 불러오는 무료 CDN cdnjs가 이제 전면적으로 Cloudflare Workers와 R2 위에서 돌아가게 된 과정을 다룹니다. 하루 90억 요청 규모 서비스의 인프라 이전기를 통해 대규모 정적 자산 서빙의 현실적 고민을 엿볼 수 있습니다.
+- **[Inaccessible AI-Generated UI (Five-Layer Enforcement System)](https://frontendmasters.com/blog/ai-generated-ui-is-inaccessible-by-default/)** (출처: *Smashing Newsletter #570*)
+  + 요약: AI 코드 생성 도구는 몇 초 만에 React 컴포넌트를 만들어내지만, 시각적으로만 그럴듯할 뿐 보조기술이 의존하는 시맨틱 정보는 거의 비어 있는 경우가 많습니다. LLM 생성 컴포넌트의 시맨틱 정확성을 강제하기 위한 5계층 구조를 제안합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[TanStack Charts: A New Chart Grammar Option](https://tanstack.com/charts/latest)** (출처: *JavaScript Weekly #797*)
+  ![TanStack Charts](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/zzctbd5nks5jg4ur4cir.jpg)
+  + 개요: 최근 몇 주간 TanStack이 빠르게 반복 개발 중인, 프레임워크 중립적인 선언형 차트 명세 방식입니다. 다양한 시각화를 JavaScript로 선언하면 SVG 또는 canvas로 렌더링되고 원하는 대로 스타일링할 수 있습니다.
+  + 사용법: 기존 차트 라이브러리와의 접근 방식 차이는 공식 [비교 문서](https://tanstack.com/charts/latest/docs/comparison)에서 확인할 수 있습니다. (현재 pre-alpha 단계로 API가 계속 바뀌고 있어, 프로덕션 도입 전 문서 최신 버전을 반드시 확인하는 것이 좋습니다.)
+  + 실전 팁: 명령형 렌더링 라이브러리에 지쳤다면, "차트를 선언한다"는 문법 관점에서 한 번 살펴볼 가치가 있습니다. 출력이 SVG/canvas 양쪽을 지원하므로 렌더 타깃을 상황에 맞게 고를 수 있습니다.
+- **[Plate: Build Your Own Rich Text Editor](https://platejs.org/)** (출처: *React Status #486*)
+  ![Plate rich text editor framework](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/rk6mx0cvwj0ccpzqec7o.jpg)
+  + 개요: React 기반 텍스트 에디터를 직접 조립할 수 있는 프레임워크로, 필요한 기능과 동작만 선택해 넣는 방식입니다. 문서화가 매우 탄탄한 것이 특징입니다.
+  + 사용법: 소스는 [GitHub 저장소](https://github.com/udecode/plate)에서 확인할 수 있으며, 각 기능은 [공식 문서](https://platejs.org/docs)를 통해 플러그인 형태로 붙여 나갑니다. "에디터에 필요한 만큼만 기능을 고른다"는 점에서 위 TanStack Table v9의 opt-in 철학과도 통합니다.
+  + 실전 팁: Notion 스타일 에디터나 커스텀 마크다운 편집기처럼 요구사항이 제각각인 프로젝트에서, 처음부터 다 만드는 대신 필요한 블록·서식 플러그인만 선택해 시작하기 좋습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[ffmpeg webCLI: A Browser-Based Video Editor](https://github.com/tejaswigowda/ffmpeg-webCLI)** (출처: *Frontend Focus #753*)
+  + 요약: `ffmpeg.wasm` 기반의 브라우저 내 영상 편집 UI로, [여기서 직접 사용](https://tejaswigowda.com/ffmpeg-webCLI/)해볼 수 있습니다. 트림·변환·압축·플립 등 30가지 이상의 작업을 서버 업로드 없이 로컬에서 처리합니다.
+- **[Morphicons: Morphing Library for Stroke-Based Icons](https://www.morphicons.com/)** (출처: *React Status #486*)
+  + 요약: prop 하나만 바꾸면 아이콘이 부드럽게 변형되는 라이브러리입니다. Lucide, Tabler, Heroicons, Iconoir, shadcn 아이콘 레지스트리와 함께 동작하며, 홈페이지 라이브 데모에서 효과를 바로 확인할 수 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+
+- **[The Secure Way to Release an npm Package in 2026](https://evilmartians.com/chronicles/the-secure-way-to-release-an-npm-package)** (출처: *JavaScript Weekly #797*)
+  + 핵심 인사이트: `postcss` 등 유명 패키지 저자(Andrey Sitnik)가 쓴 실전 가이드로, staged publishing과 trusted publishing을 "어떻게" 쓰는지뿐 아니라 "왜" 그것이 안전한지를 설명합니다. 마침 이번 주 `keyv`·`cacheable` 공급망 공격이 진행 중이라, 자신의 패키지를 배포하는 개발자라면 지금 당장 읽어둘 만한 시의성 있는 글입니다.
+- **[Building an Accessible Modal Dialog](https://agustinbarrientos.com/writing/senior-eye/accessible-modal-dialog/)** (출처: *Smashing Newsletter #570*)
+  ![Building An Accessible Modal Dialog](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/e86f53ef-dacb-bdb0-fb99-81f54e9c4513.png)
+  + 핵심 인사이트: 모달의 접근성은 대개 포커스 처리와 키보드·스크린리더 지원에서 조용히 무너집니다. 네이티브 `<dialog>` 요소를 토대로 삼되, `<dialog>`가 남기는 빈틈을 채우는 세부 사항까지 단계별로 짚어 재사용 가능한 접근성 모달을 만드는 실전 가이드입니다.
+- **[Something Nobody Told You About The Image Element: It Can Overflow!](https://master.dev/blog/something-nobody-told-you-about-the-image-element-it-can-overflow/)** (출처: *Frontend Focus #753*)
+  ![The img element can overflow](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1785935605/uccl0np3ctq361nfzqze.jpg)
+  + 핵심 인사이트: `<img>` 요소에는 기본적으로 `overflow: clip`이 적용되어 있다는, 대부분 몰랐을 사실을 파고듭니다. Temani Afif가 그 이유와, 이 숨겨진 오버플로를 다시 보이게 만들면 무슨 일이 벌어지는지를 설명합니다. 브라우저 기본 스타일에 대한 감각을 넓혀주는 글입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The CSS lh unit](https://ishadeed.com/article/lh-unit/)** (출처: *Frontend Focus #753*)
+  + 요약: Ahmad Shadeed가 line-height 단위 `lh`가 어떻게 동작하는지, 그리고 어떤 상황에서 고려해볼 만한지를 접근하기 쉽게 정리했습니다.
+- **[Accessible Emojis And Icons](https://blog.pope.tech/2026/04/01/making-emojis-and-icons-screen-reader-accessible/)** (출처: *Smashing Newsletter #570*)
+  + 요약: 이모지와 아이콘은 개성을 더하지만 시각·인지 장애가 있는 사용자에게는 오해를 부를 수 있습니다. HTML은 물론 이메일·소셜 게시물에서도 스크린리더 친화적으로 만드는 방법을 Elle Smith가 정리했습니다.
+---
+
+## 4. ✨ 아이디어
+
+- **[Accessibility Quest](https://a11y.quest/)** (출처: *Smashing Newsletter #570*)
+  ![Accessibility Quest](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/07bb7b02-b70b-2ace-bf2f-4bf5825504e5.png)
+  + 특징: Dave Davies가 Web Accessibility Specialist 시험 대비용으로 만든 접근성 퀴즈입니다. 128문항으로 구성되어 있고 모든 정답에는 설명과 공식 문서 링크가 붙어 있어, 학습 자료를 게임처럼 풀게 만든 좋은 인터랙션 사례입니다.
+- **[This Page Tasks You With Mowing a Lawn](https://pudding.cool/2026/06/mow/)** (출처: *Frontend Focus #753*)
+  + 특징: 잔디를 최대한 효율적으로 깎는 과제를 던지는 인터랙티브 페이지입니다. 단순한 미니게임을 넘어, 정보를 흥미롭고 몰입감 있게 "보여주는" 방식에 대한 영감을 주는 The Pudding다운 사례입니다.
+
+## 5. ⚡️ 짧은 소식
+- **[🚨 keyv & cacheable Packages Compromised](https://socket.dev/blog/popular-npm-packages-in-the-keyv-and-cacheable-namespaces-compromised-in-active-supply-chain)** (출처: *JavaScript Weekly #797*)
+  + 요약: 인기 패키지 `keyv`와 `cacheable`이 자격증명 탈취 웜에 감염되었고, 그 여파가 수백 개 패키지로 번지며 현재도 진행 중입니다. GitHub는 이에 대응해 발행 시점 악성코드 스캔을 도입하기 시작했습니다.
+- **[React Alicante & reactCon Conferences](https://reactalicante.es/)** (출처: *React Status #486*)
+  + 요약: React Alicante가 9월 24–26일 스페인에서 열립니다(Mark Erikson, Matteo Collina 등 참여). React Native 콘퍼런스 [reactCon](https://www.nextappcon.com/reactcon)은 10월 7–9일 베를린에서 개최됩니다.
+- **[It's HTML Day 2026](https://2026.html.energy)** (출처: *Frontend Focus #753*)
+  + 요약: 이번 주 토요일, HTML을 주제로 글을 쓰고 축하하는 HTML Day 2026이 전 세계 곳곳에서 열립니다.
+- **[Deno vs Oracle Trademark Case Continues](https://ttabvue.uspto.gov/ttabvue/v?pno=92086835&pty=CAN&eno=26)** (출처: *JavaScript Weekly #797*)
+  + 요약: 'JavaScript™' 상표를 둘러싼 Deno와 Oracle의 분쟁이 계속되는 가운데, 증거개시 절차가 이어지며 Deno가 다섯 번째 기한 연장 요청에 동의했습니다.
+- **[EU to Require Labeling of AI-Generated Content](https://www.euronews.com/my-europe/2026/08/02/ai-generated-label-becomes-mandatory-in-the-eu-for-companies)** (출처: *Frontend Focus #753*)
+  + 요약: EU의 새 규정에 따라 기업은 특정 AI 생성 콘텐츠에 라벨을 표기해야 합니다.
+
+## 6. 🎉 릴리스
+
+- **[Next.js 16.3 Released](https://nextjs.org/blog/next-16-3)** (*JavaScript Weekly #797 / React Status #486*)
+  + 업데이트: 팀을 재편(Dan Abramov, Pete Hunt 합류)한 뒤 나온 새 버전으로, 더 빠른 빌드, 선택적 TypeScript 7 타입 체크, 빨라진 SSR, Instant Navigations, AI 관련 개선 등을 담았습니다.
+- **[Node.js v26.6.0 (Current) & v24.19.0 (LTS)](https://nodejs.org/en/blog/release/v26.6.0)** (*JavaScript Weekly #797*)
+  + 업데이트: 최신 Current 라인 v26.6.0과 LTS 라인 [v24.19.0](https://nodejs.org/en/blog/release/v24.19.0)이 함께 공개되었습니다.
+- **[MobX 7.0](https://github.com/mobxjs/mobx/releases/tag/mobx%407.0.0)** (*JavaScript Weekly #797*)
+  + 업데이트: 인기 상태 관리 라이브러리가 몸집을 줄이고 deprecated API를 제거했으며, React 바인딩을 갱신하고 이제 항상 Proxy 기반 observable 객체·배열을 사용합니다.
+- **[Vite 8.2](https://github.com/vitejs/vite/blob/v8.2.0/packages/vite/CHANGELOG.md)** (*JavaScript Weekly #797*)
+  + 업데이트: Vite 8.2 릴리스. 자세한 변경 사항은 CHANGELOG를 참고하세요.
+- **[Hono 4.13.0](https://github.com/honojs/hono/releases/tag/v4.13.0)** (*JavaScript Weekly #797*)
+  + 업데이트: 경량 웹 프레임워크 Hono 4.13.0이 공개되었습니다.
+- **[Astro 7.2](https://astro.build/blog/astro-720/)** (*React Status #486*)
+  + 업데이트: 실험적 증분 정적 빌드 지원이 추가되어, 마지막 빌드 이후 바뀌지 않은 사전 렌더 페이지의 재생성을 건너뜁니다.
+- **[Base UI 1.7](https://base-ui.com/react/overview/releases/v1-7-0)** (*React Status #486*)
+  + 업데이트: 언스타일 UI 컴포넌트 라이브러리로, shadcn/ui의 새로운 기본값으로 채택되었습니다.
+- **[React Aria 1.20](https://react-aria.adobe.com/releases/v1-20-0)** (*React Status #486*)
+  + 업데이트: Adobe의 컴포넌트 스위트에 `PreviewTrigger`, `TokenField` 컴포넌트가 새로 추가되었습니다.
+- **[SWR 2.5](https://github.com/vercel/swr/releases/tag/v2.5.0)** (*React Status #486*)
+  + 업데이트: 훅 기반 데이터 페칭 라이브러리 v2.5는 RSC 캐시 프리로딩과, 캐시를 비우고 진행 중 작업을 폐기하는 `unload()` API를 추가했습니다.
+- **[Material UI 9.3](https://github.com/mui/material-ui/releases/tag/v9.3.0)** (*React Status #486*)
+  + 업데이트: 널리 쓰이는 종합 React 컴포넌트 스위트 Material UI 9.3이 릴리스되었습니다.
+
+## ✍️ 마치며
+
+이번 주 릴리스들을 관통하는 한 가지 흐름은 "필요한 만큼만 싣는다"는 철학이었습니다. TanStack Table v9가 기능을 opt-in으로 돌려세운 것, htmx의 본질을 40줄로 환원해 나머지를 플러그인으로 밀어낸 실험, 그리고 Base UI 같은 언스타일 라이브러리의 확산까지 프레임워크의 무게중심이 "다 갖춘 기본값"에서 "명시적으로 고르는 최소 코어"로 옮겨가고 있다는 인상을 받습니다. 코어를 얇게 유지하고 확장 지점을 잘 설계하는 일이, 결국 번들 크기와 유지보수성을 동시에 잡는 열쇠가 되는 듯합니다.
+
+다른 한편으로 `keyv`·`cacheable` 공급망 공격은, 우리가 아무리 좋은 아키텍처를 짜도 그것을 배송하는 파이프라인이 뚫리면 소용없다는 사실을 다시 일깨웁니다. staged/trusted publishing 같은 배포 위생이 더 이상 선택이 아니라는 점, 그리고 Smashing이 짚은 것처럼 AI가 만들어 준 UI의 접근성을 우리가 직접 검증해야 한다는 점 결국 "생성"보다 "검증과 신뢰"가 이번 주의 진짜 주제였는지도 모르겠습니다.
+
+#### 출처
+- [JavaScript Weekly #797](https://javascriptweekly.com/issues/797)
+- [Frontend Focus #753](https://frontendfoc.us/issues/753)
+- [React Status #486](https://react.statuscode.com/issues/486)
+- [Smashing Newsletter #570](https://mailchi.mp/smashingmagazine/570-new-adventures-in-accessibility)
