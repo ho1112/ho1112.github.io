@@ -1,0 +1,156 @@
+---
+title: '🚀 2026-08 W3 #71'
+desc: Baseline基準のJavaScript軽量化、CSS subgridとエディトリアルタイポグラフィ、TypeScript 7.0・Next.jsなど主要リリース | 2026年8月第3週目 週間技術ニュースレター
+date: 2026-08-15
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週は「**送らないことこそパフォーマンス**」というテーマが複数のニュースレターを貫いていました。JavaScript WeeklyはBaselineを基準に依存関係を監査(audit)し、バンドルを削減する方法を、Frontend FocusはJavaScriptなしでリアルタイムSPAを実装するアプローチを取り上げました。同時に、CSSの表現力が大きく伸びたことも目を引きます。subgridで複雑な表レイアウトを再現したり、background-clipや編集用タイポグラフィ機能でテキストデザインを引き上げたりする記事が続きました。ツール面では、ReactでネイティブなLinuxアプリを作るGTKX 1.0、ターミナルUIをDOMで作るTermDOMが登場し、リリース欄にはNode.js 26.7、Next.js 16.3.1、TypeScript 7.0(ネイティブポート)まで大きなニュースが集まりました。
+
+## 1. 🔍 深掘り
+- **[How Baseline Can Help You Ship Less JavaScript](https://www.smashingmagazine.com/2026/08/how-baseline-can-help-ship-less-javascript/)** (出典: *JavaScript Weekly #798*)
+  - 背景: ポリフィルやユーティリティライブラリは惰性のように積み重なっていきますが、ブラウザのサポート基準線(Baseline)が上がるにつれて、その多くは今やネイティブに置き換え可能になっています。この記事は、「何を削除できるか」を勘で判断するのではなく、再利用可能な監査プロセスとして仕組み化しようと提案しています。
+  - 主な機能: 依存関係をIntl、HTTP、UIプリミティブ、lodashのようなクラスターにまとめ、削除前に投げかけるべき質問リストを提供します。興味深いことに、置き換えがかえってバンドルを大きくしてしまう事例(Day.js → Temporal)まで取り上げ、無条件の「ライブラリ削除」に警鐘を鳴らしています。
+  - コード例:
+```js
+    // フォーマット用ユーティリティライブラリの代わりにネイティブのIntlを使用
+    const price = new Intl.NumberFormat("ko-KR", {
+      style: "currency", currency: "KRW",
+    }).format(19900); // "₩19,900"
+    const rtf = new Intl.RelativeTimeFormat("ko");
+    rtf.format(-1, "day"); // "1日前"
+```
+  - 実務への適用: 新機能を追加する前に「この機能、Baselineに入っているか?」をチェックリストにしておけば、依存関係の増加を事前に防ぐことができます。
+  - 注意事項: ネイティブAPIが常に軽いとは限りません。ポリフィル(Temporalなど)がまだ重い領域では、置き換えが逆効果になる可能性があるため、実際のバンドルサイズを測定してから判断する必要があります。
+- **[Rebuilding FIFA Standings Layout With CSS Subgrid](https://ishadeed.com/article/fifa-layout/)** (出典: *Smashing Newsletter #571*)
+  ![Rebuilding FIFA Standings Layout With CSS Subgrid](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/326ae1b0-350e-96fb-587d-b657a7a9f5cd.png)
+  - 背景: Ahmad Shadeed氏がワールドカップの順位表ページに興味を持ち、元の実装を分解して調べた上で、同じレイアウトをCSS gridとsubgridで作り直した過程をまとめています。
+  - 主な機能: 外側のグリッドでカラムトラックを一度だけ定義し、各行(カード/チーム)がsubgridでそのトラックをそのまま継承する点がポイントです。こうすることで、行ごとにカラム幅を個別に合わせる必要がなく、配置が自動的に揃います。
+  - コード例:
+```css
+    .table { display: grid; grid-template-columns: 2rem 1fr repeat(4, 3rem); }
+    .row {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid; /* 親のトラックをそのまま継承 */
+    }
+```
+  - 実務への適用: 順位表、価格表、データカードのように「行ごとにセルの境界がぴったり揃う必要がある」レイアウトで、別途テーブルマークアップを使わずにセマンティックを保ちながら整列できます。
+  - 注意事項: subgridは比較的新しい機能なので、旧型ブラウザ向けのフォールバック(単純なflex整列など)を併せて設計しておくのが安全です。
+
+---
+#### 見逃せないコンテンツ
+- **[Own the RSC Pipeline: Cache and Compose It Yourself](https://www.youtube.com/watch?v=6lSH1-ytd7E)** (出典: *React Status #487*)
+  + 要約: TanStack Startの実装を主導したコントリビューターが、「RSCはアーキテクチャではなくプリミティブだ」と主張します。結局のところ2つのReact関数とストリームに過ぎないため、自分で直接キャッシュしてオフラインでも扱えるという視点を、18分の動画で解説しています。
+- **[HTML Over WebSockets: Real-Time SPAs With Barely Any JavaScript](https://en.andros.dev/blog/ef4968f5/html-over-websockets-real-time-spas-with-barely-any-javascript/)** (出典: *Frontend Focus #754*)
+  + 要約: 新しいアイデアではありませんが最近再び注目されているアプローチで、サーバーがHTMLの断片をWebSocketで送り込む双方向リアルタイム方式の仕組みと、他の方法と比べていつ有利になるのかを説明しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[GTKX 1.0: The React Framework for Linux](https://gtkx.dev/blog/gtkx-1-0)** (出典: *React Status #487*)
+  + 概要: React(JSX)でネイティブなLinuxデスクトップアプリを作るフレームワークです。webviewを使わずに実際のGTK4・Adwaitaウィジェットをレンダリングし、通常のNodeプロセス上でnpmパッケージやFast Refreshまで利用できます。
+  + 使い方: 1.0直後に登場したGTKX 1.1では、デプロイまで一括で処理するコマンドが追加されました。
+```bash
+    # Flatpak / .deb / .rpm / AppImageの配布物を一括生成 (GTKX 1.1)
+    gtkx deploy
+```
+  + 実践チップ: Electron式のwebview方式が負担に感じられたLinux向けアプリなら、Webスタック(React)の経験をそのまま活かしつつ、ネイティブウィジェットの性能・ルックアンドフィールを両立できる選択肢になります。
+- **[TermDOM: Build Terminal UIs with HTML, CSS and the DOM](https://termdom.org/)** (出典: *Frontend Focus #754*)
+  + 概要: Crank.jsの作者が手がけたプロジェクトで、Web開発のスキルをターミナルに持ち込みます。Node・Bun・Deno上のTUIを、バニラJSまたは任意のフロントエンドフレームワークで記述できます。
+  + 使い方(概念例): おなじみのDOM APIでターミナル画面の要素を構成する形です。
+```js
+    // DOMスタイルのAPIでターミナルUIノードを構成する概念例
+    const box = document.createElement("div");
+    box.style.border = "1px solid";
+    box.textContent = "Hello Terminal";
+    document.body.appendChild(box);
+```
+  + 実践チップ: FlexboxとフォームはサポートしていますがCSS Gridはまだ未対応です。レイアウトはFlexboxを基準に設計してください。
+
+---
+#### 見逃せないコンテンツ
+- **[kbar 1.0: A Cmd+K Interface for React Apps](https://kbar.vercel.app/)** (出典: *React Status #487*)
+  + 要約: 5年間のベータ期間を経て正式に1.0に到達しました。ページ内のコマンド/検索(Cmd+K)パレットを簡単に追加でき、React 18・19に完全対応しています。
+- **[Morphicons: Morphing Library for Stroke-Based Icons](https://www.morphicons.com/)** (出典: *Frontend Focus #754*)
+  + 要約: ストロークベースのアイコン間でモーフィング(変形)アニメーションを提供するライブラリで、インタラクションに躍動感を加えたいときに便利です。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Five CSS Properties You Should Know for Better Text Designs](https://master.dev/blog/typographic-css-tricks/)** (出典: *Frontend Focus #754*)
+  + 主要なインサイト: 画像を使わずCSSだけでテキストにインパクトを与えるテクニック集です。background-clip、box-decoration-break、letter-spacingなどをコード・デモとともに紹介しています。
+```css
+    /* テキストにグラデーションを塗りつぶし */
+    .headline {
+      background: linear-gradient(90deg, #7c3aed, #06b6d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+```
+- **[Editorial Typography With CSS](https://www.carmenansio.com/articles/editorial-typography-css/)** (出典: *Smashing Newsletter #571*)
+  ![Editorial Typography In CSS](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/74c1db19-051c-e8a4-6194-3e00962d481c.png)
+  + 主要なインサイト: フルードスケール、バランスの取れた見出し、オプティカルサイジング、ハンギングパンクチュエーション(hanging punctuation)のような、長らく印刷物だけの専売特許だった組版のディテールが、ついにブラウザにやってきました。Carmen Ansio氏が、これらの機能でWebタイポグラフィを一段引き上げる方法を紹介しています。
+```css
+    h1 { text-wrap: balance; }        /* 見出しの改行バランス */
+    p  { hanging-punctuation: first; } /* 先頭文字の句読点ぶら下げ */
+```
+- **[Migrating a Large Flow Monorepo to TypeScript](https://engineeringblog.yelp.com/2026/08/migrating-a-large-flow-monorepo-to-typescript.html)** (出典: *JavaScript Weekly #798*)
+  + 主要なインサイト: Yelpが数年かけて140万行をFlowから取り除いた記録であり、Flowそのものの話というより「長期マイグレーションをどう回すか」についての実践ガイドに近い内容です。型カバレッジが83%から96%へ上がったこと自体も大きな成果でした。
+
+---
+#### 見逃せないコンテンツ
+- **[Dark Mode Toggles: Two States are Enough](https://lea.verou.me/blog/2026/dark-mode-toggles/)** (出典: *Frontend Focus #754*)
+  + 要約: Lea Verou氏は、ユーザーは今そこにない問題の解決策をわざわざ探したりしないという点を改めて示しながら、ダークモードトグルであらゆる状態をUIに露出させる必要はないとアドバイスしています。
+- **[Reading A Performance Profile](https://perf.reviews/profile-guide)** (出典: *Smashing Newsletter #571*)
+  + 要約: Joan León氏が作成したインタラクティブなフィールドガイドで、ネットワークウォーターフォールやフレームチャートを素早く読み解くメンタルモデルを、実際のキャプチャ・ワークフローチェックリストとともに身につけられます。
+---
+
+## 4. ✨ アイデア
+- **[The Windows 'Pipes' Screensaver Built in CSS](https://css.graphics/pipes/)** (出典: *Frontend Focus #754*)
+  + 特徴: 多くの人が懐かしむWindows NTのパイプスクリーンセーバーを、純粋なCSSだけで再現しています。cssGraphicsライブラリと3DエンジンPolyCSSが原動力となっており、CSSだけでどこまでできるかを見せてくれる楽しい事例です。
+- **[How To Choose A UI Font](https://yeptype.com/article/inter-alternatives)** (出典: *Smashing Newsletter #571*)
+  ![How To Choose A UI Font](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/5aa764bd-00b8-192b-8a41-d04e0c14bc9c.png)
+  + 特徴: Interは手を加えなくてもよく馴染むUIフォントですが、「どこにでもある」という弱点があります。Yep! Type Foundryが、Interと同じくらい手間のかからないフォントを選ぶための2つの基準と、検討する価値のある10個のInter代替案を提示しています。
+
+## 5. ⚡️ ミニノート
+- **[The Next.js team is doing a Reddit AMA](https://www.reddit.com/r/nextjs/comments/1vnlcsk/were_the_nextjs_team_ask_us_anything/)** (出典: *React Status #487*)
+  + 要約: Next.jsチームがRedditでAMA(何でも聞いてください)を実施しています。該当スレッドに質問を書き込めます。
+- **[Kitesurf: Cloudflare's Agent-First Browser in V8 Isolates](https://blog.cloudflare.com/kitesurf/)** (出典: *JavaScript Weekly #798*)
+  + 要約: Workers上でページごとに1つのisolateとして動作するブラウザエンジンです。人間ではなくエージェントを対象としており、速度は遅い代わりにChromiumと比べてCPU・メモリを3〜7倍少なく使用します。現在ベータとして試用可能で、今後オープンソース化される予定です。
+- **[99% of My Website Traffic is Bots](https://patronview.com/news/99-percent-of-my-website-traffic-is-bots/)** (出典: *Frontend Focus #754*)
+  + 要約: Nick Gray氏が1年間にわたり大規模なボットトラフィックと戦ってきた記録で、ボットトラフィックの性質の変化と、Cloudflareのルールを活用した対応策を包み隠さず共有しています。
+- **[Measuring Component Performance (Container Timing API)](https://csswizardry.com/2026/07/meaasuring-component-performance-with-the-container-timing-api/)** (出典: *Smashing Newsletter #571*)
+  + 要約: 標準的なパフォーマンス指標では、個々のコンポーネントの性能を把握するのは困難です。新しいContainer Timing API(現在Chrome origin trial)は、DOM領域を指定することで、その領域が描画されるたびにエントリを受け取れるようにしてくれます。
+- **[A 12-year-old weak PRNG in crypto-js](https://www.coinspect.com/blog/ill-bloom-investigation/)** (出典: *JavaScript Weekly #798*)
+  + 要約: crypto-jsの弱い乱数生成器が、ウォレット資金の窃取に悪用されました。ただし、4.0.0より前(2020年)のバージョンでシークレットを生成した場合に限られます。
+
+## 6. 🎉 リリース
+- **[Next.js 16.3.1](https://github.com/vercel/next.js/releases/tag/v16.3.1)** (*React Status #487*)
+  + アップデート: 16.3リリースには、ネットワークレスポンス前のレンダリングを検証するPlaywright用instant()テストヘルパーが含まれています。
+- **[React Native 0.87](https://reactnative.dev/blog/2026/08/11/react-native-0.87)** (*React Status #487*)
+  + アップデート: パブリックJS APIがStrict TypeScript APIになり、Metroが軽量化されたv0.87に更新され、iOS向けSwift Package Managerサポート(実験的)が追加されました。
+- **[Node.js 26.7.0 (Current)](https://nodejs.org/en/blog/release/v26.7.0)** (*JavaScript Weekly #798*)
+  + アップデート: --test-coverage-include-allの追加、FFI・SQLiteのクラッシュ修正、Perfettoトレーシングの初期サポート。
+- **[Preact 11 Release Candidate](https://github.com/preactjs/preact/releases/tag/11.0.0-rc.0)** (*JavaScript Weekly #798*)
+  + アップデート: Preact 11がリリース候補(RC)段階に入りました。
+- **[SolidStart v2](https://github.com/solidjs/solid-start/discussions/2281)** (*JavaScript Weekly #798*)
+  + アップデート: SolidJS陣営におけるNext.js・SvelteKitに相当するメタフレームワークのv2です。
+- **[pnpm 12 (Rust rewrite)](https://pnpm.io/blog/whats-different-in-pnpm-12)** (*JavaScript Weekly #798*)
+  + アップデート: Rustで書き直されたpnpm 12がRCに到達し、pnpm 11との違いはわずか3点だけです。
+- **[TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)** (*Smashing Newsletter #571*)
+  + アップデート: 7月初めにMicrosoftが発表したネイティブポートで、コンパイラが約10倍高速化し、プロジェクトの読み込み・参照検索・自動補完・診断の遅延を大幅に削減します。
+- **[React Hook Form 7.85.0](https://github.com/react-hook-form/react-hook-form/releases/tag/v7.85.0)** (*React Status #487*)
+  + アップデート: React Hook Form 7.85.0のパッチリリースです。
+- **[Sonner 2.0.8](https://github.com/emilkowalski/sonner/releases/tag/v2.0.8)** (*React Status #487*)
+  + アップデート: トーストライブラリSonner 2.0.8のリリースです。
+
+## ✍️ おわりに
+今週のニュースを貫く印象は、フロントエンドが再び「標準プラットフォーム」へと重心を移しつつあるという点です。Baselineを根拠に依存関係を削ぎ落とし、subgridや編集用タイポグラフィのように、かつてはライブラリや画像で迂回していた表現を、今やCSS一、二行で解決しています。ライブラリを追加する前にプラットフォームが提供するものをまず確認する習慣が、長期的にはバンドルサイズだけでなく保守コストまで削減してくれるように思います。一方、Kitesurfのように「人間ではなくエージェントのためのブラウザ」が登場する流れは、私たちが作るWebの消費主体が広がりつつあることを思い出させてくれます。ツールが高速化し(TypeScript 7.0、pnpm 12)、標準が厚みを増しつつある今こそ、習慣のように積み上げてきたスタックを一度見直してみるいい時期だと感じます。
+
+#### 出典
+- [JavaScript Weekly #798](https://javascriptweekly.com/issues/798)
+- [Frontend Focus #754](https://frontendfoc.us/issues/754)
+- [React Status #487](https://react.statuscode.com/issues/487)
+- [Smashing Newsletter #571](https://mailchi.mp/smashingmagazine/571-whats-new-in-frontend)
