@@ -1,0 +1,132 @@
+---
+title: '🚀 2026-08 W4 #72'
+desc: Solid 2.0のasync一級市民化、GitHub障害が引き金となったGit War of 2026、pnpm・Vitest・SvelteKitのメジャーRC総まとめ | 2026年8月第4週目 週間技術ニュースレター
+date: 2026-08-22
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週のフロントエンドエコシステムの話題は、なんといっても**AIエージェント時代のフレームワーク選択**です。CursorがSolidを捨ててReactとStyleXへ完全移行した事実が公開されたまさにその週に、Solidはasyncをリアクティブグラフの一級市民へと引き上げたSolid 2.0 RCを公開し、真っ向勝負を挑みました。一方、GitHubの8時間障害は、Cursor、Cloudflare、Pierreがそれぞれ独自のGitホスティングを打ち出す、いわゆる「Git War of 2026」の引き金となりました。さらにpnpm 12、Vitest 5、SvelteKit 3、Preact 11、そしてReact Native 0.87まで、メジャーバージョンのRCが相次いだ一週間でした。
+
+## 1. 🔍 深掘り
+- **[Solid 2.0 RC: The Big \<Reveal\>](https://www.solidjs.com/blog/solid-2-0-rc-the-big-reveal)** (出典: *Bytes #513*)
+  - 背景: UIフレームワークの本当の難題は、レンダリングではなくasyncでした。Solid 1.xでは非同期の値を`createResource`という特殊なプリミティブで別途処理する必要がありましたが、2.0ではこのasyncをリアクティブグラフの**一級市民**として統合し、フレームワーク史上最大の刷新を行いました。
+  - 主な機能: `createMemo`にPromiseやasync iteratorをそのまま渡すと、グラフがsuspend/resumeを自動的に処理します。`<Suspense>`は初回レンダーのみを担当する`<Loading>`に置き換えられ、更新は`isPending()`でバックグラウンド追跡されるため、再検証のたびにUIがスピナーに戻ることはありません。`action()`や`createOptimisticStore`といった楽観的プリミティブがコアに組み込まれ、Oxcベースの Rustコンパイラによりビルドが従来比20〜350倍高速化されました。
+  - コード例:
+```js
+    // Solid 1.x — resourceで特殊処理
+    const [data] = createResource(() => fetchUser(userId()));
+
+    // Solid 2.0 — <Loading>境界内でPromiseをそのまま
+    const data = createMemo(() => fetchUser(userId()));
+```
+  - 実務への適用: データの多い画面で再検証が発生しても、以前のコンテンツが画面に残るため、値を読み取る箇所でのみブロッキングされます。個々のデータが準備でき次第UIが更新される体験を作る際に、特に強力です。
+  - 注意事項: まだRC段階のため、stableになるまでAPIが変わる可能性があります。また、`await`境界の後でシグナルを読み取ると追跡が途切れるため、**先にtrackしてからawaitする**という順序を守る必要があります。
+- **[The Git War of 2026](https://github.blog/news-insights/company-news/the-august-17-outage-and-the-work-ahead/)** (出典: *Bytes #514*)
+  - 背景: GitHubは現在、月間30億件のコミットを処理し、1億3千万件のPRをマージしていますが、この負荷によりシステムが限界に達しました。最近の8時間障害の間に3つのチームが同時に競合製品をリリースし、「Git War」が始まりました。
+  - 主な機能 (競合アーキテクチャ):
+    - **Cursor Origin** — GitHubのアーキテクトを迎えて作られた新しいGitホスティングアーキテクチャで、より高速で安定したものを目指しています。コードレビューUIはありますが、CI/CDはまだ自前で接続する必要があります。
+    - **Pierre Computer Co.** — こちらも元GitHub出身チームが作ったAPI-only方式のGitストレージで、すでにLovableとBoltが使用中です。
+    - **Cloudflare Artifacts** — 「Gitを喋るバージョンストレージ」で、事実上「Cloudflareの上にGitHubをセルフホスト」する概念です。バージョンストレージ、パイプライン、イベント、CIといったビルディングブロックを提供します。
+  - 実務への適用: エージェントが大量のコードを生成する時代に、急増するコミット・PRを支えるGitインフラを模索するチームに、新しい選択肢が開かれました。
+  - 注意事項: 3つの製品はいずれも、現在の形ではGitHubの完全な代替とはなりません。今のところは、負荷を分散して支える補完的な存在に近いといえます。
+
+---
+#### 見逃せないコンテンツ
+- **[How Lovable.dev moved from Next.js to TanStack Start](https://lovable.dev/blog/how-we-migrated-lovable-dev-away-from-nextjs)** (出典: *Bytes #513*)
+  + 要約: Lovableが自社プラットフォームをドッグフーディングするために、代表アプリをTanStack Startへ段階的に移行した過程です。コードをフレームワーク非依存にし、関連ルートを一緒に移動させ、2つのフレームワークを同時に動作させる方法がまとめられています。
+- **[Gisting](https://shopify.engineering/gisting)** (出典: *Bytes #513*)
+  + 要約: Shopifyのエンジニアリングブログの記事で、LLMコンテキストを学習済みトークン集合へ圧縮し、モデルをより高速かつ低コストにする手法を扱っています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[MicroLighter](https://daverupert.com/2026/08/microlighter/)** (出典: *Bytes #513*)
+  + 概要: Dave Rupertが作った、依存関係のないクライアントサイド構文ハイライターで、CSS Custom Highlight APIを使用します。トークンごとに`<span>`を注入するのではなく、テキスト範囲を`CSS.highlights`に登録する方式のため、DOMがきれいに保たれます。
+  + 使い方:
+```js
+    import { highlightAll } from "microlighter";
+    import "microlighter/themes/github.css";
+    await highlightAll();
+    // <pre><code class="language-javascript">const answer = 42;</code></pre>
+```
+  + 実践チップ: コードのないページではスクリプトを遅延読み込みすることで、不要なコストを削減できます。ただし`::highlight()`疑似要素はitalic、bold、フォント変更をサポートしないという制限があるため、そうした機能が必要な場合はweb componentバンドルを併用すると良いでしょう。
+
+---
+#### 見逃せないコンテンツ
+- **[oj](https://rapha.land/introducing-oj/)** (出典: *Bytes #514*)
+  + 要約: Rapha Amorimが作ったバンドラーで、ViteのAPIと性能を維持しながら、メモリ使用量を大幅に削減することを目指しています。
+- **[fx](https://fx.sh)** (出典: *Bytes #514*)
+  + 要約: Vercel Labsが作ったミニマルなエージェントハーネスです。無駄のない最小構成でエージェントを動かしてみることができます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Reliable Query Prefetching with TanStack Router](https://tkdodo.eu/blog/reliable-query-prefetching-with-tanstack-router)** (出典: *Bytes #514*)
+  + 主要なインサイト: TkDodoの記事で、信頼できるprefetchのためには、ルートローダーのprefetchとコンポーネントのクエリが**同一のquery options**を使う必要があると指摘しています。規模が大きくなるとこの2つがずれやすくなるため、query optionsをRoute Contextに入れて同期状態を保つパターンを提案しています。
+- **[CSS: the bomb inside your inbox](https://portswigger.net/research/css-the-bomb-inside-your-inbox)** (出典: *Bytes #513*)
+  + 主要なインサイト: Gmail、Outlook、FastmailのCSS sanitizerを回避する新たな攻撃手法を扱っています。CSSだけでトークンを窃取したり、クリックをハイジャックしたり、さらにはパスワードをキーロギングできることを示し、メールレンダリングにおいてCSSがどれほど危険な攻撃対象になり得るかを警告しています。
+- **[What I've Learned Writing For Billions Of Users](https://uxdesign.cc/what-ive-learned-writing-for-billions-of-users-f4db0c1aa9cb)** (出典: *Smashing Newsletter #572*)
+  ![What I've Learned Writing For Billions Of Users](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/f68fce7a-a889-c3d2-db00-323fbee6d66a.png)
+  + 主要なインサイト: Nick DiLalloが、数十の言語と文化圏にまたがる数十億人のユーザー向けのプロダクトライティングから学んだ70の教訓をまとめました。すぐに自分の文章に活かせる実践的な原則が詰まっています。
+
+---
+#### 見逃せないコンテンツ
+- **[Coordinating Optimistic Updates in Next.js](https://aurorascharff.no/posts/coordinating-optimistic-updates-in-nextjs/)** (出典: *This Week In React #294*)
+  + 要約: `useActionState`と`useOptimistic`を、アクションキュー、reducer、自動ロールバックされる楽観的状態と組み合わせて、重なり合うトランジションを調整するパターンです。配線は複雑ですが、一度覚えれば様々な場所で再利用できます。
+- **[Impersonating the DOM](https://julesblom.com/writing/hoistable-svg-defs-ii)** (出典: *This Week In React #294*)
+  + 要約: React Ariaが使う興味深いライブラリ設計手法です。`createPortal(children, fakeDocument)`でreconcilerの処理を覗き見し、レンダリングされた子要素にアクセスすることで、SVGの`<defs>`をhoistingしたり重複除去したりといった作業ができます。
+---
+
+## 4. ✨ アイデア
+- **[The Four Pillars Of Content Design](https://medium.com/design-bootcamp/the-four-pillars-model-of-content-design-1b49364298b4)** (出典: *Smashing Newsletter #572*)
+  ![The Four Pillars Of Content Design](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/e0ba9903-9b8e-a686-871a-e91effd1f7e5.png)
+  + 特徴: 製品・UXデザイナーのDouble Diamondモデルに対応する、コンテンツデザイナーのためのフレームワークです。Andrew Tippのチームが作ったこの線形/反復ハイブリッドアプローチは、コンテンツデザインチームが自分たちの強みと弱みがどこにあるかを把握する助けとなります。
+- **[Content Design Below The Surface](https://medium.com/designing-atlassian/content-design-below-the-surface-36d02746bfdb)** (出典: *Smashing Newsletter #572*)
+  ![Content Design Below The Surface](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/8cffb8c2-7c17-64e5-d78f-7d1d893c568f.png)
+  + 特徴: Linette Vollerが氷山のメタファーでコンテンツデザインを読み解いた記事です。インターフェースに見える文言は表面にすぎず、その下にあるskeleton、structure、scope、strategyへと続く階層を掘り下げ、より直感的なUXの土台を示しています。
+
+## 5. ⚡️ ミニノート
+- **[Convex raised a $57m Series B](https://news.convex.dev/convex-raises-57m/)** (出典: *Bytes #513*)
+  + 要約: Convexが5,700万ドルのシリーズBを調達し、100% TypeScriptベースのリアクティブなバックエンドプラットフォーム開発を続けます。
+- **[The token brokers](https://vectoral.com/blog/who-are-the-token-brokers)** (出典: *Bytes #513*)
+  + 要約: Matt Lenhardが、割引価格で調達した数千万個のLLMトークンを転売してスプレッドを稼ぐ「トークンブローカー」たちについて書いています。
+- **[React's new browser detection API](https://react.dev/reference/react-dom/browser)** (出典: *Bytes #514*)
+  + 要約: Reactが、コードがブラウザ上で実行されているかどうかを検知する新しいAPI `use(browser(reason?))` を追加しました。
+- **[Person Of The Week: Green Web FoundationのChris Adams](https://www.thegreenwebfoundation.org/)** (出典: *Smashing Newsletter #572*)
+  + 要約: Green Web Foundationの技術・政策ディレクターであり、ClimateAction.techの運営者でもあるChris Adamsが、今週の人物として紹介されました。
+- **[Cursor completed its migration from Solid to React and StyleX](https://x.com/poteto/status/2089227731305464150)** (出典: *This Week In React #294*)
+  + 要約: CursorがSolid(v1)からReactとStyleXへの移行を完了しました。シグナルベースのアプローチがパフォーマンスの落とし穴を生んだことが理由で、新製品「Bot」では`useEffect`の直接使用を禁止しています。
+
+## 6. 🎉 リリース
+- **[React Native 0.87](https://reactnative.dev/blog/2026/08/11/react-native-0.87)** (*This Week In React #294*)
+  + アップデート: v1.0に向けた最大の一歩。デフォルトのStrict TypeScript API、2倍高速化されたMetroソースマップ、実験的なiOS SPMサポート、AGP 9対応、`InteractionManager`など多数のdeprecated APIを削除。最小要件はNode.js 22、AGP 9、Kotlin 2.0+。
+- **[Bun 1.4](https://bun.com/blog/bun-v1.4#what-s-new)** (*Bytes #514*)
+  + アップデート: Node.js互換性の改善、メモリ使用量の大幅削減、多数の組み込みAPIを追加。
+- **[pnpm 12.0 RC](https://pnpm.io/blog/whats-different-in-pnpm-12)** (*Bytes #513*)
+  + アップデート: Rustで書き直されました。5つの差分にさえ気をつければ、導入は難しくありません。
+- **[Vitest 5.0 RC](https://main.vitest.dev/guide/migration.html#vitest-5)** (*Bytes #513*)
+  + アップデート: `clearMocks`のデフォルト有効化、fake timerがTemporalもmock、その他DXの改善。stableは2〜3週間以内を予定。
+- **[SvelteKit 3.0 RC](https://svelte.dev/blog/sveltekit-3-release-candidate)** (*This Week In React #294*)
+  + アップデート: Vite 8 + Rolldown、error boundaries、検証済みの環境変数、remote functions。
+- **[Preact 11.0 RC](https://github.com/preactjs/preact/releases/tag/11.0.0-rc.0)** (*This Week In React #294*)
+  + アップデート: `use()`、`createPortal()`、`useEffectEvent()`などを追加。
+- **[Astro 7.2](https://astro.build/blog/astro-720/)** (*This Week In React #294*)
+  + アップデート: インクリメンタルな静的ビルド、セッションサポートのopt-out。
+- **[Node.js 26.7](https://nodejs.org/en/blog/release/v26.7.0)** (*This Week In React #294*)
+  + アップデート: Perfettoトレーシングをサポート。
+- **[Firebase 26](https://invertase.io/blog/react-native-firebase-v26-release)** (*This Week In React #294*)
+  + アップデート: New Architectureベース — TurboModules、TypeScript parity、modular API。
+- **[Formisch 1.0](https://formisch.dev/blog/formisch-v1/)** (*Bytes #514*)
+  + アップデート: フレームワーク非依存・タイプセーフ・モジュール型のフォームライブラリが1.0に到達しました。
+
+## ✍️ おわりに
+
+今週のニュースをまとめていると、フレームワークの技術的な優秀さと「エージェントがどれだけうまく扱えるか」が、次第に別の軸へと分かれつつあるという印象を受けます。CursorがSolidを離れた理由が、パフォーマンスや表現力ではなく「エージェントがReactの方が予測可能なコードを書く」ことだったという点は、じっくり考えてみる価値があります。そして、まさにその週にSolid 2.0がasyncの複雑さをフレームワーク側で吸収し、「エージェントが台無しにする余地を減らす」という方向で応じたことは、今後の競争構図を象徴的に示しています。
+
+GitHub障害が引き金となったGitインフラ競争も、結局は同じ流れの延長線として読み取れます。人間のスピードではなくエージェントのスピードでコードが生み出される中で、私たちが当然のものとしてきたインフラの前提が、再び試練にさらされています。次々と登場するメジャーRCの中で、各ツールが「AI時代のワークフロー」にどう自らを適応させていくかを見守ることは、当分の間、最も興味深い観戦ポイントになりそうです。
+
+#### 出典
+- [Bytes #513](https://bytes.dev/archives/513)
+- [Bytes #754](https://bytes.dev/archives/514)
+- [This Week In React #294](https://thisweekinreact.com/newsletter/294)
+- [Smashing Newsletter #572](https://mailchi.mp/smashingmagazine/572-ux-writing-and-content-design)
