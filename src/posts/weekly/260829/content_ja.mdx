@@ -1,0 +1,153 @@
+---
+title: '🚀 2026-08 W5 #73'
+desc: LovableのNext.js→TanStack Start大規模マイグレーション、Bun 1.4と主要フレームワークリリース、AI時代におけるフロントエンド知識の再編 | 2026年8月第5週目 週間技術ニュースレター
+date: 2026-08-29
+thumbnail: /posts/weekly/agust.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週は「フレームワーク大移動」と「AI時代のフロントエンド」という二つの軸がはっきりと見えました。Lovableが4200万MAU規模のサービスをNext.jsからTanStack Startへルート単位で移行した大規模マイグレーションの記録が話題を呼び、Frontend Focusのカバーストーリーは、AI回答時代におけるフロントエンド知識の価値がどう再編されるかを正面から取り上げました。同時にBun 1.4、Solid 2.0 RC、SvelteKit 3 RCといった大型リリースが相次ぎ、CSS Custom Highlight APIやHTMLの基本機能がJavaScriptの領域を吸収していく流れも続いています。Smashingは今回、UXリサーチ特集で毛色の違う内容を届けています。
+
+## 1. 🔍 深掘り
+- **[How Lovable Migrated from Next.js to TanStack Start](https://lovable.dev/blog/how-we-migrated-lovable-dev-away-from-nextjs)** (出典: *React Status #488*)
+  - 背景: lovable.devは月間4200万訪問者、約400ルート、85万〜91万行規模のアプリを、Vercel上のNext.jsから自社インフラ(Cloudflare)上のTanStack Startへ移行しました。動機は明確です。ローカル開発サーバーの起動時間が70秒・8GB RAMから10秒・1.5GBに短縮され、クライアント中心のアプリではサーバーファーストのApp Routerがもたらす利点があまり大きくなかったのです。
+  - 主な特徴: 両フレームワークをプロキシワーカーの背後で同時に稼働させ、ルートレジストリとフィーチャーフラグのメタデータを単一の信頼できる情報源として抽出し、プロキシと両フレームワークで共有しました。ラップされたルーターコンポーネントがソフト/ハードナビゲーションを判定し、ルートグループごとに社内 → 1% → 100%の多段階A/Bロールアウトを行いました。あるユーザーが最初に着地したフレームワークにそのまま留まり続けるよう固定した点もポイントです。
+  - コード例(概念的な流れ):
+```js
+    // ルートレジストリとフィーチャーフラグを単一のソースとして
+    // プロキシがリクエストをどちらかのフレームワークに振り分ける
+    const target = pickFramework(routeRegistry, request.url, user.flags);
+    return target === "tanstack"
+      ? fetch(TANSTACK_ORIGIN + path, request)
+      : fetch(NEXTJS_ORIGIN + path, request);
+```
+  - 実務への応用: 大規模なクライアント中心アプリを無停止で段階的に移行する際の、ストラングラーパターンの教科書的な事例です。最終的にフレームワーク依存のコードは全体の約3%まで減少しました。
+  - 注意事項: 静的JSON importが一つ、CloudflareのIsolateにおける128MBのメモリ上限を超え、11分間エラー率50%を引き起こしたOOM事故がありました。また、外部ロールアウトは一度に一つずつ1%→100%へ上げないと混乱を招くとのことです。
+- **[ESM and CommonJS: What import and require Actually Do](https://blog.gaborkoos.com/posts/2026-08-14-Your-Modules-Are-Lying-to-You/)** (出典: *JavaScript Weekly #799*)
+  - 背景: JavaScriptには長らく標準のモジュールシステムがなく、Nodeがその空白をCommonJSで埋めました。2015年にESMが標準として登場したことで両体系が共存するようになり、その相互運用の境界に微妙な落とし穴が生まれています。
+  - 主な特徴: `import`と`require`は「コードを読み込む」という一つの概念の裏に、解決・インスタンス化・評価・公開という4段階を隠しています。ESMのnamed importはエクスポート元のモジュールが所有するバインディングへの生きた参照である一方、CommonJSは`module.exports`オブジェクトの値を返すため、分割代入で取り出した値はその時点のコピーになります。また、静的importはソース上の位置に関係なく、エントリーモジュールの評価前にグラフが先に構築されます。
+  - コード例:
+```js
+    // counter.mjs
+    export let count = 0;
+    export const inc = () => { count++; };
+
+    // app.mjs — importは生きたバインディング(live binding)
+    import { count, inc } from "./counter.mjs";
+    inc();
+    console.log(count); // 1  (値の変化がそのまま見える)
+```
+  - 実務への応用: 循環依存、デュアルパッケージ、「importではできるがrequireではできない」パッケージ問題の根本を理解するのに直接役立ちます。
+  - 注意事項: 循環ESM importはTDZにより`ReferenceError`が発生することがあり、ESMは相対パスに拡張子を要求し、`__dirname`の代わりに`import.meta.url`を使う必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[What We Learnt Building a Data Grid in React, Vue, and Svelte](https://svar.dev/blog/building-data-grid-in-react-vue-svelte/)** (出典: *React Status #488*)
+  + 要約: 同じデータグリッドを3つのフレームワークで実装したチームの結論は「性能差はほとんどない」でした。高速なグリッドのコストがかかる部分の大半は、フレームワークとは無関係だったというのが要点です。
+- **[The Wicked Reason Removing Code Beats Better Scheduling](https://infrequently.org/2026/08/notes-on-performance-remediation-strategies/)** (出典: *JavaScript Weekly #799*)
+  + 要約: Alex Russellは、「いつ読み込むか」を調整するよりも「そもそもコードを送らない」ほうが大きなパフォーマンス改善であり、これは技術の問題というよりマネジメントの問題だと主張します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[MicroLighter: A Syntax Highlighter That Doesn't Touch the DOM](https://daverupert.com/2026/08/microlighter/)** (出典: *Frontend Focus #755*)
+  + 概要: Dave Rupertが作った約2KBのクライアントサイドハイライターで、トークンごとに`<span>`を挿入する代わりにCSS Custom Highlight APIの`::highlight()`を使用します。VS Codeが使うTextMate構文を必要なときだけ遅延読み込みし、この手法は今年Baselineに入りました。
+  + 使い方:
+```js
+    import { highlightAll } from "microlighter";
+    import "microlighter/themes/github.css";
+
+    await highlightAll(); // pre>codeブロックをスキャンしてハイライト
+```
+  + 実践Tips: `::highlight()`はイタリック・ボールド・フォント変更に対応していないという制限があるため、行番号やコピーボタンが必要な場合はカスタムエレメント版を使うとよいでしょう。ページ読み込み後に挿入されたコードは、再ハイライトイベントで更新できます。
+- **[TermDOM: Build Terminal UIs with HTML, CSS and DOM](https://termdom.org/)** (出典: *JavaScript Weekly #799*)
+  + 概要: 実際のDOM・CSSOMとレイアウトエンジンを文字セルのグリッドにレンダリングし、独自のウィジェットAPIを覚えなくてもバニラJSやReact/Vue/Angularの標準レンダラーでTUIを作れるようにします。今回のv0.1.5でCSS gridに対応しました。
+  + 使い方:
+```js
+    import { TermDOM } from "@b9g/termdom";
+
+    const term = new TermDOM();
+    term.attach(); // 実際のDOMドキュメントがターミナルに描画される
+    term.document.body.innerHTML = "<div>Hello, terminal</div>";
+```
+  + 実践Tips: `1px`と`1ch`はどちらも1セルにマッピングされ、`@media`クエリは実際のターミナルサイズに反応してリフローします。Node・Bun・Denoで動作し、単一バイナリにコンパイルすることもできます。
+
+---
+#### 見逃せないコンテンツ
+- **[Form-Saver: Web Component That Saves/Restores Form Values](https://github.com/aarongustafson/form-saver)** (出典: *Frontend Focus #755*)
+  + 要約: 入力値をlocalStorageに保存し、セッションが途中で切れても復元、フォーム送信時には自動でクリアします。フォーム離脱防止に役立つ小さなWebコンポーネントです。
+- **[Svelte Bits: Animated UI Components for Svelte](https://sveltebits.xyz/)** (出典: *Frontend Focus #755*)
+  + 要約: React向けで有名なReact Bitsを、同じ作者がSvelte向けに移植したアニメーションコンポーネント集です。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[The Asteroid Currently Hitting Frontend Web Development](https://nolanlawson.com/2026/08/23/the-asteroid-currently-hitting-frontend-web-development/)** (出典: *Frontend Focus #755*)
+  + 主要なインサイト: Nolan Lawsonは、長年積み重ねてきたフロントエンドの知識がAI回答時代においてその多くが「ほぼ役に立たなくなった」と診断しつつ、それでもこの局面をどう乗り越えるかについて方向性を示しています。技術トレンドよりも、開発者のキャリアと教育という観点から読む価値があります。
+- **[HTML Can Do That](https://chrisburnell.com/html-can-do-that/)** (出典: *Frontend Focus #755*)
+  + 主要なインサイト: Chris Burnellは、HTMLがかつてJavaScriptの役割だった領域を吸収しつつあるとして、`popover`、invoker commands、`hidden="until-found"`など8つの例をコードと限界とともに示しています。
+```html
+    <button popovertarget="menu">열기</button>
+    <div id="menu" popover>메뉴 내용</div>
+```
+- **[The Eight Pillars of User Research](https://medium.com/researchops-community/the-eight-pillars-of-user-research-1bcd2820d75a)** (出典: *Smashing Newsletter #573*)
+  ![Eight Pillars Of UX Research](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/db17bfc1-3db5-a2c9-4473-f90e525645da.png)
+  + 主要なインサイト: 役割・ツール・プロセスを横断し、UXリサーチのインパクトを拡大するための包括的なモデルです。アンケートと世界33回のワークショップから得たインサイトに基づいており、リサーチャーとReOpsが共通の目標に向かって協働するための骨組みとなります。
+
+---
+#### 見逃せないコンテンツ
+- **[Hiding Internal State in TypeScript Objects](https://www.carlos-menezes.com/posts/hiding-properties-typescript)** (出典: *JavaScript Weekly #799*)
+  + 要約: エクスポートしていないunique symbolをプロパティキーに使うと、その内部状態を`Object.keys`や`JSON.stringify`に露出させずに隠すことができます。
+- **[The Process of Migrating from Sass to Native CSS](https://chrissmith.xyz/blog/2026/the-process-of-migrating-from-sass-to-native-css/)** (出典: *Frontend Focus #755*)
+  + 要約: 「よほど特殊な場合を除けば、もうSassは必要ない」という前提のもと、段階的にまとめられた実用的なマイグレーションガイドです。
+---
+
+## 4. ✨ アイデア
+- **[3D CSS, from Super Mario Bros 3 to Mario 64](https://www.carmenansio.com/articles/3d-css-guide/)** (出典: *Frontend Focus #755*)
+  + 特徴: 平面的な2Dの疑似的な奥行きから本物の3Dへと進む過程を、`perspective`・`preserve-3d`・`translateZ`など6つのプロパティ/値でインタラクティブに見せてくれるガイドです。
+- **[A Walkable ASCII Cyberpunk City in One HTML File](https://www.youtube.com/watch?v=3YtygAx_C6A)** (出典: *Frontend Focus #755*)
+  ![A Walkable ASCII Cyberpunk City in One HTML File](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1786984799/wbowcgrsrptjltk3muwb.png)
+  + 特徴: たった一つのHTMLファイルの中で、レイキャスティングによって道路・建物・車・歩行者まで揃った街をASCII文字でレンダリングし、歩き回れるようにした目にも楽しい実験です。
+
+## 5. ⚡️ ミニノート
+- **[Two critical unauthenticated RCEs affecting Next.js have been patched](https://nextjs.org/blog/august-2026-security-release)** (出典: *React Status #488*)
+  + 要約: 認証なしで悪用可能な深刻なRCEが2件パッチされました。状況に応じて16.3.3または15.5.24にアップデートしてください。
+- **[Firefox 154 landed](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/154)** (出典: *Frontend Focus #755*)
+  + 要約: `text-box`ショートハンドプロパティとともに、`sibling-index()`・`sibling-count()`が導入されBaselineに加わりました。
+- **[Splitting a git commit is now a single command](https://blog.gnoack.org/post/git-history-split)** (出典: *JavaScript Weekly #799*)
+  + 要約: Git 2.54以降、`git history split <ref>`が変更をhunk単位で確認しながら、2つのコミットメッセージを受け取ってコミットを分割してくれます。
+- **[The Next.js team did an AMA on Reddit](https://www.reddit.com/r/nextjs/comments/1vrq0tp/were_the_nextjs_team_ask_us_anything/)** (出典: *React Status #488*)
+  + 要約: ミドルウェア、GETサーバーアクション、複雑さの増大といったデリケートな話題について、チームの回答がスレッドに詰まっています。
+- **[An update on Firefox's coming support for JPEG XL](https://hacks.mozilla.org/2026/08/intent-to-ship-jpeg-xl/)** (出典: *JavaScript Weekly #799*)
+  + 要約: Jake Archibaldが、FirefoxのJPEG XLサポート計画の最新状況を共有しました。Chromeも近く対応する予定です。
+
+## 6. 🎉 リリース
+- **[Bun 1.4: Now More Node.js Compatible Than Ever](https://bun.com/blog/bun-v1.4)** (*JavaScript Weekly #799*)
+  + アップデート: 数週間の遅延を経て、Zig→Rustへの書き換えが到着しました。Nodeだけでなく、Next.js・Playwright・Vitest・Nuxtとの互換性も大きく改善され、スループットとCPU/メモリ使用量も大幅に向上しました。
+- **[Solid 2.0 RC: The Big `<Reveal>`](https://www.solidjs.com/blog/solid-2-0-rc-the-big-reveal)** (*JavaScript Weekly #799*)
+  + アップデート: asyncがリアクティビティグラフの中に入り、通常のmemoとして流れるようになりました。`createResource`・`batch`・`startTransition`が廃止され、SolidStartはViteプラグインの`start: true`フラグに統合、APIも凍結されました。
+- **[SvelteKit 3 Release Candidate](https://svelte.dev/blog/sveltekit-3-release-candidate)** (*JavaScript Weekly #799*)
+  + アップデート: SvelteKit 3がRC段階に入りました。
+- **[React Native 0.87](https://reactnative.dev/blog/2026/08/11/react-native-0.87)** (*JavaScript Weekly #799*)
+  + アップデート: React Native 0.87がリリースされました。
+- **[Ionic Framework v9](https://ionic.io/blog/announcing-ionic-framework-9)** (*React Status #488*)
+  + アップデート: React・Angular・Vue向けのモバイルファーストUIツールキットが、2年ぶりに帰ってきました。React Router 6対応やAngular 21+のゾーンレス変更検知などが追加され、v8ユーザー向けのアップグレードガイドも提供されています。
+- **[TanStack Query Adds Simpler query and infiniteQuery Methods](https://github.com/TanStack/query/pull/10658)** (*React Status #488*)
+  + アップデート: 5.102.0で導入された、Dominikが「v5以降で最大のリリース」と呼ぶ変更です。QueryClientの新しい`query`/`infiniteQuery`が、既存の`fetchQuery`/`fetchInfiniteQuery`を置き換える方向です。
+- **[Waku 1.0 RC: The Minimal React Framework Freezes Its API](https://waku.gg/blog/waku-v1-rc)** (*React Status #488*)
+  + アップデート: Server ComponentsベースのミニマルなReactフレームワークがついにRCに到達し、公開APIが凍結されました。v1最終版に反映される最後のフィードバック機会です。
+- **[Formisch 1.0: Framework-Agnostic Schema-Based Form Library](https://formisch.dev/blog/formisch-v1/)** (*JavaScript Weekly #799*)
+  + アップデート: Valibotスキーマが8つのフレームワークで型と検証を駆動する、ヘッドレスフォームライブラリです。v1ではAngular・React Nativeのサポートと各種マイグレーションガイドが追加されました。
+- **[Stryker Mutator 10.0: Test Your Tests with Mutation Testing](https://stryker-mutator.io/)** (*JavaScript Weekly #799*)
+  + アップデート: コードに意図的な変異を加え、テストがそれを検出できるかを検証するミューテーションテストツールが10.0にアップデートされました。
+- **[react-jsonschema-form 6.8](https://github.com/rjsf-team/react-jsonschema-form)** (*React Status #488*)
+  + アップデート: JSON Schemaを使ってWebフォームを宣言的に構成するコンポーネントが6.8にアップデートされました。
+
+## ✍️ おわりに
+
+今週のニュースを貫く流れは「削ぎ落とし」でした。Lovableはフレームワーク依存コードを3%まで削ぎ落とし、MicroLighterは`<span>`の挿入を削ぎ落とし、Alex Russellは読み込みタイミングを調整するよりコード自体を送らないほうがいいと語ります。HTMLとCSSがJavaScriptの領域を吸収していく流れも、結局は同じ方向を向いています。プラットフォームが成熟するほど、私たちが直接背負うべき複雑さは減っていきます。ただ、Lovableの11分間の障害が思い起こさせるように、抽象化を取り除いた場所には、メモリの上限のような根本的な制約がより鮮明に現れます。何をフレームワークに任せ、何を自分で理解すべきかを見極める感覚が、AIが表面的な知識を代替する時代にこそ、むしろ重要になっていると感じます。
+
+#### 出典
+- [JavaScript Weekly #799](https://javascriptweekly.com/issues/799)
+- [Frontend Focus #755](https://frontendfoc.us/issues/755)
+- [React Status #488](https://react.statuscode.com/issues/488)
+- [Smashing Newsletter #573](https://mailchi.mp/smashingmagazine/573-ux-research)
