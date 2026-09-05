@@ -1,0 +1,153 @@
+---
+title: '🚀 2026-09 W1 #74'
+desc: スタイルシステムのマイグレーション(StyleX・htmx 4.0)、Zodのメモリ最適化、AI時代のデザインシステム再構築 | 2026年9月第1週目 週間技術ニュースレター
+date: 2026-09-05
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はフレームワークの根本的な書き直しが目立ちました。Linearはstyled-componentsからStyleXへ、1,000件を超えるPRを経て大規模なマイグレーションを完了させ、htmxは内部通信レイヤーをXMLHttpRequestからfetch()へ移行し4.0をリリースしました。Zodやpnpmといった必須ツール群はメモリと速度の最適化に注力し、Smashing Newsletterは、AIエージェントの時代にデザインシステムがどのように再構成されつつあるかを取り上げました。コードゴルフから物理ベースのCSSまで、実用性と楽しさが共存する一週間でした。
+
+## 1. 🔍 深掘り
+- **[Linear's styled-components to StyleX Migration](https://linear.app/now/styling-linear-for-the-future-stylex)** (出典: *React Status #489*)
+  ![Linear's styled-components to StyleX Migration](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/chyecu202ca5onsfqt58.jpg)
+  - 背景: Linearは長らくstyled-componentsでUIをスタイリングしてきましたが、React 18のconcurrent renderingの導入以降、ランタイムCSS-in-JS方式がメインスレッドの負荷を増大させる問題が浮上し、styled-components自体もメンテナンスモードへ移行したことで、新たな基盤が必要になりました。
+  - 主な機能: MetaのStyleXは、スタイルの解決をビルドタイムで完結させるアトミックCSSシステムで、スタイルはコンポーネントの近くに配置されながらも、外部からコンポーネントを再スタイリングすることを困難にし、明示的な「スタイリング契約」を強制します。Linearは決定論的なコードモッド(styled-components-to-stylex-codemod)でほとんどを自動変換し、残りのエッジケースはエージェントに処理させました。
+  - コード例:
+```js
+    // StyleXの一般的な使用パターン(公開ドキュメント基準の例)
+    import * as stylex from '@stylexjs/stylex';
+    const styles = stylex.create({
+      base: { padding: 8, borderRadius: 6 },
+    });
+```
+  - 実務での活用: 大規模なコードベースでCSS-in-JSのランタイムオーバーヘッドを取り除きたい場合、特にエージェントが大量にコードを書くワークフローにおいて、明示的なスタイル契約が必要な組織に有用です。実際、レンダリング負荷の大きい画面でメインスレッドのCPU処理が20〜35%削減されたという結果が報告されています。
+  - 注意事項: 親要素依存のセレクタ、グローバルセレクタ、ラッパーを介したコンポーネントの再スタイリングなど、CSSテンプレートリテラルが提供していた柔軟性の一部は諦める必要があり、マイグレーション期間中は両システムが共存するため、別途の移行戦略が必要です。
+- **[htmx 4.0: Server-Driven Interactivity From Your Markup](https://four.htmx.org/announcements/2026-08-28-htmx-4.0.0-is-released)** (出典: *Frontend Focus #756*, *JavaScript Weekly #800*)
+  ![htmx 4.0: Server-Driven Interactivity From Your Markup](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/nc13z6ehpnla8cdrym18.jpg)
+  - 背景: htmxの開発チームはfixiプロジェクトを手がける中でfetch() APIと非同期プログラミングに習熟し、ストリーミングHTMLのアイデアがきっかけとなって内部実装をXMLHttpRequestからfetch()へ移行することを決定、8か月間の作業を経て4.0をリリースしました。
+  - 主な機能: 属性の継承がデフォルトで無効化され、「:inherited」サフィックスで明示する必要があります。イベント名は「htmx:phase:action」という形式に標準化され、history機能はlocalStorageをもう使用せず、戻る操作時にページを再取得するようになりました。新機能としてidiomorphベースのmorph swapが組み込まれ、複数のターゲットを一度に更新する&lt;hx-partial&gt;タグが追加されました。
+  - コード例:
+```html
+    <!-- htmx 2 -->
+    <div hx-confirm="Are you sure?">
+      <button hx-delete="/item/1">Delete</button>
+    </div>
+
+    <!-- htmx 4: 継承を明示的に指定する必要がある -->
+    <div hx-confirm:inherited="Are you sure?">
+      <button hx-delete="/item/1">Delete</button>
+    </div>
+```
+  - 実務での活用: 既存のhtmx 2.xアプリを維持しながらも、CLIアップグレードツール(npx htmx.org@4.0.0 upgrade-check)で継承属性やイベント名変更の該当箇所を事前にチェックできるため、SPAフレームワークなしでサーバー主導のインタラクティブなアプリを構築したいチームに適しています。
+  - 注意事項: npmではまだ4.0がlatestタグに指定されていないため、バージョンを明示しないと自動的にはアップグレードされません。また、属性の継承方式の変更が最も大きなマイグレーションの負担になる可能性があります。
+
+---
+#### 見逃せないコンテンツ
+- **[How to Use CSS random() Outside Safari Today](https://css-tricks.com/css-random-function-polyfill/)** (出典: *Frontend Focus #756*)
+  + 概要: SafariでのみサポートされているCSS random()をカスタムプロパティに格納しておくポリフィルにより、他のブラウザでも模倣できる方法を扱います。
+- **[Controlling When CSS Custom Properties Are Computed](https://jakearchibald.com/2026/css-custom-property-compute-time/)** (出典: *Frontend Focus #756*)
+  + 概要: CSSカスタムプロパティの値がいつ、どのように計算されるかが予想と異なる場合があるという点を、Jake Archibaldが取り上げます。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Zod 4.5: Faster Parsing, 9x Less Memory Per Schema](https://zod.dev/blog/zod-4-5)** (出典: *JavaScript Weekly #800*)
+  + 背景: 人気のTypeScriptスキーマ検証ライブラリであるZodは、これまですべてのスキーマメソッドをインスタンスに自動バインドしていましたが、この方式がインスタンスごとに不要なヒープ領域を消費する問題につながっていました。
+  + コード例(コード/CLI):
+```ts
+    import * as z from "zod";
+
+    const Player = z.object({
+      username: z.string(),
+      xp: z.number(),
+    });
+
+    const CompiledPlayer = z.compile(Player); // 事前コンパイルでパース速度向上
+```
+  + 実践のヒント: 「メソッドメモ化」パターンのおかげで、初回アクセス時にのみメソッドが生成されるようになり、bareなz.string()の保持ヒープが7.5KBから784バイトに削減されました。検証失敗時にスタックトレースをキャプチャしないパスも追加され、safeParseの失敗が約7.5倍高速化されたため、失敗が頻発するフォーム検証パスで特にメリットが大きくなります。
+- **[cn: shadcn's Faster Drop-In Replacement for tailwind-merge and clsx](https://github.com/shadcn-ui/cn)** (出典: *React Status #489*)
+  + 背景: shadcnとAiden Baiが開発したcnは、Tailwindの競合ルールをその都度計算する代わりに、ルックアップテーブルとして事前にコンパイルしておく方式でtailwind-mergeとclsxを置き換えます。
+  + コード例(コード/CLI):
+```bash
+    npx cn build  # 実際に使用されるルールのみを残してバンドルをトリミング
+```
+  + 実践のヒント: 既存のtailwind-merge/clsxの組み合わせをそのまま置き換えられるドロップイン設計のため、マイグレーションコストをかけずにクラスマージのパフォーマンスだけを改善したいプロジェクトに適しています。
+
+---
+#### 見逃せないコンテンツ
+- **[Quicklink: Faster Subsequent Page-Loads by Prefetching Visible Links](https://github.com/GoogleChromeLabs/quicklink)** (出典: *Frontend Focus #756*)
+  + 概要: ブラウザのアイドルタイムにビューポート内に表示されているリンクを事前に取得し、その後のページ遷移を高速化するライブラリです。
+- **[GPUIX: Build GPU-Rendered Native Desktop Apps with React](https://gpuix.dev/)** (出典: *React Status #489*)
+  + 概要: ReactコンポーネントをZedエディタのGPUIフレームワークでレンダリングし、Electronやwebviewなしで単一バイナリのネイティブデスクトップアプリを作る実験的な試みです。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[The Depths of JavaScript: Minesweeper in 247 Bytes](https://yui.dev/blog/minesweeper-in-247-bytes)** (出典: *JavaScript Weekly #800*)
+  ![The Depths of JavaScript: Minesweeper in 247 Bytes](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/bx17eefknqp64qnr1fet.jpg)
+  + 主要なインサイト: yuiは数年前、遊び半分で完全に動作するMinesweeperをコードゴルフとして書き、658バイト版を作った後399バイトまで削減して一旦手を止めていました。最近ドライブを整理していてこのコードを再発見し、DiscordでDNEKと共に数か月かけて磨き上げた結果、8x8のランダムボード生成、左クリックでのマス開放、右クリックでのフラグ表示、隣接地雷がないマスの再帰的な開放、基本的な勝利判定まで、主要機能を一つも削らずに247バイトまで圧縮しました。(コード全体は著作権の都合上、本記事には掲載しません。原文リンクからご確認いただけます。)
+  + この記事が役立つ理由: プロダクションコードとはかけ離れていますが、JSの構文を極限まで圧縮する過程で、配列の分割代入、再帰クロージャ、暗黙の型変換といった言語内部の挙動を深く理解できる良い学習素材です。
+- **[How Turbopack Chunks Your JavaScript](https://nextjs.org/blog/turbopack-chunking)** (出典: *React Status #489*)
+  + 主要なインサイト: TurbopackがNext.jsアプリのJavaScriptをどのような基準でチャンクに分割するかを説明し、Next.js 16.3に実験的に追加されたチャンキング調整オプションについて解説します。(ニュースレター本文には別途コードスニペットは提供されていません。)
+  + この記事が役立つ理由: クライアントバンドルサイズの削減に注力しているチームであれば、Turbopack内部のチャンキングロジックを理解することで、どのオプションを調整すべきか判断する助けになります。
+- **[State of AI in Design Systems](https://state-of-ai-in-design-systems.netlify.app/)** (出典: *Smashing Newsletter #574*)
+  ![State Of AI In Design Systems](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/04d05c39-c861-ee09-12be-3861badeeb9b.png)
+  + 主要なインサイト: Kaelig Deloumeau-Prigentが行ったフィールドスタディでは、デザインシステムがデザインシステムへの貢献と消費のためのエージェンティックなツーリングをどう実装・展開しているか、各チームがモデルをシステムに適合させ続ける方法は何か、そしてほぼすべてのチームが行き着いた共通パターンは何かが扱われています。DesignSystems.oneは5つの具体的なシグナルを基準に、どのデザインシステムが「エージェントフレンドリー」かを監査しており、結果は四半期ごとに更新されます。
+  + この記事が役立つ理由: AIエージェントがデザインシステムを消費・貢献する時代において、実際にどのようなパターンが機能しているのかを定量的に確認したいデザイン・フロントエンドチームに有用な基準点を提供します。
+
+---
+#### 見逃せないコンテンツ
+- **[Lovable's Migration from Next.js to TanStack Start](https://lovable.dev/blog/how-we-migrated-lovable-dev-away-from-nextjs)** (出典: *JavaScript Weekly #800*)
+  + 概要: 約85万行規模のアプリを、プロキシの背後で両フレームワークを並行運用しながらNext.jsからTanStack Startへ移行した過程を扱います。
+- **[Bumping the Major Version of Your JavaScript Library is User Hostile](https://yob.id.au/2026/09/01/major-version-bumps.html)** (出典: *JavaScript Weekly #800*)
+  + 概要: ライブラリのメジャーバージョンを上げることが、なぜユーザーにとって敵対的に感じられ得るのかを論じる記事です。
+---
+
+## 4. ✨ アイデア
+- **[Ambient CSS: A Physics-Based Lighting System for CSS](https://ambientcss.vercel.app/)** (出典: *Frontend Focus #756*)
+  ![Ambient CSS: A Physics-Based Lighting System for CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ga5v6trn0seplpf29pmj.jpg)
+  + 特徴: 「Blender meets CSS」を掲げ、光の方向や各種パラメータを宣言するだけで、影・グラデーション・ベベルなどが自動的についてくる物理ベースのCSSライティングシステムです。実際の見た目はBlenderのレンダリング結果を基に調整されています。
+- **[Particle Charts: Render Charts as Clouds of Particles](https://particlecharts.com/)** (出典: *Frontend Focus #756*)
+  + 特徴: チャートを粒子の雲のような形でレンダリングするユニークな可視化手法で、存在理由自体ははっきりしないものの、実際に見れば納得できる興味深いビジュアルアプローチです。始めるのも簡単です。
+
+## 5. ⚡️ ミニノート
+- **[𝕏 TanStack and Vercel are teaming up](https://x.com/tan_stack/status/2094888852607652280)** (出典: *React Status #489*)
+  + 概要: TanStackとVercelが協業し、VercelをTanStack Startの「ファーストクラスホーム」にすることを決定、新しいデプロイガイドも併せて公開されました。
+- **[Margelo is joining Callstack](https://margelo.com/blog/margelo-joins-callstack)** (出典: *React Status #489*)
+  + 概要: Nitro ModulesとVisionCameraを開発したMargeloが、Callstackへの参画契約を発表しました。
+- **[Google has removed all remaining Manifest V2 extensions from the Chrome Web Store](https://webiterate.dev/google-removed-extensions-ublock-origin-108/)** (出典: *Frontend Focus #756*)
+  + 概要: uBlock Originを含む、Manifest V2の拡張機能がChromeウェブストアから全面的に削除されました。
+- **[AWS Lambdaがプレビューで新しいNode.js 26ランタイムを導入](https://aws.amazon.com/blogs/compute/introducing-public-preview-runtimes-on-aws-lambda-starting-with-node-js-26-and-python-3-15/)** (出典: *JavaScript Weekly #800*)
+  + 概要: AWS LambdaにNode.js 26ランタイムがプレビューとして追加されました。
+- **[今週の人物: Tey Bannerman](https://teybannerman.com/ai/2025/08/25/human-in-the-loop-framework.html)** (出典: *Smashing Newsletter #574*)
+  + 概要: 20年以上テック業界に携わり、AI戦略のコンサルティングを行ってきたTey Bannermanが、今週の「Person of the Week」として紹介されました。「Four Modes」と「Human in the Loop」というフレームワークを考案しています。
+
+## 6. 🎉 リリース
+- **[Vitest 5.0 is out](https://vitest.dev/blog/vitest-5.html)** (*React Status #489*)
+  + アップデート: React SPAベンチマークで約15%高速化され、テスト実行後にブラウザテストを振り返れる内蔵トレースビューが追加されました。
+- **[Mantine 9.6: A Huge Component Library Update](https://mantine.dev/changelog/9-6-0/)** (*React Status #489*)
+  + アップデート: 新しいライトボックスコンポーネント、コンテキストベースの一括操作用ActionBar、waffle・matrix・gauge・candlestickの4種類の新しいチャートタイプが追加されました。
+- **[the Bun 1.4 release](https://bun.com/blog/bun-v1.4)** (*React Status #489*)
+  + アップデート: buildおよびBun.buildに内蔵Reactコンパイラが追加され、Bun.markdown.react()によってMarkdownをネイティブにReact要素へ変換できるようになりました。
+- **[Firefox 155 landed yesterday](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/155)** (*Frontend Focus #756*)
+  + アップデート: 2週間ごとにメジャーバージョンをリリースするFirefoxの155番目のリリースで、すべてのプロパティで使えるattr()、さらにprogress()、alpha()、font-width(従来のfont-stretchの新しい名称)など、CSS機能が大量に追加されました。
+- **[Cropper.js 2.2: An Image Cropping Control](https://fengyuanchen.github.io/cropperjs/)** (*Frontend Focus #756*)
+  + アップデート: 10年以上メンテナンスされ続けている画像トリミングコントロールの新バージョンで、プレイグラウンドですぐに試すことができます。
+- **[Speedlify2: Continuously Measure Website Performance](https://www.zachleat.com/web/speedlify2/)** (*Frontend Focus #756*)
+  + アップデート: Eleventyの作者が開発した無料のセルフホスト型ツールで、GitHub ActionsとPages上でLighthouseスコア・Core Web Vitals・Axeアクセシビリティスコアを継続的に測定します。
+- **[pnpm 12: Rewritten in Rust, Same Commands and Lockfile](https://pnpm.io/blog/releases/12.0)** (*JavaScript Weekly #800*)
+  + アップデート: Rustで書き直されましたが、v11のコマンド・フラグ・ロックファイル形式はほぼそのまま維持されています。npmのlatestタグはまだpnpm 11を指しているため、pnpm self-update next-12でアップグレードする必要があります。
+- **[Remix 3 RC: A Full-Stack Framework with No React Required](https://remix.run/blog/remix-3-release-candidate)** (*JavaScript Weekly #800*)
+  + アップデート: Reactフレームワークだった Remix が、独立したフルスタックフレームワークとして生まれ変わる大規模な書き直しを実質的に終え、正式リリースは10月2日を予定しています。
+- **[Rspack 2.2, Rsbuild 2.2, and Rslint 0.9](https://rspack.rs/blog/announcing-2-2)** (*JavaScript Weekly #800*)
+  + アップデート: ビルドとHMRの速度が向上し、モジュールIDが短縮されました。Rsbuildはデフォルトで Node.js のチャンク分割をサポートします。Rslintは現在、@typescript-eslintのすべてのルールとプリセットを実装しています。
+- **[Node.js v26.8.0 (Current)](https://nodejs.org/en/blog/release/v26.8.0) / [Node.js v24.20.0 (LTS)](https://nodejs.org/en/blog/release/v24.20.0)** (*JavaScript Weekly #800*)
+  + アップデート: Currentラインのv26.8.0とLTSラインのv24.20.0が同時にリリースされました。
+
+## ✍️ おわりに
+今週のニュースをまとめてみると、成熟したツールほど「根本から作り直す」決断を恐れないという印象を受けました。LinearのStyleXへの移行も、htmxのfetch()ベースの書き直しも、一見すると静かな変化ですが、その裏には数年かけて積み上がった技術的負債に正面から向き合ったチームの判断がありました。Zodがメモリ使用量を9分の1に削減したのも同様に、派手な新機能よりも基礎体力を鍛える作業でした。一方で、Minesweeperを247バイトに圧縮する試みや物理ベースのCSSライティングシステムのように、実用性とは関係なく純粋な楽しさのために作られた成果物も、今なおこのエコシステムを豊かにしていると思います。AIエージェントがコードを共に書く時代になるにつれて、デザインシステムやスタイリング規約のように「明示的な契約」を求める方向へツールが収束しつつあるという点も、注目に値する流れでした。
+
+#### 出典
+- [JavaScript Weekly #800](https://javascriptweekly.com/issues/800)
+- [Frontend Focus #756](https://frontendfoc.us/issues/756)
+- [React Status #489](https://react.statuscode.com/issues/489)
+- [Smashing Newsletter #574](https://mailchi.mp/smashingmagazine/574-design-systems)
