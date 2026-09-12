@@ -1,0 +1,166 @@
+---
+title: '🚀 2026-09 W2 #75'
+desc: Turbopackチャンク結合戦略の詳細分析、React 19.3のView Transitions正式リリース、ShopifyのReact Native離脱 | 2026年9月第2週目 週間技術ニュースレター
+date: 2026-09-12
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はフレームワークの安定化とパフォーマンス最適化が際立った一週間でした。React 19.3がView TransitionsとFragment Refsを正式にリリースし、Turbopackはチャンク結合戦略を公開してバンドリングの思想を明らかにしました。一方、Shopifyは6年間続けてきたReact Native戦略を打ち切り、ネイティブへ回帰すると宣言し、コミュニティに波紋を広げました。HTMLは`<geolocation>`や`<usermedia>`のような宣言的な権限エレメントへと静かに進化しており、Vitest 5.0はテストデバッグ体験を一段引き上げました。Smashingではデータビジュアライゼーションをテーマに、チャート選定とアクセシブルなリサーチインサイトが取り上げられました。
+
+## 1. 🔍 深掘り
+- **[How Turbopack Chunks Your JavaScript](https://nextjs.org/blog/turbopack-chunking)** (出典: *JavaScript Weekly #801*)
+  ![How Turbopack Chunks Your JavaScript](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wq9zwktpt9rxrly3oo74.jpg)
+  - 背景: Next.jsアプリは数十個のJavaScript「チャンク」に分割されてロードされます。Turbopackチームはnextjs.org自体を対象に「never merge / デフォルト / グループ内全体結合」という3つの設定で実測データを収集し、リクエスト数と転送コード量の間のトレードオフを公開しました。
+  - 主要機能: Turbopackはチャンクグループ内でキャッシュの効果を見積もって結合の可否を判断し、単一ページセッションと複数ページセッションを別々に計算します。nextjs.orgの実測では、デフォルト設定は結合なしと比べてリクエスト数を半分以上減らしつつコード量もわずかに減りましたが、最大結合はリクエスト数をさらに減らす代わりにコード量が10%増加しました。結合の判断はビルド時に行われるため、訪問者のブラウザキャッシュの状態を反映できないという限界も指摘されています。
+  - コード例:
+```ts
+    // next.config.ts
+    const nextConfig = {
+      experimental: {
+        turbopackChunking: {
+          minChunkSize: 50000,
+          maxChunkCountPerGroup: 40,
+          maxMergeChunkSize: 200000,
+          generateComponentChunks: false,
+        },
+      },
+    }
+```
+  - 実務での活用: ページ遷移が多いサイトであればデフォルト設定(積極的な結合)が有利で、初回ロード1回が重要なランディングページ的なサービスであれば結合を減らす方が有利な場合があります。`generateComponentChunks`を有効にすると、ルート単位ではなくコンポーネント単位でキャッシュを意識したチャンクを作成できます。
+  - 注意事項: これらのオプションはまだ実験的(experimental)な機能であるためプロダクションでの利用は推奨されておらず、ビルド時点での判断であるという根本的な限界は残っています。
+
+---
+#### 見逃せないコンテンツ
+- **[How Safari Fixed Top-Level await](https://webkit.org/blog/18227/fixing-top-level-await-in-safari/)** (出典: *JavaScript Weekly #801*)
+  + 要約: Safariのモジュールローダーが廃止された仕様草案の上に構築されていたため、top-level await導入時に「cannot access before initialization」というエラーが数年間発生していました。Safari 27でローダーを一から作り直し、仕様に完全準拠させた経緯を扱っています。
+- **[React Now Rusted All the Way Out](https://blog.master.dev/react-now-rusted-all-the-way-out/)** (出典: *React Status #490*)
+  + 要約: 1000個以上のファイルを持つReact Routerアプリをoxcが手掛けるRust製React Compilerポートに移行した結果、コンパイル時間が14.3秒から0.81秒に短縮され、従来のBabelベースの1.0が見逃していたパターンまで処理できるようになった事例を、Vite設定とともに紹介しています。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Vitest 5.0 Focuses on Speed and Test Debugging](https://vitest.dev/blog/vitest-5)** (出典: *JavaScript Weekly #801*)
+  - 概要: Viteネイティブのテストランナーのメジャーリリースで、790名以上のコントリビューターが参加しました。今回のバージョンでは、パフォーマンス測定のために5ファイル程度のユーティリティパッケージから1,280モジュール規模のエンタープライズモノレポまでを網羅する`vitest-dev/benchmarks`参照アプリセットを新たに作成し、ベンチマークを行いました。
+  - 使い方:
+```ts
+    // vitest.config.ts
+    import { defineConfig } from 'vitest/config'
+
+    export default defineConfig({
+      test: {
+        browser: { traceView: true },
+      },
+    })
+```
+```bash
+    vitest --browser.traceView
+    vitest doctor
+```
+  - 実践のヒント: `browser.traceView`を有効にすると、すべてのインタラクションとアサーションをDOMスナップショットとして記録しておき、ブラウザがすでに次の状態に進んだ後でもステップごとにリプレイできます。このビューアーはブラウザUI・Vitest UI・HTMLレポーターのいずれからも開けるため、ローカルでのデバッグはもちろんCI失敗の分析にも役立ちます。`vitest doctor`はワーカー数を半分ずつ減らしながら5%以上速くなるポイントを見つけて提案してくれます。
+- **[WCAG Radar: Run Accessibility Checks on Pages You Have Open](https://wcagtoolkit.com/wcag-radar)** (出典: *Frontend Focus #757*)
+  - 概要: アクセシビリティ監査企業Proper Accessが無料で提供するツールで、全47個のWCAGチェックのうち28個を無料で実行でき、ログインが必要なページやlocalhostでも動作します。
+  - 使い方: ブックマークレットはインストール不要でブラウザのブックマークバーにドラッグして使用し(Windowsは`Ctrl+Shift+B`、Macは`⌘⇧B`でブックマークバーを表示)、Chrome・Firefox・Edge用の拡張機能も同じチェックとバージョンを提供しており、ブックマークレットがブロックされるGoogle Docsのようなサイトでも動作します。
+  - 実践のヒント: すべての検出項目には監査専門家に直接つながるリンクが付いており、スタイルをすべてオフにするモードに切り替えると、スクリーンリーダーが実際に読み上げる順序でテキストだけが残るため、コンテンツ構造が論理的かどうかを確認できます。
+
+---
+#### 見逃せないコンテンツ
+- **[Drawably: Hand-Drawn UI Controls](https://www.drawably.dev/)** (出典: *Frontend Focus #757*)
+  + 要約: 手描き風のUIコントロールコレクションで、シードベースのランダムによってペンスケッチアニメーションまで描画し、依存関係なしでJS約7KB、スタイルシート3KBと軽量です。[リポジトリ](https://github.com/Danilaa1/drawably)も公開されています。
+- **[vgpu: Render WebGPU Shaders in the Browser or Node.js](https://vgpu.sh/)** (出典: *Frontend Focus #757*)
+  + 要約: 同じシェーダーをブラウザで実行したり、Nodeでヘッドレスレンダリング(高解像度PNG・MP4出力)したりできるようにし、WGSLモジュールをTypeScriptのようにimport/exportできます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Half Past Fetch: What await fetch() Waits For](https://blog.gaborkoos.com/posts/2026-09-08-Half-Past-Fetch/)** (出典: *JavaScript Weekly #801*)
+  - 背景: `await fetch(url)`はレスポンス全体を待つと誤解されがちですが、実際にはヘッダーまでを待ってresolveされます。
+  - 主要なインサイト: 仕様上、HTTP-network fetchアルゴリズムはサーバーが送る1xxステータス行をスキップし、最終的なステータス行が到着した瞬間に新しい`ReadableStream`を付けてレスポンスを返します。つまり`response.body`はまだ埋まり続けているストリームであり、この隙間のために`clone()`がまだ完成していない内容をコピーする仕組みや、`abort()`がヘッダー以降の段階で異なる挙動をする理由、そして想定していたタイムアウトが実際にはリクエスト全体をカバーできない理由が説明されています。
+  - コード例:
+```js
+    const t0 = performance.now()
+    const response = await fetch(url)
+    console.log('headers', performance.now() - t0, response.status)
+    await response.arrayBuffer() // 本文までにかかった実際の時間はここで明らかになる
+```
+  - この記事が役立つ理由: ヘッダー到着と本文完了の間のギャップを知らないと、`clone()`や`abort()`、タイムアウト関連のバグに遭遇したときに見当違いの場所で原因を探すことになります。実務でよく見られるfetch関連の誤動作の根本原因を、仕様レベルで明らかにしてくれます。
+- **[New Things You Should Know About HTML in 2026](https://blog.master.dev/new-things-you-should-know-about-html-here-in-mid-2026/)** (出典: *Frontend Focus #757*)
+  - 背景: かつての汎用的な`<permission>`エレメントの実験は廃止され、代わりに`<geolocation>`のように用途別に具体的な権限エレメントを導入する方向へとHTMLが進化しています。
+  - 主要なインサイト: `<usermedia>`はカメラ・マイクへのアクセスフロー全体を管理し、ユーザーの意図を捉え、ブラウザのプロンプトを表示し、`MediaStream`オブジェクトをアプリケーションに渡します。画面上に実際に見えるボタンであるため、ユーザーが一度権限を拒否しても、設定メニューを探し回ることなく再度ボタンを押して気持ちを変えられる「復旧経路」が自然に生まれます。対応していないブラウザでは意味を持たない`<span>`のように無視され、プログレッシブエンハンスメントとして動作します。
+  - コード例:
+```html
+    <usermedia id="media-ctrl">
+      <button>Enable camera and microphone</button>
+    </usermedia>
+```
+  - この記事が役立つ理由: `getUserMedia()`の呼び出しや手動のプロンプト処理といったボイラープレートを取り除けるフローをあらかじめ把握しておくと、今後このような宣言的な権限エレメントが標準化された際に、移行の負担を減らすことができます。
+- **[The Browser's Main Thread is Expensive](https://kciter.so/posts/the-expensive-main-thread/en/)** (出典: *Frontend Focus #757*、*JavaScript Weekly #801* 同時掲載)
+  ![The Browser's Main Thread is Expensive](https://kciter.so/images/2026-07-12-the-expensive-main-thread/thumbnail.png)
+  - 背景: メインスレッドに作業が集中するとインタラクションが途切れる問題を扱っており、2つのニュースレターで同時に紹介されるほど反響が大きかった記事です。
+  - 主要なインサイト: 著者はsplitting(作業の分割)・batching(作業のまとめ)・prioritizing(順序付け)・deferring(先送り)という4つの手法で整理しています。例えば、人気のライブ配信チャットでは1秒間に数百件ものメッセージが一気に押し寄せますが、これをどう分割して処理するかが最初の基準となり、タブを切り替えて戻ってきた際に画面外の投稿まで一括でスタイル・レイアウトを再計算してしまうフィードUIの事例で、deferringの必要性を示しています。
+  - コード例: *(原文は概念・事例の説明が中心で、著者が提示したコードスニペットはありません。同じ文脈でよく使われる標準APIを参考として付け加えます。)*
+```js
+    // 例: 長い処理をアイドル時間に分けて処理する一般的なパターン
+    function processInChunks(items, worker) {
+      requestIdleCallback(() => {
+        // 残り時間がある場合のみ次のバッチを処理
+      })
+    }
+```
+  - この記事が役立つ理由: 「何をどれだけ分割するか」と「いつ処理するか」を切り分けてアプローチするフレームを提示し、漠然とした「最適化が必要だ」という感覚を具体的なチェックリストへと変えてくれます。
+
+---
+#### 見逃せないコンテンツ
+- **[10 Anti-'Slop' Moves for Frontend Projects](https://evilmartians.com/chronicles/ten-anti-ai-slop-moves-for-frontend-projects-going-faster-than-humans-can-review)** (出典: *JavaScript Weekly #801*)
+  + 要約: レビューすべきコード量そのものを減らす自動化されたチェックを扱い、OpenAPIコード生成、レイヤー境界の強制、ミューテーションテスティング、CIでルールを固定する方法などをウォークスルー形式で紹介しています。
+- **[How To Choose The Right Chart](https://base.uber.com/6d2425e9f/p/61b6c1-charts)** (出典: *Smashing Newsletter #575*)
+  + 要約: UberのBase Design Systemは、チャートの種類選定を「ユーザーが理解しようとする概念」「変数の個数」「データの変化を示す必要があるかどうか」という3つの基準で標準化し、漠然としていた意思決定を構造化しています。
+---
+
+## 4. ✨ アイデア
+- **[Searching for Birds](https://searchingforbirds.visualcinnamon.com/)** (出典: *Smashing Newsletter #575*)
+  ![Searching For Birds](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/a3b56433-54db-12bc-af99-701734ac20d0.png)
+  - 特徴: Nadieh Bremerが手がけたインタラクティブなデータビジュアライゼーションストーリーで、人々が鳥を「検索する方法」を探求し、鳥好きの人々からデータビジュアライゼーション・イラストレーション・ストーリーテリングに関心のある人々まで、誰もが感嘆させられるプロジェクトです。
+- **[Building an Infinite Liquid Glass Grid with Three.js, WebGPU, and TSL](https://tympanus.net/codrops/2026/09/08/building-an-infinite-liquid-glass-grid-with-three-js-webgpu-and-tsl/)** (出典: *Frontend Focus #757*)
+  - 特徴: 実際のジオメトリの代わりにカスタムシェーダーのみでガラスを再現しています。角丸四角形のハイトマップをSDF(signed distance function)として作成し、屈折率をわずかに変えた複数回の屈折サンプリングで色収差を表現しており、「無限の」グリッドは座標を包んだ球(sphere)の上で実装されています。その後のアップデートでは、TSLコンピュートパスで書かれたXPBDソルバーによって、カードが配置された表面全体をGPU上でシミュレーションされる布のように波打たせ、カード上のテキストもMSDFフォントで一緒に屈折するよう調整されています。
+
+## 5. ⚡️ ミニノート
+- **[jQuery 1.0 is 20 years old](https://www.infoq.com/news/2026/09/jquery-20-years/)** (出典: *JavaScript Weekly #801*)
+  + 要約: `$()`でブラウザ戦争を回避させてくれたjQuery 1.0がリリース20周年を迎え、多くのサイトが今なおこれを使い続けている理由をInfoQが振り返りました。Frontend Focusでも取り上げられています。
+- **[Tailwind Labs, creator of Tailwind CSS, is joining Shopify](https://tailwindcss.com/blog/tailwind-is-joining-shopify)** (出典: *React Status #490*)
+  + 要約: Tailwind CSSを開発したTailwind LabsがShopifyに参画することになりましたが、Tailwind CSSをはじめとするオープンソースプロジェクトは同じチームがそのままMITライセンスで維持していくと発表されました。
+- **[Two men have been arrested over the TeamPCP npm supply chain attacks](https://www.aikido.dev/blog/teampcp-arrested-supply-chain)** (出典: *JavaScript Weekly #801*)
+  + 要約: Shai-Huludワームを模倣したものと疑われるTeamPCPサプライチェーン攻撃の首謀者として名指しされた2名が逮捕されました。この2名は「Mini Shai-Hulud」の拡散にも関与しているとみられています。
+- **[W3C Opens Its 2026 Community Survey](https://www.w3.org/news/2026/w3c-opens-2026-community-wide-survey/)** (出典: *Frontend Focus #757*)
+  + 要約: W3Cが今後の運営方針とウェブ標準策定に関する意見を集めるため、2026年コミュニティ全体アンケートを開始しました。
+- **[Person Of The Week: Tom Greenwood](https://www.smashingmagazine.com/person-of-the-week/tom-greenwood/)** (出典: *Smashing Newsletter #575*)
+  + 要約: ロンドンを拠点とするWordPressエージェンシーWholegrain Digitalの共同創業者であり、初期のグリーンウェブ運動家でもあるTom Greenwoodが今週の人物に選ばれました。彼は世界初のウェブサイト炭素計算機を開発し、Sustainable Web Manifestoを共同執筆しました。
+
+## 6. 🎉 リリース
+- **[React 19.3.0](https://github.com/react/react/releases/tag/v19.3.0)** (*React Status #490*)
+  + アップデート: View TransitionsとFragment Refsがexperimentalから正式(stable)に昇格しました。
+- **[Jotai 3.0](https://github.com/pmndrs/jotai/blob/main/docs/guides/migrating-to-v3.mdx)** (*React Status #490*)
+  + アップデート: ESM専用に切り替わり、React 18・TypeScript 5.5が最小要求バージョンとなりました。`atomFamily`は`jotai-family`として分離され、`loadable`は`unwrap`に置き換えられました。
+- **[React DevTools 8.0](https://github.com/react/react/blob/main/packages/react-devtools/CHANGELOG.md#800)** (*React Status #490*)
+  + アップデート: Suspenseタブがデフォルトで有効になり、Timelineプロファイラーは削除されてブラウザ標準のPerformanceパネルに置き換えられました。また、コーディングエージェントにDevToolsを公開する実験的パッケージも併せて公開されました。
+- **[React Native ExecuTorch 0.10](https://github.com/software-mansion/react-native-executorch/releases/tag/v0.10.0)** (*React Status #490*)
+  + アップデート: オンデバイスAIライブラリを一から書き直し、不透明だったネイティブモジュールの代わりにC++不要で組み合わせ可能なTypeScriptパイプラインへと変更し、Core ML・MLX・Vulkanアクセラレーションに対応しました。
+- **[Vitest 5.0](https://vitest.dev/blog/vitest-5)** (*JavaScript Weekly #801*)
+  + アップデート: パフォーマンスに焦点を当てたメジャーリリースで、Trace Viewと`vitest doctor`が新たに追加されました。(詳細は上記のツール & ライブラリセクションを参照)
+- **[Bun 1.4.1 / 1.4.2](https://bun.com/blog/bun-v1.4.1)** (*JavaScript Weekly #801*)
+  + アップデート: アイドル時のメモリ使用量が大幅に削減され、`bun build`のバンドルサイズが小さくなりました。また、`Bun.serve`が同一ポートでHTTP/1.1とHTTP/2を同時にサポートするようになりました。
+- **[Rslib 1.0](https://rslib.rs/blog/v1-0)** (*JavaScript Weekly #801*)
+  + アップデート: Rspackチームが手がける統合ビルドパイプラインで、ESM・CJSの同時サポート、Module Federation出力、React/Vue/Svelte/Solid全般のコンポーネントCSS処理といった、パッケージ公開時の面倒な部分を解決します。
+- **[SimpleWebAuthn 14.0](https://github.com/MasterKale/SimpleWebAuthn/releases/tag/v14.0.0)** (*JavaScript Weekly #801*)
+  + アップデート: パスキーライブラリがポスト量子ML-DSAパスキー検証に対応し、Node 24.7以降では登録時にデフォルトでML-DSA-44を優先的に使用します。
+- **[Dropzone.js 6.x](https://www.dropzone.dev/)** (*JavaScript Weekly #801*)
+  + アップデート: 5年にわたるベータ期間を経て、6.0・6.1・6.2が2日の間に立て続けにリリースされました。依存関係なし、より小さなバンドルサイズ、そしてチャンクアップロード時にファイルが破損していたバグの修正が行われています。
+- **[deck.gl 9.4](https://deck.gl/docs/whats-new#deckgl-v94)** (*JavaScript Weekly #801*)
+  + アップデート: GPUベースのデータビジュアライゼーションライブラリが実験的なWebGPUサポートを拡張しました。v9系列の最終リリースになると見込まれています。
+
+## ✍️ おわりに
+今週のニュースを見渡すと、実験的だったものが一つ、また一つと居場所を見つけていく流れが目につきます。ReactのView TransitionsとFragment Refsは、去年までは「実験的」というラベルが付いていましたが、今やプロダクションで使ってよいAPIになりました。HTMLの権限エレメントも、`<permission>`という汎用的な実験が廃止された跡地に、`<geolocation>`や`<usermedia>`のようなより具体的な解決策が根を下ろしつつあります。反対に、Shopifyが6年間続けたReact Nativeの歩みを終え、ネイティブへ回帰した事例は、特定の技術スタックへの賭けが組織の成長段階や優先順位によっていつでも見直され得ることを改めて示しています。Turbopackのチャンク結合ベンチマークやVitestのパフォーマンス重視のリリースに共通して感じられるのは、ツールがもはや「とにかく動くようにすること」を超えて、実測データを根拠にトレードオフを透明に公開する方向へと成熟しつつあるという点です。コードをどれだけ速く書けるかよりも、そのコードが実際のブラウザと実際のユーザーの前でどう動作するかを測ることが、ますます重要になってきているようです。
+
+#### 出典
+- [JavaScript Weekly #801](https://javascriptweekly.com/issues/801)
+- [Frontend Focus #757](https://frontendfoc.us/issues/757)
+- [React Status #490](https://react.statuscode.com/issues/490)
+- [Smashing Newsletter #575](https://mailchi.mp/smashingmagazine/575-data-visualization)
