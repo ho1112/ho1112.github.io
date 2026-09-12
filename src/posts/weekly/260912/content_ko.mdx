@@ -1,0 +1,166 @@
+---
+title: '🚀 2026-09 W2 #75'
+desc: Turbopack 청크 병합 전략 심층 분석, React 19.3 View Transitions 정식 출시, Shopify의 React Native 이탈 | 2026년 9월 2주차 주간 기술 뉴스레터
+date: 2026-09-12
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 프레임워크 안정화와 성능 최적화가 두드러졌습니다. React 19.3이 View Transitions와 Fragment Refs를 정식으로 내놓았고, Turbopack은 청크 병합 전략을 공개하며 번들링 철학을 드러냈습니다. 한편 Shopify는 6년간 이어온 React Native 전략을 접고 네이티브로 회귀하겠다고 선언해 커뮤니티에 파장을 일으켰습니다. HTML은 `<geolocation>`, `<usermedia>` 같은 선언적 권한 엘리먼트로 조용히 진화 중이고, Vitest 5.0은 테스트 디버깅 경험을 한 단계 끌어올렸습니다. Smashing에서는 데이터 시각화를 주제로 차트 선택과 접근성 있는 리서치 인사이트를 다뤘습니다.
+
+## 1. 🔍 심층 분석
+- **[How Turbopack Chunks Your JavaScript](https://nextjs.org/blog/turbopack-chunking)** (출처: *JavaScript Weekly #801*)
+  ![How Turbopack Chunks Your JavaScript](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wq9zwktpt9rxrly3oo74.jpg)
+  - 배경: Next.js 앱은 수십 개의 JavaScript "청크"로 쪼개져 로드됩니다. Turbopack 팀은 nextjs.org 자체를 대상으로 "never merge / 기본값 / 그룹 내 전체 병합"이라는 세 가지 설정으로 실측 데이터를 수집해, 요청 수와 전송 코드량 사이의 트레이드오프를 공개했습니다.
+  - 핵심 기능: Turbopack은 청크 그룹 내에서 캐싱 이득을 추정해 병합 여부를 결정하며, 단일 페이지 세션과 다중 페이지 세션을 따로 계산합니다. nextjs.org 실측에서는 기본 설정이 병합 없음 대비 요청 수를 절반 이상 줄이면서 코드량도 소폭 줄였지만, 최대 병합은 요청 수를 더 줄이는 대신 코드량이 10% 늘었습니다. 병합 결정은 빌드 타임에 이뤄지므로 방문자의 브라우저 캐시 상태를 반영하지 못한다는 한계도 짚었습니다.
+  - 코드 예제:
+```ts
+    // next.config.ts
+    const nextConfig = {
+      experimental: {
+        turbopackChunking: {
+          minChunkSize: 50000,
+          maxChunkCountPerGroup: 40,
+          maxMergeChunkSize: 200000,
+          generateComponentChunks: false,
+        },
+      },
+    }
+```
+  - 실무 적용: 페이지 탐색이 잦은 사이트라면 기본값(적극적 병합)이 유리하고, 초기 로드 한 번이 중요한 랜딩 페이지 성격의 서비스라면 병합을 줄이는 쪽이 더 유리할 수 있습니다. `generateComponentChunks`를 켜면 라우트 단위가 아니라 컴포넌트 단위로 캐시 인지 청크를 만들 수 있습니다.
+  - 주의사항: 이 옵션들은 아직 실험적(experimental) 기능이라 프로덕션에는 권장되지 않으며, 빌드 시점 결정이라는 근본적인 한계는 남아 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How Safari Fixed Top-Level await](https://webkit.org/blog/18227/fixing-top-level-await-in-safari/)** (출처: *JavaScript Weekly #801*)
+  + 요약: Safari의 모듈 로더가 폐기된 스펙 초안 위에 구축되어 있던 탓에 top-level await 도입 시 "cannot access before initialization" 오류가 수년간 발생했고, Safari 27에서 로더를 처음부터 다시 짜서 스펙을 완전히 준수하게 만든 과정을 다룹니다.
+- **[React Now Rusted All the Way Out](https://blog.master.dev/react-now-rusted-all-the-way-out/)** (출처: *React Status #490*)
+  + 요약: 1000개 이상의 파일을 가진 React Router 앱을 oxc의 Rust 기반 React Compiler 포트로 옮긴 결과 컴파일 시간이 14.3초에서 0.81초로 줄었고, 기존 Babel 기반 1.0이 놓치던 패턴까지 처리한다는 사례를 Vite 설정과 함께 소개합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[Vitest 5.0 Focuses on Speed and Test Debugging](https://vitest.dev/blog/vitest-5)** (출처: *JavaScript Weekly #801*)
+  - 개요: Vite 네이티브 테스트 러너의 메이저 릴리스로, 790명 이상의 컨트리뷰터가 참여했습니다. 이번 버전은 성능 측정을 위해 5개 파일짜리 유틸리티 패키지부터 1,280개 모듈 규모의 엔터프라이즈 모노레포까지 아우르는 `vitest-dev/benchmarks` 참조 앱 세트를 새로 만들어 벤치마크했습니다.
+  - 사용법:
+```ts
+    // vitest.config.ts
+    import { defineConfig } from 'vitest/config'
+
+    export default defineConfig({
+      test: {
+        browser: { traceView: true },
+      },
+    })
+```
+```bash
+    vitest --browser.traceView
+    vitest doctor
+```
+  - 실전 팁: `browser.traceView`를 켜면 모든 인터랙션과 단언을 DOM 스냅샷으로 기록해 두었다가 브라우저가 이미 다음 상태로 넘어간 뒤에도 단계별로 리플레이할 수 있고, 이 뷰어는 브라우저 UI·Vitest UI·HTML 리포터에서 모두 열 수 있어 로컬 디버깅은 물론 CI 실패 분석에도 유용합니다. `vitest doctor`는 워커 수를 절반씩 줄여가며 5% 이상 빨라지는 지점을 찾아 추천해 줍니다.
+- **[WCAG Radar: Run Accessibility Checks on Pages You Have Open](https://wcagtoolkit.com/wcag-radar)** (출처: *Frontend Focus #757*)
+  - 개요: 접근성 감사 업체 Proper Access가 무료로 제공하는 도구로, 전체 47개 WCAG 체크 중 28개를 무료로 실행할 수 있고 로그인이 필요한 페이지나 localhost에서도 동작합니다.
+  - 사용법: 북마클릿은 설치 없이 브라우저 북마크 바에 드래그해 사용하며(윈도우는 `Ctrl+Shift+B`, 맥은 `⌘⇧B`로 북마크 바 표시), Chrome·Firefox·Edge용 확장 프로그램도 동일한 체크와 버전을 제공하며 북마클릿이 차단되는 Google Docs 같은 사이트에서도 작동합니다.
+  - 실전 팁: 모든 발견 항목에는 감사 전문가에게 바로 연결되는 링크가 붙어 있고, 스타일을 전부 끄는 모드로 전환하면 스크린리더가 실제로 읽어 들이는 순서대로 텍스트만 남겨 콘텐츠 구조가 논리적인지 점검할 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Drawably: Hand-Drawn UI Controls](https://www.drawably.dev/)** (출처: *Frontend Focus #757*)
+  + 요약: 손으로 그린 듯한 UI 컨트롤 컬렉션으로, 시드 기반 랜덤으로 펜 스케치 애니메이션까지 그려주며 의존성 없이 JS 약 7KB, 스타일시트 3KB로 가볍습니다. [저장소](https://github.com/Danilaa1/drawably)도 공개되어 있습니다.
+- **[vgpu: Render WebGPU Shaders in the Browser or Node.js](https://vgpu.sh/)** (출처: *Frontend Focus #757*)
+  + 요약: 같은 셰이더를 브라우저에서 실행하거나 Node로 헤드리스 렌더링(고해상도 PNG·MP4 출력)할 수 있게 해주며, WGSL 모듈을 TypeScript처럼 import/export할 수 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Half Past Fetch: What await fetch() Waits For](https://blog.gaborkoos.com/posts/2026-09-08-Half-Past-Fetch/)** (출처: *JavaScript Weekly #801*)
+  - 배경: `await fetch(url)`이 응답 전체를 기다린다고 오해하기 쉽지만, 실제로는 헤더까지만 기다리고 resolve됩니다.
+  - 핵심 인사이트: 스펙상 HTTP-network fetch 알고리즘은 서버가 보내는 1xx 상태줄을 건너뛰고 최종 상태 줄이 도착하는 순간 새 `ReadableStream`을 붙여 응답을 반환합니다. 즉 `response.body`는 여전히 채워지고 있는 스트림이며, 이 틈새 때문에 `clone()`이 아직 완성되지 않은 내용을 복사하는 방식이나 `abort()`가 헤더 이후 단계에서 다르게 동작하는 이유, 그리고 생각했던 타임아웃이 실제로는 요청 전체를 덮지 못하는 이유가 설명됩니다.
+  - 코드 예시:
+```js
+    const t0 = performance.now()
+    const response = await fetch(url)
+    console.log('headers', performance.now() - t0, response.status)
+    await response.arrayBuffer() // 본문까지 걸린 실제 시간은 여기서 드러남
+```
+  - 왜 이 글이 유익한지: 헤더 도착과 본문 완료 사이의 간극을 모르면 `clone()`, `abort()`, 타임아웃 관련 버그를 마주쳤을 때 원인을 엉뚱한 곳에서 찾게 됩니다. 실무에서 흔한 fetch 관련 오동작의 근본 원인을 스펙 레벨에서 짚어 줍니다.
+- **[New Things You Should Know About HTML in 2026](https://blog.master.dev/new-things-you-should-know-about-html-here-in-mid-2026/)** (출처: *Frontend Focus #757*)
+  - 배경: 예전의 범용 `<permission>` 엘리먼트 실험은 폐기되었고, 대신 `<geolocation>`처럼 용도별로 구체적인 권한 엘리먼트를 도입하는 방향으로 HTML이 진화하고 있습니다.
+  - 핵심 인사이트: `<usermedia>`는 카메라·마이크 접근 플로우 전체를 관리하며 사용자의 의도를 포착하고, 브라우저 프롬프트를 띄우고, `MediaStream` 객체를 애플리케이션에 전달합니다. 화면에 실제로 보이는 버튼이기 때문에, 사용자가 한 번 권한을 거부해도 설정 메뉴를 뒤지지 않고 다시 버튼을 눌러 마음을 바꿀 수 있는 "복구 경로"가 자연스럽게 생깁니다. 지원하지 않는 브라우저에서는 의미 없는 `<span>`처럼 무시되어 프로그레시브 인핸스먼트로 동작합니다.
+  - 코드 예시:
+```html
+    <usermedia id="media-ctrl">
+      <button>Enable camera and microphone</button>
+    </usermedia>
+```
+  - 왜 이 글이 유익한지: `getUserMedia()` 호출과 수동 프롬프트 처리 보일러플레이트를 걷어낼 수 있는 흐름을 미리 파악해두면, 이후 이런 선언적 권한 엘리먼트가 표준화될 때 마이그레이션 부담을 줄일 수 있습니다.
+- **[The Browser's Main Thread is Expensive](https://kciter.so/posts/the-expensive-main-thread/en/)** (출처: *Frontend Focus #757*, *JavaScript Weekly #801* 동시 추천)
+  ![The Browser's Main Thread is Expensive](https://kciter.so/images/2026-07-12-the-expensive-main-thread/thumbnail.png)
+  - 배경: 메인 스레드에 작업이 몰리면 인터랙션이 끊기는 문제를 다루며, 두 뉴스레터에서 동시에 추천될 만큼 반응이 좋았던 글입니다.
+  - 핵심 인사이트: 저자는 splitting(작업 쪼개기)·batching(작업 묶기)·prioritizing(순서 정하기)·deferring(미루기) 네 가지 기법으로 정리합니다. 예를 들어 인기 라이브 스트림 채팅방에서는 메시지가 초당 수백 개씩 한꺼번에 몰려오는데, 이를 어떻게 쪼개 처리하느냐가 첫 번째 기준이 되고, 탭을 전환했다가 돌아왔을 때 화면 밖에 있는 게시물까지 한꺼번에 스타일·레이아웃을 재계산하는 피드 UI 사례로 deferring의 필요성을 보여줍니다.
+  - 코드 예시: *(원문은 개념·사례 설명 중심이라 저자가 제시한 코드 스니펫은 없습니다. 같은 맥락에서 흔히 쓰이는 표준 API를 참고용으로 덧붙입니다.)*
+```js
+    // 예: 긴 작업을 유휴 시간에 나눠 처리하는 일반적인 패턴
+    function processInChunks(items, worker) {
+      requestIdleCallback(() => {
+        // 남은 시간이 있을 때만 다음 배치 처리
+      })
+    }
+```
+  - 왜 이 글이 유익한지: "무엇을 얼마나 쪼갤지"와 "언제 처리할지"를 구분해서 접근하는 프레임을 제시해, 막연히 "최적화가 필요하다"는 감각을 구체적인 체크리스트로 바꿔줍니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[10 Anti-'Slop' Moves for Frontend Projects](https://evilmartians.com/chronicles/ten-anti-ai-slop-moves-for-frontend-projects-going-faster-than-humans-can-review)** (출처: *JavaScript Weekly #801*)
+  + 요약: 리뷰해야 할 코드량 자체를 줄이는 자동화된 체크들을 다루며, OpenAPI 코드 생성, 레이어 경계 강제, 뮤테이션 테스팅, CI로 규칙을 고정하는 방법 등을 walkthrough 형식으로 소개합니다.
+- **[How To Choose The Right Chart](https://base.uber.com/6d2425e9f/p/61b6c1-charts)** (출처: *Smashing Newsletter #575*)
+  + 요약: Uber의 Base Design System은 차트 종류 선택을 "사용자가 이해하려는 개념", "변수 개수", "데이터 변화를 보여줘야 하는지 여부" 세 가지 기준으로 표준화해, 막연했던 의사결정을 구조화합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Searching for Birds](https://searchingforbirds.visualcinnamon.com/)** (출처: *Smashing Newsletter #575*)
+  ![Searching For Birds](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/a3b56433-54db-12bc-af99-701734ac20d0.png)
+  - 특징: Nadieh Bremer가 만든 인터랙티브 데이터 시각화 스토리로, 사람들이 새를 "검색하는 방식"을 탐구하며 새 애호가와 데이터 시각화·일러스트레이션·스토리텔링에 관심 있는 사람 모두를 감탄하게 만드는 프로젝트입니다.
+- **[Building an Infinite Liquid Glass Grid with Three.js, WebGPU, and TSL](https://tympanus.net/codrops/2026/09/08/building-an-infinite-liquid-glass-grid-with-three-js-webgpu-and-tsl/)** (출처: *Frontend Focus #757*)
+  - 특징: 실제 지오메트리 대신 커스텀 셰이더만으로 유리를 흉내 냅니다. 둥근 사각형 높이 맵을 SDF(signed distance function)로 만들고, 굴절률이 조금씩 다른 여러 번의 굴절 샘플링으로 색수차를 표현하며, "무한한" 그리드는 좌표를 감싼 구(sphere) 위에서 구현됩니다. 이후 업데이트에서는 TSL 컴퓨트 패스로 작성한 XPBD 솔버로 카드가 담긴 표면 전체를 GPU에서 시뮬레이션되는 천처럼 흐물거리게 만들었고, 카드 위의 텍스트도 MSDF 폰트로 함께 굴절되도록 다듬었습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[jQuery 1.0 is 20 years old](https://www.infoq.com/news/2026/09/jquery-20-years/)** (출처: *JavaScript Weekly #801*)
+  + 요약: `$()`로 브라우저 전쟁을 우회하게 해준 jQuery 1.0이 출시 20주년을 맞았고, 많은 사이트가 여전히 이를 사용하는 이유를 InfoQ가 되짚었습니다. Frontend Focus에서도 함께 다뤘습니다.
+- **[Tailwind Labs, creator of Tailwind CSS, is joining Shopify](https://tailwindcss.com/blog/tailwind-is-joining-shopify)** (출처: *React Status #490*)
+  + 요약: Tailwind CSS를 만든 Tailwind Labs가 Shopify에 합류하지만, Tailwind CSS를 비롯한 오픈소스 프로젝트는 동일한 팀이 그대로 MIT 라이선스로 유지한다고 밝혔습니다.
+- **[Two men have been arrested over the TeamPCP npm supply chain attacks](https://www.aikido.dev/blog/teampcp-arrested-supply-chain)** (출처: *JavaScript Weekly #801*)
+  + 요약: Shai-Hulud 웜을 복제한 것으로 의심되는 TeamPCP 공급망 공격의 배후로 지목된 두 명이 체포되었으며, 이들은 'Mini Shai-Hulud' 확산과도 연관된 것으로 보입니다.
+- **[W3C Opens Its 2026 Community Survey](https://www.w3.org/news/2026/w3c-opens-2026-community-wide-survey/)** (출처: *Frontend Focus #757*)
+  + 요약: W3C가 향후 운영 방향과 웹 표준 작업에 대한 의견을 수렴하기 위해 2026년 커뮤니티 전체 설문을 시작했습니다.
+- **[Person Of The Week: Tom Greenwood](https://www.smashingmagazine.com/person-of-the-week/tom-greenwood/)** (출처: *Smashing Newsletter #575*)
+  + 요약: 런던 기반 WordPress 에이전시 Wholegrain Digital의 공동 창업자이자 초기 그린 웹 운동가인 Tom Greenwood가 이번 주의 인물로 선정되었습니다. 그는 최초의 웹사이트 탄소 계산기를 만들고 Sustainable Web Manifesto를 공동 집필했습니다.
+
+## 6. 🎉 릴리스
+- **[React 19.3.0](https://github.com/react/react/releases/tag/v19.3.0)** (*React Status #490*)
+  + 업데이트: View Transitions와 Fragment Refs가 experimental에서 정식(stable)으로 승격되었습니다.
+- **[Jotai 3.0](https://github.com/pmndrs/jotai/blob/main/docs/guides/migrating-to-v3.mdx)** (*React Status #490*)
+  + 업데이트: ESM 전용으로 전환되었고 React 18·TypeScript 5.5가 최소 요구 버전이 되었으며, `atomFamily`는 `jotai-family`로 분리, `loadable`은 `unwrap`으로 대체되었습니다.
+- **[React DevTools 8.0](https://github.com/react/react/blob/main/packages/react-devtools/CHANGELOG.md#800)** (*React Status #490*)
+  + 업데이트: Suspense 탭이 기본으로 켜지고 Timeline 프로파일러는 제거되어 브라우저 자체 Performance 패널로 대체되었으며, 코딩 에이전트에 DevTools를 노출하는 실험적 패키지도 함께 공개되었습니다.
+- **[React Native ExecuTorch 0.10](https://github.com/software-mansion/react-native-executorch/releases/tag/v0.10.0)** (*React Status #490*)
+  + 업데이트: 온디바이스 AI 라이브러리를 처음부터 다시 작성해, 불투명했던 네이티브 모듈 대신 C++ 없이 조합 가능한 TypeScript 파이프라인으로 바꾸고 Core ML·MLX·Vulkan 가속을 지원합니다.
+- **[Vitest 5.0](https://vitest.dev/blog/vitest-5)** (*JavaScript Weekly #801*)
+  + 업데이트: 성능에 초점을 맞춘 메이저 릴리스로 Trace View와 `vitest doctor`가 새로 추가되었습니다. (상세 내용은 위 툴 & 라이브러리 섹션 참고)
+- **[Bun 1.4.1 / 1.4.2](https://bun.com/blog/bun-v1.4.1)** (*JavaScript Weekly #801*)
+  + 업데이트: 유휴 메모리 사용량이 크게 줄었고 `bun build` 번들 크기가 작아졌으며, `Bun.serve`가 같은 포트에서 HTTP/1.1과 HTTP/2를 동시에 지원하게 되었습니다.
+- **[Rslib 1.0](https://rslib.rs/blog/v1-0)** (*JavaScript Weekly #801*)
+  + 업데이트: Rspack 팀이 만든 통합 빌드 파이프라인으로, ESM·CJS 동시 지원, Module Federation 출력, React/Vue/Svelte/Solid 전반의 컴포넌트 CSS 처리 같은 패키지 퍼블리싱의 번거로운 부분을 해결합니다.
+- **[SimpleWebAuthn 14.0](https://github.com/MasterKale/SimpleWebAuthn/releases/tag/v14.0.0)** (*JavaScript Weekly #801*)
+  + 업데이트: 패스키 라이브러리가 포스트 퀀텀 ML-DSA 패스키 검증을 지원하며, Node 24.7 이상에서는 등록 시 기본으로 ML-DSA-44를 우선 사용합니다.
+- **[Dropzone.js 6.x](https://www.dropzone.dev/)** (*JavaScript Weekly #801*)
+  + 업데이트: 5년에 걸친 베타 끝에 6.0·6.1·6.2가 이틀 사이에 연달아 출시되며 의존성 없음, 더 작은 번들, 청크 업로드 시 파일이 손상되던 버그 수정이 이뤄졌습니다.
+- **[deck.gl 9.4](https://deck.gl/docs/whats-new#deckgl-v94)** (*JavaScript Weekly #801*)
+  + 업데이트: GPU 기반 데이터 시각화 라이브러리가 실험적 WebGPU 지원을 확장했으며, v9 계열의 마지막 릴리스로 예상됩니다.
+
+## ✍️ 마치며
+이번 주 소식들을 훑어보면, 실험적이었던 것들이 하나둘 제자리를 찾아가는 흐름이 눈에 띕니다. React의 View Transitions와 Fragment Refs는 작년까지만 해도 "실험적" 딱지가 붙어 있었지만 이제는 프로덕션에서 써도 되는 API가 되었고, HTML의 권한 엘리먼트들도 `<permission>`이라는 범용 실험이 폐기된 자리에 `<geolocation>`, `<usermedia>` 같은 더 구체적인 해법으로 자리를 잡아가고 있습니다. 반대로 Shopify가 6년간의 React Native 여정을 접고 네이티브로 돌아간 사례는, 특정 기술 스택에 대한 베팅이 조직의 성장 단계나 우선순위에 따라 언제든 재검토될 수 있다는 점을 새삼 보여줍니다. Turbopack의 청크 병합 벤치마크나 Vitest의 성능 중심 릴리스에서 공통으로 느껴지는 것은, 이제 도구들이 "일단 되게 만드는 것"을 넘어 실측 데이터를 근거로 트레이드오프를 투명하게 공개하는 방향으로 성숙해지고 있다는 점입니다. 코드를 얼마나 빨리 쓰느냐보다, 그 코드가 실제 브라우저와 실제 사용자 앞에서 어떻게 동작하는지를 재는 일이 점점 더 중요해지는 듯합니다.
+
+#### 출처
+- [JavaScript Weekly #801](https://javascriptweekly.com/issues/801)
+- [Frontend Focus #757](https://frontendfoc.us/issues/757)
+- [React Status #490](https://react.statuscode.com/issues/490)
+- [Smashing Newsletter #575](https://mailchi.mp/smashingmagazine/575-data-visualization)
