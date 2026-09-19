@@ -1,0 +1,173 @@
+---
+title: '🚀 2026-09 W3 #76'
+desc: OJ・@shadcn/lint・Fallowに見るAIエージェント時代のツール再編、Safari 27とReact 19.3、IE時代のCSSハック回顧 | 2026年9月第3週目 週間技術ニュースレター
+date: 2026-09-19
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週は、AIエージェントがコードを読み書きする時代に合わせて、ツールや設計が再編されていく様子が目立ちました。Lovableの、RustベースでVite互換の開発サーバーOJ、エージェントが違反の理由を理解できるよう支援する@shadcn/lint、デッドコードを素早く検出するFallowが代表例です。Safari 27やReact 19.3といったプラットフォームのアップデート、Tailwind LabsのShopify参画のニュースも続きました。さらにIE時代のCSSハックの回顧や、行の長さ・行の高さといったタイポグラフィの基本まで加わり、フロントエンドの過去と現在をあわせて振り返る一週間でした。
+
+## 1. 🔍 深掘り
+- **[OJ: A Rust-Native, Vite-Compatible Dev Server](https://lovable.dev/blog/faster-previews-oj)** (出典: *React Status #491*)
+	- 背景: Lovableは1日に約100万個のサンドボックスで、プレビューを一つずつ立ち上げては落とす運用をしています。Viteは、開発者1人がノートPC1台で使う状況を想定した設計です。そのため、インスタンスごとにJavaScriptランタイムとツールチェーン、多くのメモリが付随し、そのコストがコールドスタートの遅延やウォームサンドボックスの負担として積み重なっていました。
+	- 主な機能: OJはViteのようにアプリを実行する単一のRustバイナリです。既存の`vite.config.ts`(または`oj.config.ts`)を読み込み、実際のViteプラグインを互換ブリッジ経由で実行します。React Fast RefreshやTanStack Startのようにアプリが依存する部分はRustで再実装し、RolldownとOxcの上に構築しました。ファイルウォッチャーからWebSocketまですべてRustで、プラグインやサーバーコードがJavaScriptを必要とするときだけ小さなNodeサイドカーを起動します。エージェントによる編集も考慮しています。ファイルウォッチャー、モジュールグラフ、コンパイラ、HMRを一つの同期されたパイプラインにまとめ、エージェントが複数のファイルを一度に書き込んでも、一つの一貫した更新にまとめて反映します。
+	- 数値: コンポーネント10,000個の合成アプリで、コールドスタートはOJが1.2秒、Viteが4.9秒、メモリは約115MB対1.5GB以上でした。Excalidrawは約0.8秒対約2.3秒、288MB対2.4GBでした。実際のLovableプレビューを使った実験では、ロード完了までの中央値が17.4秒から8.0秒に、サンドボックスの確保時間が14.5秒から3.0秒に短縮されました。
+	- 実務での活用: プレビューやサンドボックスを大量に立ち上げる環境や、エージェントが複数のファイルを連続で書き込むワークフローで意味があります。一般的なプロジェクトでは今すぐViteを置き換える必要はなく、OJはLovableのプレビューに小さな割合から段階的に適用している段階です。
+	- 注意事項: オープンソースですが、まだ実験的です。著者も、速度の数値が完全に同一条件での比較ではないと述べています。Vite側の計測には`vite-plugin-checker`(tscで型エラーをオーバーレイ表示)が含まれており、OJはこのプラグインをまだホストしていません。
+- **[CSS Curiosities of the Past](https://vale.rocks/posts/css-relics)** (出典: *Frontend Focus #758*)
+	![CSS Curiosities of the Past](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/k6lzihdml7pitxrpadxq.jpg)
+	- 背景: ブラウザが一つの標準に忠実ではなかった時代、特にInternet Explorerの非標準な実装に対応するために書かれていた、CSSの構文・パースバグ・ハックをまとめたエッセイです。タイトルの「CSSがJavaScriptを実行していた時代」は、この記事に登場するCSS Expressionsを指しています。
+	- 主な機能: 代表的な事例は次のとおりです。
+		- star hack: `*`を前置したプロパティをIE7以下のみ有効として処理し、`_`を前置したプロパティをIE6のみ有効として処理しました。
+		- clearfixの`zoom: 1`: IEの`hasLayout`フラグを有効にするための回避策でした。
+		- CSS Expressions: IE5で導入され、IE8で終了しました。
+		- DirectXベースの`filter`: `-ms-filter`がIE10で削除されるまで使われていました。
+		- HTML Components: `behavior: url(...)`でスクリプトを紐付ける方式でした。
+		- Tantek Çelikのbox model hack: `voice-family`のパーサーバグを利用していました。
+	- コード例:
+```css
+		*width: 250px;   /* IE7以下のみ有効として扱う (star hack) */
+		_width: 200px;   /* IE6のみ有効として扱う */
+		top: expression(eval(document.documentElement.scrollTop)); /* CSS内でJSを実行 */
+		filter: alpha(opacity=50);   /* IE専用のfilter */
+```
+	- 実務での活用: 古いスタイルシートでこのような宣言に出会ったとき、何のためのコードだったのかを読み解き、安全に削除できるかどうかを判断するのに使えます。
+	- 注意事項: CSS Expressionsは、レンダリング、リサイズ、スクロール、マウス移動のたびに再評価されるため、パフォーマンスへの負荷が大きかったと記事は説明しています。ほとんどが標準ではないので、現在のコードに導入する対象ではなく、歴史資料として読むのが適切です。
+
+---
+#### 見逃せないコンテンツ
+- **[A Design Space Exploration of async / await](https://cel.cs.brown.edu/blog/design-space-async-await/)** (出典: *JavaScript Weekly #802*)
+	+ 要約: 単純なasync/awaitの例が、JavaScript、Rust、Python、Swiftでそれぞれ異なる結果になります。クイズでメンタルモデルを確認したうえで、言語ごとの設計上の選択の違いを見ていきます。
+- **[Modern Web Types: TypeScript Support for Newer Web APIs](https://philipwalton.com/articles/modern-web-types/)** (出典: *JavaScript Weekly #802*)
+	+ 要約: TypeScriptのDOM型は、複数のブラウザエンジンで出荷されたAPIだけを含みます。そのため、要素スコープの`startViewTransition`や`fetchLater`はエラーになります。`modern-web-types`は、単一のエンジンでのみ出荷されたインターフェースまで追加してくれる`lib.dom`の代替です。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[@shadcn/lint : An Agent-First Linter for Tailwind Design Systems](https://github.com/shadcn-ui/lint)** (出典: *React Status #491*)
+	![@shadcn/lint : An Agent-First Linter for Tailwind Design Systems](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/afaokicwppgsd63qh1c5.jpg)
+	+ 概要: 型で「Buttonのpaddingは禁止」と制限することはできますが、エラーメッセージは禁止されているという事実しか伝えず、サイズをどう決めればよいかは教えてくれません。@shadcn/lintは、コンポーネントが受け取れるTailwindクラスをあらかじめ宣言しておき、違反すると、プロジェクトのコンポーネント・variant・テーマをもとに代替案を提示するESLint/Oxlintプラグインです。Tailwind v4のプロジェクトで使用し、shadcn/uiは必須ではありません。
+	+ 使い方: Oxlintの設定(`.oxlintrc.json`)の例です。ESLintも同じsettingsとrulesを使います。
+```json
+		{
+		  "jsPlugins": ["@shadcn/lint"],
+		  "settings": { "shadcn": { "ui": "@workspace/ui/components" } },
+		  "rules": { "shadcn/no-restyle": ["error", { "allow": ["layout"] }] }
+		}
+```
+	+ 実践チップ: `allow: ["layout"]`は、レイアウト系のクラスのみ許可するという意味です。モノレポでは、コンポーネントを定義するディレクトリ(`packages/ui/src/components/**`など)でoverrideを使ってルールをオフにしておきます。既存のプロジェクトでは、ドキュメントの導入ガイドどおり、警告から始めてルールを一つずつ増やしていくのが安全です。
+- **[Fallow: Codebase Intelligence for TypeScript and JavaScript](https://docs.fallow.tools/)** (出典: *JavaScript Weekly #802*)
+	+ 概要: エージェントが作ったコードは整理されないまま溜まりやすく、「このexportは本当に使われていないのか」といった判断は、ファイル単体ではなくimport/exportグラフ全体を見る必要があります。FallowはこれをこなすRustバイナリです。未使用コード、重複、循環依存、複雑度のホットスポット、アーキテクチャ境界の違反を検出し、0〜100点のhealth scoreも算出します。基本の分析はNode.jsやTypeScriptコンパイラに依存せず、フレームワークプラグインがエントリーポイントを自動検出するため、初回実行時に設定は不要です。
+	+ 使い方:
+```bash
+		npx fallow dead-code
+		npx fallow health --score --hotspots --targets
+		npx fallow dead-code --unused-class-members --type-aware --format json --quiet
+```
+	+ 実践チップ: 既存のコードベースでは`fallow audit`が便利です。変更によって新たに生じたfindingにのみ失敗を設定するため、レガシーな負債が原因で初日からCIが止まることがありません。既存のfindingは`--save-baseline`、`--baseline`で切り離します。エイリアス・re-export・パッケージをまたぐ正確なシンボル識別が必要なリファクタリングには、`--type-aware`を付けます。
+
+---
+#### 見逃せないコンテンツ
+- **[category-colors: Generate 'Least Wrong' Color Palettes for Charts](https://mattstromawn.com/writing/the-least-wrong-colors-version-2/)** (出典: *JavaScript Weekly #802*)
+	+ 要約: Matt Ström-Awnが、Stripeのデザインディレクターだった2022年に考案したカテゴリ別チャートの色選択アルゴリズムが、npmパッケージとして公開され、Web上ですぐに試せます。
+- **[Kerning Visualizer](https://kern.kineticstudio.com/)** (出典: *Smashing Newsletter #576*)
+	+ 要約: Hunter Thompsonが作ったツールで、単語内のすべての文字ペアを分析してオプティカルカーニングを適用した間隔を作り出し、それぞれの調整の理由を説明してくれます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[From 1,256ms to 96ms: Fixing INP in a Massive React Dropdown](https://dev.to/subito/from-1256ms-to-96ms-fixing-inp-in-a-massive-react-dropdown-16l7)** (出典: *React Status #491*)
+	![From 1,256ms to 96ms: Fixing INP in a Massive React Dropdown](https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F3foxjs5p3218h59s9c3g.jpeg)
+	+ 背景: Subitoのデザインシステムに含まれるMultiSelectは、ほとんどの項目が12個前後のため、即座に開いていました。ところが、ブランドフィルターの約1,175個のオプションでは、4倍のCPUスロットリングをかけたモバイル環境で、開くときのINPが1,256msとなり「poor」評価でした。画面には6行ほどしか見えないのに、オプションコンポーネント約1,175個を1回の同期コミットでマウントしたことが原因でした。
+	+ 主要なインサイト: 約90行の`useVirtualScroll`フックで、表示されている行と上下5個のバッファ(`OVERSCAN`)だけをレンダリングし、INPを96msに、`role="option"`のDOMノードを13個に減らしました。すべての行の高さが同じという前提のおかげで、コードをここまで小さくできました。
+	+ コード例:
+```js
+		const totalHeight = totalCount * itemHeight;
+		const startIdx = Math.max(0, Math.floor(scrollTop / itemHeight) - OVERSCAN);
+		const endIdx = Math.min(totalCount, Math.ceil((scrollTop + maxHeight) / itemHeight) + OVERSCAN);
+		const offsetTop = startIdx * itemHeight;
+```
+	+ 解説: コピーする前に行の高さの種類を数えてみる方法もあわせて示しています。値が一つでなければ、行を均一にするか、TanStack Virtualやreact-virtuosoのようなライブラリを使うよう案内しています。仮想化すると画面外の項目がDOMから外れ、ブラウザ標準の検索(Ctrl+F)にヒットしなくなるというアクセシビリティ上のトレードオフも隠さずに述べており、そのまま取り入れやすい記事です。
+- **[Better Icon and Label Alignment](https://ishadeed.com/article/aligning-list-icons/)** (出典: *Frontend Focus #758*)
+	+ 背景: アイコン付きのリストでは、テキストが1行のときはアイコンが中央に揃いますが、複数行に折り返されると、中央揃えのアイコンは不自然に見えます。`align-items: start`に`translateY(3px)`のような固定値を指定する方法は、フォントサイズ、アイコンサイズ、コンテナ幅が変わると崩れます。
+	+ 主要なインサイト: 1行目のline-height(`1lh`)とアイコンサイズの差を半分にした値をオフセットとして使います。そうすれば、3つの条件が変わっても揃いが保たれます。アイコンを`::before`の背景画像として入れる場合は、`flex-shrink: 0`、`aspect-ratio: 1`、`height: auto`を併用する必要があります。
+	+ コード例:
+```css
+		.icon {
+		  --offset: calc((1lh - var(--size)) / 2);
+		  transform: translateY(var(--offset));
+		}
+```
+	+ 解説: マジックナンバーを計算式に置き換えていく過程を、ステップごとのデモで見せてくれます。デザインシステムのリストコンポーネントにそのまま移せるパターンです。
+- **[How To Set Text Properly](https://pimpmytype.com/line-length-line-height/)** (出典: *Smashing Newsletter #576*)
+	![The Ideal Line Length And Line Height](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/c5958bb2-53dd-4532-2958-b2289757f04d.png)
+	+ 背景: Oliver Schöndorferが、フォントサイズ、行の長さ、行の高さを「タイポグラフィの三位一体」としてまとめて解説したシリーズのうち、行の長さと行の高さの回です。リンク先の記事は2021年に書かれ、2022年に更新されたものです。
+	+ 主要なインサイト: デスクトップの本文は、1行60〜80文字、行の高さ1.5〜1.6程度が出発点で、行が短いほど行の高さを下げられます。モバイルは1.3〜1.45、見出しは約1.1、UIコンポーネントは1.2〜1.3を提案しています。フォントを先に決めてから、サイズ、行の長さ、行の高さの順に調整することを勧めています。60〜80文字が読む速度で検証された数値ではないという点も指摘しています。
+	+ コード例:
+```css
+		p {
+		  max-width: 64ch;
+		}
+```
+	+ 解説: `rem`基準では1remがおよそ2文字分の幅になるため、`max-width`を30〜40remに設定でき、`ch`単位を使えばフォントサイズを考慮する必要がありません。「正解の数字はない」という前提のもと、判断の基準を教えてくれる記事です。
+
+---
+#### 見逃せないコンテンツ
+- **[Functional Programming Jargon, Mapped and Explained](https://hemanth.github.io/functional-programming-jargon/)** (出典: *JavaScript Weekly #802*)
+	+ 要約: TC39代表Hemanth HMによるFP用語のリファレンスが、概念同士の関係を示す探索型のマップに生まれ変わりました。各概念には簡単な定義とJavaScriptの例が付いています。
+- **[Do Frameworks Matter Anymore?](https://brookslybrand.com/posts/do-frameworks-matter-anymore/)** (出典: *React Status #491*)
+	+ 要約: Remixチームのメンバー Brooks Lybrandが、「AIが勝手にReactを使えばいい」という主張に反論します。フレームワークを飛ばすと、エージェントがその場しのぎのフレームワークを即興で作り出す、という論理です。ニュースレターは、過度に抽象化されたReactアプリがエージェントの作業コストを最大5倍まで押し上げたという、ある開発者の実験も紹介しています。
+---
+
+## 4. ✨ アイデア
+- **[Neat Annotations: Elegant Hand-Drawn Annotations with CSS](https://neat-annotations.syabro.com/)** (出典: *Frontend Focus #758*)
+	![Neat Annotations: Elegant Hand-Drawn Annotations with CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1789557313/crpjqoc9ssmdanb1ijub.png)
+	+ 特徴: 手描き風の矢印と手書き文字のラベルを、純粋なCSSだけで付けられます。JavaScriptもビルド工程も不要で、CSSファイル1つで動作します。`<span class="ann ann-n ann-amber" data-note="no refresh needed">`のように対象を囲むと、ラベルは`data-note`から取得されます。矢印の向きは8種類、色のクラスも用意されており、注釈は対象の外側に配置されてスペースを占有しないため、周囲に余白が必要です。必須の情報を`data-note`だけに入れないようにという案内もあります。
+- **[js13kGames 2026: 317 games squeezed into 13KB each](https://js13kgames.com/2026/blog/voting-open)** (出典: *JavaScript Weekly #802*)
+	+ 特徴: 13KB制限のWebゲームコンテスト第15回が、過去最多の317作品の応募で締め切られました。今年のテーマは「Unicorns and Rainbows」で、投票は9月14日から10月4日まで、受賞者は10月5日に発表されます。ニュースレターは、[SP13KTRA](https://js13kgames.com/2026/games/sp13ktra)レーサーと[Hornbound](https://js13kgames.com/2026/games/hornbound)ローグライクを出発点として勧めています。すべてのプロジェクトのリポジトリも公開されており、コードを確認できます。
+
+## 5. ⚡️ ミニノート
+- **[Tailwind Labs is joining Shopify](https://tailwindcss.com/blog/tailwind-is-joining-shopify)** (出典: *JavaScript Weekly #802*)
+	+ 要約: Tailwind CSSはこれからもオープンソースのままで、MITライセンスも変わらず、チームはShopifyの支援を受けてプロジェクトの管理を続けます。
+- **[Attackers are scanning for exposed Vite dev servers](https://www.f5.com/labs/articles/cloud-takeover-mass-scanning-for-exposed-vite-endpoints-cve-2026-39364)** (出典: *React Status #491*)
+	+ 要約: 公開されているViteの開発サーバーを狙って`.env`ファイルにアクセスするスキャンが観測されました。該当のバグはVite 7.3.2と8.0.5で修正されているので、長く更新していない場合は設定を点検する必要があります。
+- **[TC39 meets in Tokyo in two weeks](https://github.com/tc39/agendas/blob/main/2026/09.md)** (出典: *JavaScript Weekly #802*)
+	+ 要約: 今回の会議の議題には、iterator helperの後続提案3件(`join`、`includes`、chunking)のStage 4への移行が挙がっています。
+- **[GitHub Actions cache-mode setting](https://socket.dev/blog/github-actions-cache-mode)** (出典: *React Status #491*)
+	+ 要約: ワークフローやジョブごとにキャッシュへのアクセスを制限する設定が追加されました。数か月前にTanStackのnpmパッケージが侵害された事例のようなキャッシュポイズニングを防ぐ手段です。
+- **[SmashingConf Amsterdam 2027](https://smashingconf.com/amsterdam-2027)** (出典: *Smashing Newsletter #576*)
+	+ 要約: デザイナーとフロントエンドエンジニア向けの、実務重視のカンファレンスが発表され、登壇者、ワークショップ、日程は順次公開されます。アーリーバードチケットの登録が開始されています。
+
+## 6. 🎉 リリース
+- **[React 19.3](https://react.dev/blog/2026/09/09/react-19-3)** (出典: *JavaScript Weekly #802*)
+	+ アップデート: ビュートランジションとFragment Refsがstableになり、Trusted Typesのサポートが追加されました。
+- **[React Router 8.4](https://reactrouter.com/changelog#v840)** (出典: *React Status #491*)
+	+ アップデート: `useLocation`だけを呼び出すコンポーネントは、ナビゲーション開始時に再レンダリングされなくなりました。オプトイン方式のunstableなルートマッチャーは、大規模アプリでのナビゲーション時間を最大88%短縮します。
+- **[Safari 27](https://developer.apple.com/documentation/safari-release-notes/safari-27-release-notes)** (出典: *Frontend Focus #758*)
+	+ アップデート: iOS・iPadOS・macOS 27と同時にリリースされました。カスタマイズ可能な`<select>`、画像の`sizes="auto"`、`:heading`擬似クラス、`alpha()`、複数色の`color-mix()`などが入りました。AIエージェントをSafariに接続する方法もドキュメントとして公開されました。
+- **[Chrome 153](https://developer.chrome.com/blog/new-in-chrome-153)** (出典: *Frontend Focus #758*)
+	+ アップデート: 単一軸のスクロールコンテナ(安定版以外のチャネル限定)と、`<camera>`、`<microphone>`要素が追加されました。Chrome 154はベータに入りました。
+- **[pnpm 12.4](https://pnpm.io/blog/releases/12.4)** (出典: *JavaScript Weekly #802*)
+	+ アップデート: 1つのワークスペースで、npmパッケージと一緒にRustクレートやPythonパッケージも管理できます。
+- **[Playwright 1.63](https://github.com/microsoft/playwright/releases/tag/v1.63.0)** (出典: *JavaScript Weekly #802*)
+	+ アップデート: テストが名前付きの`lock`を宣言できるため、同じリソースを共有するテストが同時に実行されません。
+- **[Node.js v26.8.2 (Current)](https://nodejs.org/en/blog/release/v26.8.2)** / **[v24.21.0 (LTS)](https://nodejs.org/en/blog/release/v24.21.0)** (出典: *JavaScript Weekly #802*)
+	+ アップデート: 両バージョンとも、多数の脆弱性を修正したUndiciのセキュリティリリースを含みます。
+- **[SnapDOM 3.0](https://github.com/zumerlab/snapdom/releases/tag/v3.0.0)** (出典: *Frontend Focus #758*)
+	+ アップデート: DOM要素を画像に変換する、依存関係のない`html2canvas`の代替です。繰り返しのキャプチャを高速化する「incremental recapture」、Webフォントの自動埋め込み、生のHTML文字列を画像に変換する`fromString()`が追加されました。
+- **[Motion 13.4](https://motion.dev/)** (出典: *React Status #491*)
+	+ アップデート: ブラウザネイティブのView Transition APIとReact 19.3の`ViewTransition`コンポーネントを活用して、ビュー間で要素をアニメーションさせる`AnimateView`が追加されました。
+- **[Expo SDK 58 beta](https://expo.dev/changelog/sdk-58-beta)** (出典: *React Status #491*)
+	+ アップデート: iOS 27向けに、React Native 0.88 RCをベースにビルドされ、App Intentsのサポートと、コーディングエージェントを対象とした新しいCLIツールが含まれます。
+
+## ✍️ おわりに
+
+今週のニュースでもっとも目を引いたのは、ツールの利用者が人間からエージェントにまで広がっているという点でした。OJは、複数のファイルが一度に書き込まれる編集パターンを前提にHMRパイプラインを設計し直し、@shadcn/lintはエラーメッセージそのものを、エージェントが自分で修正できる形にしました。ルールを設けることよりも、違反したときにどう直せばよいかを伝えることのほうが重要になってきているという印象を受けました。
+
+逆に、CSS Curiosities of the Pastを読むと、今では当たり前に使っている標準機能が、どれだけ多くの回避策の上に成り立っているかを改めて実感します。`lh`単位でアイコンの揃えを解く方法や、行の高さが同じという前提で90行の仮想スクロールを作ったINPの事例は、どちらも問題の前提を正確に絞り込み、小さな解決策を得たという共通点がありました。新しいツールが次々と登場する時期だからこそ、前提条件を先に確認する習慣がより価値を持つと思います。
+
+#### 出典
+- [JavaScript Weekly #802](https://javascriptweekly.com/issues/802)
+- [Frontend Focus #758](https://frontendfoc.us/issues/758)
+- [React Status #491](https://react.statuscode.com/issues/491)
+- [Smashing Newsletter #576](https://mailchi.mp/smashingmagazine/576-web-typography-and-smashingconf-2027)
