@@ -1,0 +1,173 @@
+---
+title: '🚀 2026-09 W3 #76'
+desc: OJ·@shadcn/lint·Fallow로 보는 AI 에이전트 시대의 도구 재편, Safari 27과 React 19.3, IE 시절 CSS 해킹 회고 | 2026년 9월 3주차 주간 기술 뉴스레터
+date: 2026-09-19
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 이번 주 핵심 테마
+
+이번 주는 AI 에이전트가 코드를 읽고 쓰는 시대에 맞춰 도구와 설계가 재편되는 모습이 두드러졌습니다. Lovable의 Rust 기반 Vite 호환 개발 서버 OJ, 에이전트가 위반 사유를 이해하도록 돕는 @shadcn/lint, 데드 코드를 빠르게 잡는 Fallow가 대표적입니다. Safari 27과 React 19.3 같은 플랫폼 업데이트, Tailwind Labs의 Shopify 합류 소식도 이어졌습니다. 여기에 IE 시절 CSS 해킹의 회고와 줄 길이·줄 높이 같은 타이포그래피 기본기까지 더해, 프런트엔드의 과거와 현재를 함께 돌아본 한 주였습니다.
+
+## 1. 🔍 심층 분석
+- **[OJ: A Rust-Native, Vite-Compatible Dev Server](https://lovable.dev/blog/faster-previews-oj)** (출처: *React Status #491*)
+  - 배경: Lovable은 하루 약 100만 개의 샌드박스를 프리뷰 하나씩 띄웠다 내리는 방식으로 운영합니다. Vite는 개발자 한 명이 노트북 한 대에서 쓰는 상황에 맞춘 설계입니다. 그래서 인스턴스마다 JavaScript 런타임과 툴체인, 많은 메모리가 따라붙고, 그 비용이 콜드 스타트 지연과 웜 샌드박스 부담으로 쌓였습니다.
+  - 핵심 기능: OJ는 Vite처럼 앱을 실행하는 단일 Rust 바이너리입니다. 기존 `vite.config.ts`(또는 `oj.config.ts`)를 읽고, 실제 Vite 플러그인을 호환 브리지로 실행합니다. React Fast Refresh와 TanStack Start처럼 앱이 의존하는 부분은 Rust로 다시 구현했고, Rolldown과 Oxc 위에 만들었습니다. 파일 워처부터 웹소켓까지 전부 Rust이며, 플러그인이나 서버 코드가 JavaScript를 요구할 때만 작은 Node 사이드카를 띄웁니다. 에이전트 편집도 고려했습니다. 파일 워처, 모듈 그래프, 컴파일러, HMR을 하나의 동기화된 파이프라인으로 묶어, 에이전트가 파일 여러 개를 한꺼번에 써도 하나의 일관된 업데이트로 합쳐 반영합니다.
+  - 수치: 컴포넌트 10,000개짜리 합성 앱에서 콜드 스타트가 OJ 1.2초, Vite 4.9초였고, 메모리는 약 115MB 대 1.5GB 이상이었습니다. Excalidraw는 약 0.8초 대 약 2.3초, 288MB 대 2.4GB였습니다. 실제 Lovable 프리뷰 실험에서는 로드 완료까지의 중앙값이 17.4초에서 8.0초로, 샌드박스 확보 시간이 14.5초에서 3.0초로 줄었습니다.
+  - 실무 적용: 프리뷰나 샌드박스를 대량으로 띄우는 환경, 에이전트가 여러 파일을 연속으로 쓰는 워크플로에서 의미가 큽니다. 일반 프로젝트에서는 당장 Vite를 바꿀 필요는 없고, OJ는 Lovable 프리뷰에 작은 비율부터 점진 적용 중입니다.
+  - 주의사항: 오픈소스이지만 아직 실험적입니다. 저자도 속도 수치가 완전한 동일 조건 비교는 아니라고 밝힙니다. Vite 쪽 측정에는 `vite-plugin-checker`(tsc로 타입 오류를 오버레이)가 포함되어 있고 OJ는 이 플러그인을 아직 호스팅하지 않습니다.
+- **[CSS Curiosities of the Past](https://vale.rocks/posts/css-relics)** (출처: *Frontend Focus #758*)
+  ![CSS Curiosities of the Past](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/k6lzihdml7pitxrpadxq.jpg)
+  - 배경: 브라우저가 하나의 표준에 충실하지 않던 시절, 특히 Internet Explorer의 비표준 구현에 대응하려고 쓰던 CSS 문법·파싱 버그·해킹을 정리한 에세이입니다. 제목의 "CSS가 JavaScript를 실행하던 시절"은 이 글에 나오는 CSS Expressions를 가리킵니다.
+  - 핵심 기능: 대표 사례는 다음과 같습니다.
+    - star hack: `*` 접두 속성을 IE7 이하만 유효하게 처리했고, `_` 접두 속성은 IE6만 유효하게 처리했습니다.
+    - clearfix의 `zoom: 1`: IE의 `hasLayout` 플래그를 켜기 위한 우회책이었습니다.
+    - CSS Expressions: IE5에서 도입되어 IE8에서 종료됐습니다.
+    - DirectX 기반 `filter`: `-ms-filter`가 IE10에서 제거되기 전까지 쓰였습니다.
+    - HTML Components: `behavior: url(...)`로 스크립트를 붙이는 방식이었습니다.
+    - Tantek Çelik의 box model hack: `voice-family` 파서 버그를 이용했습니다.
+  - 코드 예제:
+```css
+    *width: 250px;   /* IE7 이하만 유효로 취급 (star hack) */
+    _width: 200px;   /* IE6만 유효로 취급 */
+    top: expression(eval(document.documentElement.scrollTop)); /* CSS 안에서 JS 실행 */
+    filter: alpha(opacity=50);   /* IE 전용 filter */
+```
+  - 실무 적용: 오래된 스타일시트에서 이런 선언을 만났을 때 무엇을 위한 코드였는지 해석하고 안전하게 제거할지 판단하는 데 쓸 수 있습니다.
+  - 주의사항: CSS Expressions는 렌더링, 리사이즈, 스크롤, 마우스 이동 때마다 재평가되어 성능 부담이 컸다고 글은 설명합니다. 대부분이 표준이 아니므로 현재 코드에 도입할 대상이 아니라 역사 자료로 읽는 편이 맞습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[A Design Space Exploration of async / await](https://cel.cs.brown.edu/blog/design-space-async-await/)** (출처: *JavaScript Weekly #802*)
+  + 요약: 간단한 async/await 예제가 JavaScript, Rust, Python, Swift에서 서로 다른 결과를 냅니다. 퀴즈로 멘탈 모델을 점검한 뒤 언어별 설계 선택의 차이를 살펴봅니다.
+- **[Modern Web Types: TypeScript Support for Newer Web APIs](https://philipwalton.com/articles/modern-web-types/)** (출처: *JavaScript Weekly #802*)
+  + 요약: TypeScript의 DOM 타입은 여러 브라우저 엔진에서 출시된 API만 포함합니다. 그래서 element 범위의 `startViewTransition`이나 `fetchLater`는 오류가 납니다. `modern-web-types`는 단일 엔진에서만 출시된 인터페이스까지 추가해 주는 `lib.dom` 대체재입니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[@shadcn/lint : An Agent-First Linter for Tailwind Design Systems](https://github.com/shadcn-ui/lint)** (출처: *React Status #491*)
+  ![@shadcn/lint : An Agent-First Linter for Tailwind Design Systems](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/afaokicwppgsd63qh1c5.jpg)
+  + 개요: 타입으로 "Button의 padding은 금지"라고 막을 수는 있지만, 오류 메시지는 금지 사실만 알려 주고 크기를 어떻게 정해야 하는지는 알려 주지 못합니다. @shadcn/lint는 컴포넌트가 받을 수 있는 Tailwind 클래스를 선언해 두고, 위반하면 프로젝트의 컴포넌트·variant·테마를 근거로 대안을 제시하는 ESLint/Oxlint 플러그인입니다. Tailwind v4 프로젝트에서 쓰며 shadcn/ui는 필수가 아닙니다.
+  + 사용법: Oxlint 설정(`.oxlintrc.json`) 예시입니다. ESLint도 같은 settings와 rules를 씁니다.
+```json
+    {
+      "jsPlugins": ["@shadcn/lint"],
+      "settings": { "shadcn": { "ui": "@workspace/ui/components" } },
+      "rules": { "shadcn/no-restyle": ["error", { "allow": ["layout"] }] }
+    }
+```
+  + 실전 팁: `allow: ["layout"]`은 레이아웃 계열 클래스만 허용한다는 뜻입니다. 모노레포에서는 컴포넌트를 정의하는 디렉터리(`packages/ui/src/components/**` 등)에 override로 규칙을 꺼 둡니다. 기존 프로젝트는 문서의 도입 가이드대로 경고부터 시작해 규칙을 하나씩 늘리는 편이 안전합니다.
+- **[Fallow: Codebase Intelligence for TypeScript and JavaScript](https://docs.fallow.tools/)** (출처: *JavaScript Weekly #802*)
+  + 개요: 에이전트가 만든 코드는 정리되지 않은 채 쌓이기 쉽고, "이 export가 정말 안 쓰이는가" 같은 판단은 파일 하나가 아니라 전체 import/export 그래프를 봐야 합니다. Fallow는 이 일을 하는 Rust 바이너리입니다. 미사용 코드, 중복, 순환 의존, 복잡도 핫스팟, 아키텍처 경계 위반을 찾고, 0~100점의 health score도 계산합니다. 기본 분석은 Node.js나 TypeScript 컴파일러에 의존하지 않으며, 프레임워크 플러그인이 진입점을 자동 감지해 첫 실행에는 설정이 필요 없습니다.
+  + 사용법:
+```bash
+    npx fallow dead-code
+    npx fallow health --score --hotspots --targets
+    npx fallow dead-code --unused-class-members --type-aware --format json --quiet
+```
+  + 실전 팁: 기존 코드베이스에는 `fallow audit`가 유용합니다. 변경이 새로 만든 finding에만 실패를 걸어서 레거시 부채 때문에 첫날부터 CI가 막히지 않습니다. 기존 finding은 `--save-baseline`, `--baseline`으로 격리합니다. 별칭·re-export·패키지를 가로지르는 정확한 심볼 식별이 필요한 리팩터링에는 `--type-aware`를 붙입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[category-colors: Generate 'Least Wrong' Color Palettes for Charts](https://mattstromawn.com/writing/the-least-wrong-colors-version-2/)** (출처: *JavaScript Weekly #802*)
+  + 요약: Matt Ström-Awn이 Stripe 디자인 디렉터 시절인 2022년에 고안한 범주형 차트 색상 선택 알고리즘이 이제 npm 패키지로 공개됐고, 웹에서 바로 써 볼 수 있습니다.
+- **[Kerning Visualizer](https://kern.kineticstudio.com/)** (출처: *Smashing Newsletter #576*)
+  + 요약: Hunter Thompson이 만든 도구로, 단어 안의 모든 글자 쌍을 분석해 옵티컬 커닝을 적용한 간격을 만들어 주고 각 조정의 이유를 설명합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[From 1,256ms to 96ms: Fixing INP in a Massive React Dropdown](https://dev.to/subito/from-1256ms-to-96ms-fixing-inp-in-a-massive-react-dropdown-16l7)** (출처: *React Status #491*)
+  ![From 1,256ms to 96ms: Fixing INP in a Massive React Dropdown](https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2F3foxjs5p3218h59s9c3g.jpeg)
+  + 배경: Subito의 디자인 시스템 MultiSelect는 대부분 항목이 열두 개 안팎이라 즉각 열렸습니다. 그런데 브랜드 필터의 약 1,175개 옵션에서는, 4배 CPU 스로틀링을 건 모바일 환경에서 열기 INP가 1,256ms로 "poor" 등급이었습니다. 화면에는 6줄 정도만 보이는데 옵션 컴포넌트 약 1,175개를 한 번의 동기 커밋으로 마운트한 것이 원인이었습니다.
+  + 핵심 인사이트: 약 90줄짜리 `useVirtualScroll` 훅으로 보이는 행과 위아래 5개 버퍼(`OVERSCAN`)만 렌더링해 INP를 96ms로, `role="option"` DOM 노드를 13개로 줄였습니다. 모든 행의 높이가 같다는 가정 덕분에 코드가 이렇게 작을 수 있었습니다.
+  + 코드 예시:
+```js
+    const totalHeight = totalCount * itemHeight;
+    const startIdx = Math.max(0, Math.floor(scrollTop / itemHeight) - OVERSCAN);
+    const endIdx = Math.min(totalCount, Math.ceil((scrollTop + maxHeight) / itemHeight) + OVERSCAN);
+    const offsetTop = startIdx * itemHeight;
+```
+  + 해설: 복사하기 전에 행 높이 종류를 세어 보는 방법을 함께 제시합니다. 값이 하나가 아니면 행을 균일하게 만들거나 TanStack Virtual, react-virtuoso 같은 라이브러리를 쓰라고 안내합니다. 가상화하면 화면 밖 항목이 DOM에서 빠져 브라우저 기본 검색(Ctrl+F)에 잡히지 않는다는 접근성 트레이드오프도 숨기지 않아, 그대로 가져다 쓰기 좋은 글입니다.
+- **[Better Icon and Label Alignment](https://ishadeed.com/article/aligning-list-icons/)** (출처: *Frontend Focus #758*)
+  + 배경: 아이콘이 붙은 목록에서 텍스트가 한 줄이면 아이콘이 가운데에 맞지만, 여러 줄로 줄바꿈되면 가운데 정렬된 아이콘이 어색해 보입니다. `align-items: start`에 `translateY(3px)` 같은 고정값을 주는 방법은 글꼴 크기, 아이콘 크기, 컨테이너 너비가 바뀌면 깨집니다.
+  + 핵심 인사이트: 첫 줄의 line-height(`1lh`)와 아이콘 크기의 차이를 절반으로 나눈 값을 오프셋으로 씁니다. 그러면 세 조건이 바뀌어도 정렬이 유지됩니다. 아이콘을 `::before` 배경 이미지로 넣는 경우에는 `flex-shrink: 0`, `aspect-ratio: 1`, `height: auto`를 함께 써야 합니다.
+  + 코드 예시:
+```css
+    .icon {
+      --offset: calc((1lh - var(--size)) / 2);
+      transform: translateY(var(--offset));
+    }
+```
+  + 해설: 매직 넘버를 계산식으로 바꾸는 과정을 단계별 데모로 보여 줍니다. 디자인 시스템의 리스트 컴포넌트에 바로 옮길 수 있는 패턴입니다.
+- **[How To Set Text Properly](https://pimpmytype.com/line-length-line-height/)** (출처: *Smashing Newsletter #576*)
+  ![The Ideal Line Length And Line Height](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/c5958bb2-53dd-4532-2958-b2289757f04d.png)
+  + 배경: Oliver Schöndorfer가 글꼴 크기, 줄 길이, 줄 높이를 "타이포그래피의 삼위일체"로 묶어 설명한 시리즈 중 줄 길이와 줄 높이 편입니다. 링크된 글은 2021년에 쓰였고 2022년에 갱신된 글입니다.
+  + 핵심 인사이트: 데스크톱 본문은 한 줄 60~80자에 줄 높이 1.5~1.6 정도가 출발점이고, 줄이 짧을수록 줄 높이를 낮출 수 있습니다. 모바일은 1.3~1.45, 제목은 약 1.1, UI 컴포넌트는 1.2~1.3을 제안합니다. 글꼴을 먼저 정한 뒤 크기, 줄 길이, 줄 높이 순서로 조정하라고 권합니다. 60~80자가 읽기 속도로 검증된 수치는 아니라는 점도 짚습니다.
+  + 코드 예시:
+```css
+    p {
+      max-width: 64ch;
+    }
+```
+  + 해설: `rem` 기준으로는 1rem이 대략 두 글자 폭이라 `max-width`를 30~40rem으로 잡을 수 있고, `ch` 단위를 쓰면 글꼴 크기를 고려하지 않아도 됩니다. "정답 숫자는 없다"는 전제에서 판단 기준을 알려 주는 글입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Functional Programming Jargon, Mapped and Explained](https://hemanth.github.io/functional-programming-jargon/)** (출처: *JavaScript Weekly #802*)
+  + 요약: TC39 대표 Hemanth HM의 FP 용어 레퍼런스가 개념 간 관계를 보여 주는 탐색형 지도로 바뀌었습니다. 각 개념에 간단한 정의와 JavaScript 예제가 붙어 있습니다.
+- **[Do Frameworks Matter Anymore?](https://brookslybrand.com/posts/do-frameworks-matter-anymore/)** (출처: *React Status #491*)
+  + 요약: Remix 팀 구성원 Brooks Lybrand가 "AI가 알아서 React를 쓰면 된다"는 주장에 반박합니다. 프레임워크를 건너뛰면 에이전트가 임시 프레임워크를 즉흥적으로 만든다는 논리입니다. 뉴스레터는 과도하게 추상화된 React 앱이 에이전트 작업 비용을 최대 5배까지 높였다는 한 개발자의 실험도 함께 소개합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Neat Annotations: Elegant Hand-Drawn Annotations with CSS](https://neat-annotations.syabro.com/)** (출처: *Frontend Focus #758*)
+  ![Neat Annotations: Elegant Hand-Drawn Annotations with CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1789557313/crpjqoc9ssmdanb1ijub.png)
+  + 특징: 손으로 그린 듯한 화살표와 손글씨 라벨을 순수 CSS만으로 붙입니다. JavaScript도 빌드 단계도 없이 CSS 파일 하나로 동작합니다. `<span class="ann ann-n ann-amber" data-note="no refresh needed">`처럼 대상을 감싸면 라벨은 `data-note`에서 가져옵니다. 화살표 방향 8종과 색상 클래스가 있고, 주석은 대상 바깥에 배치되어 공간을 차지하지 않으므로 주변에 여백이 필요합니다. 필수 정보를 `data-note`에만 담지 말라는 안내도 있습니다.
+- **[js13kGames 2026: 317 games squeezed into 13KB each](https://js13kgames.com/2026/blog/voting-open)** (출처: *JavaScript Weekly #802*)
+  + 특징: 13KB 제한의 웹 게임 대회 15회차가 역대 최다인 317개 출품작으로 마감됐습니다. 올해 주제는 "Unicorns and Rainbows"이고, 투표는 9월 14일부터 10월 4일까지이며 수상자는 10월 5일에 발표됩니다. 뉴스레터는 [SP13KTRA](https://js13kgames.com/2026/games/sp13ktra) 레이서와 [Hornbound](https://js13kgames.com/2026/games/hornbound) 로그라이크를 시작점으로 추천합니다. 모든 프로젝트의 공개 저장소도 열려 있어 코드를 살펴볼 수 있습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Tailwind Labs is joining Shopify](https://tailwindcss.com/blog/tailwind-is-joining-shopify)** (출처: *JavaScript Weekly #802*)
+  + 요약: Tailwind CSS는 계속 오픈소스로 유지되고 MIT 라이선스도 그대로이며, 팀이 Shopify의 지원을 받아 프로젝트를 이어서 관리합니다.
+- **[Attackers are scanning for exposed Vite dev servers](https://www.f5.com/labs/articles/cloud-takeover-mass-scanning-for-exposed-vite-endpoints-cve-2026-39364)** (출처: *React Status #491*)
+  + 요약: 노출된 Vite 개발 서버를 노려 `.env` 파일에 접근하는 스캔이 관측됐습니다. 해당 버그는 Vite 7.3.2와 8.0.5에서 패치됐으니 오래 업데이트하지 않았다면 설정을 점검해야 합니다.
+- **[TC39 meets in Tokyo in two weeks](https://github.com/tc39/agendas/blob/main/2026/09.md)** (출처: *JavaScript Weekly #802*)
+  + 요약: 이번 회의 안건에는 iterator helper 후속 제안 세 건(`join`, `includes`, chunking)의 Stage 4 진입이 올라와 있습니다.
+- **[GitHub Actions cache-mode setting](https://socket.dev/blog/github-actions-cache-mode)** (출처: *React Status #491*)
+  + 요약: 워크플로나 잡별로 캐시 접근을 제한하는 설정이 추가됐습니다. 몇 달 전 TanStack의 npm 패키지가 침해된 사례와 같은 캐시 포이즈닝을 막는 수단입니다.
+- **[SmashingConf Amsterdam 2027](https://smashingconf.com/amsterdam-2027)** (출처: *Smashing Newsletter #576*)
+  + 요약: 디자이너와 프런트엔드 엔지니어를 위한 실무 중심 컨퍼런스가 발표됐고, 연사와 워크숍, 일정은 순차 공개됩니다. 얼리버드 티켓 등록이 열려 있습니다.
+
+## 6. 🎉 릴리스
+- **[React 19.3](https://react.dev/blog/2026/09/09/react-19-3)** (출처: *JavaScript Weekly #802*)
+  + 업데이트: 뷰 트랜지션과 Fragment Refs가 stable이 되었고 Trusted Types 지원이 추가됐습니다.
+- **[React Router 8.4](https://reactrouter.com/changelog#v840)** (출처: *React Status #491*)
+  + 업데이트: `useLocation`만 호출하는 컴포넌트는 내비게이션 시작 시 더 이상 리렌더링되지 않습니다. 옵트인 방식의 unstable 라우트 매처는 대형 앱에서 내비게이션 시간을 최대 88% 줄입니다.
+- **[Safari 27](https://developer.apple.com/documentation/safari-release-notes/safari-27-release-notes)** (출처: *Frontend Focus #758*)
+  + 업데이트: iOS·iPadOS·macOS 27과 함께 출시됐습니다. 커스터마이즈 가능한 `<select>`, 이미지의 `sizes="auto"`, `:heading` 의사 클래스, `alpha()`, 다중 색상 `color-mix()` 등이 들어갔습니다. AI 에이전트를 Safari에 연결하는 방법도 문서로 공개됐습니다.
+- **[Chrome 153](https://developer.chrome.com/blog/new-in-chrome-153)** (출처: *Frontend Focus #758*)
+  + 업데이트: 단일 축 스크롤 컨테이너(비안정 채널 한정)와 `<camera>`, `<microphone>` 요소가 추가됐습니다. Chrome 154는 베타에 들어갔습니다.
+- **[pnpm 12.4](https://pnpm.io/blog/releases/12.4)** (출처: *JavaScript Weekly #802*)
+  + 업데이트: 하나의 워크스페이스에서 npm 패키지와 함께 Rust 크레이트, Python 패키지도 관리할 수 있습니다.
+- **[Playwright 1.63](https://github.com/microsoft/playwright/releases/tag/v1.63.0)** (출처: *JavaScript Weekly #802*)
+  + 업데이트: 테스트가 이름 있는 `lock`을 선언할 수 있어, 같은 자원을 공유하는 테스트가 동시에 실행되지 않습니다.
+- **[Node.js v26.8.2 (Current)](https://nodejs.org/en/blog/release/v26.8.2)** / **[v24.21.0 (LTS)](https://nodejs.org/en/blog/release/v24.21.0)** (출처: *JavaScript Weekly #802*)
+  + 업데이트: 두 버전 모두 다수의 취약점을 고친 Undici 보안 릴리스를 포함합니다.
+- **[SnapDOM 3.0](https://github.com/zumerlab/snapdom/releases/tag/v3.0.0)** (출처: *Frontend Focus #758*)
+  + 업데이트: DOM 요소를 이미지로 바꾸는 무의존성 `html2canvas` 대안입니다. 반복 캡처를 빠르게 하는 "incremental recapture", 웹 폰트 자동 임베딩, 원시 HTML 문자열을 이미지로 바꾸는 `fromString()`이 추가됐습니다.
+- **[Motion 13.4](https://motion.dev/)** (출처: *React Status #491*)
+  + 업데이트: 브라우저 네이티브 View Transition API와 React 19.3의 `ViewTransition` 컴포넌트를 활용해 뷰 사이의 요소를 애니메이션하는 `AnimateView`가 추가됐습니다.
+- **[Expo SDK 58 beta](https://expo.dev/changelog/sdk-58-beta)** (출처: *React Status #491*)
+  + 업데이트: iOS 27용으로 React Native 0.88 RC 기반에서 빌드되며, App Intents 지원과 코딩 에이전트를 겨냥한 새 CLI 도구가 포함됩니다.
+
+## ✍️ 마치며
+
+이번 주 소식에서 가장 눈에 띈 것은 도구의 사용자가 사람에서 에이전트까지 넓어지고 있다는 점이었습니다. OJ는 여러 파일이 한꺼번에 쓰이는 편집 패턴을 전제로 HMR 파이프라인을 다시 설계했고, @shadcn/lint는 오류 메시지 자체를 에이전트가 스스로 고칠 수 있는 형태로 만들었습니다. 규칙을 세우는 일보다 위반했을 때 어떻게 고치라고 알려 주는지가 더 중요해지고 있다는 인상을 받았습니다.
+
+반대로 CSS Curiosities of the Past를 읽으면, 지금 당연하게 쓰는 표준 기능이 얼마나 많은 우회로 위에 서 있는지 새삼 느끼게 됩니다. `lh` 단위로 아이콘 정렬을 푸는 방식이나, 행 높이가 같다는 전제로 90줄짜리 가상 스크롤을 만든 INP 사례는 모두 문제의 전제를 정확히 좁혀 작은 해법을 얻었다는 공통점이 있었습니다. 새로운 도구가 쏟아지는 시기일수록 전제 조건을 먼저 확인하는 습관이 더 값어치가 있다고 생각합니다.
+
+#### 출처
+- [JavaScript Weekly #802](https://javascriptweekly.com/issues/802)
+- [Frontend Focus #758](https://frontendfoc.us/issues/758)
+- [React Status #491](https://react.statuscode.com/issues/491)
+- [Smashing Newsletter #576](https://mailchi.mp/smashingmagazine/576-web-typography-and-smashingconf-2027)
