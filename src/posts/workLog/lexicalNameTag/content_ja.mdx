@@ -1,0 +1,532 @@
+---
+title: 'Lexicalで作ったスカウトメッセージの名前自動置換タグ'
+desc: スカウトメッセージに{name}タグを入れておくと、送信時に自動で候補者名に置換される機能をLexicalで実装した過程をまとめました。ライブラリ比較、POC検証、カーソル位置バグとの格闘、リリース後の実際の使用率まで記録しています。
+date: 2026-09-23
+thumbnail: /posts/workLog/lexicalNameTag/thumb.avif
+---
+
+## マージタグをチャットメッセージに実装する
+
+PDMから問い合わせを受けました。スカウトメッセージに`「{name}さん、はじめまして」`のようにあらかじめ入力しておくと、送信時点で`{name}`部分が候補者名に自動置換される機能が必要だという依頼でした。正式な企画に入る前に、技術的に実現可能な範囲をまず確認してほしいという依頼でした。
+
+この種の機能でまず思い浮かぶ代表的な事例はSlackの`@メンション`です。しかし要件を詳しく見ていくと、異なる点がありました。メッセージが使われる場面は、候補者1人にすぐ送る1:1送信だけではありませんでした。
+
+- **一括送信**: 複数の候補者に同時に送る場合です。そもそも「この人」を選択する単一の対象がありません。
+- **予約送信**: タグを入力する時点と、実際に名前が埋め込まれる送信時点が異なります。
+- **テンプレート**: 後で再利用するメッセージ雛形をあらかじめ保存しておく機能です。保存時点では受け取る相手がそもそも決まっていません。
+
+むしろ1:1送信を除けば、`{name}`を即座に実際の名前に変えるのではなく、マクロの形のまま保存しておく必要があるケースのほうが多くありました。つまり、ユーザーがポップアップから対象を選んで挿入するメンション方式ではなく、`{name}`というマクロを埋め込んでおけば、後の時点(送信またはテンプレート使用時)に一括置換される仕組みが必要でした。
+
+このように、あらかじめ埋め込んでおいた印が後で実際の値に置き換わる方式は、調べてみるとメールマーケティングツールですでに**マージタグ**(merge tag)という名前でよく使われていました。`{{FirstName}}`のようなタグを入れておくと、送信時点で受信者ごとの実際の名前に自動置換されるのと同じ原理です。
+
+カーソルが置かれる位置、改行時の挙動、マウスを乗せたときのツールチップといった細かいUXは、この依頼には含まれていませんでした。この部分はSlackなど代表的なチャットUIを参考にしながら自分で設計しました。
+
+この要件が実際に実装可能なのか、どこまで実装できるのかを、まずPOC(Proof of Concept)で検証することにしました。
+
+---
+
+## ライブラリ検討: react-mentions、Tiptap、そしてLexical
+
+POCに入る前に、どのような方式で実装するかをまず整理しました。必要な機能は次の通りでした。
+
+1. **マクロ自動置換**: ポップアップなしで`{name}`のようなパターンを入力すると同時にチップへ変換
+2. **UXディテール**: バックスペース1回でチップがまとめて削除される
+3. **UI分岐**: 1:1送信時は青いチップ、一括送信時は灰色のチップのように、状態に応じて異なるUI
+4. **IME安定性**: 日本語入力環境でゴーストテキストなしに安定して動作
+5. **プレーンテキスト最適化**: スカウトメッセージは書式のないチャット入力欄なので、太字・斜体のようなリッチテキスト機能は不要です。むしろこうした機能がデフォルトで搭載されていると、マクロチップと書式が重なるエッジケースや不要なツールバーUIまで気を配る必要があり、ない方が実装・保守の両面で有利です。
+
+この基準で3つの候補を比較しました。
+
+| 評価項目 | <span style={{ whiteSpace: 'nowrap' }}>重み</span> | **react-mentions** | **Tiptap** | **Lexical** |
+| --- | --- | --- | --- | --- |
+| マクロ自動置換(ポップアップなし) | Max | 1.0(動作原理自体が要件に反する) | 5.0(InputRulesで標準サポート) | 5.0(TextTransformで完全サポート) |
+| UXディテール(まとめて削除) | High | 2.0(カーソル計算などカスタムが必要) | 4.5(Atom Nodeで可能) | 5.0(`token`モードで簡単に処理) |
+| UI分岐(1:1 vs 一括) | High | 2.0(CSSの小細工が必要) | 4.5(NodeViewにReactを連携) | 5.0(Reactコンポーネント連携が自然) |
+| IME安定性 | High | 2.0(透明レイヤー方式のためゴーストが発生) | 4.5(ProseMirrorベースで安定) | 5.0(安定) |
+| プレーンテキスト最適化 | Mid | 4.0(単純テキスト専用で有利) | 3.0(Rich Textコアが標準搭載) | 5.0(`PlainTextPlugin`を提供) |
+| 開発生産性(ラーニングカーブ) | Mid | 3.5(始めるのは簡単だが要件の前で限界) | 4.0(ドキュメントが充実し直感的) | 2.5(初期参入障壁が最も高い) |
+| **合計点** | - | **14.5** | **25.5** | **27.5** |
+
+`react-mentions`はそもそも「ユーザーがリストから選んで挿入する」方式で設計されたライブラリのため、ポップアップなしの自動置換というコア要件そのものと動作原理が噛み合いませんでした。カーソル位置を手動で計算し、透明レイヤーを重ねるといったカスタムが必要でした。これは最初から技術的負債を積み上げるやり方だと判断し、早い段階で除外しました。
+
+残ったのはエディタフレームワークのTiptapとLexicalでした。
+
+### Tiptapのジレンマ
+
+Tiptapは生まれながらにして「Notionのようなリッチテキストエディタ」です。設定なしでヘッドレスとして使うこともできますが、公式ドキュメントと例のほとんどが`@tiptap/starter-kit`をインストールした状態を前提としています。このパッケージには太字、斜体、リスト変換(`-`を打つとリストに変わるなど)が標準で含まれているため、チャット入力欄として使うには、これらの機能を1つずつ取り除く作業が必要でした。
+
+`StarterKit`を完全に外してゼロから組み立てても、根本的な問題が1つ残ります。Tiptap(ProseMirror)の構造上、テキストを入力するには`Paragraph`拡張が必須なため、結局`<p>`タグを抱えていくしかありません。チャット入力欄のUIに合わせるには、このタグによるスタイルをずっと打ち消し続ける必要があるわけです。
+
+また、Tiptapは純粋なJavaScriptエンジンであるProseMirrorをReactでラップした構造のため、チップの中にReactコンポーネント(例: 青い名前チップ)を入れるには`ReactNodeViewRenderer`という橋を1つ経由する必要があります。
+
+### Lexicalの方式
+
+LexicalはMetaがReactと組み合わせて使いやすいように最初から設計したエンジンです。`LexicalComposer`だけを立ち上げると、キーボードを打っても文字入力すらできない完全に空の状態からスタートします。文字入力が必要なら`PlainTextPlugin`を付け、タグ変換が必要なら自作の変換ロジックを付けるというように、必要な機能だけを正確に組み立てられます。
+
+チップノードを作るときに使う`DecoratorNode`は、関数の中で`return <MentionChip name="田中" />`のようにそのままReact JSXを返せば完了です。既存のReactコンポーネントを開発するのと同じようにpropsを渡し、状態を管理できます。
+
+### 結論
+
+そのため、最初の数日のラーニングカーブさえ乗り越えれば、チャット入力欄という目的に正確に合致し、Reactコンポーネントの挿入も自然なLexicalの方が良いと判断しました。`StarterKit`を取り除いても`<p>`タグを前提とせざるを得ないTiptapよりも、必要なものだけを1つずつ組み立てていくLexicalのヘッドレス方式が、この機能の性質とより噛み合っていました。
+
+他のライブラリを選ぶときも、便利機能が盛りだくさんな方よりカスタムしやすいヘッドレスな方を選ぶことが多いのですが、今回もやはりヘッドレスが正解でした🙂
+
+---
+
+## POC: 何が、どこまで可能か
+
+選定したLexicalで、短期間のうちにコア動作の実現可能性を検証しました。PDMが依頼したのは名前が自動で置換される機能そのものであり、ハイライトの色やツールチップ、バックスペースでまとめて削除するといった細かいUXは仕様に含まれていませんでした。この部分はSlackなどを参考にしながらあれこれ実験し、自分で実装しました。この段階で次のことまで可能だと確認できました。
+
+- 入力領域でのハイライト(色、幅の調整が可能)
+- マウスオーバー/キーボードカーソルに反応するツールチップ表示
+- バックスペースでタグをトークン(かたまり)単位で削除
+- コピー&ペースト、Undo(Ctrl+Z)への対応
+- ユーザーが`{Name}`、`{NAME}`、全角`｛name｝`のように誤入力しても、正規表現ベースで検知して正規化
+
+![POC調査結果の共有](/posts/workLog/lexicalNameTag/poc1.avif)
+
+この調査結果をチームに共有しました。ハイライトを含めて実装可能であることが確認され、正式な設計が依頼されることになり、思ったより反応が良くて嬉しかったです🎉
+
+![メンバーの反応](/posts/workLog/lexicalNameTag/poc2.avif)
+
+このPOC結果を基に、PDMが最終仕様を確定してチームに共有しました。以降、正式な開発が始まりました。
+
+![朝会共有資料](/posts/workLog/lexicalNameTag/poc공유.avif)
+
+POCはあくまで「できる」ということだけを示す段階でした。本当の苦労は、これを実際のサービスに組み込むところから始まりました😅
+
+---
+
+## 実装で遭遇した本当の問題たち
+
+### 基本構造: タグを特殊ノードにする
+
+Lexicalではエディタ内のコンテンツが**ノード**(Node)単位で管理されます。通常のテキストは`TextNode`、改行は`ParagraphNode`などとして存在します。
+
+`{name}`タグを特殊に扱うために、`TextNode`を継承したカスタムノード`MacroTagNode`を作りました。
+
+```javascript
+export class MacroTagNode extends TextNode {
+  __macroKey: string    // 実際のテキスト値: "{name}"
+  __tagLabel: string | undefined  // 画面表示用ラベル: "名前" など
+
+  createDOM(config: EditorConfig): HTMLElement {
+    const dom = super.createDOM(config)
+
+    dom.contentEditable = 'false'  // (1) タグ内へのカーソル侵入を防止
+    dom.className = styles['macro-tag']
+    dom.textContent = this.__tagLabel ?? this.__macroKey  // (2) 画面にはラベルを表示
+    return dom
+  }
+
+  // タグの直前・直後に入力した文字がタグの中に吸収されないように
+  canInsertTextBefore(): boolean { return false }
+  canInsertTextAfter(): boolean { return false }
+}
+```
+
+ここで重要なポイントが2つあります。
+
+**(1) `contentEditable = 'false'`**
+この属性を`false`に設定すると、その要素の中にカーソルが入らなくなります。設定しないと、`{name}`の`n`と`a`の間にカーソルが位置するなど、おかしな挙動が発生します。
+
+**(2) `__text = macroKey`(内部テキスト値を`{name}`のまま保持)**
+Lexicalはノードのテキスト長を基に、コピー/ペーストやカーソル移動時の位置を計算します。`__text`を`{name}`のまま保持しないと、コピー時にオフセット計算がずれてしまいます。画面に表示されるテキストと内部の値が異なっていても構いませんが、内部の値の長さは正確でなければなりません。
+
+### 自動補完: 少し間違った入力も正しく変換
+
+ユーザーが誤って`{ Name }`や`｛name｝`のように入力しても、`{name}`に自動変換されるように処理しました。
+
+| 入力 | 変換後 |
+|------|---------|
+| `{Name}` | `{name}` |
+| `｛name｝`(全角括弧) | `{name}` |
+| `{ name }`(前後の空白) | `{name}` |
+| `{ｎａｍｅ}`(全角アルファベット) | `{name}` |
+| `{na me}`(中間の空白) | `{name}` |
+
+```javascript
+export const normalizeTagInput = (text: string): string =>
+  text.replace(/[｛{]([^｝}]*)[｝}]/g, (_, inner: string) => {
+    const normalized = inner
+      .replace(/\s/g, '')           // 空白を除去
+      .toLowerCase()                // 大文字 → 小文字
+      .replace(/[Ａ-Ｚａ-ｚ]/g, (c) => // 全角アルファベット → 半角
+        String.fromCharCode(c.charCodeAt(0) - 0xfee0)
+      )
+    return `{${normalized}}`
+  })
+```
+
+この関数をLexicalの`registerNodeTransform`(ノードの内容が変わるたびに自動で呼び出されるコールバック)の中で実行すると、ユーザーが入力するたびにリアルタイムで変換されます。
+
+### カーソル位置との戦い
+
+この実装で最も苦労した部分は**カーソル位置**でした。Lexicalの内部動作を知らないと原因を突き止めにくい落とし穴がいくつもありました。
+
+**落とし穴1: テキストを変更した後、カーソルが先頭に戻る**
+`registerNodeTransform`の中でノードのテキスト内容を`setTextContent()`で変更すると、Lexicalがカーソル位置をノードの先頭にリセットしてしまいます。
+
+例えば`{ name }`を入力して`}`で閉じた瞬間、自動補完が発動して`{name}`にテキストが変更されるのですが、このときカーソルが`{`の前へ移動してしまいます。
+
+解決策は、`setTextContent()`の直後にカーソル位置を明示的に指定することです。
+
+```javascript
+if (text !== rawText) {
+  node.setTextContent(text)  // テキストを変更
+  // ← この時点でカーソルが先頭にリセットされる
+
+  node.select(text.length, text.length)
+  // text.length = テキストの末尾位置
+  // → カーソルをテキストの末尾に戻す
+}
+```
+
+`select(a, b)`は`a`の位置から`b`の位置まで選択するメソッドです。`a === b`の場合は選択なしでカーソルだけがその位置に置かれます。
+
+**落とし穴2: ZWS(見えない文字)とノード結合の問題**
+タグを挿入した直後、カーソルをタグのすぐ右に位置させたいと考えました。しかし`MacroTagNode`の中にはカーソルが入らないため、タグの後ろにカーソルが置かれる場所が必要です。
+
+そこでZWS(Zero Width Space、幅が0の見えない空白文字)をタグのすぐ後ろに挿入する方法を使いました。画面には何も表示されませんが、Lexical内部ではテキストノードとして存在するため、カーソルをそこに位置させることができます。
+
+```javascript
+const zwsNode = $createTextNode('​')  // 見えない空白文字
+tagNode.insertAfter(zwsNode)
+zwsNode.select(0, 0)  // ZWSの前にカーソルを置く
+```
+
+しかし、タグの後にすでにテキストがある場合はZWSを挿入してはいけません。Lexicalは内部最適化により、同じスタイルの隣接した`TextNode`を自動的に結合してしまいます。ZWSノードと次のテキストノードが結合されると、別途作っておいた「ZWS除去処理」が発動し、カーソルが意図しない位置に飛んでしまいます。
+
+```javascript
+const nextNode = tagNode.getNextSibling()  // タグの次のノードを確認
+
+if ($isTextNode(nextNode)) {
+  // 次にテキストがある場合: ZWSなしでそのテキストの先頭にカーソルを置く
+  nextNode.select(0, 0)
+} else {
+  // 次にテキストがない場合: ZWSを挿入してそこにカーソルを置く
+  const zwsNode = $createTextNode('​')
+  tagNode.insertAfter(zwsNode)
+  zwsNode.select(0, 0)
+}
+```
+
+**落とし穴3: ZWSの前 vs 後ろ**
+ZWSノードで`select(0, 0)`は文字の**前**にカーソルを置くことになります。`select(1, 1)`にすると文字の**後ろ**にカーソルが行き、左矢印キーでタグを通り過ぎるには2回押さなければならない不便が生じます。
+
+```javascript
+zwsNode.select(0, 0)  // ✅ ZWSの前 → 矢印1回でタグの左へ移動可能
+zwsNode.select(1, 1)  // ❌ ZWSの後ろ → 矢印2回が必要
+```
+
+**落とし穴4: タグが行の先頭・改行直後に来るとカーソルが消える**
+`MacroTagNode`の前のテキストをすべて削除して、タグが段落の最初のノードになると、タグの前にカーソルを置く場所がなくなり、カーソルが消えてしまいます。改行(`LineBreakNode`)の直後にタグが来る場合も同様です。
+
+```
+{name}こんにちは         ← 1行目
+{name}よろしくお願いします         ← 2行目(LineBreak直後のタグ)
+```
+
+この構造では、2番目のタグの前にはクリックや矢印キーで移動できる場所がありません。`registerNodeTransform(MacroTagNode)`で、タグが段落の最初、またはLineBreakの直後にある場合は自動的にZWSを前に挿入するようにして解決しました。
+
+```javascript
+editor.registerNodeTransform(MacroTagNode, (node) => {
+  const prevSibling = node.getPreviousSibling()
+  // 前に何もない(段落の先頭)か、LineBreak直後の場合のみ処理
+  if (prevSibling !== null && !$isLineBreakNode(prevSibling)) return
+
+  // タグの前にZWSを挿入 → カーソルがそこに置けるようになる
+  const zwsNode = $createTextNode('​')
+  node.insertBefore(zwsNode)
+
+  // テキスト削除直後はカーソルがタグ上または段落先頭の無効な位置にあるため、ZWSへ移動
+  const selection = $getSelection()
+  if (!$isRangeSelection(selection) || !selection.isCollapsed()) return
+  const anchorNode = selection.anchor.getNode()
+  if (anchorNode === node || (anchorNode === node.getParent() && selection.anchor.offset === 0)) {
+    zwsNode.select(0, 0)
+  }
+})
+```
+
+最初は`registerUpdateListener`で実装していましたが、更新が終わった後に発火されるため、ZWS挿入のために追加の`editor.update()`が必要になり、更新サイクルが2回回ってしまい、commit後の時点なのでselectionの状態も信頼しづらいものでした。`registerNodeTransform`は更新サイクルの中で実行されるため、二重更新がなくselectionも安定します。特定のノードに関する補正ロジックはtransformの方が適しています。
+
+**落とし穴5: ZWSの見えない2つのカーソル位置**
+ZWSは幅が0の文字ですが、テキストノードの中では立派な1文字であり、カーソル位置を2つ(offset 0と1)持ちます。画面上ではどちらも同じ位置に見えますが、キーボード操作では別の位置になります。例えばタグの直後で左矢印を押すとoffset 1に到達し、もう一度押すとoffset 0に移動しますが、視覚的には何の変化もないため「矢印を押したのに動かない」という感覚を与えます。
+
+左右の矢印を押したときにカーソルがZWSの上にあれば、次の意味のある位置へ一気にジャンプするように処理して解決しました。
+
+```javascript
+// 左矢印: ZWS(LineBreak直後)の上で左 → 前の行末へジャンプ
+if (
+  $isTextNode(node) &&
+  node.getTextContent() === '​' &&
+  $isMacroTagNode(node.getNextSibling()) &&
+  $isLineBreakNode(node.getPreviousSibling())
+) {
+  const lineBreak = node.getPreviousSibling()
+  const beforeLineBreak = lineBreak?.getPreviousSibling()
+  if ($isTextNode(beforeLineBreak)) {
+    // 前の行末へ移動
+    beforeLineBreak.select(
+      beforeLineBreak.getTextContentSize(),
+      beforeLineBreak.getTextContentSize()
+    )
+  }
+}
+```
+
+右矢印も対称的に処理しました(ZWSの上で右 → タグを飛び越えて次の位置へ)
+
+**落とし穴6: `registerCommand`で矢印キーを横取りしようとしても効かないとき**
+上記の問題を最初はLexicalのコマンドシステムで解決しようとしました。
+
+```javascript
+editor.registerCommand(
+  KEY_ARROW_LEFT_COMMAND,
+  (event) => {
+    // 条件チェック
+    event.preventDefault()
+    targetNode.select(...)
+    return true  // コマンドが処理されたことを通知
+  },
+  COMMAND_PRIORITY_NORMAL
+)
+```
+
+理論的には動作するはずでしたが、実際にはカーソルが相変わらず元々行くはずだった場所に移動してしまいました🤔 `preventDefault()`は、Lexicalとブラウザのkeydown処理のタイミングがずれて、うまく効きませんでした。ブラウザが先にカーソルを移動させた後、Lexicalのselection同期ロジックが私たちの指定したselectionを上書きしてしまうためです。
+
+DOMの`keydown`イベントを**capture phase**で直接キャッチして解決しました。capture phaseはイベントが子要素に伝播する前の段階なので、Lexicalより先に受け取ることができます。
+
+```javascript
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key !== 'ArrowLeft') return
+
+  // 条件チェック
+  let targetKey = null
+  editor.getEditorState().read(() => {
+    // ... selectionを見てどこに移動するかを決定
+  })
+
+  if (targetKey) {
+    event.preventDefault()              // ブラウザのデフォルト動作をブロック
+    event.stopImmediatePropagation()    // Lexicalにも渡らないようブロック
+    editor.update(() => {
+      // 明示的にカーソルを目的の位置へ移動
+    })
+  }
+}
+
+// editorのroot要素(=contenteditable div)が準備できたらlistenerを付ける
+editor.registerRootListener((rootElement, prevRootElement) => {
+  if (prevRootElement) prevRootElement.removeEventListener('keydown', handleKeyDown, true)
+  if (rootElement) rootElement.addEventListener('keydown', handleKeyDown, true)
+})
+```
+
+`addEventListener`の第3引数`true`がcapture phaseの登録です。`registerRootListener`を使う理由は、`editor.getRootElement()`が最初は`null`になり得るためです(PluginがContentEditableより先にマウントされる場合)。`registerRootListener`はroot要素が準備/変更されるたびにコールバックを呼び出します。
+
+**落とし穴7: transformはペースト・一括挿入時にも発動する**
+transformは「ユーザーがタイピングするときだけ発動する」と勘違いしやすいですが、`TextNode`が変更されるすべての状況で発動します。ペースト(paste)やコードでの一括挿入も含まれます。
+
+ユーザーが`111{name}222`をペーストすると、カーソルはテキストの末尾(`222`の後ろ)に位置したままtransformが発動し、`{name}`を`MacroTagNode`に変換します。既存のコードは`nextNode.select(0, 0)`でカーソルをタグのすぐ後ろ(`222`の前)へ強制的に移動させていました。タイピング時にはカーソルがすでにタグの位置にあるため自然ですが、paste・一括挿入ではカーソルがもっと後ろにあるのに強制的に前へ引き戻されるバグでした。
+
+transform内でカーソルがすでに`nextNode`の中にある場合は移動させないよう、条件を追加して解決しました。
+
+```javascript
+const nextNode = tagNode.getNextSibling()
+if ($isTextNode(nextNode)) {
+  const sel = $getSelection()
+  const cursorAlreadyInNextNode =
+    $isRangeSelection(sel) &&
+    sel.isCollapsed() &&
+    sel.anchor.getNode() === nextNode
+  if (!cursorAlreadyInNextNode) {
+    nextNode.select(0, 0)
+  }
+} else {
+  // ZWSを追加してカーソルを置く（タグが末尾にある場合）
+  const zwsNode = $createTextNode('​')
+  tagNode.insertAfter(zwsNode)
+  zwsNode.select(0, 0)
+}
+```
+
+### エラー検証: validateMessageContent
+
+タグ関連のエラー条件は共通関数`validateMessageContent`として実装しました。エラー条件は3つです。
+
+1. `{`と`}`が正しく対をなしていない場合(`{name`、`name}`、`{{name}}`など)
+2. `{}`内の内容が有効なタグでない場合(`{unknown}`)
+3. 同じタグが連続して出現する場合(`{name}{name}`)
+
+```javascript
+export const validateMessageContent = (
+  text: string,
+  tagConfigs: TagConfig[]
+): string | null => {
+  // 検証前に自動補完を通す
+  // → {Name}のような間違ったケースも{name}に補正されてから検証されるため、不要なエラーが発生しない
+  const normalized = normalizeTagInput(text)
+
+  // ① 括弧の対応チェック: { と } の数を数えながら異常なパターンを検知
+  let openCount = 0
+  for (const ch of normalized) {
+    if (ch === '{') {
+      if (openCount > 0) return invalidBraceError()  // {{ 二重括弧
+      openCount++
+    } else if (ch === '}') {
+      if (openCount === 0) return invalidBraceError()  // 閉じ括弧のみ
+      openCount--
+    }
+  }
+  if (openCount > 0) return invalidBraceError()  // 開いた括弧が閉じられていない
+
+  // ② 有効でないタグ内容
+  const bracketMatches = normalized.match(/\{([^{}]*)\}/g) ?? []
+  for (const full of bracketMatches) {
+    const isValid = tagConfigs.some((c) => {
+      c.pattern.lastIndex = 0
+      return c.pattern.test(full)
+    })
+    if (!isValid) return `未対応のタグが使用されています...`
+  }
+
+  // ③ 同じタグの連続: 正規表現で「同じパターンの繰り返し」を検知
+  const duplicateTagMatch = /(\{[^{}]+\})\1/.exec(normalized)
+  if (duplicateTagMatch) return `${tagName}が連続して挿入されています`
+
+  return null
+}
+```
+
+エラー判定は送信ボタンを押したとき、エラーの解消/更新はすでにエラーが表示されている状態のときだけ入力中に再検証する、というように分けました。
+
+```javascript
+onChange={(text) => {
+  // エラーがすでに表示されている状態でのみ再検証
+  // → 普段は入力するたびに検証が走らない
+  if (tagError && tagConfigs.length > 0) {
+    const newError = validateMessageContent(text, tagConfigs)
+    // エラー内容が変わったときだけstateを更新(不要な再レンダーを防止)
+    if (newError !== tagError) setTagError(newError)
+  }
+}}
+```
+
+こうすることで、エラーがない普段は入力するたびに検証が走らないので快適で、エラー表示中に修正すればリアルタイムでメッセージが更新されたり消えたりします。
+
+### UI実装: エラー表示とタグチップのツールチップ
+
+エラー発生時はエディタとツールバーの両方に赤い枠線を表示し(1つの入力領域に見えるように)、エディタの上にエラーメッセージを表示し、送信ボタンを無効化しつつ、マウスを乗せるとツールチップでエラー内容を表示するようにしました。
+
+```javascript
+<Tooltip placement="top-start" followCursor={false}>
+  <TooltipTrigger>
+    <button
+      type="submit"
+      disabled={isSending || disabled || !!tagError}
+      onClick={() => {
+        const error = validateMessageContent(content, tagConfigs)
+        if (error) { setTagError(error); return }  // エラーがあれば送信を中断
+        onSubmit(...)
+      }}
+    >
+      <Icon icon="letter" />
+    </button>
+  </TooltipTrigger>
+  {tagError && <TooltipContent>{tagError}</TooltipContent>}
+</Tooltip>
+```
+
+タグチップにマウスを乗せると「送信時に、各学生の姓に置換されます」のようなツールチップを表示したいと考えました。しかしLexicalの`createDOM`はReactコンポーネントではなく純粋なHTML要素を返すため、プロジェクトで使っている`<Tooltip>`Reactコンポーネントをそのまま付けることができませんでした。そこで`mouseenter`/`mouseleave`イベントをDOMに直接付け、ツールチップ要素を`document.body`に命令的に生成/削除する方式で実装しました。
+
+```javascript
+// createDOM内部
+dom.addEventListener('mouseenter', () => {
+  if (this.__tooltipDescription) showTooltip(dom, this.__tooltipDescription)
+})
+dom.addEventListener('mouseleave', () => {
+  hideTooltip()
+})
+
+// ツールチップの表示/非表示
+const showTooltip = (dom: HTMLElement, description: string) => {
+  let tooltip = document.getElementById('lexical-tag-tooltip')
+  if (!tooltip) {
+    tooltip = document.createElement('div')
+    tooltip.id = 'lexical-tag-tooltip'
+    document.body.appendChild(tooltip)
+  }
+  tooltip.textContent = description
+
+  // タグチップの上部中央に位置させる
+  const rect = dom.getBoundingClientRect()
+  tooltip.style.transform = `translate(${'...'}px, ${'...'}px)`
+}
+
+const hideTooltip = () => {
+  document.getElementById('lexical-tag-tooltip')?.remove()
+}
+```
+
+Reactの状態やコンポーネントツリーの外にある要素を扱う場合は、`document.body`に直接付ける方式がシンプルです。Lexicalノードの中でReactコンポーネントのライフサイクルを管理しようとすると複雑さが大きく増すため、このケースでは純粋なDOM操作の方が適していました。
+
+加えて、2つのちょっとしたUIバグもありました。
+
+- **Tooltipの`placement`命名規則**: LTR基準で`end`は右、`start`は左に伸びていきます。送信ボタンが画面右端にあるため`top-end`を使うとツールチップが画面外に切れてしまいました。`top-start`に変更して解決しました。
+- **Tooltipのちらつき**: マウスがボタン(トリガー)からツールチップ(コンテンツ)へ移動する瞬間、ボタンのhover状態が一瞬切れてツールチップが消えてまた現れるループがありました。ツールチップのコンテンツに`pointer-events: none`を指定すると、マウスがツールチップの上にあってもボタンのhover状態が維持され、解決します。
+
+---
+
+## まとめ: 実装時の注意点
+
+- `setTextContent()`の後は`select()`でカーソル位置を再指定する必要があります。そうしないとカーソルがノードの先頭にリセットされます。
+- 隣接する`TextNode`はLexicalが自動的に結合するため、ZWSを挿入する前に次のノードがテキストかどうかを先に確認する必要があります。
+- ノード関連の補正ロジックは`registerUpdateListener`より`registerNodeTransform`の方が良いです。更新サイクルの中で実行されるため二重更新がなく、selectionも安定します。
+- `contentEditable=false`と`__text=macroKey`はどちらも必要です。片方だけだとカーソルの侵入やオフセット計算のエラーが起きます。
+- ZWSは見えませんがカーソル位置を2つ(offset 0, 1)持つため、矢印キー移動時に飛び越す処理が必要です。
+- `registerCommand`で矢印キーを横取りしても効かない場合は、DOMの`keydown`をcapture phaseで直接キャッチする方式の方が信頼性があります。
+- 検証ロジックはLexicalに依存しない独立した関数として作っておけば、後で`textarea`のような別の画面でも再利用できます。
+
+---
+
+## 実際の動作画面
+
+言葉で説明するより実際に見た方が早いと思い、実際に動作する画面を収めてみました🎬
+
+タグボタンを押すと名前タグが挿入され、マウスを乗せるとツールチップが表示されます。
+
+<video loop autoPlay muted playsInline controls style={{ width: '100%', height: 'auto' }}>
+  <source src="/posts/workLog/lexicalNameTag/input.webm" type="video/webm" />
+</video>
+
+`{name}`のように直接入力しても同じタグに自動変換されます。
+
+<video loop autoPlay muted playsInline controls style={{ width: '100%', height: 'auto' }}>
+  <source src="/posts/workLog/lexicalNameTag/name.webm" type="video/webm" />
+</video>
+
+---
+
+## リリース後: どれくらい使われているか
+
+機能をリリースして一定期間が経った後、PDMが効果検証の結果を集計して共有してくれました。
+
+- **オファー承諾後の自動メッセージ**: 4,033 / 19,192件(21.01%)で名前タグを使用
+- **メッセージ一括送信**: 文面ベースで59 / 404件(14.60%)、送信単位ベースで80 / 740件(10.81%)で使用
+- **主な利用シナリオ**: オファー承諾後に連絡が途絶えた候補者へ再度連絡する際、ステータス管理→一括送信(名前タグ使用)の流れで特に活用されていることが確認できました。
+
+![リリース後の効果検証](/posts/workLog/lexicalNameTag/효과검증.avif)
+
+この機能が特に良かった理由は、Slackのメンションのようにすでに多くの人に馴染みのある有名なパターンだったこともあります。フロントエンドエンジニアとして、ユーザーが直接触って能動的にアクションを起こす、反応の大きい機能を作れたことに大きな意味がありました。さらに実際の利用数値まで良い結果が出て、より手応えのある仕事になりました😊
+
+---
+
+## おわりに
+
+振り返ってみると、カーソル1つのために何日も格闘し、ありとあらゆるエッジケースに遭遇しましたが、それだけ楽しく作れた機能でした。完成した後、実際によく使われているのを見て、より嬉しかったです。
+
+Lexicalは公式ドキュメントが不足していて迷う瞬間も多かったですが、カスタムノードとtransformで思い通りのものを正確に作れるという点が、なかなか魅力的なライブラリでした。
+
+この記事がLexicalで何か作ってみようとしている方々の役に立てば嬉しいです🙂

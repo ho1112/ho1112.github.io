@@ -1,0 +1,532 @@
+---
+title: 'Lexical로 만든 스카우트 메시지 이름 자동치환 태그'
+desc: 스카우트 메시지에 {name} 태그를 넣으면 발송 시 자동으로 후보자 이름으로 치환되는 기능을 Lexical로 구현한 과정을 정리했습니다. 라이브러리 비교, POC 검증, 커서 위치 버그와의 사투, 릴리스 후 실제 사용률까지 기록입니다.
+date: 2026-09-23
+thumbnail: /posts/workLog/lexicalNameTag/thumb.avif
+---
+
+## 머지 태그를 채팅 메시지에 구현하기
+
+PDM으로부터 문의를 받았습니다. 스카우트 메시지에 `「{name}さん、はじめまして」`처럼 미리 입력해두면 발송 시점에 `{name}` 부분이 후보자 이름으로 자동 치환되는 기능이 필요하다는 요청이었습니다. 정식 기획에 들어가기 전에 기술적으로 실현 가능한 범위를 먼저 확인해달라는 의뢰였습니다.
+
+이런 형태의 기능에서 가장 먼저 떠오르는 대표적인 사례는 Slack의 `@멘션`입니다. 하지만 요구사항을 들여다보면 다른 점이 있었습니다. 메시지가 쓰이는 곳은 후보자 한 명에게 즉시 보내는 1:1 발송뿐만이 아니었습니다.
+
+- **일괄 발송**: 여러 후보자에게 동시에 보내는 경우입니다. 애초에 "이 사람"을 선택할 단일 대상이 없습니다.
+- **예약 발송**: 태그를 입력하는 시점과 실제로 이름이 채워지는 발송 시점이 다릅니다.
+- **템플릿**: 나중에 재사용할 메시지 양식을 미리 저장해두는 기능입니다. 저장 시점에는 받는 사람이 아예 정해져 있지 않습니다.
+
+오히려 1:1 발송을 제외하면 `{name}`을 즉시 실제 이름으로 바꾸는 게 아니라 매크로 형태 그대로 저장해둬야 하는 케이스가 더 많았습니다. 즉 사용자가 팝업에서 대상을 골라 삽입하는 멘션 방식이 아니라 `{name}`이라는 매크로를 심어두면 이후 시점(발송 또는 템플릿 사용)에 일괄 치환되는 구조가 필요했습니다.
+
+이렇게 미리 심어둔 표시가 나중에 실제 값으로 바뀌는 방식은 알고 보니 이메일 마케팅 툴에서 이미 **머지 태그(merge tag)** 라는 이름으로 흔히 쓰이고 있었습니다. `{{FirstName}}` 같은 태그를 넣어두면 발송 시점에 수신자별 실제 이름으로 자동 치환되는 것과 같은 원리입니다.
+
+커서가 놓일 위치, 개행 시 동작, 마우스를 올렸을 때의 툴팁 같은 세부 UX는 이 요청에 포함돼 있지 않았습니다. 이런 부분은 Slack 등 대표적인 채팅 UI를 참고하며 직접 설계했습니다.
+
+이 요구사항이 실제로 구현 가능한지 어디까지 구현할 수 있는지를 먼저 POC(Proof of Concept)로 검증하기로 했습니다.
+
+---
+
+## 라이브러리 검토: react-mentions, Tiptap, 그리고 Lexical
+
+POC에 들어가기에 앞서 어떤 방식으로 구현할지부터 정리했습니다. 필요한 기능은 다음과 같았습니다.
+
+1. **매크로 자동 치환**: 팝업 없이 `{name}` 같은 패턴을 입력하는 즉시 칩으로 변환
+2. **UX 디테일**: 백스페이스 한 번에 칩이 덩어리째 삭제
+3. **UI 분기**: 1:1 발송 시 파란 칩, 일괄 발송 시 회색 칩처럼 상태에 따라 다른 UI
+4. **IME 안정성**: 일본어 입력 환경에서 고스트 텍스트 없이 안정적으로 동작
+5. **순수 텍스트 최적화**: 스카우트 메시지는 서식 없는 채팅 입력창이라 볼드체, 이탤릭체 같은 리치 텍스트 기능이 필요 없습니다. 오히려 이런 기능이 기본 탑재돼 있으면 매크로 칩과 서식이 겹치는 엣지 케이스나 불필요한 툴바 UI까지 신경 써야 해서 없는 편이 구현과 유지보수 모두에 유리합니다.
+
+이 기준으로 세 후보를 비교했습니다.
+
+| 평가 항목 | <span style={{ whiteSpace: 'nowrap' }}>가중치</span> | **react-mentions** | **Tiptap** | **Lexical** |
+| --- | --- | --- | --- | --- |
+| 매크로 자동 치환 (팝업 없이) | Max | 1.0 (동작 원리 자체가 위배됨) | 5.0 (InputRules로 기본 지원) | 5.0 (TextTransform으로 완벽 지원) |
+| UX 디테일 (덩어리 삭제) | High | 2.0 (커서 계산 등 커스텀 필요) | 4.5 (Atom Node로 가능) | 5.0 (`token` 모드로 간단히 처리) |
+| UI 분기 (1:1 vs 일괄) | High | 2.0 (CSS 꼼수 필요) | 4.5 (NodeView에 React 연결) | 5.0 (React 컴포넌트 연동이 자연스러움) |
+| IME 안정성 | High | 2.0 (투명 레이어 방식이라 고스트 발생) | 4.5 (ProseMirror 기반, 안정적) | 5.0 (안정적) |
+| 순수 텍스트 최적화 | Mid | 4.0 (단순 텍스트 전용이라 유리) | 3.0 (Rich Text 코어가 기본 포함) | 5.0 (`PlainTextPlugin` 제공) |
+| 개발 생산성 (러닝커브) | Mid | 3.5 (시작은 쉽지만 요구사항 앞에서 한계) | 4.0 (문서 좋고 직관적) | 2.5 (초기 진입장벽이 가장 높음) |
+| **총점** | - | **14.5** | **25.5** | **27.5** |
+
+`react-mentions`는 애초에 "사용자가 목록에서 골라 삽입"하는 방식으로 설계된 라이브러리라 팝업 없는 자동 치환이라는 핵심 요구사항 자체와 동작 원리가 맞지 않았습니다. 커서 위치를 수동으로 계산하고 투명 레이어를 덧씌우는 식의 커스텀이 필요했습니다. 이건 시작부터 기술 부채를 쌓는 방식이라 판단해 초반에 제외했습니다.
+
+남은 건 에디터 프레임워크인 Tiptap과 Lexical이었습니다.
+
+### Tiptap의 딜레마
+
+Tiptap은 태생이 '노션 같은 리치 텍스트 에디터'입니다. 아무 설정 없이 헤드리스로 쓸 수도 있지만, 공식 문서와 예제 대부분이 `@tiptap/starter-kit`을 설치한 상태를 기준으로 하고 있습니다. 이 패키지에는 볼드, 이탤릭, 리스트 변환(`-`를 치면 리스트로 바뀌는 등)이 기본 포함돼 있어서 채팅 입력창처럼 쓰려면 이 기능들을 하나하나 꺼내는 작업이 필요했습니다.
+
+`StarterKit`을 아예 빼고 밑바닥부터 조립해도 근본적인 문제가 하나 남습니다. Tiptap(ProseMirror) 구조상 텍스트를 입력하려면 `Paragraph` 확장이 필수라서 결국 `<p>` 태그를 안고 갈 수밖에 없습니다. 채팅 입력창 UI에 맞추려면 이 태그로 인한 스타일을 계속 상쇄해야 하는 셈입니다.
+
+또한 Tiptap은 순수 자바스크립트 엔진인 ProseMirror를 React로 감싼 구조라서 칩 안에 React 컴포넌트(예: 파란색 이름 칩)를 넣으려면 `ReactNodeViewRenderer`라는 다리를 하나 거쳐야 합니다.
+
+### Lexical의 방식
+
+Lexical은 Meta가 React와 함께 쓰기 좋게 처음부터 설계한 엔진입니다. `LexicalComposer`만 띄우면 키보드를 쳐도 글자 입력조차 안 되는 완전한 빈 상태에서 시작합니다. 글자 입력이 필요하면 `PlainTextPlugin`을 붙이고, 태그 변환이 필요하면 직접 만든 변환 로직을 붙이는 식으로 필요한 기능만 정확히 조립할 수 있습니다.
+
+칩 노드를 만들 때 쓰는 `DecoratorNode`는 함수 안에서 `return <MentionChip name="田中" />` 처럼 그대로 React JSX를 반환하면 끝입니다. 기존 React 컴포넌트 개발하듯 props를 내려주고 상태를 관리할 수 있습니다.
+
+### 결론
+
+그래서 초반 며칠의 러닝커브만 넘기면 채팅 입력창이라는 목적에 정확히 맞고 React 컴포넌트 삽입도 자연스러운 Lexical이 낫다고 판단했습니다. `StarterKit`을 덜어내고 `<p>` 태그를 상정해야 하는 Tiptap보다 필요한 것만 하나씩 조립하는 Lexical의 헤드리스 방식이 이 기능의 성격과 더 잘 맞았습니다.
+
+다른 라이브러리를 고를 때도 편의 기능이 빵빵한 쪽보다는 커스텀이 용이한 헤드리스 쪽으로 하게 됐는데 이번에도 역시 헤드리스가 정답이었네요 🙂
+
+---
+
+## POC: 무엇이, 어디까지 가능한가
+
+선정한 Lexical로 짧은 기간 동안 핵심 동작의 실현 가능성을 검증했습니다. PDM이 요청한 건 이름이 자동으로 치환되는 기능 자체였고 하이라이트 색상이나 툴팁, 백스페이스로 덩어리째 삭제하는 것 같은 세부 UX는 사양에 없었습니다. 이 부분은 Slack 등을 참고하며 이것저것 실험해보고 직접 구현했습니다. 이 단계에서 다음까지 가능함을 확인했습니다.
+
+- 입력 영역에서의 하이라이트 (색상, 폭 조정 가능)
+- 마우스 오버/키보드 커서에 반응하는 툴팁 표시
+- 백스페이스로 태그를 토큰(덩어리) 단위로 삭제
+- 복사&붙여넣기, Undo(Ctrl+Z) 대응
+- 사용자가 `{Name}`, `{NAME}`, 전각 `｛name｝` 처럼 잘못 입력해도 정규식 기반으로 감지해 정규화
+
+![POC 조사 결과 공유](/posts/workLog/lexicalNameTag/poc1.avif)
+
+이 조사 결과를 팀에 공유했습니다. 하이라이트를 포함해 구현이 가능하다는 것이 확인되면서 정식 설계가 의뢰됐고 생각보다 반응이 좋아서 뿌듯했습니다 🎉
+
+![동료 반응](/posts/workLog/lexicalNameTag/poc2.avif)
+
+이 POC 결과를 바탕으로 PDM이 최종 사양을 확정해 팀에 공유했습니다. 이후 정식 개발이 시작됐습니다.
+
+![아침조회 공유 자료](/posts/workLog/lexicalNameTag/poc공유.avif)
+
+POC는 딱 "된다"는 것만 보여주는 단계였습니다. 진짜 고생은 이걸 실제 서비스에 붙이면서부터 시작됐습니다 😅
+
+---
+
+## 실제 구현에서 만난 진짜 문제들
+
+### 기본 구조: 태그를 특수 노드로 만들기
+
+Lexical에서는 에디터 안의 내용이 **노드(Node)** 단위로 관리됩니다. 일반 텍스트는 `TextNode`, 줄바꿈은 `ParagraphNode` 등으로 존재합니다.
+
+`{name}` 태그를 특수하게 취급하기 위해 `TextNode`를 상속한 커스텀 노드 `MacroTagNode`를 만들었습니다.
+
+```javascript
+export class MacroTagNode extends TextNode {
+  __macroKey: string    // 실제 텍스트값: "{name}"
+  __tagLabel: string | undefined  // 화면 표시용 라벨: "名前" 등
+
+  createDOM(config: EditorConfig): HTMLElement {
+    const dom = super.createDOM(config)
+
+    dom.contentEditable = 'false'  // (1) 태그 안에 커서 침투 방지
+    dom.className = styles['macro-tag']
+    dom.textContent = this.__tagLabel ?? this.__macroKey  // (2) 화면에는 라벨 표시
+    return dom
+  }
+
+  // 태그 바로 앞/뒤에 입력한 문자가 태그 안으로 흡수되지 않도록
+  canInsertTextBefore(): boolean { return false }
+  canInsertTextAfter(): boolean { return false }
+}
+```
+
+여기서 중요한 포인트가 두 가지 있습니다.
+
+**(1) `contentEditable = 'false'`**
+이 속성을 `false`로 설정하면 그 요소 안으로 커서가 들어가지 않습니다. 설정하지 않으면 `{name}`의 `n`과 `a` 사이에 커서가 위치하는 등 이상한 동작이 발생합니다.
+
+**(2) `__text = macroKey` (내부 텍스트값을 `{name}`으로 유지)**
+Lexical은 노드의 텍스트 길이를 바탕으로 복사/붙여넣기나 커서 이동 시 위치를 계산합니다. `__text`를 `{name}`으로 유지하지 않으면 복사할 때 오프셋 계산이 틀어집니다. 화면에 보이는 텍스트와 내부 값이 달라도 되지만, 내부 값의 길이는 정확해야 합니다.
+
+### 자동보완: 조금 틀린 입력도 올바르게 변환
+
+사용자가 실수로 `{ Name }`이나 `｛name｝`처럼 입력해도 `{name}`으로 자동 변환되도록 처리했습니다.
+
+| 입력 | 변환 후 |
+|------|---------|
+| `{Name}` | `{name}` |
+| `｛name｝` (전각 괄호) | `{name}` |
+| `{ name }` (앞뒤 공백) | `{name}` |
+| `{ｎａｍｅ}` (전각 알파벳) | `{name}` |
+| `{na me}` (중간 공백) | `{name}` |
+
+```javascript
+export const normalizeTagInput = (text: string): string =>
+  text.replace(/[｛{]([^｝}]*)[｝}]/g, (_, inner: string) => {
+    const normalized = inner
+      .replace(/\s/g, '')           // 공백 제거
+      .toLowerCase()                // 대문자 → 소문자
+      .replace(/[Ａ-Ｚａ-ｚ]/g, (c) => // 전각 알파벳 → 반각
+        String.fromCharCode(c.charCodeAt(0) - 0xfee0)
+      )
+    return `{${normalized}}`
+  })
+```
+
+이 함수를 Lexical의 `registerNodeTransform`(노드 내용이 바뀔 때마다 자동 호출되는 콜백) 안에서 실행하면 사용자가 입력할 때마다 실시간으로 변환됩니다.
+
+### 커서 위치와의 싸움
+
+이 구현에서 가장 고생한 부분은 **커서 위치** 였습니다. Lexical의 내부 동작을 모르면 원인을 찾기 어려운 함정이 여러 개 있었습니다.
+
+**함정 1: 텍스트를 바꾼 후 커서가 처음으로 돌아간다**
+`registerNodeTransform` 안에서 노드의 텍스트 내용을 `setTextContent()`로 변경하면 Lexical이 커서 위치를 노드의 맨 앞으로 리셋해버립니다.
+
+예를 들어 `{ name }`을 입력하고 `}`로 닫는 순간 자동보완이 발동해 `{name}`으로 텍스트가 변경되는데 이때 커서가 `{` 앞으로 이동해버립니다.
+
+해결책은 `setTextContent()` 직후 커서 위치를 명시적으로 지정하는 것입니다.
+
+```javascript
+if (text !== rawText) {
+  node.setTextContent(text)  // 텍스트 변경
+  // ← 이 시점에서 커서가 맨 앞으로 리셋된다
+
+  node.select(text.length, text.length)
+  // text.length = 텍스트의 마지막 위치
+  // → 커서를 텍스트 끝으로 되돌린다
+}
+```
+
+`select(a, b)`는 `a` 위치에서 `b` 위치까지 선택하는 메서드입니다. `a === b`면 선택 없이 커서만 그 위치에 놓입니다.
+
+**함정 2: ZWS(보이지 않는 문자)와 노드 병합 문제**
+태그를 삽입한 직후 커서를 태그 바로 오른쪽에 위치시키고 싶었습니다. 하지만 `MacroTagNode` 안에는 커서가 들어가지 않기 때문에 태그 뒤에 커서가 놓일 자리가 필요합니다.
+
+그래서 ZWS(Zero Width Space, 폭이 0인 보이지 않는 공백 문자)를 태그 바로 뒤에 삽입하는 방법을 썼습니다. 화면에는 아무것도 보이지 않지만 Lexical 내부에서는 텍스트 노드로 존재하므로 커서가 거기에 위치할 수 있습니다.
+
+```javascript
+const zwsNode = $createTextNode('​')  // 보이지 않는 공백 문자
+tagNode.insertAfter(zwsNode)
+zwsNode.select(0, 0)  // ZWS 앞에 커서를 놓는다
+```
+
+하지만 태그 다음에 이미 텍스트가 있는 경우에는 ZWS를 삽입하면 안 됩니다. Lexical은 내부 최적화로 같은 스타일의 인접한 `TextNode`를 자동으로 병합해버립니다. ZWS 노드와 다음 텍스트 노드가 병합되면 별도로 만들어둔 "ZWS 제거 처리"가 발동해 커서가 엉뚱한 위치로 가버립니다.
+
+```javascript
+const nextNode = tagNode.getNextSibling()  // 태그 다음 노드를 확인
+
+if ($isTextNode(nextNode)) {
+  // 다음에 텍스트가 있는 경우: ZWS 없이 그 텍스트의 맨 앞에 커서를 놓는다
+  nextNode.select(0, 0)
+} else {
+  // 다음에 텍스트가 없는 경우: ZWS를 삽입하고 거기에 커서를 놓는다
+  const zwsNode = $createTextNode('​')
+  tagNode.insertAfter(zwsNode)
+  zwsNode.select(0, 0)
+}
+```
+
+**함정 3: ZWS 앞 vs 뒤**
+ZWS 노드에서 `select(0, 0)`은 문자의 **앞** 에 커서를 놓는 것입니다. `select(1, 1)`을 하면 문자 **뒤** 에 커서가 가서 왼쪽 화살표 키로 태그를 지나치려면 2번 눌러야 하는 불편함이 생깁니다.
+
+```javascript
+zwsNode.select(0, 0)  // ✅ ZWS 앞 → 화살표 1번으로 태그 왼쪽으로 이동 가능
+zwsNode.select(1, 1)  // ❌ ZWS 뒤 → 화살표 2번 필요
+```
+
+**함정 4: 태그가 줄의 맨 앞/줄바꿈 직후에 오면 커서가 사라진다**
+`MacroTagNode` 앞의 텍스트를 모두 삭제해서 태그가 단락의 첫 번째 노드가 되면, 태그 앞에 커서를 놓을 곳이 없어서 커서가 사라져버립니다. 줄바꿈(`LineBreakNode`) 직후에 태그가 오는 경우도 마찬가지입니다.
+
+```
+{name}안녕하세요         ← 1번째 줄
+{name}반갑습니다         ← 2번째 줄 (LineBreak 직후의 태그)
+```
+
+이 구조에서 두 번째 태그 앞에는 클릭이나 화살표 키로 이동할 자리가 없습니다. `registerNodeTransform(MacroTagNode)`로 태그가 단락 첫 번째이거나 LineBreak 직후에 있으면 자동으로 ZWS를 앞에 삽입하도록 해결했습니다.
+
+```javascript
+editor.registerNodeTransform(MacroTagNode, (node) => {
+  const prevSibling = node.getPreviousSibling()
+  // 앞에 아무것도 없거나(단락 선두), LineBreak 직후인 경우만 처리
+  if (prevSibling !== null && !$isLineBreakNode(prevSibling)) return
+
+  // 태그 앞에 ZWS를 삽입 → 커서가 거기에 놓일 수 있게 된다
+  const zwsNode = $createTextNode('​')
+  node.insertBefore(zwsNode)
+
+  // 텍스트 삭제 직후는 커서가 태그 위 또는 단락 선두의 무효 위치에 있으므로 ZWS로 이동
+  const selection = $getSelection()
+  if (!$isRangeSelection(selection) || !selection.isCollapsed()) return
+  const anchorNode = selection.anchor.getNode()
+  if (anchorNode === node || (anchorNode === node.getParent() && selection.anchor.offset === 0)) {
+    zwsNode.select(0, 0)
+  }
+})
+```
+
+처음에는 `registerUpdateListener`로 구현했는데, 업데이트가 끝난 뒤에 발화되기 때문에 ZWS 삽입을 위한 추가 `editor.update()`가 필요해 업데이트 사이클이 두 번 돌았고, commit 이후 시점이라 selection 상태도 신뢰하기 어려웠습니다. `registerNodeTransform`은 업데이트 사이클 안에서 실행되기 때문에 이중 업데이트가 없고 selection도 안정적입니다. 특정 노드와 관련된 보정 로직은 transform이 더 적합합니다.
+
+**함정 5: ZWS의 보이지 않는 2개 커서 위치**
+ZWS는 폭이 0인 문자지만 텍스트 노드 안에서는 어엿한 1글자라 커서 위치를 2개(offset 0과 1) 가집니다. 화면상으로는 둘 다 같은 위치로 보이지만 키보드 조작에서는 별개의 위치입니다. 예를 들어 태그 직후에서 왼쪽 화살표를 누르면 offset 1에 도착하고 다시 누르면 offset 0으로 이동하는데 시각적으로는 아무 변화가 없어 "화살표를 눌렀는데 안 움직인다"는 느낌을 줍니다.
+
+좌우 화살표를 눌렀을 때 커서가 ZWS 위에 있으면 다음 의미 있는 위치로 한 번에 건너뛰도록 처리해서 해결했습니다.
+
+```javascript
+// 왼쪽 화살표: ZWS(LineBreak 직후) 위에서 왼쪽 → 이전 줄 끝으로 점프
+if (
+  $isTextNode(node) &&
+  node.getTextContent() === '​' &&
+  $isMacroTagNode(node.getNextSibling()) &&
+  $isLineBreakNode(node.getPreviousSibling())
+) {
+  const lineBreak = node.getPreviousSibling()
+  const beforeLineBreak = lineBreak?.getPreviousSibling()
+  if ($isTextNode(beforeLineBreak)) {
+    // 이전 줄 끝으로 이동
+    beforeLineBreak.select(
+      beforeLineBreak.getTextContentSize(),
+      beforeLineBreak.getTextContentSize()
+    )
+  }
+}
+```
+
+오른쪽 화살표도 대칭적으로 처리했습니다(ZWS 위에서 오른쪽 → 태그를 건너뛰어 다음 위치로)
+
+**함정 6: `registerCommand`로 화살표 키 가로채기가 안 통할 때**
+위 문제를 처음에는 Lexical의 명령 시스템으로 풀려고 했습니다.
+
+```javascript
+editor.registerCommand(
+  KEY_ARROW_LEFT_COMMAND,
+  (event) => {
+    // 조건 체크
+    event.preventDefault()
+    targetNode.select(...)
+    return true  // 명령 처리됨을 알림
+  },
+  COMMAND_PRIORITY_NORMAL
+)
+```
+
+이론적으로는 동작해야 했지만 실제로는 커서가 여전히 원래 가던 곳으로 이동했습니다 🤔 `preventDefault()`가 Lexical과 브라우저의 keydown 처리 타이밍이 어긋나 제대로 통하지 않았습니다. 브라우저가 먼저 커서를 옮긴 다음 Lexical의 selection 동기화 로직이 우리가 지정한 selection을 덮어써버렸기 때문입니다.
+
+DOM의 `keydown` 이벤트를 **capture phase** 로 직접 잡아서 해결했습니다. capture phase는 이벤트가 자식 요소로 전파되기 전 단계라 Lexical보다 먼저 받을 수 있습니다.
+
+```javascript
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key !== 'ArrowLeft') return
+
+  // 조건 체크
+  let targetKey = null
+  editor.getEditorState().read(() => {
+    // ... selection을 보고 어디로 이동할지 결정
+  })
+
+  if (targetKey) {
+    event.preventDefault()              // 브라우저 기본 동작 차단
+    event.stopImmediatePropagation()    // Lexical에도 안 가게 차단
+    editor.update(() => {
+      // 명시적으로 커서를 원하는 위치로 이동
+    })
+  }
+}
+
+// editor의 root 요소(=contenteditable div)가 준비되면 listener 부착
+editor.registerRootListener((rootElement, prevRootElement) => {
+  if (prevRootElement) prevRootElement.removeEventListener('keydown', handleKeyDown, true)
+  if (rootElement) rootElement.addEventListener('keydown', handleKeyDown, true)
+})
+```
+
+`addEventListener`의 세 번째 인자 `true`가 capture phase 등록입니다. `registerRootListener`를 쓰는 이유는 `editor.getRootElement()`가 처음에는 `null`일 수 있기 때문입니다(Plugin이 ContentEditable보다 먼저 마운트되는 경우). `registerRootListener`는 root 요소가 준비/변경될 때마다 콜백을 호출합니다.
+
+**함정 7: transform은 붙여넣기·일괄 삽입 시에도 발동한다**
+transform이 "사용자가 타이핑할 때만 발동한다"고 착각하기 쉽지만, `TextNode`가 변경되는 모든 상황에서 발동합니다. 붙여넣기(paste)나 코드에서의 일괄 삽입도 포함됩니다.
+
+사용자가 `111{name}222`를 붙여넣으면 커서는 텍스트 끝(`222` 뒤)에 위치한 채로 transform이 발동해 `{name}`을 `MacroTagNode`로 변환합니다. 기존 코드는 `nextNode.select(0, 0)`으로 커서를 태그 바로 뒤(`222` 앞)로 강제 이동시켰습니다. 타이핑 시에는 커서가 이미 태그 위치에 있어 자연스럽지만 paste·일괄 삽입에서는 커서가 더 뒤에 있는데 강제로 앞으로 당겨지는 버그였습니다.
+
+transform 내에서 커서가 이미 `nextNode` 안에 있다면 이동시키지 않도록 조건을 추가해 해결했습니다.
+
+```javascript
+const nextNode = tagNode.getNextSibling()
+if ($isTextNode(nextNode)) {
+  const sel = $getSelection()
+  const cursorAlreadyInNextNode =
+    $isRangeSelection(sel) &&
+    sel.isCollapsed() &&
+    sel.anchor.getNode() === nextNode
+  if (!cursorAlreadyInNextNode) {
+    nextNode.select(0, 0)
+  }
+} else {
+  // ZWSを追加してカーソルを置く（タグが末尾にある場合）
+  const zwsNode = $createTextNode('​')
+  tagNode.insertAfter(zwsNode)
+  zwsNode.select(0, 0)
+}
+```
+
+### 에러 검증: validateMessageContent
+
+태그 관련 에러 조건은 공통 함수 `validateMessageContent`로 구현했습니다. 에러 조건은 세 가지입니다.
+
+1. `{`와 `}`가 올바르게 쌍을 이루지 않는 경우 (`{name`, `name}`, `{{name}}` 등)
+2. `{}` 안의 내용이 유효한 태그가 아닌 경우 (`{unknown}`)
+3. 같은 태그가 연속으로 등장하는 경우 (`{name}{name}`)
+
+```javascript
+export const validateMessageContent = (
+  text: string,
+  tagConfigs: TagConfig[]
+): string | null => {
+  // 검증 전에 자동보완을 통과시킨다
+  // → {Name}처럼 틀린 케이스도 {name}으로 보정된 후 검증되므로 불필요한 에러가 발생하지 않는다
+  const normalized = normalizeTagInput(text)
+
+  // ① 괄호 쌍 체크: { 와 } 의 수를 세면서 비정상적인 패턴을 감지
+  let openCount = 0
+  for (const ch of normalized) {
+    if (ch === '{') {
+      if (openCount > 0) return invalidBraceError()  // {{ 이중 괄호
+      openCount++
+    } else if (ch === '}') {
+      if (openCount === 0) return invalidBraceError()  // 닫는 괄호만 있음
+      openCount--
+    }
+  }
+  if (openCount > 0) return invalidBraceError()  // 열린 괄호가 닫히지 않음
+
+  // ② 유효하지 않은 태그 내용
+  const bracketMatches = normalized.match(/\{([^{}]*)\}/g) ?? []
+  for (const full of bracketMatches) {
+    const isValid = tagConfigs.some((c) => {
+      c.pattern.lastIndex = 0
+      return c.pattern.test(full)
+    })
+    if (!isValid) return `未対応のタグが使用されています...`
+  }
+
+  // ③ 같은 태그 연속: 정규표현으로 "같은 패턴의 반복"을 감지
+  const duplicateTagMatch = /(\{[^{}]+\})\1/.exec(normalized)
+  if (duplicateTagMatch) return `${tagName}が連続して挿入されています`
+
+  return null
+}
+```
+
+에러 판정은 전송 버튼을 눌렀을 때, 에러 해소/갱신은 이미 에러가 표시된 상태에서만 입력 중에 재검증하도록 나눴습니다.
+
+```javascript
+onChange={(text) => {
+  // 에러가 이미 표시된 상태에서만 재검증
+  // → 평소에는 입력할 때마다 검증이 돌지 않는다
+  if (tagError && tagConfigs.length > 0) {
+    const newError = validateMessageContent(text, tagConfigs)
+    // 에러 내용이 변했을 때만 state를 업데이트 (불필요한 리렌더 방지)
+    if (newError !== tagError) setTagError(newError)
+  }
+}}
+```
+
+이렇게 하면 에러가 없는 평소에는 입력할 때마다 검증이 돌지 않아 쾌적하고 에러 표시 중에 수정하면 실시간으로 메시지가 업데이트되거나 사라집니다.
+
+### UI 구현: 에러 표시와 태그 칩 툴팁
+
+에러 발생 시 에디터와 툴바 양쪽에 빨간 테두리를 표시하고(하나의 입력 영역으로 보이도록) 에디터 위에 에러 메시지를 띄우고, 전송 버튼을 비활성화하면서 마우스를 올리면 툴팁으로 에러 내용을 보여주도록 했습니다.
+
+```javascript
+<Tooltip placement="top-start" followCursor={false}>
+  <TooltipTrigger>
+    <button
+      type="submit"
+      disabled={isSending || disabled || !!tagError}
+      onClick={() => {
+        const error = validateMessageContent(content, tagConfigs)
+        if (error) { setTagError(error); return }  // 에러 있으면 전송 중단
+        onSubmit(...)
+      }}
+    >
+      <Icon icon="letter" />
+    </button>
+  </TooltipTrigger>
+  {tagError && <TooltipContent>{tagError}</TooltipContent>}
+</Tooltip>
+```
+
+태그 칩에 마우스를 올리면 "送信時に、各学生の姓に置換されます"(발송 시 각 학생의 성으로 치환됩니다) 같은 툴팁을 표시하고 싶었습니다. 하지만 Lexical의 `createDOM`은 React 컴포넌트가 아닌 순수 HTML 요소를 반환하기 때문에 프로젝트에서 쓰는 `<Tooltip>` React 컴포넌트를 그대로 붙일 수 없었습니다. 그래서 `mouseenter`/`mouseleave` 이벤트를 DOM에 직접 달고, 툴팁 요소를 `document.body`에 명령형으로 생성/제거하는 방식으로 구현했습니다.
+
+```javascript
+// createDOM 내부
+dom.addEventListener('mouseenter', () => {
+  if (this.__tooltipDescription) showTooltip(dom, this.__tooltipDescription)
+})
+dom.addEventListener('mouseleave', () => {
+  hideTooltip()
+})
+
+// 툴팁 표시/숨김
+const showTooltip = (dom: HTMLElement, description: string) => {
+  let tooltip = document.getElementById('lexical-tag-tooltip')
+  if (!tooltip) {
+    tooltip = document.createElement('div')
+    tooltip.id = 'lexical-tag-tooltip'
+    document.body.appendChild(tooltip)
+  }
+  tooltip.textContent = description
+
+  // 태그 칩 위 중앙에 위치
+  const rect = dom.getBoundingClientRect()
+  tooltip.style.transform = `translate(${'...'}px, ${'...'}px)`
+}
+
+const hideTooltip = () => {
+  document.getElementById('lexical-tag-tooltip')?.remove()
+}
+```
+
+React의 상태나 컴포넌트 트리 밖에 있는 요소를 다루는 경우는 `document.body`에 직접 붙이는 방식이 간단합니다. Lexical 노드 안에서 React 컴포넌트의 라이프사이클을 관리하려면 복잡성이 크게 올라가므로 이 케이스는 순수 DOM 조작 쪽이 더 적합했습니다.
+
+덧붙여 두 가지 소소한 UI 버그도 있었습니다.
+
+- **Tooltip `placement` 이름 규칙**: LTR 기준으로 `end`는 오른쪽, `start`는 왼쪽으로 뻗어나갑니다. 전송 버튼이 화면 오른쪽 끝에 있어서 `top-end`를 쓰면 툴팁이 화면 밖으로 잘렸습니다. `top-start`로 바꿔 해결했습니다.
+- **Tooltip 깜빡임**: 마우스가 버튼(트리거)에서 툴팁(콘텐츠)으로 이동하는 순간 버튼의 hover 상태가 잠깐 꺼지면서 툴팁이 사라졌다 다시 나타나는 루프가 있었습니다. 툴팁 콘텐츠에 `pointer-events: none`을 주면 마우스가 툴팁 위에 있어도 버튼의 hover 상태가 유지돼 해결됩니다.
+
+---
+
+## 요약: 구현 시 주의점
+
+- `setTextContent()` 이후에는 `select()`로 커서 위치를 다시 지정해야 합니다. 안 그러면 커서가 노드 맨 앞으로 리셋됩니다.
+- 인접한 `TextNode`는 Lexical이 자동으로 병합하므로 ZWS를 삽입하기 전에 다음 노드가 텍스트인지 먼저 확인해야 합니다.
+- 노드 관련 보정 로직은 `registerUpdateListener`보다 `registerNodeTransform`이 낫습니다. 업데이트 사이클 안에서 실행돼 이중 업데이트가 없고 selection도 안정적입니다.
+- `contentEditable=false`와 `__text=macroKey`는 둘 다 필요합니다. 하나만 있으면 커서 침투나 오프셋 계산 오류가 생깁니다.
+- ZWS는 보이지 않지만 커서 위치를 2개(offset 0, 1) 가지므로 화살표 키 이동 시 건너뛰는 처리가 필요합니다.
+- `registerCommand`로 화살표 키를 가로채는 게 안 통하면 DOM `keydown`을 capture phase로 직접 잡는 방식이 더 신뢰성 있습니다.
+- 검증 로직은 Lexical에 의존하지 않는 독립 함수로 만들어두면 나중에 `textarea` 같은 다른 화면에서도 재사용할 수 있습니다.
+
+---
+
+## 실제 동작 화면
+
+말로 설명하는 것보다 직접 보는 게 빠를 것 같아 실제로 동작하는 화면을 담아봤습니다 🎬
+
+태그 버튼을 누르면 이름 태그가 삽입되고 마우스를 올리면 툴팁이 뜹니다.
+
+<video loop autoPlay muted playsInline controls style={{ width: '100%', height: 'auto' }}>
+  <source src="/posts/workLog/lexicalNameTag/input.webm" type="video/webm" />
+</video>
+
+`{name}`처럼 직접 입력해도 같은 태그로 자동 변환됩니다.
+
+<video loop autoPlay muted playsInline controls style={{ width: '100%', height: 'auto' }}>
+  <source src="/posts/workLog/lexicalNameTag/name.webm" type="video/webm" />
+</video>
+
+---
+
+## 릴리스 후: 얼마나 쓰이고 있을까
+
+기능을 릴리스하고 일정 기간이 지난 뒤 PDM이 효과 검증 결과를 집계해 공유해줬습니다.
+
+- **오퍼 승낙 후 자동 메시지**: 4,033 / 19,192건 (21.01%)에서 이름 태그 사용
+- **메시지 일괄 발송**: 문면 기준 59 / 404건(14.60%), 발송 단위 기준 80 / 740건(10.81%)에서 사용
+- **주요 사용 시나리오**: 오퍼 승낙 후 연락이 끊긴 후보자에게 다시 연락할 때 상태 관리 → 일괄 발송(이름 태그 사용) 흐름에서 특히 활용되는 것으로 확인됐습니다.
+
+![릴리스 후 효과 검증](/posts/workLog/lexicalNameTag/효과검증.avif)
+
+이 기능이 특히 좋았던 이유는 Slack의 멘션처럼 이미 많은 사람들에게 익숙한 유명한 패턴이었기 때문이기도 합니다. 프론트엔드 개발자로서 사용자가 직접 만지고 능동적으로 액션을 취하는 반응이 큰 기능을 만들어볼 수 있었다는 게 의미가 컸습니다. 거기다 실제 사용 수치까지 좋게 나와서 더 보람 있는 작업이었습니다 😊
+
+---
+
+## 마치며
+
+돌아보면 커서 하나 때문에 며칠을 씨름하고 별의별 엣지 케이스를 다 만났지만 그만큼 재밌게 만든 기능이었습니다. 완성하고 나서 실제로 잘 쓰이는 걸 보니 더 뿌듯했고요.
+
+Lexical은 공식 문서가 부족해서 헤매는 순간도 많았지만 커스텀 노드와 transform으로 원하는 걸 정확하게 만들 수 있다는 게 꽤 매력적인 라이브러리였습니다.
+
+이 글이 Lexical로 뭔가 만들어보려는 분들께 도움이 됐으면 좋겠습니다 🙂
