@@ -1,0 +1,134 @@
+---
+title: '🚀 2026-09 W4 #77'
+desc: 대형 PR 가상화 렌더링(GitHub Copilot 앱), 6MB 데스크톱 앱 런타임 tinyjs, Next.js RCE 취약점과 npm 보안 | 2026년 9월 4주차 주간 기술 뉴스레터
+date: 2026-09-26
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 이번 주 핵심 테마
+AI 에이전트가 코드를 쏟아내는 시대에 맞춰, 성능과 품질을 지키는 방법을 다시 묻는 한 주였습니다. React-Redux는 시그널 기반 selector로 dispatch 비용을 줄이려 하고, GitHub Copilot 앱은 100만 줄 PR을 React 밖에서 렌더링하며, Linear는 CI 비용을 다시 설계했습니다. 데스크톱 앱은 tinyjs처럼 6MB대로 작아지고, 브라우저는 Safari 27과 Chrome이 네이티브 기능을 빠르게 늘리고 있습니다. 한편 Next.js의 치명적인 RCE 수정과 공급망 공격 소식은 보안 점검의 필요성을 다시 일깨웁니다.
+
+## 1. 🔍 심층 분석
+- **[Rendering Huge Pull Requests in the GitHub Copilot App](https://github.blog/engineering/user-experience/rendering-huge-pull-requests-in-the-github-copilot-app/)** (출처: *React Status #492*)
+  ![Rendering Huge Pull Requests in the GitHub Copilot App](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wurtgptbln8tma7ldkus.jpg)
+   - 배경: 리팩터링이나 마이그레이션은 하나의 PR로 합쳐야 할 때가 있고, 리뷰 대화가 붙을수록 PR은 더 커집니다. GitHub 팀은 2,200개 파일, 100만 줄 이상의 변경, 400개가 넘는 인라인 코멘트가 있는 PR을 기준으로 Copilot 앱의 diff 화면을 다시 만들었습니다.
+   - 핵심 기능: 코드 행은 높이를 미리 계산할 수 있으므로 가상화, typed array 기반 오프셋 계산, React 컴포넌트 없는 imperative 행 렌더러로 처리합니다. 반면 코멘트는 렌더링해 봐야 높이를 알 수 있어서 높이 계산을 두 영역으로 나눴습니다. 코드 지오메트리는 정확값이 고정이고, 동적 블록(리뷰 스레드, 답글 입력창 등)은 추정 후 측정으로 보정합니다. 측정은 블록마다 ResizeObserver를 두는 대신 스크롤이 멈춘 뒤 뷰포트 약 2400px 안쪽 블록만 한 번에 읽는 방식이고, 보정 시에는 사용자가 보던 행이나 블록을 기준으로 스크롤 위치를 유지합니다.
+   - 코드 예제:
+```text
+     total height = deterministic code height          (exact, known up front)
+                  + Σ dynamic block effective heights   (estimated, then measured)
+                  + scroll padding
+```
+   - 실무 적용: 높이를 예측할 수 없는 콘텐츠가 섞인 가상 리스트(채팅, 댓글 스레드, 피드)에서 "확정 높이"와 "측정 높이"를 별도 인덱스로 분리하는 설계를 참고할 수 있습니다. 글에서는 자체 상태를 점검하는 구조화된 프로브를 화면에 상시 두고, 합성 대형 PR 픽스처로 E2E 예산을 검증하며, 변경, 측정, 개선 루프를 자동화한 과정도 소개합니다.
+   - 주의사항: 옵저버가 자신이 관찰하는 요소의 레이아웃 높이를 직접 갱신하면 피드백 루프가 생깁니다. 또한 "사용자가 스크롤 중인가"를 판별할 때 화면이 스스로 일으킨 스크롤(사이드바 토글 후 재배치 등)과 구분하지 않으면 보정이 건너뛰어져 보던 위치가 밀립니다.
+- **[The Root Scroller and How Not to Lose It](https://polypane.app/blog/the-root-scroller-and-how-not-to-lose-it/)** (출처: *Frontend Focus #759*)
+   - 배경: root scroller는 뷰포트의 스크롤 컨테이너로, 스크롤 복원과 모바일 주소창 접힘 같은 브라우저 기능을 담당합니다.
+   - 핵심 기능: 흔히 쓰는 CSS 패턴이 스크롤을 다른 요소에 넘기면 이런 기능이 사라진다는 점을 데모로 보여줍니다.
+   - 실무 적용: 레이아웃을 `height: 100%`와 내부 스크롤 컨테이너로 구성하는 앱이라면, 뷰포트 스크롤을 잃고 있지는 않은지 점검해 볼 만합니다.
+   - 주의사항: 스크롤 컨테이너를 바꾸는 CSS를 도입할 때는 스크롤 복원과 모바일 주소창 동작이 함께 깨지지 않는지 확인해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The V8 Runtime Undermined My Constant-Time JavaScript Library](https://soatok.blog/2026/09/12/the-v8-javascript-runtime-undermined-my-constant-time-javascript-library/)** (출처: *JavaScript Weekly #803*)
+  + 요약: 분기 없이 작성한 JavaScript라도 V8이 불리언과 `-0`을 처리하는 방식 때문에 CPU 캐시 동작을 통해 비밀 정보가 새어 나갈 수 있음을 다룹니다.
+- **[Helix: How Shopify is Using LLMs to Move Its App Off React Native](https://shopify.engineering/helix)** (출처: *React Status #492*)
+  + 요약: Shopify가 최근 발표한 React Native에서 Swift/Kotlin으로의 이전 작업에서 LLM을 어떻게 활용하는지 그 이면을 보여줍니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[tinyjs: Build JavaScript Desktop Apps in 10MB](https://tinyjs.app/)** (출처: *JavaScript Weekly #803*)
+  ![tinyjs: Build JavaScript Desktop Apps in 10MB](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/l5ejacd7rpbkelmaxdto.jpg)
+  + 개요: txiki.js 기반 JavaScript 백엔드에 OS 네이티브 웹뷰 창(macOS WebKit, Windows WebView2, Linux WebKitGTK)을 결합한 데스크톱 앱 런타임입니다. 공식 사이트 기준으로 배포 크기는 약 6MB입니다(Electron 150MB 이상, Tauri 약 10MB). 페이지와 백엔드는 Unix 소켓으로 통신해 열리는 포트가 없고, 백엔드에서는 파일, 소켓, 프로세스, FFI, sqlite, fetch를 쓸 수 있습니다.
+  + 사용법:
+```bash
+    tinyjs new myapp
+    cd myapp
+    tinyjs dev     # 창이 열리고 핫 리로드
+    tinyjs build   # macOS는 서명된 .app 번들 생성
+```
+```javascript
+    // src/main.js — 백엔드 전체
+    export const api = {
+      hello: async ({ name }) => `hi ${name}`,
+    };
+    // 페이지에서: await tiny.api.call('hello', { name });
+```
+  + 실전 팁: `tinyjs new myapp --template react-ts`처럼 vue-ts, svelte-ts, solid-ts, vanilla-ts 템플릿으로 Vite 기반 프로젝트를 시작할 수 있습니다. 대안으로 뉴스레터는 Electrobun(멀티 윈도우와 GPU 기능은 풍부하지만 런타임이 더 큼), Perry(TypeScript를 네이티브로 컴파일해 AppKit/Win32/GTK4 위젯 사용), Neutralinojs(더 작지만 범용 JS 백엔드가 없음)를 함께 소개합니다. 사이트에 따르면 macOS는 안정 단계이고 Windows와 Linux는 베타이며, 렌더링 엔진이 OS마다 달라 세 플랫폼 모두에서 테스트해야 합니다.
+- **[@shadcn/lint: An Agent-First Linter for Tailwind](https://github.com/shadcn-ui/lint)** (출처: *JavaScript Weekly #803*)
+  + 개요: Tailwind 프로젝트에서 "raw color 금지", "외부에서 `<Button>` 재스타일링 금지" 같은 규칙을 강제하는 ESLint/Oxlint 플러그인입니다. 위반 시 에러 메시지로 에이전트가 정의된 variant와 토큰을 쓰도록 유도합니다.
+  + 실전 팁: 에이전트가 코드를 대량 생성하는 팀에서는 디자인 시스템 규칙을 프롬프트 대신 린트 규칙으로 고정하는 방식이 재현성 면에서 유리합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Playroom: Design with JSX, Powered by Your Own Component Library](https://github.com/seek-oss/playroom)** (출처: *React Status #492*)
+  + 요약: 자체 컴포넌트 라이브러리와 연결된 브라우저 기반 JSX 플레이그라운드로, 편집하는 동안 모든 테마와 뷰포트 너비를 나란히 렌더링합니다.
+- **[pdfcn: Copy-Paste Components for Making PDFs](https://www.pdfcn.dev/)** (출처: *React Status #492*)
+  + 요약: shadcn 방식을 PDF 생성에 적용해 표, 헤더, 목록과 인보이스, 리포트용 블록 컴포넌트를 제공합니다. 렌더링은 헤드리스 브라우저가 필요 없는 WASM 엔진 Takumi 또는 Forme가 담당합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[User-Friendly Nested Tables](https://medium.com/design-bootcamp/designing-nested-tables-the-ux-of-showing-complex-data-without-creating-chaos-0b25f8bdd7d9)** (출처: *Smashing Newsletter #577*)
+  ![Designing Nested Tables: The UX of Showing Complex Data Without Creating Chaos](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d7ea0525-fa02-b297-b2d6-d1d831a73e6e.png)
+  + 핵심 인사이트: 중첩 테이블은 복잡하고 어수선해 보이기 쉽지만, 잘 설계하면 화면을 오가지 않고도 복잡한 정보를 파악하게 해 줍니다. Damilola Bamgbelu의 글은 스캔하기 쉽고 빠른 의사결정을 돕는 중첩 테이블 설계를 단계별로 안내합니다.
+- **["AI, Make the Website Good"](https://www.zachleat.com/web/ai-websites/)** (출처: *Frontend Focus #759*)
+  + 핵심 인사이트: 도구가 무엇이든 결과물의 품질에 신경 쓰는 일이 오히려 더 중요해졌다는 주장입니다. Zach Leatherman은 주요 AI 기업들이 내놓은 프런트 화면을 예로 들어 이를 보여줍니다.
+- **[Do Frameworks Matter Anymore?](https://brookslybrand.com/posts/do-frameworks-matter-anymore/)** (출처: *JavaScript Weekly #803*)
+  + 핵심 인사이트: AI를 쓰면 프레임워크를 쓰거나, 에이전트가 즉석에서 임시 프레임워크를 만들게 됩니다. Remix 팀 구성원인 Brooks Lybrand는 이것이 오히려 더 나은 프레임워크를 원해야 할 이유라고 봅니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Voice AI UX Patterns](https://uxdesign.cc/8-voice-aiux-patterns-81324c8feaa0)** (출처: *Smashing Newsletter #577*)
+  + 요약: 아바타 통화, 음성 보강 채팅, 음성 받아쓰기, 코파일럿 전사 등 음성 AI의 인터랙션 패턴을 정리하고, 각 패턴에서 AI 에이전트가 맡는 역할과 설계상 결정, 한계를 다룹니다.
+- **[Bulk Upload UX](https://medium.com/design-bootcamp/ux-case-study-bulk-upload-feature-785803089328)** (출처: *Smashing Newsletter #577*)
+  + 요약: 온라인 채용 도구의 대량 업로드 기능을 개선한 경험을 바탕으로, 파일 가져오기 과정의 흔한 문제와 해결 방법, 이해관계자에게 설계 결정을 설명하는 요령을 공유합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Animal Island UI: A 'Kawaii' React Component Library](https://guokaigdg.github.io/animal-island-ui/)** (출처: *React Status #492*)
+  + 특징: 원래 동물의 숲 이미지를 기반으로 했으나 Nintendo의 DMCA 요청 이후 자체 에셋으로 교체되었고, MIT 라이선스로 공개된 귀여운 스타일의 React 컴포넌트 라이브러리입니다. 사이트는 중국어지만 컴포넌트 둘러보기는 쉽고 GitHub README는 영어입니다.
+- **[Better Context Menus](https://linear.app/now/invisible-details)** (출처: *Smashing Newsletter #577*)
+  ![Invisible Details: Building Contextual Menus](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/6371056d-b329-997a-defb-4d062d145f6a.png)
+  + 특징: Linear는 컨텍스트 메뉴에 보이지 않는 안전 영역을 두어, 마우스가 최단 경로로 움직여도 하위 메뉴가 닫히지 않게 했습니다. 이를 React 컴포넌트로 구현한 방식을 Andreas Eldh가 설명하고, Costa Alexoglou는 SVG와 마우스 위치 추적으로 같은 문제를 푸는 다른 접근을 소개합니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Vercel Bug Bounty Program Is Now Publicly Available](https://vercel.com/blog/the-vercel-bug-bounty-program-is-now-publicly-available)** (출처: *React Status #492*)
+  + 요약: Vercel이 비공개 프로그램과 Next.js를 포함하던 오픈소스 프로그램을 하나로 합쳐 버그 바운티를 공개했습니다.
+- **[npm Stage-Only Tokens](https://github.blog/changelog/2026-09-18-stage-only-npm-tokens-for-safer-automation/)** (출처: *JavaScript Weekly #803*)
+  + 요약: 자동화 워크플로가 릴리스를 스테이징하면 메인테이너가 2FA로 승인하는 토큰이 나왔습니다. 아직 trusted publishing으로 옮기지 못한 팀의 이행 경로가 됩니다.
+- **[An Undercover Analyst Infiltrated the Gang Behind 'Mini Shai-Hulud'](https://www.wired.com/story/an-undercover-google-analyst-infiltrated-a-notorious-supply-chain-hacking-gang/)** (출처: *JavaScript Weekly #803*)
+  + 요약: 올봄 연쇄 공급망 공격을 일으킨 그룹의 채팅방에 Google 분석가가 잠입했고, 이 감시와 교란 끝에 최근 두 명이 체포되었다는 WIRED 보도입니다.
+- **[Lovable Rewrote Vite's Dev Server in Rust (OJ)](https://lovable.dev/blog/faster-previews-oj)** (출처: *JavaScript Weekly #803*)
+  + 요약: Lovable이 성능을 이유로 Vite 개발 서버를 Rust로 다시 만들었고, Evan You는 벤치마크를 반박하며 AI 시대에는 각자 자기만의 포크를 유지하게 될 것이라고 예측했습니다.
+- **[Blurry Before Beautiful: Image Previews for the Web?](https://patrickbrosset.com/articles/2026-09-22-blurry-before-beautiful-image-previews-for-the-web/)** (출처: *Frontend Focus #759*)
+  + 요약: 흐릿한 미리보기 이미지를 먼저 보여 주는 패턴을 브라우저가 네이티브로 처리하도록, Edge 팀이 `previewsrc` 속성을 제안했습니다.
+
+## 6. 🎉 릴리스
+- **[Next.js 16.3.6](https://nextjs.org/blog/nextjs-security-update-september-22-2026)** (*React Status #492*)
+  + 업데이트: Node에서 `next/og`를 쓴다면 확인이 필요합니다. v16.2 이상에 영향을 주는 `ImageResponse`의 치명적인 RCE를 수정했고, [다음 주 예정된 릴리스](https://nextjs.org/blog/upcoming-nextjs-security-release-september-2026)에서 취약점 9건이 추가로 수정됩니다.
+- **[React-Redux 9.4 Alpha Adds Opt-In useSignalSelector](https://github.com/reduxjs/react-redux/releases/tag/v9.4.0-alpha.0)** (*React Status #492*)
+  + 업데이트: Redux는 dispatch마다 마운트된 모든 selector를 실행하는데, 이 opt-in 훅은 selector가 읽은 상태 경로를 추적해 값이 바뀐 selector만 다시 실행합니다. 릴리스 노트의 벤치마크 16개 시나리오 중 12개에서 dispatch 시간이 49~88% 줄었고, 대신 min+gzip 기준 약 7.2kB가 늘어 대규모 앱용이라고 안내합니다. 상태는 불변 객체여야 하고 selector 안에서 상태를 변경하면 개발 모드에서 에러가 납니다. [Alpha 1](https://github.com/reduxjs/react-redux/releases/tag/v9.4.0-alpha.1)에서 핵심 버그 수정과 벤치마크 정정이 이루어졌습니다.
+- **[Astro React Integration 7.0](https://github.com/withastro/astro/releases/tag/@astrojs/react@7.0.0)** (*React Status #492*)
+  + 업데이트: Babel에서 Oxc로 전환하고, `compiler: true` 옵션으로 React Compiler를 지원합니다.
+- **[Safari 27.0](https://webkit.org/blog/18325/webkit-features-for-safari-27-0/)** (*Frontend Focus #759*)
+  + 업데이트: Safari MCP 서버, scroll anchoring, 커스터마이징 가능한 `<select>`, 이미지의 `sizes="auto"` 등이 포함된 대형 릴리스입니다.
+- **[Critical 9.0](https://github.com/addyosmani/critical/releases/tag/v9.0.0)** (*Frontend Focus #759*)
+  + 업데이트: 크리티컬 CSS 인라이너를 전면 재작성했습니다. 프리렌더된 HTML용 브라우저 없는 엔진과 SPA용 Playwright 기반 엔진 중 하나를 고르고, MCP를 지원합니다.
+- **[Chrome 155 Beta](https://developer.chrome.com/blog/chrome-155-beta)** (*Frontend Focus #759*)
+  + 업데이트: CSS `symbols()` 함수, `margin-trim`, JPEG XL 이미지 등을 지원합니다.
+- **[Node.js 26.10.0 (Current)](https://nodejs.org/en/blog/release/v26.10.0)** (*JavaScript Weekly #803*)
+  + 업데이트: `util.debounce`와 `util.throttle`이 추가됩니다.
+- **[ESLint 10.11.0](https://eslint.org/blog/2026/09/eslint-v10.11.0-released/)** (*JavaScript Weekly #803*)
+  + 업데이트: 시작과 린트 속도를 개선한 성능 업데이트입니다.
+- **[Turborepo 2.11](https://turborepo.dev/blog/2-11)** (*JavaScript Weekly #803*)
+  + 업데이트: 실험적으로 Rust, Python, Go 지원이 태스크 그래프에 추가되고, 2.9 대비 시작 속도가 최대 4배 빨라졌습니다.
+- **[Plotly.js 4](https://plotly.com/blog/announcing-plotly-js-4-plotly-py-7/)** (*JavaScript Weekly #803*)
+  + 업데이트: 자체 TypeScript 타입을 제공하고, 벡터장을 그리는 quiver 플롯이 추가되며, CSS Color 4 색상 문자열을 받습니다. Mapbox GL을 제거하고 MapLibre로 바꿔 토큰이 필요 없어졌습니다.
+
+## ✍️ 마치며
+이번 주 소식에서 가장 눈에 띈 흐름은 "AI가 코드를 만드는 속도를 사람과 인프라가 어떻게 따라가는가"였습니다. Linear의 CI 재설계나 shadcn의 에이전트 전용 린터처럼, 품질 기준을 사람의 리뷰가 아니라 도구의 규칙으로 옮기려는 시도가 이어지고 있습니다. React-Redux의 시그널 실험은 규모가 커진 앱에서 상태 관리 비용이 어디서 발생하는지를 다시 보게 하고, Copilot 앱 사례는 높이를 예측할 수 없는 콘텐츠를 다룰 때 "언제 측정하고 어떻게 보정하는가"가 설계의 핵심임을 보여 줍니다. 한편 Next.js의 치명적인 취약점과 공급망 공격 수사 소식은, 기능 개발 속도만큼 의존성 관리와 배포 권한의 점검도 꾸준히 이어가야 한다는 점을 상기시킵니다.
+
+#### 출처
+- [JavaScript Weekly #803](https://javascriptweekly.com/issues/803)
+- [Frontend Focus #759](https://frontendfoc.us/issues/759)
+- [React Status #492](https://react.statuscode.com/issues/492)
+- [Smashing Newsletter #577](https://mailchi.mp/smashingmagazine/577-design-patterns-voice-ux-tables-bulk-editing)
