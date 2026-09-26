@@ -1,0 +1,134 @@
+---
+title: '🚀 2026-09 W4 #77'
+desc: 巨大PRの仮想化レンダリング(GitHub Copilotアプリ)、6MBのデスクトップアプリランタイムtinyjs、Next.jsのRCE脆弱性とnpmセキュリティ | 2026年9月第4週目 週間技術ニュースレター
+date: 2026-09-26
+thumbnail: /posts/weekly/september.avif
+---
+
+## 🔥 今週の主要テーマ
+AIエージェントがコードを大量に生み出す時代に合わせて、パフォーマンスと品質をどう守るかをあらためて問い直す一週間でした。React-Reduxはシグナルベースのselectorでdispatchのコストを減らそうとしており、GitHub Copilotアプリは100万行のPRをReactの外でレンダリングし、LinearはCIのコストを設計し直しました。デスクトップアプリはtinyjsのように6MB台まで小さくなり、ブラウザではSafari 27とChromeがネイティブ機能を急速に増やしています。一方、Next.jsの致命的なRCEの修正とサプライチェーン攻撃のニュースは、セキュリティ点検の必要性をあらためて思い起こさせます。
+
+## 1. 🔍 深掘り
+- **[Rendering Huge Pull Requests in the GitHub Copilot App](https://github.blog/engineering/user-experience/rendering-huge-pull-requests-in-the-github-copilot-app/)** (出典: *React Status #492*)
+  ![Rendering Huge Pull Requests in the GitHub Copilot App](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wurtgptbln8tma7ldkus.jpg)
+   - 背景: リファクタリングやマイグレーションは1つのPRにまとめなければならないことがあり、レビューのやり取りが増えるほどPRはさらに大きくなります。GitHubチームは、2,200ファイル、100万行を超える変更、400件を超えるインラインコメントがあるPRを基準に、Copilotアプリのdiff画面を作り直しました。
+   - 主な機能: コード行は高さを事前に計算できるため、仮想化、typed arrayベースのオフセット計算、Reactコンポーネントを使わないimperativeな行レンダラーで処理します。一方、コメントはレンダリングしてみないと高さが分からないため、高さの計算を2つの領域に分けました。コードのジオメトリは正確な値で固定し、動的ブロック(レビュースレッド、返信入力欄など)は推定してから測定で補正します。測定はブロックごとにResizeObserverを置く代わりに、スクロールが止まった後、ビューポートの約2400px内側にあるブロックだけを一度にまとめて読み取る方式で、補正時にはユーザーが見ていた行やブロックを基準にスクロール位置を維持します。
+   - コード例:
+```text
+     total height = deterministic code height          (exact, known up front)
+                  + Σ dynamic block effective heights   (estimated, then measured)
+                  + scroll padding
+```
+   - 実務での活用: 高さを予測できないコンテンツが混在する仮想リスト(チャット、コメントスレッド、フィード)で、「確定した高さ」と「測定した高さ」を別々のインデックスに分離する設計が参考になります。記事では、自身の状態を点検する構造化されたプローブを画面に常時置き、合成した大規模PRフィクスチャでE2Eの予算を検証し、変更・測定・改善のループを自動化した過程も紹介されています。
+   - 注意事項: オブザーバーが自分で観察している要素のレイアウト高さを直接更新すると、フィードバックループが発生します。また、「ユーザーがスクロール中か」を判別する際に、画面自身が引き起こしたスクロール(サイドバーのトグル後の再配置など)と区別しないと、補正がスキップされて見ていた位置がずれてしまいます。
+- **[The Root Scroller and How Not to Lose It](https://polypane.app/blog/the-root-scroller-and-how-not-to-lose-it/)** (出典: *Frontend Focus #759*)
+   - 背景: root scrollerはビューポートのスクロールコンテナで、スクロール復元やモバイルのアドレスバーの折りたたみといったブラウザ機能を担っています。
+   - 主な機能: よく使われるCSSパターンがスクロールを別の要素に移してしまうと、これらの機能が失われることをデモで示しています。
+   - 実務での活用: レイアウトを `height: 100%` と内部スクロールコンテナで構成しているアプリなら、ビューポートのスクロールを失っていないか点検してみる価値があります。
+   - 注意事項: スクロールコンテナを変えるCSSを導入する際は、スクロール復元とモバイルのアドレスバーの挙動が一緒に壊れていないかを確認する必要があります。
+
+---
+#### 見逃せないコンテンツ
+- **[The V8 Runtime Undermined My Constant-Time JavaScript Library](https://soatok.blog/2026/09/12/the-v8-javascript-runtime-undermined-my-constant-time-javascript-library/)** (出典: *JavaScript Weekly #803*)
+  + 要約: 分岐なしで書いたJavaScriptであっても、V8が真偽値と `-0` を処理する方式が原因で、CPUキャッシュの挙動を通じて秘密情報が漏れる可能性があることを扱っています。
+- **[Helix: How Shopify is Using LLMs to Move Its App Off React Native](https://shopify.engineering/helix)** (出典: *React Status #492*)
+  + 要約: Shopifyが最近発表したReact NativeからSwift/Kotlinへの移行作業で、LLMをどのように活用しているのか、その舞台裏を見せてくれます。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[tinyjs: Build JavaScript Desktop Apps in 10MB](https://tinyjs.app/)** (出典: *JavaScript Weekly #803*)
+  ![tinyjs: Build JavaScript Desktop Apps in 10MB](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/l5ejacd7rpbkelmaxdto.jpg)
+  + 概要: txiki.jsベースのJavaScriptバックエンドに、OSネイティブのWebViewウィンドウ(macOSはWebKit、WindowsはWebView2、LinuxはWebKitGTK)を組み合わせたデスクトップアプリランタイムです。公式サイトによると、配布サイズは約6MBです(Electronは150MB以上、Tauriは約10MB)。ページとバックエンドはUnixソケットで通信するため開いているポートがなく、バックエンドではファイル、ソケット、プロセス、FFI、sqlite、fetchを使えます。
+  + 使い方:
+```bash
+    tinyjs new myapp
+    cd myapp
+    tinyjs dev     # ウィンドウが開いてホットリロード
+    tinyjs build   # macOSでは署名済みの.appバンドルを生成
+```
+```javascript
+    // src/main.js — バックエンド全体
+    export const api = {
+      hello: async ({ name }) => `hi ${name}`,
+    };
+    // ページ側から: await tiny.api.call('hello', { name });
+```
+  + 実践チップ: `tinyjs new myapp --template react-ts` のように、vue-ts、svelte-ts、solid-ts、vanilla-tsテンプレートでViteベースのプロジェクトを始められます。代替手段として、ニュースレターではElectrobun(マルチウィンドウとGPU機能は豊富ですがランタイムがより大きい)、Perry(TypeScriptをネイティブにコンパイルしてAppKit/Win32/GTK4ウィジェットを使用)、Neutralinojs(より小さいが汎用JSバックエンドがない)もあわせて紹介しています。サイトによるとmacOSは安定版でWindowsとLinuxはベータ段階であり、レンダリングエンジンがOSごとに異なるため、3つのプラットフォームすべてでテストする必要があります。
+- **[@shadcn/lint: An Agent-First Linter for Tailwind](https://github.com/shadcn-ui/lint)** (出典: *JavaScript Weekly #803*)
+  + 概要: Tailwindプロジェクトで「raw colorの禁止」、「外部から `<Button>` を再スタイリングすることの禁止」といったルールを強制するESLint/Oxlintプラグインです。違反時のエラーメッセージで、エージェントが定義済みのvariantとトークンを使うよう誘導します。
+  + 実践チップ: エージェントがコードを大量生成するチームでは、デザインシステムのルールをプロンプトではなくlintルールとして固定する方式が、再現性の面で有利です。
+
+---
+#### 見逃せないコンテンツ
+- **[Playroom: Design with JSX, Powered by Your Own Component Library](https://github.com/seek-oss/playroom)** (出典: *React Status #492*)
+  + 要約: 自社のコンポーネントライブラリと連携したブラウザベースのJSXプレイグラウンドで、編集中にすべてのテーマとビューポート幅を並べてレンダリングします。
+- **[pdfcn: Copy-Paste Components for Making PDFs](https://www.pdfcn.dev/)** (出典: *React Status #492*)
+  + 要約: shadcn方式をPDF生成に適用し、テーブル、ヘッダー、リストと、請求書・レポート向けのブロックコンポーネントを提供します。レンダリングはヘッドレスブラウザ不要のWASMエンジンであるTakumiまたはFormeが担当します。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[User-Friendly Nested Tables](https://medium.com/design-bootcamp/designing-nested-tables-the-ux-of-showing-complex-data-without-creating-chaos-0b25f8bdd7d9)** (出典: *Smashing Newsletter #577*)
+  ![Designing Nested Tables: The UX of Showing Complex Data Without Creating Chaos](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/d7ea0525-fa02-b297-b2d6-d1d831a73e6e.png)
+  + 主要なインサイト: 入れ子テーブルは複雑で雑然として見えやすいものの、うまく設計すれば画面を行き来せずに複雑な情報を把握できるようになります。Damilola Bamgbeluの記事は、スキャンしやすく素早い意思決定を助ける入れ子テーブルの設計を段階的に案内します。
+- **["AI, Make the Website Good"](https://www.zachleat.com/web/ai-websites/)** (出典: *Frontend Focus #759*)
+  + 主要なインサイト: ツールが何であれ、成果物の品質に気を配ることのほうがむしろ重要になったという主張です。Zach Leathermanは、主要なAI企業が出したフロント画面を例に、これを示しています。
+- **[Do Frameworks Matter Anymore?](https://brookslybrand.com/posts/do-frameworks-matter-anymore/)** (出典: *JavaScript Weekly #803*)
+  + 主要なインサイト: AIを使うと、フレームワークを使うか、エージェントがその場で臨時のフレームワークを作ることになります。Remixチームのメンバーであるブルックス・Brooks Lybrandは、これはむしろより良いフレームワークを求めるべき理由だと見ています。
+
+---
+#### 見逃せないコンテンツ
+- **[Voice AI UX Patterns](https://uxdesign.cc/8-voice-aiux-patterns-81324c8feaa0)** (出典: *Smashing Newsletter #577*)
+  + 要約: アバター通話、音声で補強したチャット、音声ディクテーション、コパイロットの文字起こしなど、音声AIのインタラクションパターンを整理し、各パターンでAIエージェントが担う役割、設計上の判断、限界を扱います。
+- **[Bulk Upload UX](https://medium.com/design-bootcamp/ux-case-study-bulk-upload-feature-785803089328)** (出典: *Smashing Newsletter #577*)
+  + 要約: オンライン採用ツールの一括アップロード機能を改善した経験をもとに、ファイルインポート過程でよくある問題とその解決方法、ステークホルダーに設計上の判断を説明するコツを共有します。
+---
+
+## 4. ✨ アイデア
+- **[Animal Island UI: A 'Kawaii' React Component Library](https://guokaigdg.github.io/animal-island-ui/)** (出典: *React Status #492*)
+  + 特徴: もともとどうぶつの森のイメージをベースにしていましたが、任天堂のDMCA要請を受けて独自アセットに差し替えられた、MITライセンスで公開されているかわいいスタイルのReactコンポーネントライブラリです。サイトは中国語ですが、コンポーネントの閲覧は簡単で、GitHubのREADMEは英語です。
+- **[Better Context Menus](https://linear.app/now/invisible-details)** (出典: *Smashing Newsletter #577*)
+  ![Invisible Details: Building Contextual Menus](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/6371056d-b329-997a-defb-4d062d145f6a.png)
+  + 特徴: Linearはコンテキストメニューに見えないセーフエリアを設け、マウスが最短経路で動いてもサブメニューが閉じないようにしました。これをReactコンポーネントで実装した方法をAndreas Eldhが説明し、Costa Alexoglouは、SVGとマウス位置の追跡で同じ問題を解く別のアプローチを紹介しています。
+
+## 5. ⚡️ ミニノート
+- **[Vercel Bug Bounty Program Is Now Publicly Available](https://vercel.com/blog/the-vercel-bug-bounty-program-is-now-publicly-available)** (出典: *React Status #492*)
+  + 要約: Vercelが、非公開プログラムとNext.jsを含んでいたオープンソースプログラムを1つに統合し、バグバウンティを公開しました。
+- **[npm Stage-Only Tokens](https://github.blog/changelog/2026-09-18-stage-only-npm-tokens-for-safer-automation/)** (出典: *JavaScript Weekly #803*)
+  + 要約: 自動化ワークフローがリリースをステージングすると、メンテナーが2FAで承認するトークンが登場しました。まだtrusted publishingへ移行できていないチームの移行パスになります。
+- **[An Undercover Analyst Infiltrated the Gang Behind 'Mini Shai-Hulud'](https://www.wired.com/story/an-undercover-google-analyst-infiltrated-a-notorious-supply-chain-hacking-gang/)** (出典: *JavaScript Weekly #803*)
+  + 要約: 今春に連続したサプライチェーン攻撃を起こしたグループのチャットルームにGoogleのアナリストが潜入し、この監視と撹乱の末に最近2人が逮捕されたというWIREDの報道です。
+- **[Lovable Rewrote Vite's Dev Server in Rust (OJ)](https://lovable.dev/blog/faster-previews-oj)** (出典: *JavaScript Weekly #803*)
+  + 要約: Lovableがパフォーマンスを理由にViteの開発サーバーをRustで作り直し、Evan Youはベンチマークに反論して、AI時代には各自が自分だけのフォークを維持するようになると予測しました。
+- **[Blurry Before Beautiful: Image Previews for the Web?](https://patrickbrosset.com/articles/2026-09-22-blurry-before-beautiful-image-previews-for-the-web/)** (出典: *Frontend Focus #759*)
+  + 要約: ぼかしたプレビュー画像を先に表示するパターンをブラウザがネイティブに処理できるよう、Edgeチームが `previewsrc` 属性を提案しました。
+
+## 6. 🎉 リリース
+- **[Next.js 16.3.6](https://nextjs.org/blog/nextjs-security-update-september-22-2026)** (*React Status #492*)
+  + アップデート: Nodeで `next/og` を使っている場合は確認が必要です。v16.2以上に影響する `ImageResponse` の致命的なRCEを修正しており、[来週予定のリリース](https://nextjs.org/blog/upcoming-nextjs-security-release-september-2026)でさらに9件の脆弱性が修正されます。
+- **[React-Redux 9.4 Alpha Adds Opt-In useSignalSelector](https://github.com/reduxjs/react-redux/releases/tag/v9.4.0-alpha.0)** (*React Status #492*)
+  + アップデート: Reduxはdispatchのたびにマウントされているすべてのselectorを実行しますが、このopt-inフックはselectorが読み取ったstateのパスを追跡し、値が変わったselectorだけを再実行します。リリースノートのベンチマーク16シナリオのうち12で、dispatch時間が49〜88%短縮され、その代わりmin+gzipベースで約7.2kB増えるため、大規模アプリ向けだと案内しています。stateはイミュータブルなオブジェクトである必要があり、selector内でstateを変更すると開発モードでエラーになります。[Alpha 1](https://github.com/reduxjs/react-redux/releases/tag/v9.4.0-alpha.1)で主要なバグ修正とベンチマークの訂正が行われました。
+- **[Astro React Integration 7.0](https://github.com/withastro/astro/releases/tag/@astrojs/react@7.0.0)** (*React Status #492*)
+  + アップデート: BabelからOxcに切り替え、`compiler: true` オプションでReact Compilerをサポートします。
+- **[Safari 27.0](https://webkit.org/blog/18325/webkit-features-for-safari-27-0/)** (*Frontend Focus #759*)
+  + アップデート: Safari MCPサーバー、scroll anchoring、カスタマイズ可能な `<select>`、画像の `sizes="auto"` などが含まれる大型リリースです。
+- **[Critical 9.0](https://github.com/addyosmani/critical/releases/tag/v9.0.0)** (*Frontend Focus #759*)
+  + アップデート: クリティカルCSSインライナーを全面的に書き直しました。プリレンダリング済みHTML向けのブラウザ不要エンジンとSPA向けのPlaywrightベースエンジンのどちらかを選べ、MCPをサポートします。
+- **[Chrome 155 Beta](https://developer.chrome.com/blog/chrome-155-beta)** (*Frontend Focus #759*)
+  + アップデート: CSSの `symbols()` 関数、`margin-trim`、JPEG XL画像などをサポートします。
+- **[Node.js 26.10.0 (Current)](https://nodejs.org/en/blog/release/v26.10.0)** (*JavaScript Weekly #803*)
+  + アップデート: `util.debounce` と `util.throttle` が追加されます。
+- **[ESLint 10.11.0](https://eslint.org/blog/2026/09/eslint-v10.11.0-released/)** (*JavaScript Weekly #803*)
+  + アップデート: 起動とlintの速度を改善したパフォーマンスアップデートです。
+- **[Turborepo 2.11](https://turborepo.dev/blog/2-11)** (*JavaScript Weekly #803*)
+  + アップデート: 実験的にRust、Python、Goのサポートがタスクグラフに追加され、2.9と比べて起動速度が最大4倍速くなりました。
+- **[Plotly.js 4](https://plotly.com/blog/announcing-plotly-js-4-plotly-py-7/)** (*JavaScript Weekly #803*)
+  + アップデート: 独自のTypeScript型定義を提供し、ベクトル場を描くquiverプロットが追加され、CSS Color 4の色文字列を受け付けます。Mapbox GLを削除してMapLibreに置き換えたため、トークンが不要になりました。
+
+## ✍️ おわりに
+今週のニュースで最も目を引いた流れは、「AIがコードを生み出す速度に、人とインフラがどう追いつくのか」でした。LinearのCI再設計やshadcnのエージェント専用linterのように、品質基準を人のレビューではなくツールのルールへ移そうとする試みが続いています。React-Reduxのシグナル実験は、規模が大きくなったアプリで状態管理のコストがどこで発生するのかをあらためて見直させ、Copilotアプリの事例は、高さを予測できないコンテンツを扱うときに「いつ測定し、どう補正するか」が設計の核心であることを示しています。一方、Next.jsの致命的な脆弱性とサプライチェーン攻撃の捜査のニュースは、機能開発の速度と同じくらい、依存関係の管理とデプロイ権限の点検も地道に続けなければならないことを思い出させます。
+
+#### 出典
+- [JavaScript Weekly #803](https://javascriptweekly.com/issues/803)
+- [Frontend Focus #759](https://frontendfoc.us/issues/759)
+- [React Status #492](https://react.statuscode.com/issues/492)
+- [Smashing Newsletter #577](https://mailchi.mp/smashingmagazine/577-design-patterns-voice-ux-tables-bulk-editing)
