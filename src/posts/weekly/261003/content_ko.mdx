@@ -1,0 +1,116 @@
+---
+title: '🚀 2026-10 W1 #78'
+desc: CSS Modules 전환을 통한 SSR 시간 단축, Claude 웹 앱 time-to-typeable 개선, 추상화 비용 측정 | 2026년 10월 1주차 주간 기술 뉴스레터
+date: 2026-10-03
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 "프론트엔드 성능과 구조의 재점검"이 중심이었습니다. GitHub는 CSS-in-JS를 걷어내고 CSS Modules로 옮겨 SSR 시간을 크게 줄였고, Anthropic은 Claude 웹 앱의 time-to-typeable을 3.1초에서 0.55초로 단축한 과정을 공개했습니다. 과도한 추상화가 개발자와 AI 에이전트 모두에게 비용이 된다는 측정 결과도 나왔습니다. 한편 Vite+ 1.0, Cloudflare의 cf CLI, EmDash 1.0 등 도구 생태계도 빠르게 움직이고 있습니다.
+
+## 1. 🔍 심층 분석
+- **[Improving Site Performance by Shipping More CSS](https://github.blog/engineering/architecture-optimization/improving-site-performance-by-shipping-more-css/)** (출처: *Frontend Focus #760*)
+  ![Improving Site Performance by Shipping More CSS 대표 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/wqdeehcjo7y0imo6gazv.jpg)
+  - 배경: GitHub는 3년에 걸쳐 github.com에서 styled-components와 CSS-in-JS를 걷어내고 CSS Modules로 전환했습니다.
+  - 핵심 기능: CSS는 오히려 더 많이 배포하게 되었지만, 서버 사이드 렌더링 시간이 55% 줄었다고 보고합니다. CSS Modules는 브라우저 표준이 아니라 번들러 관례로, `.module.css` 파일의 클래스를 고유한 이름으로 재작성해 파일 단위로 스타일을 격리하며 런타임 비용이 없습니다.
+  - 실무 적용: CSS-in-JS 런타임이 SSR 성능에 부담이 되는 서비스에서 마이그레이션을 검토할 근거로 쓸 수 있습니다. 같은 글이 JavaScript Weekly #804에도 소개되었습니다.
+  - 주의사항: 3년이 걸린 대규모 전환이라는 점에서 점진적 이전 전략이 필요합니다. 세부 한계는 원문 확인이 필요합니다.
+- **[The Grand Unifying Architecture of Frontend](https://dev.to/playfulprogramming/the-grand-unifying-architecture-of-frontend-bhk)** (출처: *JavaScript Weekly #804*)
+  ![The Grand Unifying Architecture of Frontend 대표 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/q97l6jlstbu4nz3us8ex.jpg)
+  - 배경: HTMX, React, LiveView 등 프레임워크가 제각각으로 보이는 이유를 하나의 관점으로 설명하려는 글입니다.
+  - 핵심 기능: SolidJS 창시자 Ryan Carniato는 이 도구들이 내비게이션, 콘텐츠, 즉각적인 UI 피드백이라는 세 가지 일을 클라이언트와 서버 사이에서 나누는 방식만 다르다고 주장합니다. 이어서 Solid 2.0이 이 스펙트럼 전체를 다루려 한다고 설명합니다.
+  - 실무 적용: 프레임워크를 고를 때 기능 목록 대신 이 세 가지 책임이 어디에 놓이는지를 기준으로 비교해 볼 수 있습니다.
+  - 주의사항: Solid 2.0 관련 내용은 저자가 자기 프레임워크를 설명하는 관점이라는 점을 감안해야 합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How Anthropic Made Claude's Apps 3x Faster in Two Weeks](https://claude.dev/blog/how-we-made-claude-ai-faster/)** (출처: *JavaScript Weekly #804*)
+  + 요약: p75 time-to-typeable을 3.1초에서 0.55초로 줄인 스프린트의 성능 교훈 모음입니다. em dash가 V8을 더 느린 정규식 경로로 보냈고, 불필요한 `location.reload()`가 하루 50만 회의 숨은 리로드를 일으켰다고 합니다.
+- **[The cost of abstraction for humans and AI agents](https://reactdigest.net/links/23353/56924fb8-2fd8-4d90-9539-8cdfc1099755/web)** (출처: *React Digest #576*)
+  + 요약: 394회의 AI 에이전트 실행을 측정한 결과, 과도하게 추상화된 코드는 에이전트 비용이 약 30% 더 들고 특정 작업에서는 최대 5배까지 늘었습니다. 복잡성을 숨기거나 재사용하거나 의미 있는 이름이 필요할 때만 추상화하라는 결론입니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[Size Limit: A JavaScript Performance Budgeting Tool](https://github.com/ai/size-limit)** (출처: *JavaScript Weekly #804*)
+  ![Size Limit 대표 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/yvxogbuz6gl1ubyguxml.jpg)
+  + 개요: 코드의 크기나 로드 시간 예산을 정해 두고, 초과하면 CI를 실패시키거나 PR에 표시하는 도구입니다.
+  + 실전 팁: 일회성 점검과 바이트 시각화도 가능합니다. 프레임워크, 번들러, CI에 구애받지 않습니다.
+- **[Transitions.dev: Essential UI Transitions for Web Apps](https://transitions.dev/)** (출처: *Frontend Focus #760*)
+  ![Transitions.dev 대표 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1790769815/tlckzjm42todmqsxh4zp.png)
+  + 개요: CSS 기반 UI 애니메이션을 카드 형태로 보여 주는 모음입니다. [소스 코드](https://github.com/Jakubantalik/transitions.dev)도 공개되어 있습니다.
+  + 실전 팁: AI 코딩 도구용 에이전트 스킬로 설치할 수 있습니다. 일부 트랜지션은 Pro 플랜입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Custom Attributes Polyfill](https://www.keithcirkel.co.uk/custom-attributes-polyfill/)** (출처: *Frontend Focus #760*)
+  + 요약: 제안 단계인 Custom Attributes 스펙의 폴리필로, 수명주기 훅을 가진 재사용 가능한 동작을 커스텀 속성으로 요소에 붙일 수 있습니다.
+- **[soundcn: A Curated Collection of Sound Effects for Modern Web Apps](https://www.soundcn.xyz/)** (출처: *Frontend Focus #760*)
+  + 요약: shadcn 레지스트리로 설치하는 800개 이상의 효과음 모음입니다. 사용하는 소리의 라이선스는 확인해야 합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Detect When Elements Overlap with CSS](https://ishadeed.com/article/css-detect-overlap/)** (출처: *Frontend Focus #760*)
+  ![Detect When Elements Overlap with CSS 대표 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1790768407/sqfroq51wfjasopm9vyc.png)
+  + 핵심 인사이트: 앵커 포지셔닝, 스타일 컨테이너 쿼리, 스크롤 기반 애니메이션을 조합해 JavaScript 없이 두 요소가 겹치는 순간을 감지합니다. 넘치는 "measure" 요소를 트리거로 사용합니다.
+- **[From 1,256ms to 96ms: Fixing INP in a massive React dropdown](https://reactdigest.net/links/23356/56924fb8-2fd8-4d90-9539-8cdfc1099755/web)** (출처: *React Digest #576*)
+  + 핵심 인사이트: 옵션 1,175개를 전부 렌더링하던 드롭다운의 INP가 1,256ms였습니다. 작은 커스텀 가상화 훅으로 보이는 행만 렌더링해 DOM을 13개로 줄이고 INP를 96ms까지 낮췄습니다.
+- **[Optimizing Objects with null Prototypes](https://adventures.nodeland.dev/archive/optimizing-objects-with-null-prototypes/)** (출처: *JavaScript Weekly #804*)
+  + 핵심 인사이트: V8에서 `{ __proto__: null }`이나 `Object.create(null)`로 만든 객체는 느린 딕셔너리 모드로 시작합니다. 일반 객체를 만든 뒤 프로토타입을 `null`로 설정하면 빠른 프로퍼티가 유지됩니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Connection Allowlists: Lock Down Where a Page Can Connect](https://developer.chrome.com/blog/connection-allowlist-announcement)** (출처: *Frontend Focus #760*)
+  + 요약: Chrome 152가 `Connection-Allowlist` 헤더를 지원해 페이지가 연결할 수 있는 서버를 제한합니다.
+- **[Node.js Built-ins That Replace npm Packages](https://flaviocopes.com/node-builtins/)** (출처: *JavaScript Weekly #804*)
+  + 요약: npm 패키지를 대체하는 Node 내장 기능 12가지를 안정성 수준 및 주의점과 함께 소개합니다.
+---
+
+## 4. ✨ 아이디어
+- **[A-ha's Take on Me, recreated in pure JavaScript](https://dittytoy.net/ditty/2dd99fc839)** (출처: *JavaScript Weekly #804*)
+  ![Take on Me 재현 이미지](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jilmudkfxkr6xbomw3gi.jpg)
+  + 특징: Tonny Espeset이 80년대 히트곡을 합성 보컬까지 포함해 순수 JavaScript로 재현했습니다. 온라인 JavaScript 음악 놀이터 Dittytoy에서 실행됩니다.
+- **[Child-Centered Design](https://resourcecentre.savethechildren.net/document/child-centered-design)** (출처: *Smashing Newsletter #578*)
+  ![Child-Centered Design 핸드북 이미지](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/de7de37c-41dd-33a3-9f35-c3c2e0456187.png)
+  + 특징: Save the Children Finland가 공개한 무료 핸드북으로, 어린이를 실제 디자인 과정에 참여시키는 활동, 게임, 프로세스, 팁을 담았습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[TC39 도쿄 회의: 이터레이터 제안 3건 Stage 4](https://github.com/tc39/agendas/blob/main/2026/09.md)** (출처: *JavaScript Weekly #804*)
+  + 요약: chunking, join, includes 제안이 Stage 4에 올랐습니다. includes는 Chrome 154에 이미 탑재되었습니다.
+- **[Bun의 JavaScript 사전 컴파일 미리보기](https://x.com/jarredsumner/status/2104739495895781679)** (출처: *JavaScript Weekly #804*)
+  + 요약: Claude Code 기준으로 시작이 24% 빨라지고 메모리가 48% 줄지만, 바이너리 크기는 약 2배가 됩니다.
+- **[Cloudflare cf CLI 출시](https://blog.cloudflare.com/cloudflare-cf-cli-launch/)** (출처: *JavaScript Weekly #804*)
+  + 요약: TypeScript로 작성된 단일 CLI로 모든 API를 다루며, 일부만 지원하던 Wrangler와 다릅니다.
+- **[Firefox 157 새 디자인](https://blog.mozilla.org/en/firefox/new-firefox-design-is-here/)** (출처: *Frontend Focus #760*)
+  + 요약: Firefox 157이 새로운 외관을 적용했습니다.
+- **[Angular의 부분 Rust 기반 컴파일러](https://blog.angular.dev/an-update-on-angulars-typescript-7-powered-compiler-9619a35e2b0a)** (출처: *JavaScript Weekly #804*)
+  + 요약: TypeScript 7의 Go 포트에 현재 컴파일러가 의존하는 API가 없어, Angular 팀이 일부를 Rust로 만든 컴파일러를 개발 중입니다.
+
+## 6. 🎉 릴리스
+- **[Vite+ 1.0: One CLI for Your Entire JavaScript Toolchain](https://voidzero.dev/posts/announcing-vite-plus-1-0)** (*JavaScript Weekly #804*)
+  + 업데이트: `vp` 명령 하나로 Node 런타임, 패키지 매니저, 개발 서버, 린트, 포맷, 테스트, 빌드, 태스크 실행을 `vite.config.ts` 기반으로 관리합니다. `vp migrate`로 기존 Vite, Vitest, ESLint, tsup 설정을 이전할 수 있습니다.
+- **[MSW (Mock Service Worker) 3.0](https://github.com/mswjs/msw/releases/tag/v3.0.0)** (*JavaScript Weekly #804*)
+  + 업데이트: ESM 전용이 되었고 Vite 플러그인, GraphQL 구독 지원, 페이지 이동과 폼 제출 가로채기가 추가되었습니다.
+- **[Vinext 1.0](https://blog.cloudflare.com/vinext-nextjs-on-vite/)** (*JavaScript Weekly #804*)
+  + 업데이트: Cloudflare의 Vite 기반 Next.js 재구현이 Pages Router와 App Router를 지원하며 기존 앱 마이그레이션 경로를 제공합니다.
+- **[Mermaid 12.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4012.0.0)** (*JavaScript Weekly #804*)
+  + 업데이트: 플로우차트, 클래스, 상태 다이어그램 등의 기본 레이아웃 엔진이 ELK가 되어 기존 다이어그램의 모양이 달라질 수 있습니다(`layout: dagre`로 복원). UML 유스케이스 다이어그램이 추가되었습니다.
+- **[EmDash 1.0: Cloudflare's WordPress 'Successor' is Now Stable](https://blog.cloudflare.com/emdash-cms-plugin-registry/)** (*JavaScript Weekly #804*)
+  + 업데이트: Astro 기반 WordPress 대안이 안정 버전이 되었습니다. AT Protocol 기반 분산 플러그인 레지스트리와 샌드박스 플러그인을 지원하며 Node.js에서도 동작합니다.
+- **[Markuplint 5.0](https://markuplint.dev/)** (*Frontend Focus #760*)
+  + 업데이트: HTML 린터가 버전 5에 도달했습니다. 플레이그라운드에서 바로 확인할 수 있습니다.
+- **[DOCX 9.8](https://github.com/dolanmiu/docx/releases/tag/9.8.0)** (*JavaScript Weekly #804*)
+  + 업데이트: JavaScript로 `.docx`를 생성하는 라이브러리에 차트, 도형, 워터마크, 더 많은 수식 표기 지원이 추가되었습니다.
+- **[Git 2.56](https://github.blog/open-source/git/highlights-from-git-2-56/)** (*JavaScript Weekly #804*)
+  + 업데이트: 병합 충돌 해결 후 안전하게 스테이징하는 `git add --resolved`와 일괄 브랜치 정리용 `git branch --delete-merged`가 추가되었습니다.
+- **[Polypane 31](https://polypane.app/blog/polypane-31-canvas-layout-elements-panel-improvements-and-chromium-155/)** (*Frontend Focus #760*)
+  + 업데이트: 새 캔버스 레이아웃, 요소 패널 개선, Chromium 155 업데이트가 포함되었습니다.
+- **[pnpm 12.8](https://github.com/pnpm/pnpm/releases/tag/v12.8.0)** (*JavaScript Weekly #804*)
+
+## ✍️ 마치며
+이번 주 소식을 한 줄로 요약하면 "측정하고 걷어낸다"입니다. GitHub의 CSS Modules 전환과 Claude 웹 앱의 성능 개선 모두 눈에 띄는 신기술이 아니라 병목을 측정해 불필요한 계층을 제거한 사례였습니다. 추상화 비용이 AI 에이전트 비용으로도 나타난다는 측정 결과는, 코드의 독자가 사람에서 에이전트로 넓어지고 있음을 보여 줍니다. 가상화 훅 하나로 INP를 1,256ms에서 96ms로 낮춘 사례도 같은 맥락이어서, 복잡한 해법보다 먼저 렌더링 대상을 줄일 수 있는지 살펴보는 습관이 유효하다고 생각합니다. 어린이 대상 디자인처럼 사용자를 설계 과정에 직접 참여시키는 접근은 성능 최적화와 달라 보여도, 실제 사용 맥락에서 출발한다는 점에서 맞닿아 있다고 느꼈습니다.
+
+#### 출처
+- [JavaScript Weekly #804](https://javascriptweekly.com/issues/804)
+- [Frontend Focus #760](https://frontendfoc.us/issues/760)
+- [React Digest #576](https://reactdigest.net/newsletters/2375?sid=56924fb8-2fd8-4d90-9539-8cdfc1099755)
+- [Smashing Newsletter #578](https://mailchi.mp/smashingmagazine/578-designing-for-children)
