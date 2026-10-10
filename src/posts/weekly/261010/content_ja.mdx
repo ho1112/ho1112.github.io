@@ -1,0 +1,145 @@
+---
+title: '🚀 2026-10 W2 #79'
+desc: CSS scroll snapベースのスワイプシート、Next.js 16.4 Cache Components、DenoのCloudflare合流 | 2026年10月第2週目 週間技術ニュースレター
+date: 2026-10-10
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 今週の主要テーマ
+
+今週は「JavaScriptで作っていたものをプラットフォームに任せる」という流れが随所に見られました。React AriaのSheetはCSS scroll snapとview timelineだけでスワイプジェスチャーを実装し、CSS Anchor Positioningはツールチップの位置計算をJSから取り除きます。一方、Next.js 16.4はCache Componentsを公式の推奨モデルに引き上げ、エージェントベースのアップグレードツールを発表し、Smashingはデザインシステムを AIが読める形にする方法を取り上げました。Remix 3.0の脱ReactやDenoのCloudflare合流のように、フレームワークとランタイムの勢力図が再編されるニュースも続きました。
+
+## 1. 🔍 深掘り
+- **[React Aria's New Swipeable Sheet and the CSS Tricks Behind It](https://react-aria.adobe.com/blog/sheet)** (出典: *React Status #493*)
+   - 背景: ボトムシートのようなスワイプ式オーバーレイは、これまでJSのタッチイベントで実装するのが一般的でした。React Ariaチームはこれをやめ、スクロールそのものをジェスチャーエンジンとして使う方式を選びました。
+   - 主な機能: ビューポートの高さの2倍のスクロールコンテナの中にシートを置き、開いた位置と閉じた位置にscroll snapポイントを設けます。スワイプの進行度に合わせたアニメーションは`view-timeline`で連携させ、部分的に開くsnap pointsは1pxのマーカー要素と`scroll-margin-top: 100dvh`で実現します。シートのスタックは`timeline-scope`と`animation-composition: accumulate`で処理します。
+   - コード例:
+```css
+     .sheet {
+       view-timeline: --sheet;
+       view-timeline-inset: 0 100dvh;
+     }
+     .backdrop { animation-timeline: --sheet; animation-range: entry; }
+```
+   - 実務への適用: スワイプがメインスレッドの外でディスプレイのリフレッシュレートで動作し、ネイティブのモメンタムやラバーバンディングの物理挙動が無料で付いてきます。`position`、`swipeDirection`、`snapPoints`、`preventDismissal`といったpropsで、方向や動作を調整できます。
+   - 注意事項: iOSのソフトウェアキーボードでは動的ビューポート単位が反応しないため、コンテンツに`padding-bottom: calc(100dvh - var(--visual-viewport-height))`を別途指定する必要があります。
+- **[Next.js 16.4 Makes Cache Components the Recommended Default](https://nextjs.org/blog/next-16-4)** (出典: *React Status #493*)
+   - 背景: 16.xの間、App Routerの暗黙的なキャッシュに代わるCache Componentsモデルが発展してきました。一部のケースでは従来のモデルと同じコスト・パフォーマンスの保証が難しく、広くは推奨できませんでしたが、16.4でそのギャップが埋まりました。
+   - 主な機能: `'use cache'`はコンポーネント単位のCache-Controlに相当し、1つのページの中で静的シェルとリクエスト時のレンダリングを混在させられます。16.4には、ルートのシェル・プリフェッチ・ナビゲーションが静的であることを保証する`ensureStatic`と、プリフェッチからキャッシュコンテンツを除外する`navigation()`・`prefetch()`が追加されました。
+   - コード例:
+```jsx
+     async function Projects({ userId }) {
+       'use cache';
+       cacheLife('hours');
+       // DB取得後にレンダリング
+     }
+```
+   - 実務への適用: `create-next-app`で作成した新規アプリでは、Cache Componentsがデフォルトで有効になります。既存アプリは`npx next@canary upgrade --agent=latest`で、エージェント向けのマイグレーションガイドとcodemodを入手できます。開発環境ではTurbopackのディスクキャッシュが20〜25%減り、React 19.3も含まれます。
+   - 注意事項: Cache ComponentsはNext.js 17でデフォルトになる予定です。エージェントフィードバックやRust製React Compilerなど一部の機能は、まだexperimentalフラグの裏側にあります。
+
+---
+#### 見逃せないコンテンツ
+- **[A Visual Notation for React's Parent and Owner Trees](https://julesblom.com/writing/react-visual-notation)** (出典: *React Status #493*)
+  + 要約: 要素が実際に置かれる場所(parent tree)と、その要素を作成したコンポーネント(owner tree)を併せて示すダイアグラム表記法です。Context、Suspense、memo、error boundary、RSCの表記も含まれ、コードを貼り付けるとツリーを描いてくれるプレイグラウンドがあります。
+- **[Can We Make React Faster Using the React Compiler?](https://jimmyhmiller.com/what-does-the-react-compiler-even-do)** (出典: *React Status #493*)
+  + 要約: React Compilerの出力を分解して調べたうえで、インライン化、ブロック、セレクター推論といった追加のコンパイラパスをプロトタイピングし、どこまで速くなるかを実験します。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[TanStack Charts 1.0: A Composable, Typed Charting Library](https://tanstack.com/blog/tanstack-charts-1-0)** (出典: *JavaScript Weekly #805*)
+  ![TanStack Charts 1.0: A Composable, Typed Charting Library](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hh9exzpq3o95k5zdqmyd.jpg)
+  + 概要: Tanner LinsleyがD3、Chart.js 2.0、react-chartsを経て約10年かけて積み上げてきたアイデアを詰め込んだチャートライブラリです。線・点・棒はすべてmarkであり、scaleがデータをmarkの値に変換し、そこに軸とインタラクションを組み合わせます。線の上に点を加えたり、棒を混ぜたりするのに、新しいチャートタイプは必要ありません。
+  + 実践チップ: レンダリングはSVGがデフォルトで、Canvasは別途importします。D3のscaleやcompact scaleも使えるため、バンドルを小さく保てます。著者は、既存アプリのチャートを1つ選んでTanStack Chartsで書き直してみることを勧めています。[サンプルカタログ](https://tanstack.com/charts/catalog)でコードを確認できます。
+- **[pure-web-bottom-sheet: A Bottom Sheet Built on CSS Scroll Snap](https://github.com/viliket/pure-web-bottom-sheet)** (出典: *Frontend Focus #761*)
+  + 概要: CSS scroll snapとscroll-driven animationsで実装した、軽量でアクセシビリティに優れたボトムシートのWebコンポーネントです。[サンプルページ](https://viliket.github.io/pure-web-bottom-sheet/)が用意されています。
+  + 実践チップ: 上のReact Aria Sheetと同じ原理を使っているため、Reactなしで純粋なWebコンポーネントとしてシートが必要なときに、比較してみる価値があります。
+
+---
+#### 見逃せないコンテンツ
+- **[Lightpanda 1.0: A Headless Browser for Automation](https://lightpanda.io/blog/posts/lightpanda-1-0)** (出典: *JavaScript Weekly #805*)
+  + 要約: Zigでゼロから作られたヘッドレスブラウザです。グラフィックレンダリングがないため、ChromeよりCPUとメモリの使用量がはるかに少なく、Puppeteer/Playwrightで制御したり、[純粋なJavaScriptでスクリプティング](https://lightpanda.io/docs/usage/pandascript)したりできます。
+- **[Gradient Visualizer: Debug Multi-Layer CSS Gradients](https://lab.ishadeed.com/tools/gradient-visualizer/)** (出典: *Frontend Focus #761*)
+  + 要約: 複数のgradientが重なった`background`の値を貼り付けると、レイヤーごとに分けて表示してくれます。3Dスタック表示、タイムラプス再生、編集後のコード再生成までサポートしています。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[CSS Does Your Tooltip Positioning Now](https://allthingssmitty.com/2026/10/05/css-does-your-tooltip-positioning-now/)** (出典: *Frontend Focus #761*)
+  + 背景: ツールチップやポップオーバーの位置を`getBoundingClientRect()`で計算すると、ウィンドウサイズの変更、スクロール、ビューポート下端からのはみ出しのたびに、リスナーと補正ロジックが必要でした。
+  + 主要なインサイト: `anchor-name`と`position-anchor`で2つの要素を結び付けると、ブラウザが位置を継続的に再計算します。`position-try-fallbacks`ははみ出したときに反対側へ反転させ、`popover`属性と併用すればJSなしでドロップダウンになります。`anchor-size(width)`でドロップダウンの幅をボタンに合わせることもできます。
+  + コード例:
+```css
+    .term { anchor-name: --my-anchor; }
+    .note {
+      position: fixed;
+      position-anchor: --my-anchor;
+      position-area: bottom;
+      position-try-fallbacks: flip-block, flip-inline;
+    }
+```
+  + なぜ役立つか: 位置の問題と表示タイミングの問題を切り分けて整理してくれます。anchor positioningは「どこに」置くかだけを解決し、「いつ」表示するかは`:has()`やpopoverが担います。アンカーの関係はあくまで視覚的なものでスクリーンリーダーの助けにはならないため、アクセシビリティ機能と取り違えないようにという警告も、実務では重要です。
+- **[Why Don't More Developers 'Use the Platform'?](https://nolanlawson.com/2026/10/03/why-dont-more-developers-use-the-platform/)** (出典: *JavaScript Weekly #805*)
+  + 背景: プラットフォーム支持派だったNolan Lawsonが、あえて反対側の立場から「なぜ人々はブラウザの機能があるのに自分で作るのか」を分析します。[Hacker Newsでも長い議論](https://news.ycombinator.com/item?id=49950554)が行われました。
+  + 主要なインサイト: 理由としては、ブラウザがエコシステムを追いかけていた歴史、npmライブラリがもたらす親しみやすさとドキュメント、CSSの難解さが挙げられています。それ以上に、自分で作るほうが楽しく、IKEA効果まであるという点が核心です。モーダルを自作しながらフォーカストラップまで学ぶ過程が学びになる、というわけです。AIコーディングがこれを減らすのか増やすのかについては、楽観と悲観の両方のシナリオを提示しています。
+  + なぜ役立つか: 同僚やチームの「自前実装」志向を、非難するのではなく理解する視点を与えてくれます。本人のClickHouse圧縮の経験談が、プラットフォームに任せたほうがよい事例として説得力があります。
+- **[Expose Your Design System To AI](https://www.smashingmagazine.com/2026/06/how-make-design-system-ai-ready/)** (出典: *Smashing Newsletter #579*)
+  ![How To Make Your Design System AI-Ready](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/2692e8dd-ee96-5341-e05a-735c498ad834.png)
+  + 背景: AIが一貫した結果を出すには、明確な決定と原則が必要です。人間は経験で抜けを埋めますが、AIは推測で埋めるためです。
+  + 主要なインサイト: Vitaly Friedmanのガイドは、デザインシステムをAI-readyにするためのヒント、ツール、事例を収めています。ドリフトを減らしコンテキストを維持する方法は、Hardik Pandyaの[LLMが消費できる形式に再構成する方法](https://hvpandya.com/llm-design-systems)でさらに詳しく読めます。
+  + なぜ役立つか: デザインシステムを人間向けのドキュメントから、機械が読める仕様へと拡張していく方向性を、具体的な資料とともに示してくれます。
+
+---
+#### 見逃せないコンテンツ
+- **[How Fast is the Web? Exploring Billions of Real-User Measurements](https://blog.cloudflare.com/how-fast-is-the-web/)** (出典: *Frontend Focus #761*)
+  + 要約: Cloudflareを利用する大規模サイト1万件の、匿名化された実ユーザーのCore Web Vitalsを収めた無料のBigQueryデータセットです。毎日更新され、Safari/WebKitも含まれており、遅いLCPではダウンロードが最も小さな部分であることが多いという初期分析が掲載されています。
+- **[How To Reduce AI Drifting](https://smart-interface-design-patterns.com/articles/ai-drift-design-systems/)** (出典: *Smashing Newsletter #579*)
+  + 要約: AIが関与すると、FigmaコンポーネントとStorybookコードの間の乖離が広がりやすくなります。コンポーネントコントラクトとharness engineeringで決定論的なガードレールを築き、適切なポイントでAIをループの外に出す方法を扱います。
+---
+
+## 4. ✨ アイデア
+- **[Shaders: 190+ WebGPU Effect Components, Now Open Source](https://shaders.com/updates/shaders-is-open-source)** (出典: *Frontend Focus #761*)
+  + 特徴: レンダリングエンジン、フレームワークバインディング、シェーダーコンポーネントがMITライセンスで公開されました。React、Vue、Svelte、Solid、純粋なJSで使え、[コンポーネントコレクション](https://shaders.com/docs/components)は視覚的に印象的です。
+- **[CSS Doodle: A Web Component for Drawing Patterns with CSS](https://css-doodle.com/)** (出典: *Frontend Focus #761*)
+  + 特徴: CSSを、パターン、背景、アイコン、ジェネラティブな装飾を描くための言語のように使えるWebコンポーネントです。[サンプルが満載のサイト](https://css-doodle.com/discover)があり、今週のv0.55では新しいタイリングタイプが大量に追加されました。
+
+## 5. ⚡️ ミニノート
+- **[Deno is joining Cloudflare](https://blog.cloudflare.com/deno-joins-cloudflare/)** (出典: *React Status #493*)
+  + 要約: ニュースレターの締め切り直前に届いた速報で、DenoがCloudflareに合流するというニュースです。
+- **[Coinbase says it's moving its app off React Native](https://www.linkedin.com/posts/adamawolf_senior-software-engineer-native-mobile-activity-7511201803389186048-JV6b)** (出典: *React Status #493*)
+  + 要約: Shopifyに続いてCoinbaseも、アプリをReact Nativeから移行すると発表しました。「AIコーディングエージェントが機能を2回作るコストを大幅に下げた」という論理を繰り返し、新しいプラットフォーム機能をより早く使えることも理由に挙げています。
+- **[Sindre Sorhus has disabled outside pull requests](https://bsky.app/profile/sindresorhus.com/post/3mwtgzhv7uk2t)** (出典: *JavaScript Weekly #805*)
+  + 要約: AIによる貢献スパムのため外部からのPRを受け付けないようにしましたが、プロジェクトのメンテナンスは続けます。[SWCも信頼されたコントリビューターにPRを限定](https://github.com/swc-project/swc/pull/12463)しました。
+- **[The State of Devs 2026 survey results are out](https://2026.stateofdevs.com/en-US/)** (出典: *JavaScript Weekly #805*)
+  + 要約: 5,000人以上の開発者が、キャリアの安定性、AIの利用と認識、趣味、職場(収入を含む)について回答した結果です。
+- **[WebAIM's eleventh Screen Reader User Survey](https://webaim.org/projects/screenreadersurvey11/)** (出典: *Frontend Focus #761*)
+  + 要約: 1,780人が回答し、JAWSがNVDAを再び上回りました。回答者の68%が、ウェブアクセシビリティはこの1年間で停滞したか悪化したと答えています。
+
+## 6. 🎉 リリース
+- **[Shipping JPEG XL in Chrome](https://developer.chrome.com/blog/jpeg-xl-in-chrome)** (*Frontend Focus #761*)
+  + アップデート: Chrome 155でJPEG XL(`.jxl`)画像のサポートが導入されました。JPEGより30〜50%優れた圧縮率やHDRサポートなどを提供します。
+- **[Panda CSS 2.0](https://panda-css.com/blog/panda-css-v2)** (*Frontend Focus #761*)
+  + アップデート: `css()` APIは維持したまま、コンパイラをRustで作り直し、大幅に高速化されました。配布可能なデザインシステム、view-transitionのスタイリング、ESLintプラグイン、新しいタイポグラフィプリセットが追加されました。
+- **[Video.js 10: Five Players Rebuilt as One](https://videojs.org/blog/videojs-10)** (*Frontend Focus #761*)
+  + アップデート: Plyr、Vidstack、Media Chrome、Mux Playerのチームが合流し、ゼロから作り直しました。Reactとwebコンポーネントをサポートし、バンドルが60%小さくなり、スキンをカスタマイズできます。
+- **[Remix 3.0](https://github.com/remix-run/remix/releases/tag/remix%403.0.0)** (*JavaScript Weekly #805*)
+  + アップデート: 作り直されたフルスタックフレームワークの安定版で、Reactは不要です。公式の記事はまだなく、[RCリリースの記事](https://remix.run/blog/remix-3-release-candidate)により多くの情報があります。
+- **[Preact 11 Released](https://preactjs.com/blog/preact-11/)** (*JavaScript Weekly #805*)
+  + アップデート: 6年ぶりの新メジャーバージョンで、改善されたhydration、自動ref forwarding、ESM専用パッケージが核となっています。[アップグレードガイド](https://preactjs.com/guide/v11/upgrade-guide/)があります。
+- **[Nuxt 4.6: A Big Step Towards a Server-Agnostic Nuxt](https://nuxt.com/blog/v4-6)** (*JavaScript Weekly #805*)
+  + アップデート: サーバーレイヤーがNitroに縛られなくなり、純粋なViteサーバービルドが実験的オプションとして利用可能になりました。組み込みセッション、Vue Vaporサポート、新しいCLI(Nuxt CLI 4.0)も含まれます。
+- **[Effect 4.0: A Smaller Core, Rebuilt Runtime](https://effect.website/blog/releases/effect/40)** (*JavaScript Weekly #805*)
+  + アップデート: リソース管理、並行処理、リトライ、型付きエラーを扱うライブラリを根本から書き直しました。最小バンドルが5分の1になり、並行タスクあたりのメモリ使用量が86%減ったとのことです。
+- **[Ink 8: React for CLIs Gets Scrollable Views](https://github.com/vadimdemedes/ink/releases/tag/v8.0.0)** (*React Status #493*)
+  + アップデート: React 19.3以上が必要です。`Box`の`contentOffsetX/Y`でスクロールビューを作れ、`render()`が任意のNodeストリームを受け取り、incremental renderingが行の変更部分だけを書き換えるためちらつきが減りました。`minWidth`/`maxWidth`は数値のみ許可されるbreaking changeがあります。
+- **[MSW 3.0](https://mswjs.io/blog/introducing-msw-3.0)** (*React Status #493*)
+  + アップデート: ESM専用になり、GraphQL subscriptionのサポートが追加され、サイズも軽くなりました。
+- **[Redux Toolkit 2.13: TypeScript 7 Support and a Steadier useQuery](https://github.com/reduxjs/redux-toolkit/releases/tag/v2.13.0)** (*React Status #493*)
+  + アップデート: 公式のTypeScript 7サポートが追加されました。レンダーのたびに新しいセレクターが作られていた`useQuery`の問題も修正されましたが、この問題のためrefetch中に`isSuccess`が反転することがありました。
+
+## ✍️ おわりに
+今週のニュースを読みながら、「自分で作る楽しさ」と「プラットフォームに任せる効率」のバランスをあらためて考えました。React Ariaがスクロールとview timelineだけでシートを実装した事例は、プラットフォームの機能が十分に成熟したことを示しています。一方で、Nolan Lawsonが指摘するように、AIエージェントがコードを書く時代には、プラットフォームに任せるかどうかを判断することが、ますます開発者の役割になっていきます。Next.jsのエージェント向けアップグレードツールやAI-readyなデザインシステムの議論も、同じ方向を向いていました。ツールがコードを書く速度が上がるほど、明確なコントラクトとガードレールを設計する力がより重要になると考えています。
+
+#### 出典
+- [JavaScript Weekly #805](https://javascriptweekly.com/issues/805)
+- [Frontend Focus #761](https://frontendfoc.us/issues/761)
+- [React Status #493](https://react.statuscode.com/issues/493)
+- [Smashing Newsletter #579](https://mailchi.mp/smashingmagazine/579-ai-ready-design-systems)

@@ -1,0 +1,145 @@
+---
+title: '🚀 2026-10 W2 #79'
+desc: CSS scroll snap 기반 스와이프 시트, Next.js 16.4 Cache Components, Deno의 Cloudflare 합류 | 2026년 10월 2주차 주간 기술 뉴스레터
+date: 2026-10-10
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 이번 주 핵심 테마
+
+이번 주는 "JavaScript로 만들던 것을 플랫폼에 맡긴다"는 흐름이 곳곳에서 보였습니다. React Aria의 Sheet는 CSS scroll snap과 view timeline만으로 스와이프 제스처를 구현했고, CSS Anchor Positioning은 툴팁 위치 계산을 JS에서 걷어냅니다. 한편 Next.js 16.4는 Cache Components를 공식 권장 모델로 올리며 에이전트 기반 업그레이드 도구를 내놓았고, Smashing은 디자인 시스템을 AI가 읽을 수 있게 만드는 방법을 다뤘습니다. Remix 3.0의 탈React와 Deno의 Cloudflare 합류처럼 프레임워크와 런타임 지형이 재편되는 소식도 이어졌습니다.
+
+## 1. 🔍 심층 분석
+- **[React Aria's New Swipeable Sheet and the CSS Tricks Behind It](https://react-aria.adobe.com/blog/sheet)** (출처: *React Status #493*)
+   - 배경: 바텀 시트 같은 스와이프 오버레이는 보통 JS 터치 이벤트로 구현해 왔습니다. React Aria 팀은 이를 걷어내고 스크롤 자체를 제스처 엔진으로 쓰는 방식을 택했습니다.
+   - 핵심 기능: 뷰포트 높이의 2배인 스크롤 컨테이너 안에 시트를 두고, 열림과 닫힘 위치에 scroll snap 지점을 둡니다. 스와이프 진행도에 맞춘 애니메이션은 `view-timeline`으로 연결하고, 부분적으로 열리는 snap points는 1px 마커 요소와 `scroll-margin-top: 100dvh`로 구현합니다. 시트 스택은 `timeline-scope`와 `animation-composition: accumulate`로 처리합니다.
+   - 코드 예제:
+```css
+     .sheet {
+       view-timeline: --sheet;
+       view-timeline-inset: 0 100dvh;
+     }
+     .backdrop { animation-timeline: --sheet; animation-range: entry; }
+```
+   - 실무 적용: 스와이프가 메인 스레드 밖에서 디스플레이 주사율로 동작하고, 네이티브 모멘텀과 러버밴딩 물리가 공짜로 따라옵니다. `position`, `swipeDirection`, `snapPoints`, `preventDismissal` 같은 props로 방향과 동작을 조절할 수 있습니다.
+   - 주의사항: iOS 소프트웨어 키보드는 동적 뷰포트 단위가 반응하지 않아, 콘텐츠에 `padding-bottom: calc(100dvh - var(--visual-viewport-height))`를 따로 줘야 합니다.
+- **[Next.js 16.4 Makes Cache Components the Recommended Default](https://nextjs.org/blog/next-16-4)** (출처: *React Status #493*)
+   - 배경: 16.x 동안 App Router의 암묵적 캐싱을 대체할 Cache Components 모델이 발전해 왔습니다. 일부 케이스에서 기존 모델과 같은 비용·성능 보장이 어려워 보편적으로 권하지 못했는데, 16.4에서 그 간극이 메워졌습니다.
+   - 핵심 기능: `'use cache'`는 컴포넌트 단위의 Cache-Control에 해당하며, 한 페이지 안에서 정적 셸과 요청 시점 렌더링을 섞을 수 있습니다. 16.4에는 라우트의 셸·프리페치·네비게이션이 정적임을 보장하는 `ensureStatic`과, 프리페치에서 캐시 콘텐츠를 제외하는 `navigation()`·`prefetch()`가 추가되었습니다.
+   - 코드 예제:
+```jsx
+     async function Projects({ userId }) {
+       'use cache';
+       cacheLife('hours');
+       // DB 조회 후 렌더링
+     }
+```
+   - 실무 적용: `create-next-app`으로 만든 새 앱은 Cache Components가 기본 활성화됩니다. 기존 앱은 `npx next@canary upgrade --agent=latest`로 에이전트용 마이그레이션 가이드와 codemod를 받을 수 있습니다. 개발 환경에서는 Turbopack 디스크 캐시가 20~25% 줄고 React 19.3도 포함됩니다.
+   - 주의사항: Cache Components는 Next.js 17에서 기본이 될 예정입니다. 에이전트 피드백, Rust React Compiler 같은 일부 기능은 아직 experimental 플래그 뒤에 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[A Visual Notation for React's Parent and Owner Trees](https://julesblom.com/writing/react-visual-notation)** (출처: *React Status #493*)
+  + 요약: 요소가 실제로 놓이는 위치(parent tree)와 요소를 만든 컴포넌트(owner tree)를 함께 보여 주는 다이어그램 표기법입니다. Context, Suspense, memo, error boundary, RSC 표기도 포함하며, 코드를 붙여 넣으면 트리를 그려 주는 플레이그라운드가 있습니다.
+- **[Can We Make React Faster Using the React Compiler?](https://jimmyhmiller.com/what-does-the-react-compiler-even-do)** (출처: *React Status #493*)
+  + 요약: React Compiler의 출력물을 뜯어 본 뒤 인라이닝, 블록, 셀렉터 추론 같은 추가 컴파일러 패스를 프로토타이핑해 얼마나 빨라질 수 있는지 실험합니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[TanStack Charts 1.0: A Composable, Typed Charting Library](https://tanstack.com/blog/tanstack-charts-1-0)** (출처: *JavaScript Weekly #805*)
+  ![TanStack Charts 1.0: A Composable, Typed Charting Library](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/hh9exzpq3o95k5zdqmyd.jpg)
+  + 개요: Tanner Linsley가 D3, Chart.js 2.0, react-charts를 거쳐 약 10년간 쌓은 아이디어를 담은 차트 라이브러리입니다. 선, 점, 막대가 모두 mark이고 scale이 데이터를 mark의 값으로 변환하며, 여기에 축과 인터랙션을 조합합니다. 선 위에 점을 더하거나 막대를 섞는 데 새 차트 타입이 필요 없습니다.
+  + 실전 팁: 렌더링은 SVG가 기본이고 Canvas는 별도 import입니다. D3 scale이나 compact scale도 쓸 수 있어 번들을 작게 유지할 수 있습니다. 저자는 기존 앱의 차트 하나를 골라 TanStack Charts로 재작성해 보라고 권합니다. [예제 카탈로그](https://tanstack.com/charts/catalog)에서 코드를 볼 수 있습니다.
+- **[pure-web-bottom-sheet: A Bottom Sheet Built on CSS Scroll Snap](https://github.com/viliket/pure-web-bottom-sheet)** (출처: *Frontend Focus #761*)
+  + 개요: CSS scroll snap과 scroll-driven animations로 구현한 가볍고 접근성 좋은 바텀 시트 웹 컴포넌트입니다. [예제 페이지](https://viliket.github.io/pure-web-bottom-sheet/)가 준비되어 있습니다.
+  + 실전 팁: 위 React Aria Sheet와 같은 원리를 쓰므로, React 없이 순수 웹 컴포넌트로 시트가 필요할 때 비교해 볼 만합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Lightpanda 1.0: A Headless Browser for Automation](https://lightpanda.io/blog/posts/lightpanda-1-0)** (출처: *JavaScript Weekly #805*)
+  + 요약: Zig로 처음부터 만든 헤드리스 브라우저입니다. 그래픽 렌더링이 없어 Chrome보다 CPU와 메모리를 훨씬 적게 쓰며, Puppeteer/Playwright로 제어하거나 [순수 JavaScript로 스크립팅](https://lightpanda.io/docs/usage/pandascript)할 수 있습니다.
+- **[Gradient Visualizer: Debug Multi-Layer CSS Gradients](https://lab.ishadeed.com/tools/gradient-visualizer/)** (출처: *Frontend Focus #761*)
+  + 요약: 여러 겹의 gradient가 든 `background` 값을 붙여 넣으면 레이어별로 분리해 보여 줍니다. 3D 스택 보기, 타임랩스 재생, 편집 후 코드 재생성까지 지원합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[CSS Does Your Tooltip Positioning Now](https://allthingssmitty.com/2026/10/05/css-does-your-tooltip-positioning-now/)** (출처: *Frontend Focus #761*)
+  + 배경: 툴팁이나 팝오버 위치를 `getBoundingClientRect()`로 계산하면 창 크기 변경, 스크롤, 뷰포트 하단 넘침마다 리스너와 보정 로직이 필요했습니다.
+  + 핵심 인사이트: `anchor-name`과 `position-anchor`로 두 요소를 연결하면 브라우저가 위치를 계속 재계산합니다. `position-try-fallbacks`는 넘칠 때 반대편으로 뒤집고, `popover` 속성과 함께 쓰면 JS 없이 드롭다운이 됩니다. `anchor-size(width)`로 드롭다운 너비를 버튼에 맞출 수도 있습니다.
+  + 코드 예시:
+```css
+    .term { anchor-name: --my-anchor; }
+    .note {
+      position: fixed;
+      position-anchor: --my-anchor;
+      position-area: bottom;
+      position-try-fallbacks: flip-block, flip-inline;
+    }
+```
+  + 왜 유익한가: 위치 문제와 표시 시점 문제를 구분해 줍니다. anchor positioning은 "어디에" 놓을지만 해결하고, 언제 보일지는 `:has()`나 popover가 맡습니다. 앵커 관계는 시각적일 뿐이라 스크린 리더에는 도움이 되지 않으므로 접근성 기능으로 착각하지 말라는 경고도 실무에서 중요합니다.
+- **[Why Don't More Developers 'Use the Platform'?](https://nolanlawson.com/2026/10/03/why-dont-more-developers-use-the-platform/)** (출처: *JavaScript Weekly #805*)
+  + 배경: 플랫폼 옹호 진영에 있던 Nolan Lawson이 일부러 반대편에서 "왜 사람들은 브라우저 기능을 두고 직접 만드는가"를 분석합니다. [Hacker News에서도 긴 토론](https://news.ycombinator.com/item?id=49950554)이 벌어졌습니다.
+  + 핵심 인사이트: 이유로는 브라우저가 생태계를 따라가던 역사, npm 라이브러리가 주는 친숙함과 문서화, CSS의 난해함이 꼽힙니다. 그보다 직접 만드는 것이 더 재미있고 IKEA 효과까지 있다는 점이 핵심입니다. 모달을 직접 만들며 포커스 트랩까지 배우는 과정이 학습이 된다는 것입니다. AI 코딩이 이를 줄일지 늘릴지에 대해서는 낙관과 비관 두 시나리오를 모두 제시합니다.
+  + 왜 유익한가: 동료나 팀의 "직접 구현" 성향을 비난 대신 이해하는 관점을 줍니다. 본인의 ClickHouse 압축 경험담이 플랫폼에 맡기는 편이 낫다는 사례로 설득력 있습니다.
+- **[Expose Your Design System To AI](https://www.smashingmagazine.com/2026/06/how-make-design-system-ai-ready/)** (출처: *Smashing Newsletter #579*)
+  ![How To Make Your Design System AI-Ready](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/2692e8dd-ee96-5341-e05a-735c498ad834.png)
+  + 배경: AI는 일관된 결과를 내려면 명확한 결정과 원칙이 필요합니다. 사람은 경험으로 빈틈을 메우지만 AI는 추측으로 채우기 때문입니다.
+  + 핵심 인사이트: Vitaly Friedman의 가이드는 디자인 시스템을 AI-ready로 만드는 팁, 도구, 사례를 담고 있습니다. 드리프트를 줄이고 컨텍스트를 유지하는 방법은 Hardik Pandya의 [LLM이 소비할 수 있는 형식으로 재구성하는 방법](https://hvpandya.com/llm-design-systems)에서 더 볼 수 있습니다.
+  + 왜 유익한가: 디자인 시스템을 사람용 문서에서 기계가 읽는 명세로 확장하는 방향을 구체적인 자료와 함께 보여 줍니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How Fast is the Web? Exploring Billions of Real-User Measurements](https://blog.cloudflare.com/how-fast-is-the-web/)** (출처: *Frontend Focus #761*)
+  + 요약: Cloudflare를 쓰는 대형 사이트 1만 곳의 익명화된 실사용자 Core Web Vitals를 담은 무료 BigQuery 데이터셋입니다. 매일 갱신되고 Safari/WebKit까지 포함하며, 느린 LCP에서 다운로드가 가장 작은 부분인 경우가 많다는 초기 분석이 실려 있습니다.
+- **[How To Reduce AI Drifting](https://smart-interface-design-patterns.com/articles/ai-drift-design-systems/)** (출처: *Smashing Newsletter #579*)
+  + 요약: AI가 개입하면 Figma 컴포넌트와 Storybook 코드 사이의 간극이 벌어지기 쉽습니다. 컴포넌트 계약과 harness engineering으로 결정론적 가드레일을 세우고, 적절한 지점에서 AI를 루프 밖으로 빼는 방법을 다룹니다.
+---
+
+## 4. ✨ 아이디어
+- **[Shaders: 190+ WebGPU Effect Components, Now Open Source](https://shaders.com/updates/shaders-is-open-source)** (출처: *Frontend Focus #761*)
+  + 특징: 렌더링 엔진, 프레임워크 바인딩, 셰이더 컴포넌트가 MIT 라이선스로 공개되었습니다. React, Vue, Svelte, Solid, 순수 JS에서 쓸 수 있고, [컴포넌트 컬렉션](https://shaders.com/docs/components)이 시각적으로 인상적입니다.
+- **[CSS Doodle: A Web Component for Drawing Patterns with CSS](https://css-doodle.com/)** (출처: *Frontend Focus #761*)
+  + 특징: CSS를 패턴, 배경, 아이콘, 제너러티브 장식을 그리는 언어처럼 쓰는 웹 컴포넌트입니다. [예제가 가득한 사이트](https://css-doodle.com/discover)가 있고, 이번 주 v0.55에서 새로운 타일링 유형이 대거 추가되었습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Deno is joining Cloudflare](https://blog.cloudflare.com/deno-joins-cloudflare/)** (출처: *React Status #493*)
+  + 요약: 뉴스레터 마감 직전에 전해진 속보로, Deno가 Cloudflare에 합류한다는 소식입니다.
+- **[Coinbase says it's moving its app off React Native](https://www.linkedin.com/posts/adamawolf_senior-software-engineer-native-mobile-activity-7511201803389186048-JV6b)** (출처: *React Status #493*)
+  + 요약: Shopify에 이어 Coinbase도 앱을 React Native에서 옮긴다고 밝혔습니다. "AI 코딩 에이전트가 기능을 두 번 만드는 비용을 크게 낮췄다"는 논리를 되풀이하며, 새 플랫폼 기능을 더 빨리 쓸 수 있다는 점도 이유로 들었습니다.
+- **[Sindre Sorhus has disabled outside pull requests](https://bsky.app/profile/sindresorhus.com/post/3mwtgzhv7uk2t)** (출처: *JavaScript Weekly #805*)
+  + 요약: AI 기여 스팸 때문에 외부 PR을 막았지만 프로젝트 유지보수는 계속합니다. [SWC도 신뢰받는 기여자로 PR을 제한](https://github.com/swc-project/swc/pull/12463)했습니다.
+- **[The State of Devs 2026 survey results are out](https://2026.stateofdevs.com/en-US/)** (출처: *JavaScript Weekly #805*)
+  + 요약: 5,000명 이상의 개발자가 커리어 안정성, AI 사용과 인식, 취미, 직장(소득 포함)에 대해 답한 결과입니다.
+- **[WebAIM's eleventh Screen Reader User Survey](https://webaim.org/projects/screenreadersurvey11/)** (출처: *Frontend Focus #761*)
+  + 요약: 1,780명이 응답했고 JAWS가 NVDA를 다시 앞섰습니다. 응답자의 68%는 웹 접근성이 지난 1년간 정체되었거나 나빠졌다고 답했습니다.
+
+## 6. 🎉 릴리스
+- **[Shipping JPEG XL in Chrome](https://developer.chrome.com/blog/jpeg-xl-in-chrome)** (*Frontend Focus #761*)
+  + 업데이트: Chrome 155에서 JPEG XL(`.jxl`) 이미지 지원이 도입되었습니다. JPEG보다 30~50% 나은 압축률과 HDR 지원 등을 제공합니다.
+- **[Panda CSS 2.0](https://panda-css.com/blog/panda-css-v2)** (*Frontend Focus #761*)
+  + 업데이트: `css()` API는 유지하면서 컴파일러를 Rust로 다시 만들어 훨씬 빨라졌습니다. 배포 가능한 디자인 시스템, view-transition 스타일링, ESLint 플러그인, 새 타이포그래피 프리셋이 추가되었습니다.
+- **[Video.js 10: Five Players Rebuilt as One](https://videojs.org/blog/videojs-10)** (*Frontend Focus #761*)
+  + 업데이트: Plyr, Vidstack, Media Chrome, Mux Player 팀이 합류해 처음부터 다시 만들었습니다. React와 웹 컴포넌트를 지원하고 번들이 60% 작아졌으며 스킨을 커스터마이징할 수 있습니다.
+- **[Remix 3.0](https://github.com/remix-run/remix/releases/tag/remix%403.0.0)** (*JavaScript Weekly #805*)
+  + 업데이트: 다시 만든 풀스택 프레임워크의 안정 버전으로, React가 필요 없습니다. 공식 글은 아직 없고 [RC 릴리스 글](https://remix.run/blog/remix-3-release-candidate)에 더 많은 정보가 있습니다.
+- **[Preact 11 Released](https://preactjs.com/blog/preact-11/)** (*JavaScript Weekly #805*)
+  + 업데이트: 6년 만의 새 메이저 버전으로 개선된 hydration, 자동 ref forwarding, ESM 전용 패키지가 핵심입니다. [업그레이드 가이드](https://preactjs.com/guide/v11/upgrade-guide/)가 있습니다.
+- **[Nuxt 4.6: A Big Step Towards a Server-Agnostic Nuxt](https://nuxt.com/blog/v4-6)** (*JavaScript Weekly #805*)
+  + 업데이트: 서버 레이어가 Nitro에 묶이지 않게 되어 순수 Vite 서버 빌드가 실험 옵션으로 열렸습니다. 내장 세션, Vue Vapor 지원, 새 CLI(Nuxt CLI 4.0)도 포함됩니다.
+- **[Effect 4.0: A Smaller Core, Rebuilt Runtime](https://effect.website/blog/releases/effect/40)** (*JavaScript Weekly #805*)
+  + 업데이트: 리소스 관리, 동시성, 재시도, 타입 있는 에러를 다루는 라이브러리를 밑바닥부터 다시 썼습니다. 최소 번들이 5배 작아지고 동시 태스크당 메모리 사용량이 86% 줄었다고 합니다.
+- **[Ink 8: React for CLIs Gets Scrollable Views](https://github.com/vadimdemedes/ink/releases/tag/v8.0.0)** (*React Status #493*)
+  + 업데이트: React 19.3 이상이 필요합니다. `Box`의 `contentOffsetX/Y`로 스크롤 뷰를 만들 수 있고, `render()`가 임의의 Node 스트림을 받으며, incremental rendering이 줄의 바뀐 부분만 다시 써 깜빡임이 줄었습니다. `minWidth`/`maxWidth`는 숫자만 허용되는 breaking change가 있습니다.
+- **[MSW 3.0](https://mswjs.io/blog/introducing-msw-3.0)** (*React Status #493*)
+  + 업데이트: ESM 전용으로 바뀌었고 GraphQL subscription 지원이 추가되었으며 용량이 가벼워졌습니다.
+- **[Redux Toolkit 2.13: TypeScript 7 Support and a Steadier useQuery](https://github.com/reduxjs/redux-toolkit/releases/tag/v2.13.0)** (*React Status #493*)
+  + 업데이트: 공식 TypeScript 7 지원이 추가되었습니다. 렌더마다 새 셀렉터가 만들어지던 `useQuery` 문제도 고쳐졌는데, 이 때문에 refetch 도중 `isSuccess`가 뒤집힐 수 있었습니다.
+
+## ✍️ 마치며
+이번 주 소식을 읽으면서 "직접 만드는 즐거움"과 "플랫폼에 맡기는 효율" 사이의 균형을 다시 생각했습니다. React Aria가 스크롤과 view timeline만으로 시트를 구현한 사례는 플랫폼 기능이 충분히 성숙했음을 보여 줍니다. 반면 Nolan Lawson의 지적처럼, AI 에이전트가 코드를 쓰는 시대에는 플랫폼에 맡길 것인지 판단하는 일이 점점 개발자의 몫이 됩니다. Next.js의 에이전트용 업그레이드 도구와 AI-ready 디자인 시스템 논의도 같은 방향이었습니다. 도구가 코드를 쓰는 속도가 빨라질수록 명확한 계약과 가드레일을 설계하는 능력이 더 중요해진다고 생각합니다.
+
+#### 출처
+- [JavaScript Weekly #805](https://javascriptweekly.com/issues/805)
+- [Frontend Focus #761](https://frontendfoc.us/issues/761)
+- [React Status #493](https://react.statuscode.com/issues/493)
+- [Smashing Newsletter #579](https://mailchi.mp/smashingmagazine/579-ai-ready-design-systems)
