@@ -1,0 +1,156 @@
+---
+title: '🚀 2026-10 W3 #80'
+desc: プラットフォームが取り込むCSS・HTML機能、DenoのCloudflare合流とBunの型チェッカー、Next.js緊急セキュリティパッチ | 2026年10月第3週目 週間技術ニュースレター
+date: 2026-10-17
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は「プラットフォームが取り込むもの」がキーワードでした。アイコンシステム、数字の桁揃え、レスポンシブiframe、SVGへの色の注入など、これまでライブラリやJSのハックが担っていたことを、CSSとHTMLが直接解決する事例が続きました。ランタイム側ではDenoがCloudflareに合流し、Bunが型チェッカーを内蔵するなど、勢力図の変化が大きい週でした。Node.jsはWebSocketベンチマークでBunとDenoを上回る結果を出しています。セキュリティ面では、Next.jsの緊急パッチ予告、HandlebarsとExpressの脆弱性修正が重なりました。
+
+## 1. 🔍 深掘り
+- **[The Best Way to Use Icons in Web UIs](https://lea.verou.me/blog/2026/icons/)** (出典: *Frontend Focus #762*)
+   - 背景: アイコンは通常、インラインSVGやコンポーネントの抽象化で埋め込みますが、どのアイコンを使うかがマークアップに固定されてしまい、状態ごとの差し替えや一貫性の管理が難しくなります。アイコンフォントはCSSでアイコンを扱えましたが、容量、アクセシビリティ、フォントの読み込み失敗という問題がありました。著者はアイコンをデザイントークンと捉え、CSSだけで挿入・差し替えを行う方法を提案しています。
+   - 主な機能: アイコンを `--icon-trash` のようなCSS変数(`<image>` 値)として定義し、`--icon`、`--icon-start`、`--icon-end` プロパティで擬似要素に挿入します。擬似要素を1emの正方形にし、`currentColor` の背景に `mask` でアイコンの形を適用します。スタイルクエリと `@property` により、アイコンが指定された要素にのみ適用されます。
+   - コード例:
+```css
+     button.delete { --icon: var(--icon-trash); }
+
+     @container style(--icon-start) {
+       ::before { mask: var(--icon-start) no-repeat center / contain; }
+     }
+```
+   - 実務への応用: `:hover`、ダークモード、印刷用メディアクエリ、書字方向に応じて、マークアップを変更せずにアイコンを切り替えられ、`details::marker` のような擬似要素にもアイコンを指定できます。すぐに試せるよう、`@nudeui/icons` パッケージとしても公開されました。
+   - 注意事項: マスク方式のため単色アイコンのみ対応しており、擬似要素全体がマスクされるため、別途背景や枠線を付けることはできません。スタイルクエリは全世界のブラウザの約93%で対応しており、SafariではWebKitのバグ #301609、#320220、#325900 の影響で回避用のコードが必要です。相対URLは、アイコンが定義されたファイルではなく、使用するCSSを基準に解決されます。
+- **[Recursion is DEAD and HTML Killed It](https://daverupert.com/2026/10/html-recursion/)** (出典: *Frontend Focus #762*)
+   - 背景: ネストされたコメントのようなツリー型データは、サーバー側でツリー全体を組み立ててから再帰的にレンダリングする必要があり、ツリーが完成するまでユーザーは待たされます。
+   - 主な機能: Chromiumで試験中のDeclarative Partial Updatesは、`<?marker>` というプレースホルダーを置いておくと、後から届いた `<template for="">` の内容がその位置に自動的に埋め込まれます。サーバー接続を閉じずにHTMLを流し続ければブラウザが自動で組み立ててくれるため、サーバー側でツリーを作らなくても、投稿単位ですぐに送信できます。
+   - コード例:
+```html
+     <main id="main">
+       <?marker name="post-abc123" ?>
+     </main>
+     <template for="post-abc123"><div class="post">…</div></template>
+```
+   - 実務への応用: 重要なコンテンツを先に見せ、ファーストビューより下のコンテンツは遅れて届いてもよい場合に向いています。返信付きの投稿、レビュアープロフィール付きの商品レビュー、PRのコメントスレッドが例として挙げられています。LLMチャットボットのストリーミング応答にも使えるそうです。
+   - 注意事項: Chromium専用で、FOUCやLCPに関する問題は別途管理する必要があります。`<?marker>` は一度埋まると消費されるため、続けて追加したい場合は同じ名前のマーカーを再度入れる必要があります。投稿が1万件を超えるとブラウザに負荷がかかるため、「もっと見る」ボタンは依然として必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[WebSocket Servers in JavaScript: Node.js, Bun, and Deno](https://lemire.me/blog/2026/10/10/websocket-servers-in-javascript-node-js-bun-and-deno-in-2026/)** (出典: *JavaScript Weekly #806*)
+  + 要約: 2023年にDaniel Lemireは、WebSocketのメッセージ中継でBunがNodeよりはるかに高速だと報告しましたが、当時のBunサーバーのコードにはバグがありました。今回はCのクライアント/リレーを基準に再測定し、Node 26がCに近いレイテンシでBunとDenoを上回りました。
+- **[Deno is Joining Cloudflare (But…)](https://deno.com/blog/cloudflare)** (出典: *JavaScript Weekly #806*)
+  + 要約: Denoチームは、Deno自体の開発を続けるためではなく、celldをworkerdに統合してDurable Objectsをセルフホストできるようにするために、Cloudflareに合流します。Denoランタイムは1年間は公式の修正のみを受け付け、Deno Deployは6か月後に終了し、JSRはCloudflareのインフラへ移行します。Ryan DahlはHacker Newsで「Why reimplement Node? It works.」と述べました。
+
+## 2. 🛠️ ツール & ライブラリ
+- **[H3 v2: The UnJS HTTP Framework Rebuilt on Web Standards](https://h3.dev/blog/v2)** (出典: *JavaScript Weekly #806*)
+  + 概要: NitroとNuxtのサーバーレイヤーの基盤となるミニマルなHTTPフレームワークが、`Request`、`Response`、`URL`、`Headers` の標準仕様をベースに全面的に書き直され、v2 stableとなりました。同じアプリがNode、Bun、Deno、Workers、ブラウザで動作し、URLPatternに似たルーティングと `(event, next)` ミドルウェアをサポートします。
+  + 使い方:
+```js
+    import { H3, serve } from "h3";
+
+    const app = new H3().get("/", () => "⚡️ Tadaa!");
+
+    serve(app, { port: 3000 });
+```
+  + 実践チップ: 新しい `h3/rules` の `routeRules` で、リダイレクト、ヘッダー、CORS、キャッシュをルートグループ単位で設定できます。v1のユーティリティの大半はそのまま動作し、Node.js環境では `>= 20.19` が必要です。アップグレード時は[Migration guide](https://h3.dev/migration)を参照してください。
+- **[Shaders: 190+ WebGPU Effect Components, Now Open Source](https://shaders.com/updates/shaders-is-open-source)** (出典: *JavaScript Weekly #806*)
+  + 概要: 波紋、グロー、ASCII変換といったエフェクトを、シェーダーコードではなくコンポーネントとして組み合わせられるツールで、React、Vue、Svelte、Solid、素のJSに対応しています。レンダリングエンジン、フレームワークバインディング、コンポーネントのすべてがMITライセンスで公開されました。
+  + 実践チップ: 個人・商用プロジェクトのどちらでも別途ライセンスなしで利用でき、デザインエディタのコードエクスポートも無料です。独自のコンポーネントを作成する `defineShader` は実験的な機能です。Proサブスクリプションは、1,000個以上のシェーダーなど従来の特典を維持します。
+
+---
+#### 見逃せないコンテンツ
+- **[OpenCode 2.0: A Big Update for the Open Coding Agent](https://anoma.ly/notes/opencode-2-0/)** (出典: *JavaScript Weekly #806*)
+  + 要約: Bunベースのフルスペックなエージェント型コーディングアプリです。v2.0ではバックグラウンドのサブエージェント、モデルにMCPツール呼び出しをスクリプトとして書かせるcode mode、素のJSおよびEffectコード向けクライアントが追加されました。
+- **[Screen Ruler: Measure, Inspect, and Edit Web Pages](https://www.screen-ruler.com/)** (出典: *Frontend Focus #762*)
+  + 要約: ページの寸法の計測、CSSの検査、リアルタイム編集に対応したChromium拡張機能で、MCPサーバーも併せて提供されています。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Better Dashboard Figures](https://www.carmenansio.com/articles/opentype-features-css/)** (出典: *Smashing Newsletter #580*)
+  ![Why Your Numbers Look Wrong](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/17c3cbdf-334f-6110-d98c-c45cfdef9871.png)
+  + 主要なインサイト: ダッシュボードの数字がずれて見える理由は、フォントのデフォルトの数字がプロポーショナル幅であるため、値が更新されるたびに桁の幅が変わってしまうからです。`tabular-nums` ですべての数字の幅を固定すれば、列が揃い、リアルタイムの値の揺れもなくなります。本文中の数字には `oldstyle-nums`、分数には `diagonal-fractions`、ラベルには本物の `small-caps` を使えます。
+  + コード例:
+```css
+    .amount { font-variant-numeric: tabular-nums; }
+    .note   { font-variant-numeric: oldstyle-nums; }
+    .qty    { font-variant-numeric: diagonal-fractions; }
+    .head   { font-variant-caps: small-caps; }
+```
+  + なぜ役立つのか: わずか4行のCSSで金融系UIの信頼感を変えられ、Chrome 52、Firefox 34、Safari 9.1以降で対応しているため、導入の負担もありません。ただし、Google Fontsの可変フォントビルドではこの機能のグリフが削除されていることが多く、効果が出ない場合はフォントをセルフホストする必要があるという落とし穴も指摘しています。
+- **[Filling In The Last Row](https://twilson.net/writing/filling-responsive-grid)** (出典: *Smashing Newsletter #580*)
+  ![Filling In The Last Row Of A Responsive Grid](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/131a6e24-9057-3138-c9ba-5735f355534a.png)
+  + 主要なインサイト: `1px` のgapにコンテナの背景色を枠線の色として使うグリッド区切り線のトリックは、最後の行が空いていると隙間が見えてしまいます。埋めるべき空セルの数は `ceil(items / cols) * cols - items` で計算できます。レスポンシブ対応では、複雑な計算をする代わりに、ブレークポイントごとに別々のフィラーセルのまとまりを用意し、`hidden md:block` のようなクラスで切り替える方法が最もシンプルだったとのことです。
+  + コード例:
+```jsx
+    {[...Array(Math.ceil(items / cols) * cols - items)].map((_, i) => (
+      <div key={i} className="..." />
+    ))}
+```
+  + なぜ役立つのか: 要素数は少し増えますが、カスタムCSSなしで理解しやすい解決策です。gap decorations(`row-rule`、`column-rule`)がサポートされれば不要になる暫定的な対処法であることも、はっきり述べられています。
+- **[Lazy Loading Images and Media: How Far Ahead Browsers Fetch](https://calibreapp.com/blog/native-lazy-loading)** (出典: *Frontend Focus #762*)
+  + 主要なインサイト: Chromeのページロードのうち `loading="lazy"` の画像を使っているのは26%だけで、17%のページはLCP画像にlazyを指定してしまい、かえって遅くなっています。遅延読み込みを開始する距離はブラウザごとに異なり、Chromeは4G基準で画像1,250px、Firefoxは600px、Safariは1ビューポート分です。`<video>` と `<audio>` のlazyはChrome 150以降でのみサポートされています。
+  + コード例:
+```html
+    <img src="my-image.avif" loading="lazy" />
+    <video src="showreel.mp4" loading="lazy" />
+```
+  + なぜ役立つのか: ファーストビューの画像はeagerのままにし、LCP画像には `fetchpriority="high"` を指定し、ファーストビューより下の画像だけをlazyにするというルールと、`width`/`height` の指定(CLS防止)を、実測値とともに示しています。フレームワークがSSR時に画像へpreloadを付ける場合があるため、サーバーがレンダリングした実際のHTMLを確認するようにという助言も実用的です。
+
+---
+#### 見逃せないコンテンツ
+- **[Sidenotes With CSS](https://vincent.bernat.ch/en/blog/2026-css-sidenotes)** (出典: *Smashing Newsletter #580*)
+  + 要約: Vincent BernatがCSSアンカーポジショニングで実装したサイドノートの手法です。JavaScriptは不要で、狭いビューポートやアンカーポジショニング非対応のブラウザでは、該当の段落の下に移動します。
+- **[CSS Features We Can Use Today](https://flaviocopes.com/modern-css-features/)** (出典: *Smashing Newsletter #580*)
+  + 要約: Sass、JSのハック、PostCSSプラグインが担っていた領域を、ブラウザが直接処理できるようになりました。Flavio Copesが、12個の最新CSS機能を、置き換えられる回避策、コピー&ペーストできるスニペット、対応状況とともにまとめています。
+---
+
+## 4. ✨ アイデア
+- **[CSS Linked Parameters](https://pepelsbey.dev/articles/svg-link-params/)** (出典: *Smashing Newsletter #580*)
+   ![CSS Linked Parameters](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/11727c4c-ec1c-49b5-26e9-74d1aa13f3d2.png)
+  + 特徴: `<img>` や背景画像として読み込んだSVGは、ページのCSSで色を付けられませんでしたが、`link-parameters: param(--back, #cfa9bf)` で値を渡し、SVG内で `fill="env(--back, #f25a80)"` として受け取る方式です。Vadim Makeevは、WarholのMarilynのプリントを、SVG 1つ(約50KB、ネットワークリクエスト1回)で9通りの配色で出力しました。`env()` にフォールバックがあるため、非対応のブラウザでも元の色で正常に表示されます。現在はFirefox Nightly(153~)とSafari Technology Preview 253(フラグ)でのみ実験的に動作し、仕様の一部しか実装されていないため、本番利用にはまだ早い状況です。
+- **[Brighter Than White](https://www.soverybright.com/)** (出典: *Smashing Newsletter #580*)
+   ![Make Your Logo Brighter Than White](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/f39e8932-6458-2f17-4d13-2be33b5ec98e.png)
+  + 特徴: ゲインマップを利用して、HDRディスプレイでロゴやテキストを白よりも明るく光らせる手法です。ChromeまたはSafari 26との組み合わせで動作し、Chris Bennettが、効果を作成してくれる小さなツールと、HDR画像を使ってテキストを塗るコツを共有しています。
+
+## 5. ⚡️ ミニノート
+- **[Responsive iframes](https://developer.chrome.com/blog/responsive-iframes)** (出典: *Smashing Newsletter #580*)
+  + 要約: Chrome 156がレスポンシブiframeに対応し、埋め込まれたドキュメントが内部コンテンツに合わせてコンテナのフレームサイズを自動的に調整します。高さのハードコードやイベントループの実装が不要になります。
+- **[2026 Stack Overflow Developer Survey](https://survey.stackoverflow.co/2026)** (出典: *JavaScript Weekly #806*)
+  + 要約: 30,903人が参加し、JavaScriptが12年連続で1位の言語、TypeScriptは6位でした。
+- **[An out-of-band Next.js security release is due tomorrow](https://nextjs.org/blog/upcoming-nextjs-security-update-october-2026)** (出典: *JavaScript Weekly #806*)
+  + 要約: ニュースレター発行日(10月13日)の翌日に、Next.jsの定例スケジュール外の緊急セキュリティリリースが予告されました。
+- **[Let's Encrypt 64-day certs](https://letsencrypt.org/2026/10/07/64-day-certs)** (出典: *Frontend Focus #762*)
+  + 要約: 来年2月から、新規・更新されるLet's Encrypt証明書のデフォルトの有効期間が90日から64日に短縮されます。
+- **[Lambda Web Functions](https://aws.amazon.com/blogs/aws/announcing-aws-lambda-web-functions-for-fast-consistent-web-app-performance-anywhere/)** (出典: *JavaScript Weekly #806*)
+  + 要約: Express、Hono、FastifyのようなポートをリッスンするNodeサーバーを、ハンドラーを書き直さずにLambdaで実行でき、アクティブCPU時間とメモリが別々に課金されます。
+
+## 6. 🎉 リリース
+- **[TanStack Start 1.0](https://tanstack.com/blog/tanstack-start-1-0)** (*JavaScript Weekly #806*)
+  + アップデート: ReactとSolid向けのフルスタックフレームワークが1.0としてリリースされました。
+- **[Bun 1.4.3 Adds bun check, a Built-In TypeScript Type Checker](https://bun.com/blog/bun-v1.4.3)** (*JavaScript Weekly #806*)
+  + アップデート: TypeScript 7のチェッカーを移植した `bun check` が `tsconfig.json` を読み込み、`tsc` と同じエラーを報告します。Jarred Sumnerは3〜6倍高速だと主張しています。`bun run`、`test`、`build` と連携し、アイドル状態のサーバープロセスのCPU使用量が大幅に減少したほか、JavaScriptCoreのアップグレードによってパフォーマンスも向上しました。
+- **[Node.js v26.11.0 (Current)](https://nodejs.org/en/blog/release/v26.11.0)** (*JavaScript Weekly #806*)
+  + アップデート: 設定した時間が経過するとプロセスを終了する `--process-timeout` フラグと、`node:sqlite` のvirtual tableサポートが追加されました。
+- **[Express 5.3.0](https://github.com/expressjs/express/releases/tag/v5.3.0)** (*JavaScript Weekly #806*)
+  + アップデート: `qs`、`proxy-addr`、`body-parser` の依存関係のパッチにより、5件のCVEが解決されたメンテナンスリリースです。
+- **[Handlebars 4.7.10](https://github.com/handlebars-lang/handlebars.js/releases/tag/v4.7.10)** (*JavaScript Weekly #806*)
+  + アップデート: 3.0まで遡るリリースに影響していた、2件のcriticalなJavaScriptインジェクション脆弱性が修正されました。
+- **[Partytown 1.0](https://partytown.qwik.dev/)** (*JavaScript Weekly #806*)
+  + アップデート: サードパーティスクリプトをメインスレッドではなくWeb Workerで実行するライブラリが、5年の開発を経てベータを脱しました。
+- **[Bootstrap 6 Alpha](https://blog.getbootstrap.com/2026/10/08/bootstrap-6-alpha/)** (*Frontend Focus #762*)
+  + アップデート: 2021年以来初のメジャーリリースで、ほとんどのSass変数がCSS変数に置き換えられ、JSプラグインはESM専用になり、ブラウザネイティブの機能がより活用されています。
+- **[reseter.css 3.0: The Modern CSS Reset](https://ikrishg.github.io/reseter.css/)** (*Frontend Focus #762*)
+  + アップデート: fullとmini、どちらのバージョンも `@layer reset` で囲み、論理プロパティを全面的に使用し、Lightning CSSでビルドされ、圧縮後は約1KBです。
+- **[Firefox 158 Enables JPEG XL by Default](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/158)** (*Frontend Focus #762*)
+  + アップデート: Chromeに続いてJPEG XLがデフォルトで有効になり、画像の `Accept` ヘッダーに `image/jxl` が追加されます。
+- **[Chrome 156 beta](https://chromestatus.com/release-notes/156)** (*Frontend Focus #762*)
+  + アップデート: 来週stable予定で、CSSの `random()` のサポートが追加されます。
+
+## ✍️ おわりに
+今週のニュースを読んで最も印象的だったのは、アイコン、数字の桁揃え、iframeの高さなど、長らくライブラリや回避コードに任せてきた問題が、プラットフォームの機能として一つずつ戻ってきているということです。ただし、Lea Verouの記事が示すように、Safariのバグ回避といった現実的なコストが残っているため、どこまでをプログレッシブエンハンスメントとして受け入れるか、チーム単位での基準が必要に思えます。ランタイム側では、Denoの方向転換、Bunの `bun check`、Nodeのベンチマークでの反撃が1週間に重なり、選択肢の重心が再び動いている感覚があります。一方で、Next.jsの緊急パッチ予告やHandlebars、Expressの脆弱性修正は、依存関係のアップデートを先送りしない習慣が、今なお最も安上がりなセキュリティ対策であることを思い出させてくれます。
+
+#### 出典
+- [JavaScript Weekly #806](https://javascriptweekly.com/issues/806)
+- [Frontend Focus #762](https://frontendfoc.us/issues/762)
+- [Smashing Newsletter #580](https://mailchi.mp/smashingmagazine/580-new-css-features-for-2027)

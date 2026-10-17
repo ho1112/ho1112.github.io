@@ -1,0 +1,157 @@
+---
+title: '🚀 2026-10 W3 #80'
+desc: 플랫폼이 흡수하는 CSS·HTML 기능, Deno의 Cloudflare 합류와 Bun 타입 체커, Next.js 긴급 보안 패치 | 2026년 10월 3주차 주간 기술 뉴스레터
+date: 2026-10-17
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 "플랫폼이 흡수하는 것들"이 키워드였습니다. 아이콘 시스템, 숫자 정렬, 반응형 iframe, SVG 색상 주입처럼 예전에는 라이브러리나 JS 해킹이 맡던 일을 CSS와 HTML이 직접 해결하는 사례가 이어졌습니다. 런타임 쪽에서는 Deno가 Cloudflare에 합류하고 Bun이 타입 체커를 내장하는 등 지형 변화가 컸습니다. Node.js는 WebSocket 벤치마크에서 Bun과 Deno를 앞서는 결과를 내놓았습니다. 보안 측면에서는 Next.js 긴급 패치 예고, Handlebars와 Express의 취약점 수정이 겹쳤습니다.
+
+## 1. 🔍 심층 분석
+- **[The Best Way to Use Icons in Web UIs](https://lea.verou.me/blog/2026/icons/)** (출처: *Frontend Focus #762*)
+   - 배경: 아이콘은 보통 인라인 SVG나 컴포넌트 추상화로 넣는데, 어떤 아이콘을 쓸지가 마크업에 박혀 상태별 교체나 일관성 관리가 어렵습니다. 아이콘 폰트는 CSS로 아이콘을 다뤘지만 용량, 접근성, 폰트 로딩 실패 문제가 있었습니다. 저자는 아이콘을 디자인 토큰으로 보고 CSS만으로 삽입하고 교체하는 방식을 제안합니다.
+   - 핵심 기능: 아이콘을 `--icon-trash` 같은 CSS 변수(`<image>` 값)로 정의하고, `--icon`, `--icon-start`, `--icon-end` 속성으로 의사 요소에 삽입합니다. 의사 요소를 1em 사각형으로 만들고 `currentColor` 배경에 `mask`로 아이콘 모양을 입히며, 스타일 쿼리와 `@property`로 아이콘이 지정된 요소에만 적용합니다.
+   - 코드 예제:
+     ```css
+     button.delete { --icon: var(--icon-trash); }
+
+     @container style(--icon-start) {
+       ::before { mask: var(--icon-start) no-repeat center / contain; }
+     }
+     ```
+   - 실무 적용: `:hover`, 다크 모드, 인쇄 미디어 쿼리, 쓰기 방향에 따라 마크업 수정 없이 아이콘을 바꿀 수 있고, `details::marker` 같은 의사 요소에도 아이콘을 줄 수 있습니다. 직접 적용해 볼 수 있도록 `@nudeui/icons` 패키지로도 공개되었습니다.
+   - 주의사항: 마스크 방식이라 단색 아이콘만 지원하며, 의사 요소 전체가 마스킹되어 별도 배경과 테두리는 줄 수 없습니다. 스타일 쿼리는 전 세계 브라우저의 약 93%에서 지원되고, Safari에는 WebKit 버그 #301609, #320220, #325900 때문에 우회 코드가 필요합니다. 상대 URL은 아이콘이 정의된 파일이 아니라 사용하는 CSS 기준으로 해석됩니다.
+- **[Recursion is DEAD and HTML Killed It](https://daverupert.com/2026/10/html-recursion/)** (출처: *Frontend Focus #762*)
+   - 배경: 중첩 댓글 같은 트리형 데이터는 서버에서 전체 트리를 먼저 조립한 뒤 재귀 렌더링해야 해서, 트리가 완성될 때까지 사용자가 기다립니다.
+   - 핵심 기능: Chromium에서 시험 중인 Declarative Partial Updates는 `<?marker>` 자리 표시자를 두고, 나중에 도착한 `<template for="">`의 내용을 해당 위치에 자동으로 채웁니다. 서버 연결을 닫지 않고 HTML을 계속 흘려보내면 브라우저가 알아서 조립하므로, 서버에서 트리를 만들 필요 없이 게시글 단위로 곧바로 전송할 수 있습니다.
+   - 코드 예제:
+     ```html
+     <main id="main">
+       <?marker name="post-abc123" ?>
+     </main>
+     <template for="post-abc123"><div class="post">…</div></template>
+     ```
+   - 실무 적용: 중요한 콘텐츠를 먼저 보여주고 폴드 아래 콘텐츠는 늦게 와도 되는 경우에 적합합니다. 대댓글이 있는 게시글, 리뷰어 프로필이 붙는 상품 리뷰, PR 댓글 스레드가 예시로 나옵니다. LLM 챗봇의 스트리밍 응답에도 쓸 수 있다고 합니다.
+   - 주의사항: Chromium 전용이며 FOUC와 LCP 관련 문제는 따로 관리해야 합니다. `<?marker>`는 한 번 채워지면 소모되므로 이어 붙이려면 같은 이름의 마커를 다시 넣어야 합니다. 게시글이 1만 개를 넘으면 브라우저에 부담이 되어 "더 보기" 버튼이 여전히 필요합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[WebSocket Servers in JavaScript: Node.js, Bun, and Deno](https://lemire.me/blog/2026/10/10/websocket-servers-in-javascript-node-js-bun-and-deno-in-2026/)** (출처: *JavaScript Weekly #806*)
+  + 요약: 2023년 Daniel Lemire는 Bun이 WebSocket 메시지 중계에서 Node보다 훨씬 빠르다고 보고했지만, 당시 Bun 서버 코드에 버그가 있었습니다. 이번에는 C 클라이언트/릴레이를 기준선으로 다시 측정했고, Node 26이 C에 가까운 지연 시간으로 Bun과 Deno를 앞섰습니다.
+- **[Deno is Joining Cloudflare (But…)](https://deno.com/blog/cloudflare)** (출처: *JavaScript Weekly #806*)
+  + 요약: Deno 팀은 Deno 자체 개발을 계속하려는 것이 아니라, celld를 workerd에 통합해 Durable Objects를 셀프 호스팅할 수 있게 하려고 Cloudflare에 합류합니다. Deno 런타임은 1년간 공식 수정만 받고, Deno Deploy는 6개월 뒤 종료되며, JSR은 Cloudflare 인프라로 이전됩니다. Ryan Dahl은 Hacker News에서 "Why reimplement Node? It works."라고 언급했습니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[H3 v2: The UnJS HTTP Framework Rebuilt on Web Standards](https://h3.dev/blog/v2)** (출처: *JavaScript Weekly #806*)
+  + 개요: Nitro와 Nuxt 서버 레이어의 기반인 미니멀 HTTP 프레임워크가 `Request`, `Response`, `URL`, `Headers` 표준 위로 전면 재작성되어 v2 stable이 되었습니다. 같은 앱이 Node, Bun, Deno, Workers, 브라우저에서 동작하고, URLPattern 유사 라우팅과 `(event, next)` 미들웨어를 지원합니다.
+  + 사용법:
+    ```js
+    import { H3, serve } from "h3";
+
+    const app = new H3().get("/", () => "⚡️ Tadaa!");
+
+    serve(app, { port: 3000 });
+    ```
+  + 실전 팁: 새 `h3/rules`의 `routeRules`로 리다이렉트, 헤더, CORS, 캐시를 라우트 그룹 단위로 설정할 수 있습니다. v1 유틸리티 대부분이 그대로 동작하고, Node.js 환경에서는 `>= 20.19`가 필요합니다. 업그레이드 시 [Migration guide](https://h3.dev/migration)를 참고하면 됩니다.
+- **[Shaders: 190+ WebGPU Effect Components, Now Open Source](https://shaders.com/updates/shaders-is-open-source)** (출처: *JavaScript Weekly #806*)
+  + 개요: 물결, 글로우, ASCII 변환 같은 효과를 셰이더 코드가 아니라 컴포넌트로 조합하는 도구로, React, Vue, Svelte, Solid, 순수 JS를 지원합니다. 렌더링 엔진, 프레임워크 바인딩, 컴포넌트가 모두 MIT 라이선스로 공개되었습니다.
+  + 실전 팁: 개인과 상업 프로젝트 모두 별도 라이선스 없이 쓸 수 있고, 디자인 에디터의 코드 내보내기도 무료입니다. 직접 컴포넌트를 만드는 `defineShader`는 실험적 기능입니다. Pro 구독은 1,000개 이상의 셰이더 등 기존 혜택을 유지합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[OpenCode 2.0: A Big Update for the Open Coding Agent](https://anoma.ly/notes/opencode-2-0/)** (출처: *JavaScript Weekly #806*)
+  + 요약: Bun 기반의 풀스펙 에이전트형 코딩 앱입니다. v2.0은 백그라운드 서브에이전트, 모델이 MCP 도구 호출을 스크립트로 짜게 하는 code mode, 바닐라 JS와 Effect 코드용 클라이언트를 추가했습니다.
+- **[Screen Ruler: Measure, Inspect, and Edit Web Pages](https://www.screen-ruler.com/)** (출처: *Frontend Focus #762*)
+  + 요약: 페이지 치수 측정, CSS 검사, 실시간 편집을 지원하는 Chromium 확장 프로그램이며 MCP 서버도 함께 제공합니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[Better Dashboard Figures](https://www.carmenansio.com/articles/opentype-features-css/)** (출처: *Smashing Newsletter #580*)
+  ![Why Your Numbers Look Wrong](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/17c3cbdf-334f-6110-d98c-c45cfdef9871.png)
+  + 핵심 인사이트: 대시보드 숫자가 어긋나 보이는 이유는 폰트의 기본 숫자가 비례폭이라 값이 갱신될 때 자릿수 폭이 달라지기 때문입니다. `tabular-nums`로 모든 숫자의 폭을 고정하면 열이 정렬되고 실시간 값의 흔들림이 사라집니다. 본문 속 숫자는 `oldstyle-nums`, 분수는 `diagonal-fractions`, 라벨은 진짜 `small-caps`를 쓰면 됩니다.
+  + 코드 예시:
+    ```css
+    .amount { font-variant-numeric: tabular-nums; }
+    .note   { font-variant-numeric: oldstyle-nums; }
+    .qty    { font-variant-numeric: diagonal-fractions; }
+    .head   { font-variant-caps: small-caps; }
+    ```
+  + 왜 유익한가: 네 줄의 CSS로 금융형 UI의 신뢰감을 바꿀 수 있고 Chrome 52, Firefox 34, Safari 9.1부터 지원되어 도입 부담이 없습니다. 다만 Google Fonts의 가변 폰트 빌드는 이 기능의 글리프를 제거한 경우가 많아, 효과가 없으면 폰트를 셀프 호스팅해야 한다는 함정도 짚어줍니다.
+- **[Filling In The Last Row](https://twilson.net/writing/filling-responsive-grid)** (출처: *Smashing Newsletter #580*)
+  ![Filling In The Last Row Of A Responsive Grid](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/131a6e24-9057-3138-c9ba-5735f355534a.png)
+  + 핵심 인사이트: `1px` gap에 컨테이너 배경색을 테두리 색으로 쓰는 그리드 구분선 트릭은 마지막 행이 비면 틈이 드러납니다. 채워야 할 빈 셀 수는 `ceil(items / cols) * cols - items`로 계산하고, 반응형에서는 복잡한 계산 대신 브레이크포인트마다 별도의 필러 셀 묶음을 두고 `hidden md:block` 같은 클래스로 전환하는 방식이 가장 단순했다고 합니다.
+  + 코드 예시:
+    ```jsx
+    {[...Array(Math.ceil(items / cols) * cols - items)].map((_, i) => (
+      <div key={i} className="..." />
+    ))}
+    ```
+  + 왜 유익한가: 요소 수는 약간 늘지만 커스텀 CSS 없이 이해하기 쉬운 해법입니다. gap decorations(`row-rule`, `column-rule`)가 지원되면 필요 없어지는 임시 방편이라는 점도 명확히 밝힙니다.
+- **[Lazy Loading Images and Media: How Far Ahead Browsers Fetch](https://calibreapp.com/blog/native-lazy-loading)** (출처: *Frontend Focus #762*)
+  + 핵심 인사이트: Chrome 페이지 로드의 26%만 `loading="lazy"` 이미지를 쓰는데, 17%의 페이지는 LCP 이미지를 lazy로 걸어 오히려 느려집니다. 지연 로딩 시작 거리는 브라우저마다 다릅니다. Chrome은 4G 기준 이미지 1,250px, Firefox는 600px, Safari는 한 뷰포트이며, `<video>`와 `<audio>`의 lazy는 Chrome 150+에서만 지원됩니다.
+  + 코드 예시:
+    ```html
+    <img src="my-image.avif" loading="lazy" />
+    <video src="showreel.mp4" loading="lazy" />
+    ```
+  + 왜 유익한가: 첫 화면 이미지는 eager로 두고 LCP 이미지에는 `fetchpriority="high"`, 폴드 아래만 lazy로 두는 규칙과 `width`/`height` 지정(CLS 방지)을 실측 수치와 함께 제시합니다. 프레임워크가 SSR 시 이미지에 preload를 붙이는 경우가 있으니 서버가 렌더링한 실제 HTML을 점검하라는 조언도 실용적입니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Sidenotes With CSS](https://vincent.bernat.ch/en/blog/2026-css-sidenotes)** (출처: *Smashing Newsletter #580*)
+  + 요약: Vincent Bernat이 CSS 앵커 포지셔닝으로 구현한 사이드노트 방식입니다. JavaScript가 필요 없고, 좁은 뷰포트나 앵커 포지셔닝 미지원 브라우저에서는 해당 문단 아래로 내려갑니다.
+- **[CSS Features We Can Use Today](https://flaviocopes.com/modern-css-features/)** (출처: *Smashing Newsletter #580*)
+  + 요약: Sass, JS 해킹, PostCSS 플러그인이 메우던 영역을 이제 브라우저가 직접 처리합니다. Flavio Copes가 12개 최신 CSS 기능을 대체되는 우회책, 붙여넣을 수 있는 스니펫, 지원 현황과 함께 정리했습니다.
+---
+
+## 4. ✨ 아이디어
+- **[CSS Linked Parameters](https://pepelsbey.dev/articles/svg-link-params/)** (출처: *Smashing Newsletter #580*)
+   ![CSS Linked Parameters](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/11727c4c-ec1c-49b5-26e9-74d1aa13f3d2.png)
+  + 특징: `<img>`나 배경 이미지로 넣은 SVG는 페이지 CSS로 색을 칠할 수 없었는데, `link-parameters: param(--back, #cfa9bf)`로 값을 전달하고 SVG 안에서 `fill="env(--back, #f25a80)"`로 받는 방식입니다. Vadim Makeev는 Warhol의 Marilyn 프린트를 SVG 한 개(약 50KB, 네트워크 요청 1회)로 아홉 가지 색 조합으로 출력했습니다. `env()`에 폴백이 있어 미지원 브라우저에서도 원본 색으로 정상 표시됩니다. 현재는 Firefox Nightly(153~)와 Safari Technology Preview 253(플래그)에서만 실험적으로 동작하며 스펙 일부만 구현되어 프로덕션 사용은 이릅니다.
+- **[Brighter Than White](https://www.soverybright.com/)** (출처: *Smashing Newsletter #580*)
+   ![Make Your Logo Brighter Than White](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/f39e8932-6458-2f17-4d13-2be33b5ec98e.png)
+  + 특징: 게인 맵을 이용해 HDR 디스플레이에서 로고나 텍스트를 흰색보다 밝게 빛나게 하는 기법입니다. Chrome 또는 Safari 26과 조합해 동작하며, Chris Bennett이 효과를 만들어 주는 작은 도구와 HDR 이미지를 통해 텍스트를 칠하는 팁을 공유했습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Responsive iframes](https://developer.chrome.com/blog/responsive-iframes)** (출처: *Smashing Newsletter #580*)
+  + 요약: Chrome 156이 반응형 iframe을 지원해, 임베드된 문서가 내부 콘텐츠에 맞게 컨테이너 프레임 크기를 자동으로 조절합니다. 높이 하드코딩이나 이벤트 루프 구현이 필요 없어집니다.
+- **[2026 Stack Overflow Developer Survey](https://survey.stackoverflow.co/2026)** (출처: *JavaScript Weekly #806*)
+  + 요약: 30,903명이 참여했고 JavaScript가 12년 연속 1위 언어, TypeScript는 6위입니다.
+- **[An out-of-band Next.js security release is due tomorrow](https://nextjs.org/blog/upcoming-nextjs-security-update-october-2026)** (출처: *JavaScript Weekly #806*)
+  + 요약: 뉴스레터 발행일(10월 13일) 기준 다음 날 Next.js 정기 일정 외 긴급 보안 릴리스가 예고되었습니다.
+- **[Let's Encrypt 64-day certs](https://letsencrypt.org/2026/10/07/64-day-certs)** (출처: *Frontend Focus #762*)
+  + 요약: 내년 2월부터 신규/갱신 Let's Encrypt 인증서의 기본 유효기간이 90일에서 64일로 줄어듭니다.
+- **[Lambda Web Functions](https://aws.amazon.com/blogs/aws/announcing-aws-lambda-web-functions-for-fast-consistent-web-app-performance-anywhere/)** (출처: *JavaScript Weekly #806*)
+  + 요약: Express, Hono, Fastify 같은 포트 리스닝 Node 서버를 핸들러 재작성 없이 Lambda에서 실행하며, 활성 CPU 시간과 메모리를 따로 과금합니다.
+
+## 6. 🎉 릴리스
+- **[TanStack Start 1.0](https://tanstack.com/blog/tanstack-start-1-0)** (*JavaScript Weekly #806*)
+  + 업데이트: 풀스택 React와 Solid용 프레임워크가 1.0으로 출시되었습니다.
+- **[Bun 1.4.3 Adds bun check, a Built-In TypeScript Type Checker](https://bun.com/blog/bun-v1.4.3)** (*JavaScript Weekly #806*)
+  + 업데이트: TypeScript 7 체커를 포팅한 `bun check`가 `tsconfig.json`을 읽어 `tsc`와 같은 오류를 보고하며, Jarred Sumner는 3~6배 빠르다고 주장합니다. `bun run`, `test`, `build`에 연동되고 유휴 서버 프로세스의 CPU 사용이 크게 줄었으며 JavaScriptCore 업그레이드로 성능이 개선되었습니다.
+- **[Node.js v26.11.0 (Current)](https://nodejs.org/en/blog/release/v26.11.0)** (*JavaScript Weekly #806*)
+  + 업데이트: 설정한 시간 뒤 프로세스를 종료하는 `--process-timeout` 플래그와 `node:sqlite`의 virtual table 지원이 추가되었습니다.
+- **[Express 5.3.0](https://github.com/expressjs/express/releases/tag/v5.3.0)** (*JavaScript Weekly #806*)
+  + 업데이트: `qs`, `proxy-addr`, `body-parser` 의존성 패치로 5개 CVE가 해결된 유지보수 릴리스입니다.
+- **[Handlebars 4.7.10](https://github.com/handlebars-lang/handlebars.js/releases/tag/v4.7.10)** (*JavaScript Weekly #806*)
+  + 업데이트: 3.0까지 거슬러 올라가는 릴리스에 영향을 주던 두 건의 critical JavaScript 인젝션 취약점이 수정되었습니다.
+- **[Partytown 1.0](https://partytown.qwik.dev/)** (*JavaScript Weekly #806*)
+  + 업데이트: 서드파티 스크립트를 메인 스레드 대신 Web Worker에서 실행하는 라이브러리가 5년의 개발 끝에 베타를 벗어났습니다.
+- **[Bootstrap 6 Alpha](https://blog.getbootstrap.com/2026/10/08/bootstrap-6-alpha/)** (*Frontend Focus #762*)
+  + 업데이트: 2021년 이후 첫 메이저 릴리스로, 대부분의 Sass 변수가 CSS 변수로 바뀌고 JS 플러그인은 ESM 전용이 되며 브라우저 네이티브 기능을 더 활용합니다.
+- **[reseter.css 3.0: The Modern CSS Reset](https://ikrishg.github.io/reseter.css/)** (*Frontend Focus #762*)
+  + 업데이트: full과 mini 버전 모두 `@layer reset`으로 감싸고 논리 속성을 전면 사용하며 Lightning CSS로 빌드되고, 압축 후 약 1KB입니다.
+- **[Firefox 158 Enables JPEG XL by Default](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/158)** (*Frontend Focus #762*)
+  + 업데이트: Chrome에 이어 JPEG XL이 기본 활성화되고 이미지 `Accept` 헤더에 `image/jxl`이 추가됩니다.
+- **[Chrome 156 beta](https://chromestatus.com/release-notes/156)** (*Frontend Focus #762*)
+  + 업데이트: 다음 주 stable 예정이며 CSS `random()` 지원이 추가됩니다.
+
+## ✍️ 마치며
+이번 주 소식을 읽으며 가장 인상 깊었던 점은 아이콘, 숫자 정렬, iframe 높이처럼 오래 라이브러리와 우회 코드에 맡겨 온 문제가 플랫폼 기능으로 하나씩 돌아오고 있다는 것입니다. 다만 Lea Verou의 글이 보여주듯 Safari 버그 우회 같은 현실적인 비용이 남아 있어, 어디까지를 점진적 향상으로 받아들일지 팀 단위의 기준이 필요해 보입니다. 런타임 쪽에서는 Deno의 방향 전환과 Bun의 `bun check`, Node의 벤치마크 반격이 한 주에 겹치면서 선택지의 무게중심이 다시 움직이는 느낌입니다. 한편 Next.js 긴급 패치 예고와 Handlebars, Express의 취약점 수정은 의존성 업데이트를 미루지 않는 습관이 여전히 가장 싼 보안 대책임을 상기시킵니다.
+
+#### 출처
+- [JavaScript Weekly #806](https://javascriptweekly.com/issues/806)
+- [Frontend Focus #762](https://frontendfoc.us/issues/762)
+- [Smashing Newsletter #580](https://mailchi.mp/smashingmagazine/580-new-css-features-for-2027)
