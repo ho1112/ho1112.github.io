@@ -1,0 +1,154 @@
+---
+title: '🚀 2026-10 W4 #81'
+desc: TanStack Start 1.0正式リリース、RustベースのTypeScriptポートtsrs、ネイティブJSONモジュール | 2026年10月第4週目 週間技術ニュースレター
+date: 2026-10-24
+thumbnail: /posts/weekly/october.avif
+---
+
+## 🔥 今週の主要テーマ
+今週は「速度」と「明示性」がキーワードでした。TanStack Start 1.0が正式リリースされてReactメタフレームワークの選択肢が広がり、CloudflareとVoidZeroはTypeScriptをRustに移植したtsrsを公開して、型チェック速度の競争に火をつけました。ブラウザ側では、ネイティブJSONモジュール、JPEG XLの全面サポート、Interop 2027の投票がプラットフォームの進化を示しています。一方、Next.jsとPHPの重大なRCEパッチのニュースは、アップデートを先延ばしにしないようにという警告でもあります。
+
+## 1. 🔍 深掘り
+- **[TanStack Start Reaches 1.0](https://tanstack.com/blog/tanstack-start-1-0)** (出典: *React Status #494*)
+  ![TanStack Start Reaches 1.0](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/ejihjkazanj4b02abevr.jpg)
+   - 背景: Startは、型安全なルーター(TanStack Router)を作る過程で自然にフルスタックへ拡張されたフレームワークです。2026年10月13日の1.0正式リリースでRC段階という但し書きが外れ、作者のTanner LinsleyはAPIを公式に維持していくと約束しました。
+   - 主な機能: ルート単位で、サーバーレンダリング、サーバーでのデータロードのみ、クライアントレンダリングを選択できます。型付きのサーバー関数や、クライアントとサーバーを行き来するミドルウェアも提供しており、サーバーとクライアントの実装を一か所に並べて書ける`createIsomorphicFn`が代表的な明示的APIです。
+   - コード例:
+     ```tsx
+     const getOrigin = createIsomorphicFn()
+       .server(() => new URL(getRequest().url).origin)
+       .client(() => window.location.origin)
+     ```
+   - 実務での活用: 従来のSPA方式の状態管理やクライアントナビゲーションを維持しつつ、必要な箇所だけサーバーを使いたいときに便利です。公式ガイドはNext.jsやRCからのマイグレーションドキュメントを提供しており、ニュースレターは同じアプリをNext.js 16.4と比較したサードパーティのベンチマーク(動的リクエストのスループット2.9〜8.6倍、ビルド約1.7倍)も紹介しています。
+   - 注意事項: RSCのサポートはStartのコアモデルとは切り離されたオプトイン方式です。作者はtanstack.comではRSCを使っていたものの再び取り除いたと明かしており、npmで1.0が`1.169`と表記される点も知っておくとよいでしょう。
+- **[tsrs: Cloudflare and VoidZero's Rust Port of TypeScript](https://blog.cloudflare.com/typescript-rust-port/)** (出典: *JavaScript Weekly #807*)
+   - 背景: Goに移植されたTypeScript 7はすでに高速ですが、RustにはWasm環境でガベージコレクターなしにメモリを効率的に扱えるという利点があります。Cloudflareは、フォークではなくTypeScriptチームと協力する忠実なポートであることを強調しています。
+   - 主な機能: 同じ型チェックのワーカー数で比べると、TypeScript 7.0より最大8倍速く、メモリ使用量は約70%少ないとのことです。Oxcツールチェーンの中でインキュベートされており、WebAssemblyでも動作します。
+   - コード例:
+     ```bash
+     npm install tsrs
+     npx tsrs
+     ```
+   - 実務での活用: Oxlintの型認識リントルールのような統合が予告されており、ブラウザやWorkersのようなサンドボックス上で開発ツールチェーンを最後まで動かすシナリオが開けます。ニュースレターは、Owner.comが社内の型チェックを80秒から7秒に短縮した事例も紹介しています。
+   - 注意事項: まだ実験的なリリースで、診断メッセージの出力順序など、アップストリームとの差異が残っています。TypeScript 7.1ベータも7.0比で最大2.5倍高速化したとのことなので、比較計測が必要です。
+
+---
+#### 見逃せないコンテンツ
+- **[React Only Where Needed: Owner's Next.js to Astro Move](https://building.owner.com/project-speed)** (出典: *React Status #494*)
+  + 要約: 1万以上のレストランサイトをAstroとCloudflare Workersに移行し、Reactはインタラクティブなアイランドにのみ残しました。メニューページのp75 LCPが5.4秒から0.7秒に短縮されました。
+- **[Dead Code Shouldn't Exist](https://tkdodo.eu/blog/dead-code-shouldnt-exist)** (出典: *React Status #494*)
+  + 要約: SentryがKnipを使って未使用コード2万8000行を削除した事例を扱ったカンファレンス発表のスライドとスクリプトです。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[TanStack Hotkeys Beta: A Type-Safe Library for Keyboard Shortcuts](https://tanstack.com/hotkeys/latest)** (出典: *React Status #494*)
+  + 概要: keydownリスナーでショートカットを実装すると、入力フィールド、Mac/Windowsの修飾キー、異なるキーボード配列、IME入力といった例外処理がどんどん積み重なります。Hotkeysは、こうしたクロスプラットフォームのエッジケースを、フレームワーク非依存のコアとReact、Vue、Solidなどのアダプターで整理したベータ版ライブラリです。
+  + 使い方:
+    ```tsx
+    useHotkey('Mod+S', save)
+    ```
+  + 実践チップ: ダイアログを排他的なスコープで囲むと、`Escape`が背面のパネルまで閉じてしまうことがありません。ショートカットは型付きの文字列なので、タイプミスや不可能な組み合わせはビルド前にエラーとして検出され、一度宣言した一覧からチートシートや設定画面も作れます。
+- **[Pixel: Build Graphical Applications in the Terminal](https://pixelgui.com/)** (出典: *React Status #494*)
+  ![Pixel demo: graphical React apps running in a terminal](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/nishfkuexsqapfi2rcgp.jpg)
+  + 概要: InkのようにReactでターミナルアプリを作りつつ、角丸、グラデーション、フォントといったピクセル単位のグラフィックを描画できるレンダラーです。Chromium WebViewコンポーネントまで内蔵しており、Webアプリをターミナルウィンドウに表示することもできます。
+  + 使い方:
+    ```bash
+    npm create @zenbu-labs/pixel@latest
+    ```
+  + 実践チップ: Ghostty、iTerm2、WezTermなど、対応ターミナルを先に確認してください。macOSとLinuxをサポートしており、WindowsはまだWSL経由でのみ利用できます。
+
+---
+#### 見逃せないコンテンツ
+- **[Progressive Web Components](https://arielsalminen.com/2026/progressive-web-components/)** (出典: *Smashing Newsletter #581*)
+  + 要約: レイアウトシフト、アクセシビリティ、SSRの限界といったWebコンポーネントの持病を軽減するためのライブラリElenaを紹介しています。JavaScriptがロードされる前にHTMLとCSSを先にレンダリングし、その後でリアクティビティとイベント処理を重ねる方式です。
+- **[Modern Web Types](https://philipwalton.com/articles/modern-web-types/)** (出典: *Smashing Newsletter #581*)
+  + 要約: 最新のWeb APIをTypeScriptで使うときに発生する型エラーを解決するライブラリです。自分で型を追加する必要がなく、TypeScriptが後からサポートを追加した際の衝突も避けられると説明しています。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Native JSON Modules](https://allthingssmitty.com/2026/03/16/native-json-modules-are-finally-real/)** (出典: *Smashing Newsletter #581*)
+  ![Native JSON Modules](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/20c7f37d-0d28-547a-9dc8-f931776d6f2b.png)
+  + 背景: `import config from "./config.json"`はネイティブのように見えますが、実際にはバンドラーがビルド時にJSONをモジュールに変換していたものでした。import attributesのおかげで、今はランタイムがJSONモジュールを直接処理します。
+  + 主なインサイト: `with { type: "json" }`は「このファイルは実行せず、JSONとしてパースせよ」という明示的な契約です。パースされたオブジェクトは通常のESモジュールと同様に一度だけ評価されキャッシュされるため、2回importしても同じオブジェクトです。一方、バンドラーとは異なり、デフォルトではバンドルにインライン化されません。
+  + コード例:
+    ```js
+    import config from "./config.json" with { type: "json" };
+    const mod = await import("./config.json", { with: { type: "json" } });
+    ```
+  + 参考になるポイント: バンドラーなしで純粋なESMのままJSONを使えるという点だけでなく、同じパターンがCSSモジュールスクリプトなどへ広がっていくという大きな見取り図を示してくれます。ブラウザではサーバーが`Content-Type: application/json`を返す必要があり、CORSのルールがそのまま適用されるという実務上の注意点にも触れています。
+- **[Josh Comeau's The Future of CSS](https://www.joshwcomeau.com/css/interop-2027/)** (出典: *Frontend Focus #763*)
+  + 背景: ブラウザベンダーが協力するInteropプロジェクトは、2027年の優先事項を決めるために提案のランキング投票を開き、多くの開発者が自分の順位を共有しています。Joshの記事は、その中の上位10件を、実際のデモとブラウザのサポート状況とともに紹介しています。
+  + 主なインサイト: CSS関数、`corner-shape`、`border-shape`、アンカー付きコンテナクエリ、スクロールトリガーアニメーション、`reading-flow`、ギャップ装飾、スクロール状態コンテナクエリなどが候補です。執筆時点ではほとんどがChrome 155とEdge 154のみのサポートで、FirefoxとSafariは未サポートですが、プログレッシブエンハンスメントで今日から使えるものも多くあります。
+  + コード例:
+    ```css
+    .grid {
+      display: grid;
+      reading-flow: grid-rows;
+    }
+    ```
+  + 参考になるポイント: レスポンシブレイアウトで視覚的な順序とタブ順序がずれるアクセシビリティの問題を`reading-flow`一行で解決する方法のように、すぐに使えるチップがたくさんあります。ニュースレターは、約10件の提案に投票するとFirefoxチームにとって有益なフィードバックになると紹介しています。
+- **[JPEG XL vs AVIF for Web Use-Cases](https://jakearchibald.com/2026/jpeg-xl-vs-avif/)** (出典: *Frontend Focus #763*)
+  ![JPEG XL vs AVIF for Web Use-Cases](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1792585763/nrxh8gwtp2lom2spe99p.png)
+  + 背景: JPEG XLがすべての主要ブラウザに入り、Firefox 158がデフォルト有効化に加わった最新のブラウザとして紹介されました。
+  + 主なインサイト: Jake ArchibaldがJPEG XLをAVIFとWebのユースケース基準でベンチマークし、詳細な比較と実務的な結論をまとめました。
+  + 参考になるポイント: 画像フォーマットの切り替えを検討する際に、エンコード品質や用途別の違いを一度に確認できる長文の比較記事です。
+
+---
+#### 見逃せないコンテンツ
+- **[How Miro Moved 70,000 Tests from Jest to Vitest](https://nothing-else.blog/blog/we-migrated-70000-tests-from-jest-to-vitest-yes-in-2-months)** (出典: *JavaScript Weekly #807*)
+  + 要約: 800パッケージのモノレポにある約7万件のテストをVitestに移行した話で、繰り返し作業の大半をAIエージェントが担いました。
+- **[Testing AI-Generated Code: Lint the Pattern, Test the Decision](https://www.robinwieruch.de/testing-ai-generated-code/)** (出典: *React Status #494*)
+  + 要約: コンポーネントごとにテストを付けるよりも、構造的なリントルールと共有ハーネスのほうがAI生成コードの検証に効果的だと主張しています。
+---
+
+## 4. ✨ アイデア
+- **[Strudel Flow 2](https://xyflow.com/strudel-flow)** (出典: *React Status #494*)
+   - ![Strudel Flow: a musical pad connected to voice and filter nodes](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dtm0yamwanrjkzjtlgke.jpg)
+  + 特徴: React Flowとshadcn/uiで作られたオープンソースアプリで、楽器やエフェクトのノードをつなげてStrudelコードを生成したり、コミュニティのパッチを読み込んでノブを回して試したりできます。小さな`.node.ts`ファイルで楽器やエフェクトを定義し、ReactコンポーネントでUIを付ける拡張構造も注目に値します。
+- **[Furifont: A Japanese Font That Draws Its Own Furigana](https://furifont.antfu.me/)** (出典: *Frontend Focus #763*)
+  + 特徴: 漢字の上に読み方を表示するふりがなを、`<ruby>`マークアップやJavaScriptなしでOpenType機能だけで描画する日本語フォントです。リポジトリは[こちら](https://github.com/antfu/furifont)で確認できます。
+
+## 5. ⚡️ ミニノート
+- **[Next.js has patched two critical RCE flaws](https://nextjs.org/blog/nextjs-security-update-october-14-2026)** (出典: *JavaScript Weekly #807*)
+  + 要約: `use cache`関数(アップストリームのRSCのバグ)と画像最適化機能のSVG処理で、重大なRCEが修正され、公開PoCも出ています。16.4.1または15.5.28へのアップグレードが必要です。
+- **[PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35 fix two critical bugs](https://www.php.net/archive/2026.php#2026-10-21-5)** (出典: *Frontend Focus #763*)
+  + 要約: 認証なしでリモートコード実行が可能な2つの重大なバグが修正されました。特にmod_phpのインストール環境は直ちにアップデートする必要があります。
+- **[Safari Blocks 'Identity Resolution' Tracking Infrastructure](https://webkit.org/blog/18438/blocking-identity-resolution-infrastructure/)** (出典: *Frontend Focus #763*)
+  + 要約: フォームに入力したメールアドレスをサードパーティがクロスサイト追跡IDに変換する仕組みを、Safariがドメイン単位でブロックし始めました。
+- **[Chrome has finished deprecating the unload event](https://developer.chrome.com/blog/unload-deprecated-in-chrome)** (出典: *Frontend Focus #763*)
+  + 要約: これからはデフォルトでunloadハンドラーが実行されなくなるため、`pagehide`や`visibilitychange`への置き換えが必要です。
+- **[Void, the Vite team's full-stack SDK and deploy platform, is now open source](https://blog.cloudflare.com/deploy-with-void/)** (出典: *JavaScript Weekly #807*)
+  + 要約: ViteConfの主要発表の一つとして、ViteチームのフルスタックSDK兼デプロイプラットフォームであるVoidがオープンソースとして公開されました。
+
+## 6. 🎉 リリース
+- **[Chrome 157 Beta](https://chromestatus.com/release-notes/157)** (*Frontend Focus #763*)
+  + アップデート: `corner`ショートハンドプロパティ、`text-overflow`の`<string>`値、`anchor-valid`が追加されました。
+- **[Chrome 156](https://chromestatus.com/release-notes/156)** (*Frontend Focus #763*)
+  + アップデート: 今週安定版となり、CSSの`random()`が含まれています。
+- **[Chartist 2.0](https://chartist.dev/)** (*Frontend Focus #763*)
+  + アップデート: CSSでスタイリングする軽量なSVGチャートライブラリが、コンポーザブルなAPIとサーバーサイドレンダリングを備えて帰ってきました。1.xユーザー向けのマイグレーションガイドもあります。
+- **[Expo SDK 58](https://expo.dev/changelog/sdk-58)** (*React Status #494*)
+  + アップデート: React Native 0.88をベースとし、iOS 27をターゲットにしています。
+- **[TypeScript 7.1 Beta](https://devblogs.microsoft.com/typescript/announcing-typescript-7-1-beta/)** (*React Status #494*)
+  + アップデート: プログラミングAPIと速度向上が追加され、MUIドキュメントの型チェックが1.9倍高速化し、メモリは半分で済みます。
+- **[Tamagui 3](https://tamagui.dev/blog/version-three)** (*React Status #494*)
+  + アップデート: 再レンダリングなしでテーマ変更を適用するオプトイン(ベータ)のC++ネイティブランタイム、React Strict DOM、Tailwindスタイルの構文が追加されました。
+- **[Node.js v26.12.0 (Current)](https://nodejs.org/en/blog/release/v26.12.0)** / **[v24.22.0 (LTS)](https://nodejs.org/en/blog/release/v24.22.0)** (*JavaScript Weekly #807*)
+  + アップデート: 26.12はほとんどのESモジュールを同期的にロードできるようになり、設定ファイルを安定版として扱うようになりました。24.22は`util.throttle`と`util.debounce`が追加されました。
+- **[Astro 7.4](https://astro.build/blog/astro-740/)** (*JavaScript Weekly #807*)
+  + アップデート: `astro build`のビルド時間分析用`--timings`フラグと、ワーカースレッドベースの実験的な並列プリレンダリングが追加されました。
+- **[React Router 8.5](https://reactrouter.com/changelog#v850)** (*JavaScript Weekly #807*)
+  + アップデート: 独自のビュートランジションAPIをReactの`<ViewTransition>`コンポーネントに置き換えてdeprecatedとし、実験的な「API-only」モードが追加されました。
+- **[Pretext 1.0](https://github.com/chenglou/pretext/releases/tag/v1.0.0)** (*JavaScript Weekly #807*)
+  + アップデート: DOMなしで複数行テキストのレイアウトを計算するライブラリで、1.0ではブラウザの改行アルゴリズムが移植され、実際のレンダリング結果により近づきました。
+
+## ✍️ おわりに
+今週のニュースを貫く問いは、「ツールが速くなると何が変わるのか」だったように思います。tsrsやTypeScript 7.1が示すように、型チェックが数倍速くなれば、型を厳密に書くコストが下がります。TanStack Start 1.0の型安全性と明示的なAPIがエージェント時代にいっそう力を発揮するという作者の見方も、結局は同じ文脈で読み取れます。
+
+反対に、Next.jsとPHPのRCEパッチは、速度や利便性の裏にある負担を思い出させてくれます。フレームワークを選ぶ際には、パフォーマンスの数値と同じくらい、アップデートへの対応体制や攻撃対象領域も併せて見る必要があると感じます。Webプラットフォームが、JSONモジュールやCSSの機能でバンドラーの役割を吸収していく流れも、同じ方向に見えます。ビルド段階で行っていたことがランタイムや言語標準へ移っていくほど、私たちが知っておくべきことはツールの使い方よりも、プラットフォーム自体の動作になっていきます。
+
+#### 出典
+- [JavaScript Weekly #807](https://javascriptweekly.com/issues/807)
+- [Frontend Focus #763](https://frontendfoc.us/issues/763)
+- [React Status #494](https://react.statuscode.com/issues/494)
+- [Smashing Newsletter #581](https://mailchi.mp/smashingmagazine/the-state-of-javascript-2027)
