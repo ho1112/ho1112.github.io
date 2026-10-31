@@ -1,0 +1,117 @@
+---
+title: '🚀 2026-10 W5 #82'
+desc: TanStack RedactによるReactバンドル削減、デザインシステムのインタラクション性能比較、DeadTagとサードパーティタグのサプライチェーン攻撃 | 2026年10月第5週目 週間技術ニュースレター
+date: 2026-10-31
+thumbnail: /posts/weekly/october.avif
+---
+
+## 今週の主要テーマ
+- 今週は「どれだけ軽く、速いか」をあらためて問い直す話題が中心でした。TanStack Redactは、Reactランタイムそのものを小さくする試みを打ち出しました。デザインシステム10種を同じ条件で計測した結果は、人気のライブラリでもインタラクションの遅延が大きいことを示しました。プラットフォーム側では、ChromeのHTML-in-CanvasがDOMとキャンバスの境界を取り払い、TypeScript 7.1 Betaは、VueやSvelteのようなフレームワーク系ツールが新しいコンパイラへ移行するための道を開きました。一方でDeadTagは、放置されたサードパーティタグがサプライチェーン攻撃の経路になり得ることを改めて思い出させました。
+
+## 1. 🔍 深掘り
+- **[HTML-in-Canvas: Interactive DOM Inside 2D, WebGL and WebGPU Canvases](https://developer.chrome.com/blog/html-in-canvas)** (出典: *Frontend Focus #764*)
+  ![HTML-in-Canvas: Interactive DOM Inside 2D, WebGL and WebGPU Canvases](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1793190176/dlisimtjkn0bavqwusxs.png)
+  - 背景: 3Dシーンの中にHTMLを入れるには、iframeの結果を画像に変換するという複雑な回避策が必要で、その過程でテキスト選択やアクセシビリティが失われていました。
+  - 主な機能: ライブなDOMサブツリーを2D、WebGL、WebGPUのキャンバスに直接描画しながらも、テキスト選択、フォームコントロール、ページ内検索、スクリーンリーダーがそのまま動作します。ブラウザの翻訳・オートフィルやDevToolsでの検査にも対応しています。Three.js、Babylon.js、PixiJSがすでに実験的にサポートしています。
+  - コード例:
+    ```js
+    const material = new THREE.MeshBasicMaterial();
+    material.map = new THREE.HTMLTexture(uiElement);
+    ```
+  - 実務での活用: WebXRやゲームの3Dシーン内に読めるUI(ターミナルや本など)を配置したり、キャンバス中心のデータ密度の高いUIに、アクセシビリティを保ったままHTMLを重ねたりする場合に便利です。
+  - 注意事項: 現時点ではChrome専用です。APIが使えない環境に備えて、フローティングHTMLオーバーレイやhtml2canvas、dom-to-imageといった代替手段をフォールバックとして用意しておく必要があります。
+- **[DeadTag: Forgotten Third-Party Script Tags Became a Delivery Network for Spyware](https://blog.report-uri.com/deadtag-how-forgotten-website-tags-became-a-delivery-network-for-iphone-spyware/)** (出典: *Frontend Focus #764*)
+  ![DeadTag: Forgotten Third-Party Script Tags Became a Delivery Network for Spyware](https://storage.ghost.io/c/2d/aa/2daa4f7f-a71b-47d2-a54c-06b8c60222ef/content/images/size/w2000/2026/10/DeadTag.png)
+  - 背景: かつて分析、広告、ウィジェットのスクリプトが使っていたドメインが失効し、それを指す古いタグがサイトにそのまま残っているケースが多くあります。
+  - 主な機能: 攻撃者が失効したドメインを購入すると、そのタグをまだ持っているサイトは、攻撃者のコードを知らないうちに読み込んでしまいます。タイトルにあるとおり、この経路がiPhoneスパイウェアの配布網として使われました。
+  - 実務での活用: サイトに埋め込まれているサードパーティタグとそのドメインの現在の状態を定期的に点検し、使っていないタグを削除することが、最も直接的な対策です。
+
+---
+#### 見逃せないコンテンツ
+- **[Putting MUI, Mantine, Ant Design and React Spectrum Under Load](https://denodell.com/blog/design-systems-should-be-fast-by-default)** (出典: *React Status #495*)
+  + 要約: Den Odellが、人気のデザインシステム10種を時間計測とプロファイリングで比較しました。CPUを4倍遅くした条件で249か国のドロップダウンを開くのに、Mantineは84ms、Ant Designは134msかかり、MUIとReact Spectrumは200msを超えました。フレームワークだけで結果が分かれたわけではなく、PlaywrightのテストがGitHubで公開されているため、自分で再現できます。
+- **[Building an Isolated Preview for AI-Generated HTML](https://blog.master.dev/building-an-isolated-preview-for-ai-generated-html/)** (出典: *Frontend Focus #764*)
+  + 要約: モデルが生成したHTMLを`srcdoc`のiframeでレンダリングすると、自身のoriginで実行されてしまいます。5つの攻撃デモでリスクを示したうえで、iframeの`sandbox`、CSP、厳格に検証する`postMessage`ハンドラーで隔離を強化する方法を扱います。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[TanStack Redact: A Smaller React for the Browser](https://tanstack.com/blog/introducing-tanstack-redact)** (出典: *React Status #495*)
+  + 概要: ブラウザ上でReact/React DOMを置き換える、より小さな実装です。ビルド設定に追加すれば、既存のimport、コンポーネント、フックがそのままRedactを使うようになり、TanStack Start、Vite、Vinext、Next.jsをサポートしています。VinextとNext.jsでは、サーバー側のReactは維持され、ブラウザでのhydrationとレンダリングだけをRedactが担います。
+  + サイズ削減(gzip、同一の小さなアプリ基準): Viteは68.3KBから20.1KB(70.5%削減)、TanStack Startは43.0%、Vinextは28.5%、Next.jsは20.4%の削減です。
+  + 実践的なヒント: 同期レンダリングのためタイムスライシング(time slicing)がなく、重いレンダリングが入力を遅延させる可能性があります。アプリで最も負荷の高い画面から先に適用してみて、互換性ガイドを確認してください。r/reactjsでは、あるテスターが本番サイト2か所で再レンダリングのCPUコストが約2倍になったと報告しています。
+- **[Structs: TC39's Shared Structs Proposal, But Usable Today](https://structs.arv.tools/)** (出典: *JavaScript Weekly #808*)
+  + 概要: 元TC39デリゲートが、Stage 2のstructs提案を実装しました。ワーカー間の共有メモリにより、スレッドがコピーをシリアライズしてやり取りすることなく、同じオブジェクトを扱えます。ブラウザですぐ試せるplaygroundも用意されています。
+
+---
+#### 見逃せないコンテンツ
+- **[UI SFX: A Library of 930+ Interface Sound Effects](https://uisfx.com/)** (出典: *Frontend Focus #764*)
+  + 要約: クリック、トグル、成功、ローディングループなどのUIサウンド78種を、12のスタイルで提供しています。約12KBのランタイムがWeb Audioで合成し、CC0のMP3/Oggファイルも使えます。
+- **[MicroKit: 54 Copy-Paste React Microinteractions, CSS-First](https://microkit.co/)** (出典: *Frontend Focus #764*)
+  + 要約: ボタン、ホバーエフェクト、タブ、入力欄など、コピーして使えるマイクロインタラクション54種です。TS/JSと純粋なCSS/Tailwindから選べ、約半分は依存関係がありません。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[React.lazy, Suspense and the Hidden 300ms Startup Delay](https://tabwidgets.com/blog/react-lazy-suspense-delay)** (出典: *React Status #495*)
+  ![React.lazy, Suspense and the Hidden 300ms Startup Delay](https://assets.tabwidgets.com/cdn-cgi/image/width=1600,format=auto,quality=80/images/posts/2026/10/react-lazy-suspense-delay/startup-timeline-windows.png)
+  + 主要なインサイト: コードがすでにロード済みのlazyコンポーネントでも初回レンダリングでsuspendすることがあり、Reactがsuspendされたコンテンツの表示を300msに一度に制限(throttle)する場合があります。あるチームがこの遅延を追跡した過程と解決策をまとめています。体感速度の問題を、ネットワークではなくレンダリングのスケジューリング側から探るきっかけになる記事で、とても有益です。
+- **[Performance Budgets Need a Representative Worst](https://csswizardry.com/2026/10/web-perf-wednesday-014-performance-budgets-need-a-representative-worst/)** (出典: *Frontend Focus #764*)
+  + 主要なインサイト: 単一の最悪値で予算を決めると、外れ値ひとつが本当の性能劣化を覆い隠してしまいます。直近データのP90やP95のような「代表的な最悪値」から始めるよう、Harry Robertsが自身のこれまでの助言を修正しています。スプレッドシートのテンプレートが付いているので、すぐに試せます。
+- **[Dead Code Shouldn't Exist: How Sentry Cut 28,000 Lines](https://tkdodo.eu/blog/dead-code-shouldnt-exist)** (出典: *JavaScript Weekly #808*)
+  + 主要なインサイト: 使われていないコードが思った以上に大きなコストを生むことと、Sentryが[Knip](https://knip.dev/)で2万8千行を削除した過程を扱っています。6つのカンファレンスで発表された内容が、スライドと全文スクリプトにまとめられています。
+
+---
+#### 見逃せないコンテンツ
+- **[A First Look at TypeScript 7.1's Content Mappers](https://jovidecroock.com/blog/typescript-7-content-mappers/)** (出典: *JavaScript Weekly #808*)
+  + 要約: TypeScript 7はtsserverプラグインを無視しますが、7.1のcontent mappersを使えば、TS以外のファイルをTypeScriptに変換できます。CSS modulesと`.graphql`ファイルへの適用方法を紹介しています。
+- **[Creating Dynamic Social Media Cards for User Content](https://blog.master.dev/what-should-you-put-on-a-dynamic-custom-social-media-card-image/)** (出典: *Frontend Focus #764*)
+  + 要約: Discord、X、Slack、Blueskyなどでリンクがどのように展開されるかを確認し、タイトルと説明を繰り返すだけになりがちな動的ソーシャルカードの画像に何を入れるべきかを提案しています。
+---
+
+## 4. ✨ アイデア
+- **[GTA.js: 1997's Grand Theft Auto, But in JavaScript](https://www.bram.us/2026/10/22/gta-js/)** (出典: *JavaScript Weekly #808*)
+  + 特徴: 原作のトップダウン視点GTAのエンジンをJavaScriptとWebGLで再実装し、ゲームの元のデモファイルからLiberty Cityを読み込みます。[gtajs.wtf](https://gtajs.wtf/)で実際にプレイできます。
+- **[Graveyard Pinball](https://graveyard-pinball.vercel.app/)** (出典: *React Status #495*)
+  + 特徴: React Three Fiberで作られたハロウィンのピンボールです。ガイコツ、大釜、スケルトンメイジが登場し、3Dテーブルが実際には2D物理を使っているという実装の解説が[制作者の記事](https://andersonmancini.dev/blog/graveyard-pinball)にあります。
+
+## 5. ⚡️ ミニノート
+- **[Next.js security release scheduled for November 3](https://nextjs.org/blog/upcoming-nextjs-security-release-november-2026)** (出典: *React Status #495*)
+  + 要約: 中程度の深刻度の脆弱性7件を修正するセキュリティリリースが11月3日に予告されており、パッチとともにアドバイザリが公開されます。
+- **[CSS-Tricks Has a New Owner](https://css-tricks.com/css-tricks-has-a-new-owner/)** (出典: *Frontend Focus #764*)
+  + 要約: DigitalOceanの所有を経ていたCSS-Tricksが、編集者のGeoff Grahamの運営のもと、再び独立しました。
+- **[Arc browser is being sunset](https://arc.net)** (出典: *Frontend Focus #764*)
+  + 要約: Arcブラウザが12月にサービスを終了し、代替として[Dia](https://www.diabrowser.com)が提案されています。非Chromium系では[Zen](https://zen-browser.app)があります。
+- **[Product Design Psychology](https://productdesignpsychology.com/)** (出典: *Smashing Newsletter #582*)
+  + 要約: Wouter de Bresによる無料の書籍で、人がどのように考え、判断し、信頼し、意思決定するか、そしてUIの仕組みが認識に与える影響を扱っています。
+- **[Authors Together](https://authors-together.org/)** (出典: *Smashing Newsletter #582*)
+  + 要約: 2024年に閉鎖したA Book Apartの50冊あまりの書籍が、著者たちによる新しい販売先や無料公開へとつながっており、このサイトで所在を確認できます。
+
+## 6. 🎉 リリース
+- **[Node.js v26.12.1 (Current)](https://nodejs.org/en/blog/release/v26.12.1), [v24.22.1 (LTS)](https://nodejs.org/en/blog/release/v24.22.1), [v22.23.4](https://nodejs.org/en/blog/release/v22.23.4)** (出典: *JavaScript Weekly #808*)
+  + アップデート: 10件のCVEを修正するセキュリティリリースです。悪意あるデータを展開する際にリモートコード実行につながり得る「Node2Shell」というBrotliデコーダーの欠陥が含まれます。
+- **[Announcing TypeScript 7.1 Beta](https://devblogs.microsoft.com/typescript/announcing-typescript-7-1-beta/)** (出典: *JavaScript Weekly #808*)
+  + アップデート: TypeScript 7にプログラマティックAPIが追加され、Vue・Svelte・Astroのようなファイル内のコードを検査する「content mappers」というプラグインの拡張ポイント、source phase imports、`--target es2026`が加わります。`npm install -D typescript@beta`でインストールします。
+- **[Bun 1.4.4](https://bun.com/blog/bun-v1.4.4)** (出典: *JavaScript Weekly #808*)
+  + アップデート: 既存のPrettierまたはoxfmtの設定をそのまま使えるPrettier互換フォーマッター`bun fmt`が追加され、速度は非常に速いとのことです。
+- **[TanStack DB 1.0 RC1, and How 'Oracles' Found Its Bugs](https://tanstack.com/blog/tanstack-db-1.0-rc1-going-all-in-on-oracles)** (出典: *React Status #495*)
+  + アップデート: リアクティブなクライアントデータレイヤーのAPIが安定化しました。mutationハンドラー、フック、エラーが変更されているため、[マイグレーションガイド](https://tanstack.com/db/latest/docs/guides/migrate-to-1-0-rc)を確認する必要があります。
+- **[Puck 0.24: The Visual Page Editor for React](https://puckeditor.com/blog/puck-024)** (出典: *React Status #495*)
+  + アップデート: コンポーネントの設定パネルのレイアウトを自由に構成できるようになり、ドラッグ&ドロップが改善されました。
+- **[react-window 2.5: Virtualized Lists That Scroll with the Page](https://github.com/bvaughn/react-window/releases/tag/2.5.0)** (出典: *React Status #495*)
+  + アップデート: リストとグリッドをページや親要素と一緒にスクロールさせる`scrollElement` propが追加され、独自の仮想化レイアウトを作るためのヘッドレスな`useVirtualizer()`も提供されます。
+- **[Vinext 1.4: The Vite-Powered Next.js Reimplementation Gets Faster](https://vinext.dev/blog/vinext-1-4)** (出典: *React Status #495*)
+  + アップデート: パフォーマンスに注力したリリースで、Hacker Newsクローンのサンプルでリクエストあたりのサーバー CPU使用量が1.3比で43%減少し、このテストではNext.jsをわずかに上回りました。
+- **[Firefox 159](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/159)** (出典: *Frontend Focus #764*)
+  + アップデート: スクロール駆動アニメーションがデフォルトで有効になり、主要エンジンすべてで動作するようになりました。scoped custom element registriesも追加されました。
+- **[WebKit Features for Safari 27.1](https://webkit.org/blog/18486/webkit-features-for-safari-27-1/)** (出典: *Frontend Focus #764*)
+  + アップデート: Appleの新しいフォルダブルデバイスとともに登場したSafariのリリースで、Device Posture APIとViewport Segments APIを使った折りたたみ画面向けレイアウトの作り方を案内しています。どちらのAPIもまだ機能フラグの裏にあります。
+- **[WebKit Features for Safari 27.2](https://webkit.org/blog/18515/webkit-features-for-safari-27-2/)** (出典: *Frontend Focus #764*)
+  + アップデート: カスタマイズ可能なselectの表示テキストをスタイリングする`::field-content`が追加され、Grid Lanesの`flow-tolerance`が`fit-tolerance`に名称変更されました。
+
+## おわりに
+今週のニュースを振り返ると、バンドルサイズとランタイムコストをあらためて問う流れがはっきりしていました。Redactは、アプリのコードに手を入れずにクライアントバンドルを大きく減らせることを示しましたが、同期レンダリングという代償があるため、最も重い画面での入力遅延を自分で計測して判断すべきだと思います。デザインシステムの計測結果も同じ教訓を与えてくれます。バンドルサイズだけを監視していると、クリック後の遅延は見えないからです。逆にDeadTagは、コードを減らすことと同じくらい、古い依存関係を整理することが重要だと改めて思い出させました。新しい機能を導入する前に、今使っているものの状態を点検する習慣こそが、結局のところ最も安上がりな最適化であり、防御なのでしょう。
+
+#### 出典
+- [JavaScript Weekly #808](https://javascriptweekly.com/issues/808)
+- [Frontend Focus #764](https://frontendfoc.us/issues/764)
+- [React Status #495](https://react.statuscode.com/issues/495)
+- [Smashing Newsletter #582](https://mailchi.mp/smashingmagazine/announcing-smashingconf-meets-ai-online)
