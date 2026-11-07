@@ -1,0 +1,116 @@
+---
+title: '🚀 2026-11 W1 #83'
+desc: AIエージェント時代のフレームワーク選定基準、npmクールダウンとサプライチェーンセキュリティ、DiscordとParcelのRust移行 | 2026年11月第1週目 週間技術ニュースレター
+date: 2026-11-07
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 今週の主要テーマ
+- AIエージェントがコードを書く時代に、フレームワークの選定基準を問い直すベンチマークが話題になりました。コストの差は不明瞭でしたが、ブラウザに配信されるJavaScriptの量には明確な差が表れました。一方、npmパッケージのクールダウン、サードパーティスクリプトのハイジャック、GitHub Actionsのpull_request_targetブロックなど、サプライチェーンセキュリティ関連の話題が相次ぎ、DiscordのRust移行やParcel 3のRust書き直しのように、ネイティブ言語へ重心が移る流れも目を引きました。Safariはサイトに代わってダークモードを適用してくれる機能をベータで公開しました。
+
+## 1. 🔍 深掘り
+- **[The AI Cost of JavaScript Frameworks](https://nolanlawson.com/2026/10/28/the-ai-cost-of-javascript-frameworks/)** (出典: *JavaScript Weekly #809*)
+  ![The AI Cost of JavaScript Frameworks](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/dhcgdjewfv50joacutkm.jpg)
+   - 背景: 「特定のフレームワークの方がエージェントに向いている」という主張を検証するため、Nolan LawsonがClaudeに同じアプリを12のJSスタックでそれぞれ5回ずつ作らせました。
+   - 主要機能: 実行ごとのコストのばらつきが大きく、Gautam Parabは、観測されたコストの範囲はほとんどのフレームワークの組み合わせで重なるか接していると[分析](https://gautamparab.com/writing/sixty-of-sixty-six-ranges-overlap/)しました。一方、ブラウザに送信されたJavaScriptの中央値には明確な差がありました。Astro 0KB、Hono+htmx 18K、SvelteKit 36K、React Router・TanStack Start・Next.jsは115〜142Kでした。
+   - 実務への適用: コードを自分で書かない「hands-free」開発なら、自分でコードを書いていた時代に選んだスタックをなぜそのまま維持するのか、あらためて問い直すことができます。[ベンチマークリポジトリ](https://github.com/nolanlawson/agent-framework-benchmark)が公開されているので、自分で実行してみることもできます。
+   - 注意事項: コストは実行ごとのばらつきが大きいため、1〜2回の測定値でフレームワークの優劣を決めるのは難しいです。
+- **[Safari Introduces Adaptive Dark Mode](https://webkit.org/blog/18541/introducing-adaptive-dark-mode/)** (出典: *Frontend Focus #765*)
+  ![Safari Introduces Adaptive Dark Mode](https://webkit.org/wp-content/uploads/Demo-of-Adaptive-Dark-Mode_light.png)
+   - 背景: ページロードの約40%がダークモードを使うユーザーによるものですが、ダークモードに直接対応しているページロードは約10%にとどまります。
+   - 主要機能: Safari 27.3ベータに追加された機能で、ライトなサイトを自動的にダークサイトのように見えるよう変換します。
+   - 注意事項: ユーザーがオンにしないと動作しないopt-in方式で、まだベータ段階です。
+
+---
+#### 見逃せないコンテンツ
+- **[Shrinking clarity.js: When Cleaner Code Gzips Worse](https://clarity.microsoft.com/blog/how-we-made-clarity-js-smaller/)** (出典: *JavaScript Weekly #809*)
+  + 要約: Microsoftがエージェントに分析スクリプトのサイズ最適化の実験を50回以上実行させました。import * の名前空間オブジェクトをなくしたことが大きな成果で、ヘルパー関数の抽出のようなベストプラクティス的なリファクタリングは、かえってgzip結果を大きくしました。
+- **[A Roadmap for Redux Toolkit v2.x and 3.0](https://github.com/reduxjs/redux-toolkit/discussions/5536)** (出典: *React Status #496*)
+  + 要約: Mark EriksonがRTKのロードマップを公開しました。 RTK 3.0は6〜8か月後にESMのみで登場する予定で、「React 19規模」のbreaking changeが予告されています。それに先立ち、2.xリリースが基盤作業を先に公開していき、今週の[2.14](https://github.com/reduxjs/redux-toolkit/releases/tag/v2.14.0)がその第一弾です。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[Parcel 3 Alpha: A Rust Rewrite with React Compiler, Tailwind and RSC](https://v3.parceljs.org/blog/v3-alpha/)** (出典: *React Status #496*)
+  + 概要: ParcelのコアがNode依存のないRustバイナリに置き換えられ、チームはコールドビルドがv2より最大100倍速くなったと発表しています。React Compiler(opt-in)、Tailwind、MDXが組み込まれ、RSCサポートはベータです。
+  + 実践チップ: React Compilerはopt-in、RSCはベータなので、導入時にどの機能がまだ実験段階なのかを区別して確認する必要があります。
+- **[x18n: Lint and Maintain i18n Files for Any Framework](https://x18n.dev/)** (出典: *JavaScript Weekly #809*)
+  + 概要: Anthony Fuが作った[i18n-ally](https://github.com/lokalise/i18n-ally)の後継ツールで、ロケールファイルと翻訳呼び出しをスキャンし、欠落・未使用・壊れたキーを報告します。
+  + 実践チップ: tsc --noEmitが型エラーを教えてくれるように翻訳キーの問題を教えてくれる方式なので、型チェックと同じ感覚でチェックの段階に組み込んで使えます。
+
+---
+#### 見逃せないコンテンツ
+- **[Skullet: Skeleton Loading States Measured from Your Components](https://skullet.lochie.me)** (出典: *React Status #496*)
+  + 要約: サンプルデータを渡すと、実際のコンポーネントを非表示でレンダリングして測定し、それに合わせたスケルトンを描画して、データ到着時のレイアウトシフトを減らしてくれます。[How it Works](https://skullet.lochie.me/docs#how)のドキュメントに仕組みが説明されています。
+- **[sidebearing-trim: Align Text by 'Visible Ink', Not by Glyph Boxes](https://sidebearing-trim.js.org/)** (出典: *Frontend Focus #765*)
+  + 要約: グリフボックスではなく、目に見える「インク」を基準にテキストを揃えるツールです。ページ上で直接試すことができ、[なぜ重要かを説明した記事](https://sidebearing-trim.js.org/preface)と[GitHubリポジトリ](https://github.com/peksi/sidebearing-trim)があります。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[Design Systems Should Be Fast by Default](https://denodell.com/blog/design-systems-should-be-fast-by-default)** (出典: *Frontend Focus #765*)
+  ![Design Systems Should Be Fast by Default](https://denodell.com/_astro/design-systems-ionic-profile.BQPR4mQY_ZP5vKj.webp)
+  + 主要なインサイト: Den Odellが人気のデザインシステム10種(MUI、Ant Design、Ionicなど)で、249個のオプションを持つselectを開く時間とチェックボックス100個を選択する時間を測定し、遅い箇所をプロファイリングして原因を診断しました。リグレッションを検出するテストも併せて共有しています。
+  + この記事が役立つ理由: デザインシステムのパフォーマンスを、勘ではなく測定とテストで管理する方法を示しています。
+- **['Nothing Installs at Our Company Until It's a Week Old'](https://brunoj.com/nothing-installs-at-our-company-until-its-a-week-old/)** (出典: *JavaScript Weekly #809*)
+  + 主要なインサイト: 最近のパッケージハイジャックの多くが数時間以内に発見されたため、新しいリリースを1週間インストールしないというポリシーを導入した事例です。この方式が何を壊したのか、クールダウンが防げないものは何か、主要なパッケージマネージャーごとの設定をまとめています。
+  + この記事が役立つ理由: サプライチェーン攻撃への対応を設定1行のレベルから始める方法と、その限界を併せて扱っています。
+- **[How To Stop The Stakeholder Swirl](https://medium.com/uber-design/how-to-stop-the-stakeholder-swirl-78073b7e986b)** (出典: *Smashing Newsletter #583*)
+  ![How To Stop The Stakeholder Swirl](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/447afc13-c1d6-c863-1227-8ef149e6b399.png)
+  + 主要なインサイト: UberのPrincipal DesignerであるParvaneh Toghianiが長年の経験で磨き上げたフレームワークで、結論が出ないままフィードバックだけが堂々巡りするデザインレビューを、より体系的で生産的なものに変える方法です。レビューを承認手続きではなく、足並みを揃えて成長するための機会として捉えるよう導いてくれます。
+
+---
+#### 見逃せないコンテンツ
+- **[Modern CSS Might Make Your Front-End More Complex](https://www.smashingmagazine.com/2026/11/modern-css-might-make-your-front-end-more-complex/)** (出典: *Frontend Focus #765*)
+  + 要約: JavaScriptをcontainer queryと:has()に置き換えるとコードは減りますが、レイアウトの別の場所でバグが生じることがあります。Gabriel Shoyomboが4つの事例を共有しており、container-typeがflexアイテムの幅を0にしてしまうことがある理由にも触れています。
+- **[Writable Derived State: Stop Synchronizing State](https://playfulprogramming.com/posts/writable-derived-state)** (出典: *React Status #496*)
+  + 要約: refetch時にユーザーの編集を消してしまうuseEffectの代わりに、clientData ?? serverDataというパターンを使おうという記事です。(Corbin Crutchley)
+---
+
+## 4. ✨ アイデア
+- **[Handwired: Compile Regular JavaScript into a Neural Net](https://chenglou.me/handwired/)** (出典: *JavaScript Weekly #809*)
+  + 特徴: [Pretext](https://chenglou.me/pretext/)の作者Cheng Louの新しい実験で、通常のJavaScriptをReLUと行列積で構成された正確なネットワークにコンパイルし、GPU上で実行します。130レイヤーで作られた「mini desktop」と、WebGPUでJSONドキュメント10万件を検索するデモがあります。
+- **[Spreading Liquid with Three.js](https://mofu-dev.com/en/blog/fluid-foundation/)** (出典: *Frontend Focus #765*)
+  ![Spreading Liquid with Three.js](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1793798261/pdysphxg4hnrkojir9jv.png)
+  + 特徴: 化粧品キャンペーン向けに作られた、液体が広がるエフェクトの技術解説です。厚みはheight map、動きはvelocity map、結果のレンダリングはfragment shaderで処理し、実際に触れるデモがあります。
+
+## 5. ⚡️ ミニノート
+- **[Discord Dropping Electron and React Native for a Rust Rewrite](https://www.theverge.com/news/1027379/discord-ditching-electron-web-app)** (出典: *React Status #496*)
+  + 要約: DiscordのCTOがGPUIベースのRustデスクトップクライアントを[公開](https://x.com/svishnevskiy/status/2118081920194203799)し、メモリ使用量は290MBでした。モバイルはデスクトップと共有するRustコードの上にネイティブUIを維持します。直前に公開されたDiscordのReact Native運用の話は[動画](https://www.youtube.com/watch?v=NYOM5ujWI9Y)で見られます。
+- **[Third-Party Scripts](https://blog.report-uri.com/polymarkets-csp-allowed-every-part-of-the-2-6-million-crypto-theft/)** (出典: *Frontend Focus #765*)
+  + 要約: 10月29日、Polymarketでパフォーマンスモニタリングスクリプトがウォレット窃取スクリプトにすり替えられました。スクリプトのURLはそのままで中身だけが変わったため、CSPを通過しました。対策として[Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)の適用やサードパーティリソースのセルフホスティングなどが紹介されています。
+- **[Update to Next.js 16.4.5 or 15.5.29](https://nextjs.org/blog/november-2026-security-release)** (出典: *React Status #496*)
+  + 要約: 11月のセキュリティリリースで7件のadvisoryが修正され、そのほとんどがCache Components関連のバグです。
+- **[GitHub Actions Will Block pull_request_target by Default in Public Repos](https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2)** (出典: *JavaScript Weekly #809*)
+  + 要約: 12月2日から、イベントポリシーが明示的に許可しない限り、パブリックリポジトリでpull_request_targetがデフォルトでブロックされます。11月9日と16日にbrownoutが予定されています。
+- **[Cloudflare Workers Now Supports the Temporal API Natively](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#enable-the-temporal-api)** (出典: *JavaScript Weekly #809*)
+  + 要約: temporal互換性フラグの背後でTemporal APIをネイティブサポートしており、12月1日からはデフォルトで有効になります。
+
+## 6. 🎉 リリース
+- **[React Native 0.89 RC](https://github.com/react/react-native/releases/tag/v0.89.0-rc.0)** (*React Status #496*)
+  + アップデート: テキストレイアウトとネイティブモジュール呼び出しが高速化され、レガシーブリッジAPIが削除されました。正式版は12月の予定です。
+- **[Node.js v27.0 (Alpha)](https://nodejs.org/en/blog/release/v27.0.0-alpha.0.0.0) / [v26.13.0 (LTS)](https://nodejs.org/en/blog/release/v26.13.0)** (*JavaScript Weekly #809*)
+  + アップデート: Node 26が「Lithium」LTSラインになり、27は初のNode alphaです。新しい[リリースプロセス](https://nodejs.org/en/about/previous-releases)では、すべてのラインが6か月間alphaを経てCurrentになります。
+- **[Vitest 5.1](https://vitest.dev/blog/vitest-5-1)** (*JavaScript Weekly #809*)
+  + アップデート: 変更したコードの影響を受けるテストだけを再実行する--since-last-runフラグと、インタラクティブなスナップショットレビュー機能が追加されました。
+- **[Rspack 2.3](https://rspack.rs/blog/announcing-2-3)** (*JavaScript Weekly #809*)
+  + アップデート: [SWC Next](https://github.com/swc-project/swc-next)と書き直されたパーサーを採用し、チームはビルドが5〜20%速くなり、ピークメモリ使用量も減ったと報告しています。
+- **[Chrome 158 Beta](https://chromestatus.com/release-notes/158)** (*Frontend Focus #765*)
+  + アップデート: 安定版は11月17日の予定です。install要素、:playing・:pausedなどのメディア疑似クラス、::highlight(*)が含まれ、[XSLTは廃止の方向](https://xslt.rip/)です。
+- **[XState 6.0 Beta](https://github.com/statelyai/xstate/releases/tag/xstate%406.0.0-beta.0)** (*React Status #496*)
+  + アップデート: 公開APIにこれ以上のbreaking changeは予定されておらず、[@xstate/react 7](https://github.com/statelyai/xstate/releases/tag/%40xstate/react%407.0.0-beta.0)もベータで同時にリリースされました。
+- **[Preact 11.2](https://github.com/preactjs/preact/releases/tag/11.2.0)** (*React Status #496*)
+  + アップデート: preact/compat経由でReact Compiler出力用の[ランタイム](https://github.com/preactjs/preact/releases/tag/11.1.0)を提供し、shadow root内でスコープ指定されたcustom elementレジストリをサポートします。
+- **[Leaflet 2.0 Beta 1](https://github.com/Leaflet/Leaflet/releases/tag/v2.0.0-beta.1)** (*JavaScript Weekly #809*)
+  + アップデート: 10年ぶりの最初のメジャーバージョンで、tree-shakingをサポートし、TypeScript型を含み、default exportを削除しました。
+- **[Chrome DevTools November 2026 Update](https://developer.chrome.com/blog/new-in-devtools-november-2026)** (*Frontend Focus #765*)
+  + アップデート: Elementsパネルのビジュアルなposition-areaエディタ、Web Installマニフェスト診断、MCPサーバーの改善が追加されました。
+- **[Safari 27.3 Beta](https://webkit.org/blog/18541/introducing-adaptive-dark-mode/)** (*Frontend Focus #765*)
+  + アップデート: ライトなサイトを自動的にダークへ切り替えるopt-in機能のAdaptive Dark Modeが含まれました。
+
+## ✍️ おわりに
+エージェントがコードを書く環境では、フレームワークを選ぶ基準も変わるべきだという点が、今週もっとも印象的でした。コストの差は不明瞭でしたが、ユーザーに配信されるJavaScriptの量は数字ではっきりと分かれ、結局のところ成果物の重さが選択基準になりうると感じました。また、パッケージのクールダウン、SRI、pull_request_targetのデフォルトブロックのように、サプライチェーンセキュリティへの対応が設定とポリシーの領域に降りてきており、個別のツールよりチームのデフォルト設定を点検することが重要になりました。DiscordとParcelがRustへ向かう流れまで重ねて見ると、フロントエンド開発者が扱う境界が広がり続けていることを実感します。
+
+#### 出典
+- [JavaScript Weekly #809](https://javascriptweekly.com/issues/809)
+- [Frontend Focus #765](https://frontendfoc.us/issues/765)
+- [React Status #496](https://react.statuscode.com/issues/496)
+- [Smashing Newsletter #583](https://mailchi.mp/smashingmagazine/success-with-stakeholders)
