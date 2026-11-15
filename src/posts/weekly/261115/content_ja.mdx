@@ -1,0 +1,147 @@
+---
+title: '🚀 2026-11 W2 #84'
+desc: Xのウェブアプリ再構築、CSSによる要素の重なり検出、エージェント向けUI SDKとModern Web Guidance 1.0 | 2026年11月第2週目 週間技術ニュースレター
+date: 2026-11-15
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 今週の主要テーマ
+今週はAIエージェントとWebプラットフォームが中心です。Xはサーバー3台を1つにまとめた新しいWebアプリで、低速回線での最初の投稿の表示時間を大きく短縮しました。UI SDK、Modern Web Guidance 1.0、Stageshowは、エージェントがフロントエンドを作ることを前提にしたツールです。CSSでは、anchor positioningとscroll-driven animationsで要素の重なりを検出する手法、random()関数、CSS変数で管理するアイコントークンが目を引きます。
+
+## 1. 🔍 深掘り
+- **[How X (Twitter) is Rebuilding Its Web App](https://blog.x.com/en/engineering/rebuilding-the-global-town-square-from-scratch)** (出典: *JavaScript Weekly #810*, *React Status #497*)
+   ![How X (Twitter) is Rebuilding Its Web App](https://blog.x.com/en/engineering/rebuilding-the-global-town-square-from-scratch/opengraph-image)
+   - 背景: 従来のrwebは、未ログインの訪問者に対してアプリシェル、JavaScript、GraphQLリクエストの順でレンダリングしていたため、低速回線ではスプラッシュ画面が長く表示されていました。人間向け、検索クローラー向け、リンクプレビュー向けのサーバーが別々にあり、SEOの修正を3か所に反映しなければならない問題もありました。
+   - 主な機能: Vite、ReactのストリーミングSSRとSuspense、Fastify、Platformatic Watt(Node.js v26のワーカースレッド)、RelayとGraphQLで、1台のサーバーがすべてのリクエストを処理します。人間にはストリーミングHTML、検証済みの検索クローラーには完成したドキュメント、リンクプレビューボットにはheadタグだけを送ります。Slow 4Gのラボ録画では、最初の投稿がrwebでは23.9秒、新アプリでは2.7秒で表示されました。
+   - 実務での活用: 起動時に読み込む静的importファイルが多いと、HTTP/2の同時リクエスト上限のためにラウンドトリップが増えます。チャンクをマージするプラグインで、ログイン時のエントリポイントは754個から182個に、未ログイン時のエントリポイントは582個から10個に減らしました。エントリスクリプトをasyncモジュールに変えてSuspense境界が到着する前にシェルをhydrateし、スタイルシートの読み込み後にJSを開始することで、FCPを3,064msから1,984msに短縮しました。
+   - 注意事項: サーバーがデータを取得してからレンダリングするため、ログイン状態での最初のバイトは430〜560msと、rweb(300ms未満)より遅くなります。ホームタイムラインはまだブラウザでのみレンダリングされるため、改善幅は1.7倍にとどまり、すべての数値はラボ環境での測定です。
+- **[Detect When Elements Overlap With CSS](https://ishadeed.com/article/css-detect-overlap/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (出典: *CSS Weekly #640*)
+   ![Detect When Elements Overlap With CSS](https://ishadeed.com/assets/css-detect-overlap/thumb.jpg)
+   - 背景: 位置とサイズが流動的な装飾要素がセクションに触れた瞬間に隠したかったものの、メディアクエリでは解決できませんでした。筆者も当初は、CSSだけでは不可能だと考えていました。
+   - 主な機能: anchor positioningで、装飾要素とセクションの間のスペースを占めるmeasure要素を作ります。その中に固定幅の擬似要素を入れて、スペースが足りないとoverflowが発生するようにし、このoverflowをscroll-timelineとtimeline-scopeでbodyに伝えてCSS変数を反転させます。最後に、style container queryが装飾要素を非表示にします。
+   - コード例:
+     ```css
+     body { --touching: 0; timeline-scope: --touch; animation: flip-touch 1ms linear; animation-timeline: --touch; }
+     .measure { overflow-x: auto; scroll-timeline: --touch x; }
+     @keyframes flip-touch { from, to { --touching: 1; } }
+     .decor { @container style(--touching: 1) { opacity: 0; } }
+     ```
+   - 実務での活用: 位置が流動的な装飾要素や補助的なUIがコンテンツに触れたときに、JavaScriptなしで隠すプログレッシブエンハンスメントとして使えます。
+   - 注意事項: scroll-driven animationsとanchor positioningの両方をサポートするブラウザでのみ動作します。筆者もこの手法を拡張機能として使うよう案内しています。
+
+---
+#### 見逃せないコンテンツ
+- **[Creating Diagrams and Graphs Using Modern CSS](https://blog.master.dev/creating-diagrams-and-graphs-using-modern-css/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (出典: *CSS Weekly #640*)
+  + 要約: Temani Afifの連載の最終回です。anchor positioning、border-shape、shape()、if()で2つの要素をつなぐ接続線を作り、要素をドラッグすると近い辺に沿って接続線が切り替わる動的接続と、固定接続を扱います。現在はChromeとEdgeのみが完全にサポートしており、筆者もプロダクション向けではなく実験だと述べています。
+- **[Experiments with Multithreaded JavaScript](https://blog.arv.tools/archives/2026/11/02/18.35.20/)** (出典: *JavaScript Weekly #810*)
+  + 要約: 元TC39委員のErik Arvidssonが、スレッド同士がオブジェクトを直接共有するJavaScriptを3つの方式で探ります。Porfforのフォーク、所有権チェッカーを備えたTypeScriptライブラリ、TC39 structs提案の実装で、それぞれプレイグラウンドがあります。
+---
+
+## 2. 🛠️ ツール & ライブラリ
+- **[UI SDK: Vercel and shadcn's Headless UI Behaviors Library](https://ui-sdk.dev/docs/core/changelog/introducing-ui-sdk)** (出典: *React Status #497*)
+  ![UI SDK](https://ui-sdk.dev/og/docs/core/changelog/introducing-ui-sdk/image.png)
+  + 概要: キーボードナビゲーション、フォーカス、選択、ポップアップ、ドラッグ&ドロップと必要なARIA属性を、50個以上の振る舞い単位で提供するTypeScriptライブラリです。createRovingFocus、createTypeahead、createPopupなどの関数を組み合わせて、独自のコンポーネントを作ります。同じ振る舞いを使った、React、Vue、Svelte、Solid、Web Components向けのコンポーネントも50個ほど提供されています。
+  + 使い方: @ui-sdk/coreで動作を定義し、フレームワークのコンポーネントでラップする方式です。ドキュメントのsetup promptをエージェントに貼り付ければ、インストールと設定を任せられます。
+  + 実践チップ: createPopup 1つで、ボタンの横にポップアップを開く、Escと外側クリックで閉じる、フォーカスを復元するところまで処理します。createAgentとWebMCPのregisterToolsを使うと、ブラウザエージェントがページのコンポーネントを読み取って操作できます。ベータ段階のため、一部のAPIは変更される可能性があります。
+- **[Text.js: React Apps That Render in the DevTools Console](https://textjs.org/)** (出典: *React Status #497*, *JavaScript Weekly #810*)
+  ![Text.js](https://textjs.org/og/home.png?v=bf3d2223)
+  + 概要: React 19アプリをブラウザのDevToolsコンソール(console.log)にレンダリングするフレームワークです。App Router方式のルーティング、Suspense、キーボード入力、Yogaベースのレイアウト、ASCIIフォントをサポートし、変更のあったフレームだけをconsole.logで出力します。
+  + 使い方: `bunx create-text-app`で始めます。
+    ```tsx
+    const [count, setCount] = useState(0);
+    useInput((e) => { if (e.key === "up") setCount((c) => c + 1); });
+    return <Box className="flex-col gap-1 p-2"><AsciiFont text="▼ TEXT.JS" /></Box>;
+    ```
+  + 実践チップ: ホームページでコンソールを開いてプレビューをクリックし、↑↓キーで実際に体験できます。公式ベンチマーク(100×32のダッシュボード)では、全体の再描画は0.163ms、変更されたセルがないフレームではconsole.logの呼び出しが0回です。ルートに`runtime = "server"`を指定すれば、サーバーでレンダリングすることもできます。
+
+---
+#### 見逃せないコンテンツ
+- **[Stageshow](https://benji.org/stageshow)** (出典: *Smashing Newsletter #584*)
+  + 要約: エージェントが製品紹介用のダミーUI(faux UI)をより精巧に作れるよう、ワークフローを教えるスキルです。`npx skills add benjitaylor/skills --skill stageshow`で追加でき、成果物は通常のReactコンポーネントなので、コードと同じように編集できます。
+- **[This Hue Shall Pass: A Contrast Checker That Fixes Failing Color Pairs](https://thishueshallpass.clearleft.com/)** (出典: *Frontend Focus #766*)
+  + 要約: パレットを貼り付けると、すべての前景色と背景色の組み合わせをWCAG AAまたはAAAの基準で評価するコントラストチェッカーです。色相は維持したまま、基準に近い組み合わせを合格するよう補正することもできます。
+---
+
+## 3. 📝 おすすめ記事 & チップ
+- **[The Best Way to Use Icons in Web UIs](https://lea.verou.me/blog/2026/icons/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (出典: *CSS Weekly #640*)
+  ![The Best Way to Use Icons in Web UIs](https://lea.verou.me/blog/2026/icons/images/image.png)
+  + 主要なインサイト: アイコンを`--icon-trash`のようなCSS変数(デザイントークン)として:rootに定義し、`--icon`、`--icon-start`、`--icon-end`の値だけを変えて擬似要素に挿入します。アイコンはマスクで描画されるためテキストの色にそのまま従い、メディアクエリ、hover、コンテナクエリ、`::marker`でもアイコンを差し替えられます。@nudeui/iconsで今すぐ使え、一部のSafariのバグには回避策が必要です。
+  + コード例:
+    ```css
+    button.delete { --icon: var(--icon-trash); }
+    a.github { --icon: var(--icon-github); &:hover { --icon: var(--icon-link-external); } }
+    ```
+  + なぜ有益か: インラインSVGとアイコンフォントの欠点を指摘したうえで、マークアップに手を加えずに状態ごとにアイコンを切り替える方法を示しています。デザインシステムでアイコンの一貫性を管理する方法もあわせて提案しています。
+- **[Embracing Playful Imperfection With The CSS random() Function](https://www.smashingmagazine.com/2026/10/embracing-playful-imperfection-css-random-function/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (出典: *CSS Weekly #640*)
+  ![Embracing Playful Imperfection With The CSS random() Function](https://files.smashing.media/articles/embracing-playful-imperfection-css-random-function/embracing-playful-imperfection-css-random-function.jpg)
+  + 主要なインサイト: `random(最小, 最大, ステップ)`の形で使い、最小と最大は同じ単位でなければなりません。同じ要素の横と縦の値を同期させるには、キャッシュキー(`--square-size element-scoped`)を使います。SafariはサポートしていてChrome 156でロールアウト中のため、`@supports`で囲むのが安全です。
+  + コード例:
+    ```css
+    rotate: random(-3deg, 3deg);
+    inline-size: random(--square-size element-scoped, 60px, 120px);
+    block-size: random(--square-size element-scoped, 60px, 120px);
+    @supports (rotate: random(-2deg, 2deg)) { .badge { rotate: random(-2.5deg, 2.5deg); } }
+    ```
+  + なぜ有益か: 一貫性が重要なデザインシステムで、ランダム性をどこに使うとよいかをCodePenのデモとともに示しています。プリプロセッサのループやJSライブラリなしで実現する方法も確認できます。
+- **[Beyond the Viewport: Introducing Site Seeing](https://ishadeed.com/article/beyond-the-viewport/)** (出典: *Frontend Focus #766*)
+  ![Beyond the Viewport: Introducing Site Seeing](https://ishadeed.com/assets/beyond-the-viewport/thumb.jpg)
+  + 主要なインサイト: 実際のユーザーは、ドッキングされたDevTools、縦型タブ、画面キーボード、アプリ内ブラウザ、分割表示、印刷スタイルなど、ビューポートサイズを変える環境でサイトを見ています。Ahmad Shadeedの無料ツールSite Seeingは、こうした環境でページがどう見えるかをプレビューできます。レスポンシブの確認範囲を、ブラウザウィンドウのサイズ変更の先まで広げてくれる点が有益です。
+
+---
+#### 見逃せないコンテンツ
+- **[Computing with CSS Layout](https://noscript.ing/compute)** (出典: *Frontend Focus #766*)
+  + 要約: CSSグリッドやフレックスボックスなどのレイアウト動作を利用して、CSSの計算結果を数値として読み取るインタラクティブな記事です。この値を活用してアニメーションチャートを描く方法も扱います。
+- **[Building An AI-Ready Design System Library](https://christinevallaure.substack.com/p/building-an-ai-ready-design-system)** (出典: *Smashing Newsletter #584*)
+  + 要約: FigmaファイルをコードにするときにAIは隙間を勝手に埋めてしまうため、一部が作り話のコンポーネントになりがちです。Christine Vallaureは、デザインシステムをコードから先に始め、MCPでFigmaライブラリを生成する方式を提案しています。
+---
+
+## 4. ✨ アイデア
+- **[Declarative Dragging](https://declarative-dragging.github.io/)** (出典: *React Status #497*)
+   - ![Declarative Dragging](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jmcergdduhiy3e6s1glp.jpg)
+  + 特徴: ドラッグのインタラクションを1つずつ設計する代わりに、可能な結果を宣言すればライブラリがインタラクションを計算してくれるアプローチです。実験的なReactライブラリのDragologyはSVGインターフェースを対象としており、体験できるデモが数多くあります。
+- **[Higanbana — Flower of the Other Shore](https://codepen.io/editor/grauconejo13/pen/01a19f17-72ac-7126-af68-406e31973978?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (出典: *CSS Weekly #640*)
+  + 特徴: Vanessa Victorinoが作った彼岸花(ヒガンバナ)の庭園です。SVGの花、揺れる茎、漂う魂の光で構成され、CSS random()で花ごとに形を変えています。
+
+## 5. ⚡️ ミニノート
+- **[The State of JavaScript 2026 Survey](https://survey.devographics.com/en-US/survey/state-of-js/2026)** (出典: *JavaScript Weekly #810*)
+  + 要約: 2026年のState of JavaScriptサーベイが始まりました。使用している機能、ライブラリ、ツールを共有できます。
+- **[TypeScript 7 Experimental WebAssembly Build](https://github.com/microsoft/TypeScript/pull/64174)** (出典: *JavaScript Weekly #810*)
+  + 要約: GoベースのTypeScript 7コンパイラに実験的なWebAssemblyビルドが追加され、初期版のTypeScript Playground v2ですでに使われています。
+- **[ESLint Now Lints Shell Scripts](https://eslint.org/blog/2026/11/eslint-shell-plugin-announcement/)** (出典: *JavaScript Weekly #810*)
+  + 要約: `@eslint/shell`プラグインがBash、sh、mksh向けのShellCheck風ルールを追加し、ESLintが公式にシェルスクリプトをlintできるようになりました。
+- **[Safari 27.3 Beta: Adaptive Dark Mode](https://webkit.org/blog/18541/introducing-adaptive-dark-mode/)** (出典: *JavaScript Weekly #810*)
+  + 要約: ダークテーマを提供していない明るいWebサイトを、自動的に暗くしてくれるオプトイン機能です。
+- **[GitHub Recognizes ACCESSIBILITY.md](https://github.blog/open-source/maintainers/accessibility-statements-now-have-a-home-on-github/)** (出典: *Frontend Focus #766*)
+  + 要約: GitHubが`ACCESSIBILITY.md`ファイルを認識し、リポジトリの概要ページに表示するようになりました。
+
+## 6. 🎉 リリース
+- **[Vite Critical RCE Advisory (8.3.7, 8.2.5, 8.1.7, 7.3.8, 6.4.6)](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7)** (*React Status #497*, *JavaScript Weekly #810*)
+  + アップデート: `--host`または`server.host`でネットワークに公開された開発サーバーで、リモートコード実行が可能になる致命的な欠陥です。使用しているラインに合わせて、8.3.7、8.2.5、8.1.7、7.3.8、6.4.6にアップデートする必要があります。
+- **[Parcel 3 Alpha: The Bundler Rewritten in Rust](https://v3.parceljs.org/blog/v3-alpha/)** (*JavaScript Weekly #810*)
+  + アップデート: Rustでゼロから書き直されたバンドラーで、React Spectrumのコールドビルドでは最大でParcel 2の100倍高速だと報告されています。Nodeなしで単体のバイナリとして実行でき、Rust、Go、Swiftのネイティブプラグインと、QuickJSベースのJSプラグインをサポートします。
+- **[Storybook 11 Beta](https://storybook.js.org/blog/storybook-11-beta/)** (*React Status #497*, *JavaScript Weekly #810*)
+  + アップデート: Reactプロジェクトのコンポーネントメタデータがもっと速く正確になり、型安全なストーリーとエージェント向けの公式スキルが追加されます。正式リリースは12月の予定です。
+- **[Playwright 1.65](https://github.com/microsoft/playwright/releases/tag/v1.65.0)** (*JavaScript Weekly #810*)
+  + アップデート: テストランナーをBunで実行できるようになり、新しいfailures reporterが追加されました。
+- **[Next.js 16.4.5 and 15.5.29 Security Release](https://nextjs.org/blog/november-2026-security-release)** (*JavaScript Weekly #810*)
+  + アップデート: セキュリティ上の問題7件が修正され、その中には深刻度の高いテナント間のキャッシュ露出の問題が含まれています。
+- **[Firefox 160](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/160)** (*Frontend Focus #766*)
+  + アップデート: デスクトップでWeb Speech APIのオンデバイス音声認識がサポートされます。`blocking="render"`と動画・音声の遅延読み込みは、フラグ付きで試せます。
+- **[Modern Web Guidance 1.0: Web Expertise for AI Agents](https://developer.chrome.com/blog/modern-web-guidance-v1)** (*Frontend Focus #766*, *CSS Weekly #640*)
+  + アップデート: コーディングエージェントにWebプラットフォームのベストプラクティスとブラウザ互換性データを与えるスキルが、安定版になりました。既存のコードベースからモダン化の機会を見つけるワークフロー、拡張されたガイドデータベース、公開評価ダッシュボードが追加され、FirefoxとEdgeが参加するクロスブラウザプロジェクトになりました。インストールは`npx modern-web-guidance@latest install`です。
+- **[Britecharts 3.0: Ready-Made, Accessible D3 Charts](https://britecharts.github.io/britecharts/blog/britecharts-3)** (*Frontend Focus #766*)
+  + アップデート: スクリーンリーダー向けのデータテーブルとキーボードナビゲーションで、アクセシビリティが標準で適用されます。ダークモード、TypeScriptの型、ツリーマップも追加されました。
+- **[EmbedPDF 3.0](https://github.com/embedpdf/embed-pdf-viewer/releases/tag/v3.0.0)** (*React Status #497*, *JavaScript Weekly #810*)
+  + アップデート: v3の書き直しで、すぐに使えるビューアー、独自のUIを作れるヘッドレスコンポーネント、独立したPDFエンジンを提供します。Reactコンポーネントをそのまま組み込めます。
+- **[react-virtualized 10.0](https://github.com/bvaughn/react-virtualized/releases/tag/10.0.0)** (*React Status #497*)
+  + アップデート: リスト・グリッド仮想化ライブラリがTypeScriptと関数コンポーネントベースにモダン化され、React 18以上が必要です。
+
+## ✍️ おわりに
+Xの事例で最も印象的だったのは、パフォーマンスの改善が新しい技術の導入ではなく、ボトルネックを1つずつ測定して取り除いた結果だという点です。起動ファイルの数を減らし、hydrationのタイミングを早め、スタイルシートとスクリプトのダウンロード順序を調整する作業は、どのReactアプリでも点検できます。一方で、UI SDK、Modern Web Guidance、Stageshowが同時に出てきたことから、フロントエンドのツールが人間だけでなくエージェントにとっても読み書きしやすい形に変わっていく流れがはっきりしてきました。CSSの分野でも、anchor positioning、scroll-driven animations、if()、random()といった新機能が、JavaScriptが担っていた領域を少しずつ取り込んでいます。ただし、かなりの部分がまだChrome中心なので、今はプログレッシブエンハンスメントとして取り入れるのが現実的だと思います。
+
+#### 出典
+- [JavaScript Weekly #810](https://javascriptweekly.com/issues/810)
+- [Frontend Focus #766](https://frontendfoc.us/issues/766)
+- [React Status #497](https://react.statuscode.com/issues/497)
+- [CSS Weekly #640](https://css-weekly.com/issue-640)
+- [Smashing Newsletter #584](https://mailchi.mp/smashingmagazine/ai-design-engineering-2027)
