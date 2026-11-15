@@ -1,0 +1,147 @@
+---
+title: '🚀 2026-11 W2 #84'
+desc: X의 웹 앱 재구축, CSS로 요소 겹침 감지, 에이전트를 위한 UI SDK와 Modern Web Guidance 1.0 | 2026년 11월 2주차 주간 기술 뉴스레터
+date: 2026-11-15
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 이번 주 핵심 테마
+이번 주는 AI 에이전트와 웹 플랫폼이 중심입니다. X는 서버 3개를 하나로 합친 새 웹 앱으로 느린 망에서의 첫 게시물 표시 시간을 크게 줄였습니다. UI SDK, Modern Web Guidance 1.0, Stageshow는 에이전트가 프런트엔드를 만드는 일을 전제로 한 도구입니다. CSS에서는 anchor positioning과 scroll-driven animations로 요소 겹침을 감지하는 기법, random() 함수, CSS 변수로 관리하는 아이콘 토큰이 눈에 띕니다.
+
+## 1. 🔍 심층 분석
+- **[How X (Twitter) is Rebuilding Its Web App](https://blog.x.com/en/engineering/rebuilding-the-global-town-square-from-scratch)** (출처: *JavaScript Weekly #810*, *React Status #497*)
+   ![How X (Twitter) is Rebuilding Its Web App](https://blog.x.com/en/engineering/rebuilding-the-global-town-square-from-scratch/opengraph-image)
+   - 배경: 기존 rweb은 비로그인 방문자에게 앱 셸, JavaScript, GraphQL 요청 순서로 렌더링해서 느린 망에서는 스플래시 화면만 길게 보였습니다. 사람용, 검색 크롤러용, 링크 미리보기용 서버가 따로 있어 SEO 수정을 세 곳에 반영해야 하는 문제도 있었습니다.
+   - 핵심 기능: Vite, React 스트리밍 SSR과 Suspense, Fastify, Platformatic Watt(Node.js v26 워커 스레드), Relay와 GraphQL로 서버 하나가 모든 요청을 처리합니다. 사람에게는 스트리밍 HTML, 검증된 검색 크롤러에게는 완성된 문서, 링크 미리보기 봇에게는 head 태그만 보냅니다. Slow 4G 랩 녹화에서 첫 게시물이 rweb은 23.9초, 새 앱은 2.7초에 표시되었습니다.
+   - 실무 적용: 시작 시 불러오는 정적 import 파일이 많으면 HTTP/2 동시 요청 한도 때문에 왕복이 늘어납니다. 청크 병합 플러그인으로 로그인 진입점은 754개에서 182개로, 비로그인 진입점은 582개에서 10개로 줄였습니다. 엔트리 스크립트를 async 모듈로 바꿔 Suspense 경계가 도착하기 전에 셸을 hydrate하고, 스타일시트 로드 이후에 JS를 시작해 FCP를 3,064ms에서 1,984ms로 줄였습니다.
+   - 주의사항: 서버가 데이터를 가져온 뒤 렌더링하므로 로그인 상태의 첫 바이트는 430~560ms로 rweb(300ms 미만)보다 느립니다. 홈 타임라인은 아직 브라우저에서만 렌더링되어 개선 폭이 1.7배에 그쳤고, 모든 수치는 랩 환경 측정입니다.
+- **[Detect When Elements Overlap With CSS](https://ishadeed.com/article/css-detect-overlap/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (출처: *CSS Weekly #640*)
+   ![Detect When Elements Overlap With CSS](https://ishadeed.com/assets/css-detect-overlap/thumb.jpg)
+   - 배경: 위치와 크기가 유동적인 장식 요소가 섹션과 닿는 순간 숨기고 싶었지만, 미디어 쿼리로는 해결되지 않았습니다. 작성자도 처음에는 CSS만으로는 불가능하다고 생각했습니다.
+   - 핵심 기능: anchor positioning으로 장식 요소와 섹션 사이 공간을 차지하는 measure 요소를 만듭니다. 그 안에 고정 폭 의사 요소를 넣어 공간이 부족하면 overflow가 생기게 하고, 이 overflow를 scroll-timeline과 timeline-scope로 body에 전달해 CSS 변수를 뒤집습니다. 마지막으로 style container query가 장식 요소를 숨깁니다.
+   - 코드 예제:
+     ```css
+     body { --touching: 0; timeline-scope: --touch; animation: flip-touch 1ms linear; animation-timeline: --touch; }
+     .measure { overflow-x: auto; scroll-timeline: --touch x; }
+     @keyframes flip-touch { from, to { --touching: 1; } }
+     .decor { @container style(--touching: 1) { opacity: 0; } }
+     ```
+   - 실무 적용: 위치가 유동적인 장식 요소나 부가 UI가 콘텐츠에 닿을 때 JavaScript 없이 숨기는 점진적 향상으로 쓸 수 있습니다.
+   - 주의사항: scroll-driven animations와 anchor positioning을 모두 지원하는 브라우저에서만 동작합니다. 작성자도 이 기법을 향상 기능으로 쓰라고 안내합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Creating Diagrams and Graphs Using Modern CSS](https://blog.master.dev/creating-diagrams-and-graphs-using-modern-css/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (출처: *CSS Weekly #640*)
+  + 요약: Temani Afif의 연재 마지막 글입니다. anchor positioning, border-shape, shape(), if()로 두 요소를 잇는 연결선을 만들고, 요소를 드래그하면 가까운 변을 따라 연결선이 바뀌는 동적 연결과 고정 연결을 다룹니다. 현재는 Chrome과 Edge만 완전히 지원하며, 작성자도 프로덕션용이 아닌 실험이라고 밝힙니다.
+- **[Experiments with Multithreaded JavaScript](https://blog.arv.tools/archives/2026/11/02/18.35.20/)** (출처: *JavaScript Weekly #810*)
+  + 요약: 전 TC39 위원 Erik Arvidsson이 스레드끼리 객체를 직접 공유하는 JavaScript를 세 가지 방식으로 탐구합니다. Porffor 포크, 소유권 검사기를 갖춘 TypeScript 라이브러리, TC39 structs 제안 구현이며 각각 플레이그라운드가 있습니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[UI SDK: Vercel and shadcn's Headless UI Behaviors Library](https://ui-sdk.dev/docs/core/changelog/introducing-ui-sdk)** (출처: *React Status #497*)
+  ![UI SDK](https://ui-sdk.dev/og/docs/core/changelog/introducing-ui-sdk/image.png)
+  + 개요: 키보드 탐색, 포커스, 선택, 팝업, 드래그 앤 드롭과 필요한 ARIA 속성을 50개 이상의 행동 단위로 제공하는 TypeScript 라이브러리입니다. createRovingFocus, createTypeahead, createPopup 같은 함수를 조합해 자신만의 컴포넌트를 만듭니다. 같은 행동으로 React, Vue, Svelte, Solid, Web Components용 컴포넌트 50여 개도 제공합니다.
+  + 사용법: @ui-sdk/core로 동작을 정의하고 프레임워크 컴포넌트로 감싸는 방식입니다. 문서의 setup prompt를 에이전트에 붙여 넣으면 설치와 설정을 맡길 수 있습니다.
+  + 실전 팁: createPopup 하나로 버튼 옆 팝업 열기, Esc와 바깥 클릭으로 닫기, 포커스 복원까지 처리합니다. createAgent와 WebMCP registerTools를 쓰면 브라우저 에이전트가 페이지의 컴포넌트를 읽고 조작할 수 있습니다. 베타 단계라 일부 API는 바뀔 수 있습니다.
+- **[Text.js: React Apps That Render in the DevTools Console](https://textjs.org/)** (출처: *React Status #497*, *JavaScript Weekly #810*)
+  ![Text.js](https://textjs.org/og/home.png?v=bf3d2223)
+  + 개요: React 19 앱을 브라우저 DevTools 콘솔(console.log)에 렌더링하는 프레임워크입니다. App Router 방식 라우팅, Suspense, 키보드 입력, Yoga 기반 레이아웃, ASCII 폰트를 지원하고, 바뀐 프레임만 console.log로 출력합니다.
+  + 사용법: `bunx create-text-app`으로 시작합니다.
+    ```tsx
+    const [count, setCount] = useState(0);
+    useInput((e) => { if (e.key === "up") setCount((c) => c + 1); });
+    return <Box className="flex-col gap-1 p-2"><AsciiFont text="▼ TEXT.JS" /></Box>;
+    ```
+  + 실전 팁: 홈페이지에서 콘솔을 열고 미리보기를 클릭한 뒤 ↑↓ 키로 직접 체험할 수 있습니다. 공식 벤치마크(100×32 대시보드)에서 전체 리페인트는 0.163ms, 바뀐 셀이 없는 프레임은 console.log 호출이 0회입니다. 라우트에 `runtime = "server"`를 지정하면 서버에서 렌더링할 수도 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Stageshow](https://benji.org/stageshow)** (출처: *Smashing Newsletter #584*)
+  + 요약: 에이전트가 제품 소개용 가짜 UI(faux UI)를 더 정교하게 만들도록 워크플로를 알려주는 스킬입니다. `npx skills add benjitaylor/skills --skill stageshow`로 추가하며, 결과물은 일반 React 컴포넌트라 코드처럼 수정할 수 있습니다.
+- **[This Hue Shall Pass: A Contrast Checker That Fixes Failing Color Pairs](https://thishueshallpass.clearleft.com/)** (출처: *Frontend Focus #766*)
+  + 요약: 팔레트를 붙여 넣으면 모든 전경색·배경색 조합을 WCAG AA 또는 AAA 기준으로 평가하는 대비 검사기입니다. 색조는 유지한 채 기준에 근접한 조합을 통과하도록 보정할 수도 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[The Best Way to Use Icons in Web UIs](https://lea.verou.me/blog/2026/icons/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (출처: *CSS Weekly #640*)
+  ![The Best Way to Use Icons in Web UIs](https://lea.verou.me/blog/2026/icons/images/image.png)
+  + 핵심 인사이트: 아이콘을 `--icon-trash` 같은 CSS 변수(디자인 토큰)로 :root에 정의하고, `--icon`, `--icon-start`, `--icon-end` 값만 바꿔 의사 요소에 삽입합니다. 아이콘은 마스크로 그려져 텍스트 색을 그대로 따르고, 미디어 쿼리, hover, 컨테이너 쿼리, `::marker`에서도 아이콘을 교체할 수 있습니다. @nudeui/icons로 지금 바로 쓸 수 있으며, 일부 Safari 버그에는 우회가 필요합니다.
+  + 코드 예제:
+    ```css
+    button.delete { --icon: var(--icon-trash); }
+    a.github { --icon: var(--icon-github); &:hover { --icon: var(--icon-link-external); } }
+    ```
+  + 왜 유익한가: 인라인 SVG와 아이콘 폰트의 단점을 짚은 뒤, 마크업을 건드리지 않고 상태별로 아이콘을 바꾸는 방법을 보여 줍니다. 디자인 시스템에서 아이콘 일관성을 관리하는 방식도 함께 제안합니다.
+- **[Embracing Playful Imperfection With The CSS random() Function](https://www.smashingmagazine.com/2026/10/embracing-playful-imperfection-css-random-function/?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (출처: *CSS Weekly #640*)
+  ![Embracing Playful Imperfection With The CSS random() Function](https://files.smashing.media/articles/embracing-playful-imperfection-css-random-function/embracing-playful-imperfection-css-random-function.jpg)
+  + 핵심 인사이트: `random(최소, 최대, 단계)` 형태로 쓰며 최소와 최대는 같은 단위여야 합니다. 같은 요소의 가로·세로 값을 동기화하려면 캐싱 키(`--square-size element-scoped`)를 씁니다. Safari는 지원하고 Chrome 156에서 롤아웃 중이라 `@supports`로 감싸는 것이 안전합니다.
+  + 코드 예제:
+    ```css
+    rotate: random(-3deg, 3deg);
+    inline-size: random(--square-size element-scoped, 60px, 120px);
+    block-size: random(--square-size element-scoped, 60px, 120px);
+    @supports (rotate: random(-2deg, 2deg)) { .badge { rotate: random(-2.5deg, 2.5deg); } }
+    ```
+  + 왜 유익한가: 일관성이 중요한 디자인 시스템에서 무작위성을 어디에 쓰면 좋은지 CodePen 데모와 함께 보여 줍니다. 전처리기 반복문이나 JS 라이브러리 없이 구현하는 방법도 확인할 수 있습니다.
+- **[Beyond the Viewport: Introducing Site Seeing](https://ishadeed.com/article/beyond-the-viewport/)** (출처: *Frontend Focus #766*)
+  ![Beyond the Viewport: Introducing Site Seeing](https://ishadeed.com/assets/beyond-the-viewport/thumb.jpg)
+  + 핵심 인사이트: 실제 사용자는 도킹된 DevTools, 세로 탭, 화면 키보드, 인앱 브라우저, 분할 보기, 인쇄 스타일처럼 뷰포트 크기를 바꾸는 환경에서 사이트를 봅니다. Ahmad Shadeed의 무료 도구 Site Seeing은 이런 환경에서 페이지가 어떻게 보이는지 미리 보게 해 줍니다. 반응형 점검 범위를 브라우저 창 크기 조절 너머로 넓혀 준다는 점이 유익합니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Computing with CSS Layout](https://noscript.ing/compute)** (출처: *Frontend Focus #766*)
+  + 요약: CSS 그리드와 플렉스박스 같은 레이아웃 동작을 이용해 CSS의 계산 결과를 숫자로 읽어 내는 인터랙티브 글입니다. 이 값을 활용해 애니메이션 차트를 그리는 방법도 다룹니다.
+- **[Building An AI-Ready Design System Library](https://christinevallaure.substack.com/p/building-an-ai-ready-design-system)** (출처: *Smashing Newsletter #584*)
+  + 요약: Figma 파일을 코드로 옮길 때 AI는 빈틈을 임의로 채워서 일부가 지어낸 컴포넌트가 되기 쉽습니다. Christine Vallaure는 디자인 시스템을 코드에서 먼저 시작하고, MCP로 Figma 라이브러리를 생성하는 방식을 제안합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Declarative Dragging](https://declarative-dragging.github.io/)** (출처: *React Status #497*)
+   - ![Declarative Dragging](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jmcergdduhiy3e6s1glp.jpg)
+  + 특징: 드래그 인터랙션을 하나하나 설계하는 대신 가능한 결과를 선언하면 라이브러리가 인터랙션을 계산해 주는 접근입니다. 실험적인 React 라이브러리 Dragology는 SVG 인터페이스를 대상으로 하며, 체험할 수 있는 데모가 많습니다.
+- **[Higanbana — Flower of the Other Shore](https://codepen.io/editor/grauconejo13/pen/01a19f17-72ac-7126-af68-406e31973978?utm_source=CSS-Weekly&utm_campaign=Issue-640&utm_medium=web)** (출처: *CSS Weekly #640*)
+  + 특징: Vanessa Victorino가 만든 석산(히간바나) 정원입니다. SVG 꽃, 흔들리는 줄기, 떠다니는 영혼의 빛으로 구성되고, CSS random()으로 꽃마다 모양을 다르게 합니다.
+
+## 5. ⚡️ 짧은 소식
+- **[The State of JavaScript 2026 Survey](https://survey.devographics.com/en-US/survey/state-of-js/2026)** (출처: *JavaScript Weekly #810*)
+  + 요약: 2026년 State of JavaScript 설문이 시작되었습니다. 사용하는 기능, 라이브러리, 도구를 공유할 수 있습니다.
+- **[TypeScript 7 Experimental WebAssembly Build](https://github.com/microsoft/TypeScript/pull/64174)** (출처: *JavaScript Weekly #810*)
+  + 요약: Go 기반 TypeScript 7 컴파일러에 실험적인 WebAssembly 빌드가 생겼고, 초기 버전 TypeScript Playground v2에 이미 쓰이고 있습니다.
+- **[ESLint Now Lints Shell Scripts](https://eslint.org/blog/2026/11/eslint-shell-plugin-announcement/)** (출처: *JavaScript Weekly #810*)
+  + 요약: `@eslint/shell` 플러그인이 Bash, sh, mksh용 ShellCheck 유사 규칙을 추가해 ESLint가 공식적으로 셸 스크립트를 린트합니다.
+- **[Safari 27.3 Beta: Adaptive Dark Mode](https://webkit.org/blog/18541/introducing-adaptive-dark-mode/)** (출처: *JavaScript Weekly #810*)
+  + 요약: 다크 테마를 제공하지 않는 밝은 웹사이트를 자동으로 어둡게 바꿔 주는 옵트인 기능입니다.
+- **[GitHub Recognizes ACCESSIBILITY.md](https://github.blog/open-source/maintainers/accessibility-statements-now-have-a-home-on-github/)** (출처: *Frontend Focus #766*)
+  + 요약: GitHub가 `ACCESSIBILITY.md` 파일을 인식해 저장소 개요 페이지에 보여 줍니다.
+
+## 6. 🎉 릴리스
+- **[Vite Critical RCE Advisory (8.3.7, 8.2.5, 8.1.7, 7.3.8, 6.4.6)](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7)** (*React Status #497*, *JavaScript Weekly #810*)
+  + 업데이트: `--host` 또는 `server.host`로 네트워크에 노출된 개발 서버에서 원격 코드 실행이 가능한 치명적 결함입니다. 사용 중인 라인에 맞춰 8.3.7, 8.2.5, 8.1.7, 7.3.8, 6.4.6으로 올려야 합니다.
+- **[Parcel 3 Alpha: The Bundler Rewritten in Rust](https://v3.parceljs.org/blog/v3-alpha/)** (*JavaScript Weekly #810*)
+  + 업데이트: Rust로 처음부터 다시 쓴 번들러로, React Spectrum 콜드 빌드에서 Parcel 2보다 최대 100배 빠르다고 보고합니다. Node 없이 단독 바이너리로 실행되고, Rust, Go, Swift 네이티브 플러그인과 QuickJS 기반 JS 플러그인을 지원합니다.
+- **[Storybook 11 Beta](https://storybook.js.org/blog/storybook-11-beta/)** (*React Status #497*, *JavaScript Weekly #810*)
+  + 업데이트: React 프로젝트의 컴포넌트 메타데이터가 더 빠르고 정확해지고, 타입 안전 스토리와 에이전트용 공식 스킬이 추가됩니다. 정식 릴리스는 12월 예정입니다.
+- **[Playwright 1.65](https://github.com/microsoft/playwright/releases/tag/v1.65.0)** (*JavaScript Weekly #810*)
+  + 업데이트: 테스트 러너를 Bun에서 실행할 수 있고, 새 failures reporter가 추가되었습니다.
+- **[Next.js 16.4.5 and 15.5.29 Security Release](https://nextjs.org/blog/november-2026-security-release)** (*JavaScript Weekly #810*)
+  + 업데이트: 보안 이슈 7건을 수정했고, 여기에는 심각도가 높은 테넌트 간 캐시 노출 문제가 포함됩니다.
+- **[Firefox 160](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/160)** (*Frontend Focus #766*)
+  + 업데이트: 데스크톱에서 Web Speech API의 온디바이스 음성 인식이 지원됩니다. `blocking="render"`와 비디오·오디오 지연 로딩은 플래그 뒤에서 실험할 수 있습니다.
+- **[Modern Web Guidance 1.0: Web Expertise for AI Agents](https://developer.chrome.com/blog/modern-web-guidance-v1)** (*Frontend Focus #766*, *CSS Weekly #640*)
+  + 업데이트: 코딩 에이전트에 웹 플랫폼 모범 사례와 브라우저 호환성 데이터를 넣어 주는 스킬이 안정 버전이 되었습니다. 기존 코드베이스에서 현대화 기회를 찾는 워크플로, 확장된 가이드 데이터베이스, 공개 평가 대시보드가 추가되었고 Firefox와 Edge가 참여하는 크로스 브라우저 프로젝트가 되었습니다. 설치는 `npx modern-web-guidance@latest install`입니다.
+- **[Britecharts 3.0: Ready-Made, Accessible D3 Charts](https://britecharts.github.io/britecharts/blog/britecharts-3)** (*Frontend Focus #766*)
+  + 업데이트: 스크린 리더용 데이터 테이블과 키보드 탐색으로 접근성이 기본 적용됩니다. 다크 모드, TypeScript 타입, 트리맵도 추가되었습니다.
+- **[EmbedPDF 3.0](https://github.com/embedpdf/embed-pdf-viewer/releases/tag/v3.0.0)** (*React Status #497*, *JavaScript Weekly #810*)
+  + 업데이트: v3 재작성으로 바로 쓸 수 있는 뷰어, 자체 UI를 만들 수 있는 헤드리스 컴포넌트, 독립 PDF 엔진을 제공합니다. React 컴포넌트를 바로 끼워 쓸 수 있습니다.
+- **[react-virtualized 10.0](https://github.com/bvaughn/react-virtualized/releases/tag/10.0.0)** (*React Status #497*)
+  + 업데이트: 리스트·그리드 가상화 라이브러리가 TypeScript와 함수 컴포넌트 기반으로 현대화되었고, React 18 이상이 필요합니다.
+
+## ✍️ 마치며
+X의 사례에서 가장 인상적이었던 부분은 성능 개선이 새 기술 도입보다 병목을 하나씩 측정하고 제거한 결과라는 점입니다. 시작 파일 수를 줄이고, hydration 시점을 앞당기고, 스타일시트와 스크립트의 다운로드 순서를 조정하는 일은 어떤 React 앱에서도 점검할 수 있습니다. 한편 UI SDK, Modern Web Guidance, Stageshow가 한꺼번에 나온 것을 보면, 프런트엔드 도구가 사람뿐 아니라 에이전트가 읽고 쓰기 쉬운 형태로 바뀌는 흐름이 분명해졌습니다. CSS 쪽에서도 anchor positioning, scroll-driven animations, if(), random() 같은 새 기능이 JavaScript가 맡던 영역을 점점 가져오고 있습니다. 다만 상당수가 아직 Chrome 중심이므로, 지금은 점진적 향상으로 접근하는 것이 현실적이라고 생각합니다.
+
+#### 출처
+- [JavaScript Weekly #810](https://javascriptweekly.com/issues/810)
+- [Frontend Focus #766](https://frontendfoc.us/issues/766)
+- [React Status #497](https://react.statuscode.com/issues/497)
+- [CSS Weekly #640](https://css-weekly.com/issue-640)
+- [Smashing Newsletter #584](https://mailchi.mp/smashingmagazine/ai-design-engineering-2027)
