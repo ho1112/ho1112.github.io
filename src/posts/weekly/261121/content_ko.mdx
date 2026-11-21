@@ -1,0 +1,129 @@
+---
+title: '🚀 2026-11 W3 #85'
+desc: AI가 코딩에서 놓치는 웹 개발 10가지, Next.js 보안 권고 51건의 배경, 서드파티 스크립트 공급망 공격 | 2026년 11월 3주차 주간 기술 뉴스레터
+date: 2026-11-21
+thumbnail: /posts/weekly/november.avif
+---
+
+## 🔥 이번 주 핵심 테마
+- 이번 주는 AI가 웹 개발의 양쪽 끝을 흔든 한 주였습니다. Next.js 팀은 올해 보안 권고 51건 중 70%가 1년 이상 된 코드에서 나왔고, AI가 오래된 버그 발굴 비용을 낮춘 것이 원인이라고 밝혔습니다. Chrome 팀은 코딩 에이전트가 웹 모범사례 점검의 절반 정도만 통과한다는 평가를 내놓았습니다. 서드파티 스크립트 공급망 공격과 에이전트가 조합하는 UI 동작 라이브러리(UI SDK)도 같은 흐름 위에 있습니다. State of HTML 2026은 선언적인 네이티브 요소가 계속 강세라는 점을 보여 줍니다.
+
+## 1. 🔍 심층 분석
+- **[The Top 10 Things AI Gets Wrong in Web Development](https://developer.chrome.com/blog/top-10-things-ai-gets-wrong-in-web-dev)** (출처: *JavaScript Weekly #811*)
+  ![The Top 10 Things AI Gets Wrong in Web Development](https://developer.chrome.com/static/blog/top-10-things-ai-gets-wrong-in-web-dev/image/thumbnail.png)
+  - 배경: Chrome 팀이 Modern Web Guidance 1.0과 함께 공개한 글입니다. 같은 프롬프트를 가이드 유무로 나눠 돌린 뒤 결과를 기대 항목에 맞춰 채점하는 평가를 사용했습니다. 가이드가 없을 때 통과율은 약 50%, 있을 때는 약 90%였습니다.
+  - 핵심 기능: 문제 영역 10가지는 키보드 포커스와 inert, reduced motion, 폼 검증과 자동완성, 스와이프·터치 제스처, 다이얼로그·팝오버, 다크 모드, 런타임 응답성(INP), 레이아웃 시프트, DOM XSS와 sanitization, 패스키(WebAuthn)입니다. 에이전트는 포커스 트랩이나 오버레이를 JS로 직접 만들고, 네이티브 `popover`와 `<dialog>`가 제공하는 기능을 놓칩니다. CSP나 Trusted Types는 요청하지 않으면 거의 넣지 않습니다.
+  - 코드 예제:
+     ```bash
+     npx modern-web-guidance@latest install
+     ```
+  - 실무 적용: 에이전트가 만든 코드를 리뷰할 때 10개 영역을 체크리스트로 쓸 수 있습니다. 사람이 짠 코드에도 그대로 적용됩니다.
+  - 주의사항: 가이드와 평가 기준을 같은 팀이 만들었다는 점은 감안해야 합니다. 글에서도 10개 영역이 전부는 아니며 모델과 플랫폼 변화에 따라 달라질 수 있다고 밝힙니다.
+- **[Why Next.js Has Had 51 Security Advisories This Year](https://nextjs.org/blog/how-were-using-ai-to-make-nextjs-more-secure)** (출처: *React Status #498*)
+  - 배경: 보안 권고는 2024년 6건, 2025년 14건, 2026년 51건(글 작성 시점)으로 늘었습니다. 원인은 AI가 취약점 발견을 쉽게 만들었기 때문입니다. 올해 취약점의 70%는 1년 이상 된 코드에서, 43%는 3년 이상 된 코드에서 나왔습니다. 이미지 최적화 같은 의존 라이브러리에서 나온 건도 많습니다.
+  - 핵심 기능: 기존 코드 쪽 대응은 버그 바운티, 내부 보안 봇, Trail of Bits 수동 감사입니다. 이와 함께 월 1회 보안 릴리스를 사전 공지하는 프로그램을 도입했습니다. 새 코드 쪽 대응으로는 모든 PR에서 Vercel Agent가 공격자 관점으로 리뷰합니다. 호스팅 계층 간 불일치에서 생기는 우회는 Adapters 계약으로 정리하고, 이미지 최적화는 메모리 안전 코덱으로 옮기고 있습니다.
+  - 코드 예제:
+     ```bash
+     > npm run dev
+     ⚠️ Installed Next.js version 16.4.0 is affected by a known
+     security vulnerability.
+     Next.js security version upgrade available: 16.4.0 -> 16.4.5
+     ```
+  - 실무 적용: Next.js 16.4부터 `next dev`와 `next build`가 취약 버전을 알려 줍니다. `npx next@canary upgrade --agent`를 실행하면 권고에 맞는 최신 안전 버전을 고르고, 수정이 있는 가장 오래된 메이저 안에서 업그레이드한 뒤 코딩 에이전트에 넘깁니다.
+  - 주의사항: 패치가 월 단위로 나오므로 업그레이드 주기를 정해 두지 않으면 노출 기간이 길어집니다. 51건이라는 숫자도 글 게시일 기준이라 이후 달라질 수 있습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[How a Third-Party Script Turned Malicious on Major Sites](https://blog.report-uri.com/worlds-largest-brands-infected-with-malware-via-optimizely/)** (출처: *JavaScript Weekly #811*)
+  + 요약: Optimizely A/B 테스트 플랫폼의 결함을 이용해 악성 스크립트가 사용자에게 제공되는 페이지에 삽입됐습니다(현재 제거됨). Zoom, BBC, GitLab 등에서 발견됐고, CSP가 실제로 피해를 줄인 사례를 보여 줍니다.
+- **[React2STEAL](https://opensourcemalware.com/blog/react2steal-github-actions)** (출처: *React Status #498*)
+  + 요약: React2Shell과 오래된 middleware bypass가 아직 패치되지 않은 서버를 노려 시크릿을 탈취하는 캠페인입니다. 점검 항목은 Chainguard 글에 정리돼 있습니다.
+---
+
+## 2. 🛠️ 툴 & 라이브러리
+- **[UI SDK: Headless UI Behaviors for React, Vue, Svelte, & Solid](https://ui-sdk.dev/docs/core/changelog/introducing-ui-sdk)** (출처: *JavaScript Weekly #811*)
+  + 개요: shadcn과 Vercel이 내놓은 라이브러리입니다. roving focus, typeahead, 팝업, 드래그 앤 드롭 같은 접근성 낮은 수준의 behavior 50여 개를 조합해 컴포넌트를 만듭니다. 여러 프레임워크와 Web Components를 지원합니다.
+  + 실전 팁: shadcn의 취지는 UI는 사람과 에이전트가 서로 달라도 되지만 포커스·키보드·접근성 동작은 같아야 한다는 것입니다. 에이전트가 과제에 맞는 UI를 생성해도 이 동작은 재사용되는 구조입니다.
+- **[Flashwright: A Faster, API-Compatible Playwright Fork](https://flashwright.dev/)** (출처: *JavaScript Weekly #811*)
+  + 개요: Playwright의 API와 테스트 러너는 유지합니다. 대신 워커마다 브라우저 컨텍스트를 재사용하고, 애니메이션이 가라앉기를 기다리지 않는 식의 최적화로 벤치마크에서 약 2~4배 빠르다고 합니다. 동작 원리는 [Codebeast의 설명 글](https://codebeast.io/blog/flashwright)에 있습니다.
+  + 실전 팁: 컨텍스트 재사용과 대기 생략은 테스트 간 격리나 타이밍에 기대는 테스트에 영향을 줄 수 있으므로, 기존 스위트에 적용하기 전에 결과를 비교해 보는 편이 좋습니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[Declarative Dragging](https://declarative-dragging.github.io/)** (출처: *Smashing Newsletter #585*)
+  + 요약: Joshua Horowitz, Andrew Blinn, Jeffrey Heer가 만든 방식입니다. 기하 계산, 피드백, 애니메이션 코드를 직접 짜는 대신 각 드래그 요소가 이끌 수 있는 앱의 다음 상태를 선언하면 나머지를 시스템이 처리합니다.
+- **[React Anatomy: Explode a React Page into 3D Layers](https://react-anatomy.com/)** (출처: *React Status #498*)
+  + 요약: 실행 중인 React 페이지를 렌더링한 컴포넌트에 대응하는 3D 레이어로 분리해 보여 주는 DevTools 확장입니다. 클릭한 요소의 props를 실시간으로 볼 수 있고, 설치 없이 써 볼 수 있는 데모가 있습니다.
+---
+
+## 3. 📝 추천 아티클 & 팁
+- **[The State of HTML 2026 Results](https://2026.stateofhtml.com/en-US)** (출처: *Frontend Focus #767*)
+  ![The State of HTML 2026 Results](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/jhi7bhjracqrzildsuo1.jpg)
+  + 핵심 인사이트: 가장 많이 쓰는 인터랙션 기능은 `<details>`/`<summary>`(72.5%)와 `<dialog>`(67.8%)입니다. Popover API는 모든 주요 브라우저에서 동작하게 되면서 사용률이 40%에 도달했습니다. 스타일링이 가장 어려운 요소는 `<select>`와 날짜 입력이고, customizable select는 Firefox가 아직 출시하지 않아 브라우저 지원이 가장 큰 걸림돌입니다. `<datalist>`는 사용률이 30%에서 44%로 올랐지만 긍정 평가는 44%에서 34%로 떨어졌습니다. 위시리스트 1위는 정렬과 필터링이 내장된 네이티브 데이터 테이블입니다. Kilian Valkhof는 불만의 초점이 브라우저마다 다르게 동작하는 문제에서, 브라우저가 아직 따라오지 못한 문제로 옮겨 가고 있다고 정리했습니다.
+- **[How Promises Really Resolve, Explained via a WebKit Bug](https://alistair.sh/thenables)** (출처: *JavaScript Weekly #811*)
+  + 핵심 인사이트: 던졌어야 할 비정상적인 프로미스 때문에 Bun과 Safari(둘 다 JavaScriptCore 사용)가 멈추는 버그를 Alistair가 직접 고쳤습니다. 이 버그를 출발점으로 `resolve()`가 실제로 무엇을 하는지, 그리고 `resolved`가 실제 프로미스 상태가 아닌 이유를 설명합니다.
+- **[Your JS Error Is Lying to You](https://blog.gaborkoos.com/posts/2026-11-12-Your-JS-Error-Is-Lying-to-You/)** (출처: *JavaScript Weekly #811*)
+  + 핵심 인사이트: `JSON.stringify(err)`가 왜 `{}`를 돌려주는지에서 출발해 `Error` 객체가 담고 있는 정보를 훑습니다. 스택 트레이스, `cause` 체인, 워커 경계, Pino·Winston 같은 로거를 거치면서 그중 얼마나 살아남는지를 다룹니다.
+
+---
+#### 놓치기 아까운 콘텐츠
+- **[The CSS `caret-*` Properties and Custom Caret Accessibility](https://www.sarasoueidan.com/blog/caret-styling-accessibility/)** (출처: *Frontend Focus #767*)
+  + 요약: `caret-shape`, `caret-animation`, `caret-color`로 텍스트 커서를 꾸미는 방법을 다룹니다. 캐럿 브라우징과 WCAG 규정, 작성자 스타일이 사용자의 캐럿 설정을 덮어쓸 수 있는 문제까지 포함합니다.
+- **[From Figma To Code And Back](https://christinevallaure.substack.com/p/ai-prototyping-inside-your-design)** (출처: *Smashing Newsletter #585*)
+  + 요약: 디자인 시스템을 AI 빌더에 연결해 코드로 프로토타이핑할 때 겉모습은 괜찮은데 코드가 엉망인 문제를 다룹니다. Christine Vallaure가 디자인 시스템 안에서 AI 프로토타이핑을 하는 과정과 MCP 설정을 공유합니다.
+---
+
+## 4. ✨ 아이디어
+- **[Charts in HTML and CSS](https://k9l.io/htmlcharts)** (출처: *Frontend Focus #767*)
+  - ![Charts in HTML and CSS](https://res.cloudinary.com/cpress/image/upload/w_1280,e_sharpen:60,q_auto/v1795000878/gsvxk9ekbppoc5pwbwha.png)
+  + 특징: 컬럼·바 차트, 히트맵, 도넛, 라인 차트를 JavaScript와 SVG 없이 HTML과 CSS만으로 만든 갤러리입니다. 시맨틱 마크업 위에 만들어져 스타일시트를 걷어 내도 표나 목록으로 읽힙니다. 에이전트 스킬도 함께 제공됩니다.
+- **[Kerning Visualizer](https://kern.kineticstudio.com/)** (출처: *Smashing Newsletter #585*)
+  - ![Kerning Visualizer](https://mcusercontent.com/16b832d9ad4b28edf261f34df/images/99053868-53f4-aad5-4c62-0a9c1464aec3.png)
+  + 특징: Hunter Thompson이 만든 도구로, 단어의 모든 글자 쌍을 분석해 광학적 자간을 만들고 조정마다 이유를 설명합니다. optical kerning이 텍스트 모양을 어떻게 바꾸는지 비교해 볼 수 있습니다.
+
+## 5. ⚡️ 짧은 소식
+- **[Val Town Is Winding Down](https://blog.val.town/winding-down)** (출처: *JavaScript Weekly #811*)
+  + 요약: 클라우드 기반 JavaScript 호스팅 서비스 Val Town이 1월 10일에 서비스를 종료하고, 코드는 2월에 오픈소스로 공개합니다.
+- **[Introducing the Cross-Origin Storage API](https://developer.chrome.com/blog/introducing-cross-origin-storage)** (출처: *Frontend Focus #767*)
+  + 요약: 사이트 간에 AI 모델, 폰트, 공통 라이브러리 같은 큰 에셋을 공유하게 하자는 Chrome 팀의 API 제안입니다. 사용자는 한 번만 내려받으면 됩니다.
+- **[Happy Birthday to Svelte!](https://svelte.dev/)** (출처: *JavaScript Weekly #811*)
+  + 요약: Svelte가 월요일로 10주년을 맞았습니다. Rich Harris의 첫 커밋은 2016년 11월 16일입니다.
+- **[Bitly Link Hijack](https://ransomnews.com/burger-king-tweet-bitly-link-hijack-2026/)** (출처: *Frontend Focus #767*)
+  + 요약: 예전에 만든 Bitly 단축 링크 일부가 탈취되어 연결 대상이 바뀐 사례로, 링크 단축 서비스 사용에 대한 경고입니다.
+- **[Next.js Experiments with Switchyard](https://github.com/vercel/next.js/pull/101695)** (출처: *React Status #498*)
+  + 요약: Next.js 팀이 `next start` 앞에 두는 Go 기반 서버 Switchyard를 실험 중입니다. 지금은 요청을 Node로 전달만 하지만, 라우팅 작업을 Node 밖으로 옮기는 것이 계획입니다.
+
+## 6. 🎉 릴리스
+- **[Solid 2.0 Is Now Stable](https://www.solidjs.com/blog/solid-2-0-the-long-hold/)** (*React Status #498*)
+  + 업데이트: 비동기가 시그널 그래프의 일부가 되고 서버 함수가 코어로 들어왔습니다. 코딩 에이전트용 새 진단도 추가됐습니다.
+- **[React Router 8.5.2 and 7.18.6](https://github.com/remix-run/react-router/releases/tag/react-router%408.5.2)** (*React Status #498*)
+  + 업데이트: 보안 권고 7건에 대한 수정이며, 그중 4건이 high 등급입니다. 7.18.6 릴리스는 [이 링크](https://github.com/remix-run/react-router/releases/tag/react-router%407.18.6)에 있습니다.
+- **[React Flow 13](https://xyflow.com/blog/react-flow-13-major-release)** (*React Status #498*)
+  + 업데이트: 2년 만의 첫 메이저 릴리스로, 새 `useNode` 훅 등으로 큰 플로우에서 불필요한 리렌더링을 줄였습니다. Vue Flow도 xyflow 가족에 합류했습니다.
+- **[Redux Toolkit 2.15](https://github.com/reduxjs/redux-toolkit/releases/tag/v2.15.0)** (*React Status #498*)
+  + 업데이트: 스토어마다 자체 RTK Query 런타임을 가져 SSR과 테스트 격리 문제를 고쳤습니다.
+- **[Prettier 3.10](https://prettier.io/blog/2026/11/11/3.10.0)** (*JavaScript Weekly #811*)
+  + 업데이트: 최신 JavaScript 제안과 새 Flow 문법을 지원합니다. Zig 기반 Yuku의 JS/TS 파서로 바꿔 끼우는 옵트인 플러그인이 추가됐습니다.
+- **[Node.js v26.13.1 (LTS), v24.22.3 and v22.23.5](https://nodejs.org/en/blog/release/v26.13.1)** (*JavaScript Weekly #811*)
+  + 업데이트: 클라이언트가 서버를 중단시킬 수 있는 HTTP/2 결함과, 다른 연결의 메모리가 노출될 수 있는 HTTPS 버그를 고친 [보안 릴리스](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases)입니다.
+- **[type-fest 6.0](https://github.com/sindresorhus/type-fest/releases/tag/v6.0.0)** (*JavaScript Weekly #811*)
+  + 업데이트: 120개의 새 타입이 추가됐고 TypeScript 6이 필요합니다.
+- **[jQuery 4.1 and 3.8](https://blog.jquery.com/2026/11/17/jquery-4-1-0-and-3-8-0-released-passing-the-torch/)** (*Frontend Focus #767*)
+  + 업데이트: 3.8은 3.x 라인의 마지막 계획된 기능 릴리스이며, 이후에는 중요한 수정만 제공됩니다.
+- **[Chrome 158](https://chromestatus.com/release-notes/158)** (*Frontend Focus #767*)
+  + 업데이트: `install` 요소, `:playing`·`:paused` 같은 미디어 상태 의사 클래스가 들어왔고, XSLT 단계적 제거가 시작됐습니다.
+- **[What's New in DevTools (December 2026)](https://developer.chrome.com/blog/new-in-devtools-december-2026)** (*Frontend Focus #767*)
+  + 업데이트: Chrome 158과 함께 소개된 DevTools 변경 사항 안내입니다.
+
+## ✍️ 마치며
+이번 주 소식을 읽으면서 가장 눈에 들어온 것은 AI가 공격과 방어 양쪽의 비용 구조를 동시에 바꾸고 있다는 점이었습니다. Next.js의 권고 건수 증가는 코드가 갑자기 나빠졌다기보다, 오래 묻혀 있던 버그가 값싸게 발견되는 시대가 됐다는 신호에 가깝습니다. 그렇다면 의존성을 최신으로 유지하는 일은 선택이 아니라 일상적인 운영 작업이 됩니다.
+
+Chrome 팀의 평가는 에이전트가 쓴 코드를 어떻게 검토할지 기준을 제시한다는 점에서 유용했습니다. 접근성, 성능, 보안처럼 눈에 잘 띄지 않는 영역에서 낡은 방식으로 돌아가는 경향이 있다면, 리뷰어는 동작 여부보다 플랫폼 기능을 제대로 쓰는지를 확인해야 합니다. 평가 주체가 가이드를 만든 팀이라는 한계는 있지만, 열 가지 영역 자체는 사람이 짠 코드의 점검 목록으로도 충분히 쓸 만합니다.
+
+한편 State of HTML 2026이 보여 주듯 `dialog`, `popover`, `details` 같은 선언적 요소의 채택이 늘고 있습니다. 직접 만든 오버레이와 포커스 트랩이 줄어드는 방향은 AI가 생성하는 코드의 품질 문제와도 맞닿아 있어, 네이티브 기능을 기본값으로 삼는 습관이 더 중요해졌다고 느낍니다.
+
+#### 출처
+- [JavaScript Weekly #811](https://javascriptweekly.com/issues/811)
+- [Frontend Focus #767](https://frontendfoc.us/issues/767)
+- [React Status #498](https://react.statuscode.com/issues/498)
+- [Smashing Newsletter #585](https://mailchi.mp/smashingmagazine/useful-tools-for-designers-and-engineers)
